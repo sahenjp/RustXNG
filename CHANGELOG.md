@@ -13,7 +13,6 @@
 - CI を Linux・macOS・Windows の matrix に拡張し、clippy `-D warnings`、
   `--no-default-features` ビルド、Docker イメージの `/healthz` 起動確認を追加
 
-
 ## [0.4.0] - 2026-10-24
 
 前回の「未移植」項目をすべて埋め、実測でボトルネックを潰したリリースです（後方互換）。
