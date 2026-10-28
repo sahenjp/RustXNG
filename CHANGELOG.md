@@ -4,6 +4,17 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- `xpath` エンジンが RSS/RDF を読めなかった問題を修正。HTML パーサは `<link>` を
+  void 要素として扱うため `<link>URL</link>` のテキストが落ち、`url_xpath = "./link"`
+  が空になって全件スキップされていた（RDF は 0 件、同じ engine で HTML は 392 件）。
+  XML 宣言か Content-Type が XML の応答は新しい XML DOM（`src/engine/xml.rs`、
+  `quick-xml` は既存依存）で辿る。HTML 経路の挙動は変えていない。不正な XML は
+  HTML パースにフォールバックする（黙って 0 件にしない）
+- `//RDF//item` のようにルート要素を名指しする式が 0 件になっていた問題（XML 選択で
+  最初のステップにルート自身を含めていなかった）
+
 ### Added
 
 - ビルド済みバイナリの配布: Linux（glibc / 静的 musl）、macOS（arm64 / x86_64）、

@@ -6,6 +6,7 @@
 
 pub mod state;
 pub mod util;
+pub mod xml;
 pub mod xpath;
 
 use std::collections::{BTreeMap, HashMap};
