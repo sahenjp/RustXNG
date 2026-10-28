@@ -242,10 +242,23 @@ impl Searcher {
             return response;
         }
 
+        // 全 engine の完了を待つ（join_all）。
+        //
+        // 以前はここで timeout_limit を engine ごとに一律適用していたため、
+        // **速い engine が締め切りに巻き込まれて結果を捨てていた**（実測: 45ms で
+        // 終わる engine が 102ms の締め切りで Timeout 扱いになり 0 件）。
+        // 締め切りは「検索全体」に対してかけ、完了済みの結果は必ず活かす。
+        let deadline = Instant::now()
+            + Duration::from_secs_f64(
+                request
+                    .timeout_limit
+                    .unwrap_or(self.settings.search.timeout_limit)
+                    .max(0.1),
+            );
         let outcomes = futures::future::join_all(
             engines
                 .iter()
-                .map(|engine| self.run_engine(engine, &request)),
+                .map(|engine| self.run_engine(engine, &request, deadline)),
         )
         .await;
 
@@ -318,7 +331,12 @@ impl Searcher {
         response
     }
 
-    async fn run_engine(&self, engine: &EngineHandle, request: &SearchRequest) -> EngineOutcome {
+    async fn run_engine(
+        &self,
+        engine: &EngineHandle,
+        request: &SearchRequest,
+        deadline: Instant,
+    ) -> EngineOutcome {
         let name = engine.name().to_string();
         let weight = engine.weight();
 
@@ -335,11 +353,16 @@ impl Searcher {
         }
 
         let started = Instant::now();
-        let request_limit = request
-            .timeout_limit
-            .unwrap_or(self.settings.search.timeout_limit)
-            .max(0.1);
-        let timeout = engine.timeout().min(Duration::from_secs_f64(request_limit));
+        // engine ごとの timeout は残り時間で上限を切る。締め切りを過ぎていれば走らせない。
+        let Some(timeout) = engine_budget(engine.timeout(), deadline, Instant::now()) else {
+            return EngineOutcome {
+                engine: name,
+                weight,
+                items: Err(FailureKind::Timeout),
+                elapsed: Duration::ZERO,
+                suspended: false,
+            };
+        };
 
         Metrics::incr(&self.metrics.engine_requests, 1);
         let items = self.run_engine_inner(engine, request, timeout).await;
@@ -470,6 +493,18 @@ fn failure_kind_from_error_type(error_type: &str) -> FailureKind {
     }
 }
 
+/// How long an engine may run, given the whole-search deadline.
+///
+/// The engine's own timeout is the ceiling; the search deadline may cut it short.
+/// Returns `None` when the deadline has already passed (do not run at all).
+fn engine_budget(engine_timeout: Duration, deadline: Instant, now: Instant) -> Option<Duration> {
+    let remaining = deadline.saturating_duration_since(now);
+    if remaining.is_zero() {
+        return None;
+    }
+    Some(engine_timeout.min(remaining))
+}
+
 #[cfg(test)]
 mod orchestration_tests {
     use super::*;
@@ -588,6 +623,44 @@ mod orchestration_tests {
             .map(|engine| engine.name().to_string())
             .collect();
         assert_eq!(selected, vec!["image engine".to_string()]);
+    }
+
+    /// The engine's own timeout is the ceiling when the deadline is far away.
+    #[test]
+    fn engine_budget_uses_the_engine_timeout_when_the_deadline_is_far() {
+        let now = Instant::now();
+        let budget = engine_budget(
+            Duration::from_secs(4),
+            now + Duration::from_secs(30),
+            now,
+        );
+        assert_eq!(budget, Some(Duration::from_secs(4)));
+    }
+
+    /// The search deadline cuts a slow engine short, so one slow engine cannot
+    /// hold the whole request open.
+    #[test]
+    fn engine_budget_is_cut_by_the_search_deadline() {
+        let now = Instant::now();
+        let budget = engine_budget(
+            Duration::from_secs(20),
+            now + Duration::from_millis(300),
+            now,
+        );
+        assert_eq!(budget, Some(Duration::from_millis(300)));
+    }
+
+    /// A request whose deadline has already passed must not start engines at all.
+    /// Before this, a short `timeout_limit` was applied to every engine, so engines
+    /// that had already answered in time were also reported as timeouts and their
+    /// results were dropped (measured: a 45 ms engine failed under a 100 ms limit).
+    #[test]
+    fn engine_budget_is_none_after_the_deadline() {
+        let now = Instant::now();
+        assert_eq!(
+            engine_budget(Duration::from_secs(4), now, now + Duration::from_millis(1)),
+            None
+        );
     }
 
     #[tokio::test]
