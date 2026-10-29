@@ -110,6 +110,9 @@ pub struct SearchResult {
     /// A short URL shown in the UI.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub pretty_url: Option<String>,
+    /// Readable page text, only when the request asked for raw content.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub raw_content: Option<String>,
     /// Whether the result belongs to the group of the previous one (UI only).
     #[serde(skip)]
     pub open_group: bool,
@@ -508,6 +511,68 @@ struct GroupState {
     count: i32,
 }
 
+/// The host of a URL, lowercased and without a port.
+pub fn host_of(url: &str) -> Option<String> {
+    let rest = url.split_once("://").map(|(_, rest)| rest)?;
+    let authority = rest.split(['/', '?', '#']).next()?;
+    let host = authority.rsplit('@').next()?.split(':').next()?;
+    if host.is_empty() {
+        None
+    } else {
+        Some(host.to_lowercase())
+    }
+}
+
+/// Whether [host] is [domain] itself or one of its subdomains.
+pub fn domain_matches(host: &str, domain: &str) -> bool {
+    let domain = domain
+        .trim()
+        .trim_start_matches("http://")
+        .trim_start_matches("https://")
+        .split('/')
+        .next()
+        .unwrap_or(domain)
+        .split(':')
+        .next()
+        .unwrap_or(domain)
+        .trim_start_matches("www.")
+        .to_lowercase();
+    if domain.is_empty() {
+        return false;
+    }
+    host == domain || host.ends_with(&format!(".{domain}"))
+}
+
+/// Apply the optional agent-facing result filters.
+pub fn filter_results(
+    results: &mut Vec<SearchResult>,
+    include_domains: &[String],
+    exclude_domains: &[String],
+    max_results: Option<usize>,
+) {
+    if !include_domains.is_empty() {
+        results.retain(|result| {
+            host_of(&result.url).is_some_and(|host| {
+                include_domains
+                    .iter()
+                    .any(|domain| domain_matches(&host, domain))
+            })
+        });
+    }
+    if !exclude_domains.is_empty() {
+        results.retain(|result| {
+            host_of(&result.url).is_none_or(|host| {
+                !exclude_domains
+                    .iter()
+                    .any(|domain| domain_matches(&host, domain))
+            })
+        });
+    }
+    if let Some(limit) = max_results {
+        results.truncate(limit.max(1));
+    }
+}
+
 /// The deduplication key of a URL: scheme independent, without fragment and
 /// without the usual tracking parameters.
 pub fn dedup_key(url: &str) -> String {
@@ -693,5 +758,65 @@ mod tests {
     fn pretty_url_strips_the_scheme() {
         assert_eq!(pretty_url("https://example.com/a/b/"), "example.com/a/b");
         assert_eq!(pretty_url("https://example.com/"), "example.com");
+    }
+
+    fn sample(url: &str) -> SearchResult {
+        SearchResult {
+            url: url.to_string(),
+            title: url.to_string(),
+            ..SearchResult::default()
+        }
+    }
+
+    #[test]
+    fn host_of_handles_port_userinfo_and_case() {
+        assert_eq!(
+            host_of("https://WWW.Example.com:8443/a"),
+            Some("www.example.com".into())
+        );
+        assert_eq!(
+            host_of("https://user:pw@example.com/a"),
+            Some("example.com".into())
+        );
+        assert_eq!(host_of("not a url"), None);
+    }
+
+    #[test]
+    fn domain_matches_subdomains_but_not_lookalikes() {
+        assert!(domain_matches("example.com", "example.com"));
+        assert!(domain_matches("docs.example.com", "example.com"));
+        assert!(domain_matches(
+            "docs.example.com",
+            "https://www.example.com/path"
+        ));
+        assert!(!domain_matches("notexample.com", "example.com"));
+        assert!(!domain_matches("example.com.evil.test", "example.com"));
+    }
+
+    #[test]
+    fn filter_results_applies_include_exclude_and_limit() {
+        let mut results = vec![
+            sample("https://keep.test/a"),
+            sample("https://docs.keep.test/b"),
+            sample("https://drop.test/c"),
+            sample("https://other.test/d"),
+        ];
+        filter_results(&mut results, &["keep.test".into()], &[], None);
+        assert_eq!(results.len(), 2);
+        filter_results(&mut results, &[], &["docs.keep.test".into()], None);
+        assert_eq!(results.len(), 1);
+        assert_eq!(results[0].url, "https://keep.test/a");
+        filter_results(&mut results, &[], &[], Some(0));
+        assert_eq!(results.len(), 1, "a limit below one keeps one result");
+    }
+
+    #[test]
+    fn raw_content_is_serialised_only_when_present() {
+        let mut result = sample("https://example.com/");
+        let plain = serde_json::to_value(&result).expect("json");
+        assert!(plain.get("raw_content").is_none());
+        result.raw_content = Some("page text".into());
+        let rich = serde_json::to_value(&result).expect("json");
+        assert_eq!(rich["raw_content"], "page text");
     }
 }

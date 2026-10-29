@@ -30,6 +30,11 @@ max_ban_time_on_fail = 120
 max_page = 0
 timeout_limit = 3.0
 formats = ["html", "csv", "json", "rss"]
+# "parallel" = 全エンジンを同時に開始（SearXNG 互換、既定）。
+# "staged" = 少数ずつ開始し、staged_min_results 件たまったら次の段を止める。
+strategy = "parallel"
+staged_tier = 8
+staged_min_results = 10
 
 [ui]
 default_theme = "simple"

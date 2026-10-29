@@ -4,6 +4,25 @@
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-10-29
+
+前回の調査で挙がった改善を実装したリリースです。
+
+### エージェント向けの追加
+
+- **エージェント向けの検索パラメータ**（SearXNG にはない拡張、省略時は従来どおり）
+  - `max_results=N` — 上位 N 件だけ返す。`q=rust async` の実測で 60 KB → 4.6 KB（-92%）
+  - `include_domains` / `exclude_domains` — URL のホストで絞り込み（サブドメイン対応）
+  - `include_raw_content=1` — 上位 5 件のページ本文を `raw_content` に追加（約 4,000 文字/件）
+- **応答の検証** — パースは通るが架空・プレースホルダ・クエリと無関係な応答を検出し、
+  結果に混ぜずにエンジンをサスペンドする（上流 issue #6358 の静かなゴミ混入への対策）。
+  `unresponsive_engines` に `Suspicious response` として出る
+- **実行戦略 `strategy=staged`** — エンジンを少数の段に分けて開始し、十分な結果で打ち切る。
+  既定は従来どおりの `parallel`（SearXNG 互換）。実測（`q=rust async`、初回）で
+  3.00 秒 → 0.84 秒、結果は 123 件 → 55 件。並び順は実績 → 未試行 → 失敗・サスペンドの順に自動化
+  - `[search] strategy` / `staged_tier`（既定 8）/ `staged_min_results`（既定 10）
+- 統合テストにエージェント向けフィルタと staged 戦略の検証を追加（14 → 16 件）
+
 ### Fixed
 
 - `timeout_limit` が検索全体の締め切りとして働いていなかった問題を修正。以前は各エンジンに

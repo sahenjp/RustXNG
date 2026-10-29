@@ -99,6 +99,9 @@ query_str = "SELECT title, body FROM docs WHERE body LIKE '%' || $1 || '%'"
       "query": { "type": "string", "description": "検索語。例: 'rust tokio', '!github tokio'" },
       "time_range": { "type": "string", "enum": ["day", "week", "month", "year"] },
       "categories": { "type": "string", "description": "general / news / science / it / files など" },
+      "max_results": { "type": "integer", "description": "返す最大件数。トークンを抑えたいときは 5 を指定" },
+      "include_domains": { "type": "string", "description": "このドメインだけに絞る（カンマ区切り）" },
+      "include_raw_content": { "type": "boolean", "description": "上位 5 件のページ本文も返す" },
       "pageno": { "type": "integer", "minimum": 1 }
     },
     "required": ["query"]
@@ -107,6 +110,21 @@ query_str = "SELECT title, body FROM docs WHERE body LIKE '%' || $1 || '%'"
 ```
 
 エンドポイントは `GET /search?q=...&format=json` だけです。MCP で使いたい場合は、この 1 本を叩く薄い MCP サーバーを被せれば動きます（組み込みの MCP サーバーはまだありません）。
+
+### トークンを抑える
+
+エージェントに渡す量は、パラメータ 1 つで半分以下にできます。
+
+```bash
+# 既定: 全結果（例: 60 KB / 200 件）
+curl 'http://127.0.0.1:8888/search?q=rust&format=json'
+
+# max_results: 上位 5 件だけ（例: 4.6 KB / -92%）
+curl 'http://127.0.0.1:8888/search?q=rust&format=json&max_results=5'
+
+# include_raw_content: 上位 5 件のページ本文付き（+16 KB / +3.5 秒）
+curl 'http://127.0.0.1:8888/search?q=rust&format=json&max_results=5&include_raw_content=1'
+```
 
 ## 使い始める
 

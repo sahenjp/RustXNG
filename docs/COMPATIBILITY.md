@@ -27,6 +27,20 @@
 
 計測値を含む詳細版が必要な場合は `format=json&full=1` を使います（`number_of_results` / `timings` / `engines` / `engine_data` / `paging` / `redirect_url` / `error` が追加されます）。
 
+## エージェント向けの拡張（上流にないパラメータ）
+
+SearXNG のパラメータと衝突しない名前で、LLM のツール呼び出し向けの指定を追加しています。省略すれば従来の挙動のままです。
+
+| パラメータ | 意味 | 返り値への影響 |
+| :--- | :--- | :--- |
+| `max_results=N` | 並べ替え後の上位 N 件だけを返す（1〜200 に丸める） | `results` を切り詰め |
+| `include_domains=a.com,b.com` | URL のホストが指定ドメイン（サブドメイン含む）の結果だけを残す | 絞り込み |
+| `exclude_domains=a.com` | 指定ドメインの結果を落とす | 絞り込み |
+| `include_raw_content=1` | 上位 5 件のページ本文を取得して `raw_content` フィールドに入れる | 約 4,000 文字/件を追加 |
+| `strategy=staged` | エンジンを少数の段に分けて開始し、`search.staged_min_results` 件で打ち切る（既定は並列） | 応答時間は短縮、返る件数は減る |
+
+応答自体の検証も行います。パースは通るが内容が明らかに架空・プレースホルダ・クエリと無関係な応答（上流 issue #6358 の「静かなゴミ混入」）は、結果に混ぜずにエンジンをサスペンドし、`unresponsive_engines` に `Suspicious response` として出します。
+
 ## 互換でない領域
 
 | 領域 | 差分 |

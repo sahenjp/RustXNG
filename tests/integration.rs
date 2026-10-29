@@ -104,6 +104,58 @@ async fn json_search_returns_merged_results() {
 }
 
 #[tokio::test]
+async fn agent_facing_filters_limit_and_scope_the_results() {
+    let base_url = start_fake_engine().await;
+    let app = app(settings_for(&base_url));
+
+    // max_results caps the JSON payload.
+    let (_, body, _) = get_uri(&app, "/search?q=rust&format=json&max_results=1").await;
+    let json: serde_json::Value = serde_json::from_str(&body).unwrap();
+    assert_eq!(json["results"].as_array().unwrap().len(), 1);
+
+    // include_domains keeps only matching hosts (subdomains included).
+    let (_, body, _) = get_uri(
+        &app,
+        "/search?q=rust&format=json&include_domains=example.com",
+    )
+    .await;
+    let json: serde_json::Value = serde_json::from_str(&body).unwrap();
+    assert_eq!(json["results"].as_array().unwrap().len(), 2);
+
+    let (_, body, _) = get_uri(
+        &app,
+        "/search?q=rust&format=json&include_domains=other.test",
+    )
+    .await;
+    let json: serde_json::Value = serde_json::from_str(&body).unwrap();
+    assert_eq!(json["results"].as_array().unwrap().len(), 0);
+
+    // exclude_domains drops the known host again.
+    let (_, body, _) = get_uri(
+        &app,
+        "/search?q=rust&format=json&exclude_domains=example.com",
+    )
+    .await;
+    let json: serde_json::Value = serde_json::from_str(&body).unwrap();
+    assert_eq!(json["results"].as_array().unwrap().len(), 0);
+}
+
+#[tokio::test]
+async fn staged_strategy_returns_the_same_results() {
+    let base_url = start_fake_engine().await;
+    let mut settings = settings_for(&base_url);
+    settings.search.strategy = rustxng::settings::SearchStrategy::Staged;
+    settings.search.staged_tier = 1;
+    settings.search.staged_min_results = 1;
+    let app = app(settings);
+
+    let (status, body, _) = get_uri(&app, "/search?q=rust&format=json").await;
+    assert_eq!(status, StatusCode::OK);
+    let json: serde_json::Value = serde_json::from_str(&body).unwrap();
+    assert_eq!(json["results"].as_array().unwrap().len(), 2);
+}
+
+#[tokio::test]
 async fn html_search_renders_the_result_page() {
     let base_url = start_fake_engine().await;
     let app = app(settings_for(&base_url));

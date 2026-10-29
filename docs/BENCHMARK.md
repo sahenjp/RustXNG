@@ -60,3 +60,26 @@ cargo run --release --example benchmark -- --repeats 3
 | google / bing / duckduckgo | 0.70〜0.85（ページネーションや広告枠の差） |
 
 `python3 bench/compare.py --help` で再現できます。
+
+## エージェントに渡すトークン量
+
+同じクエリ（`q=rust async`、応答 200 件前後）で、返す件数を絞ったときの実測です。
+
+| 指定 | 応答サイズ | レイテンシ |
+| --- | ---: | ---: |
+| 既定（全結果） | 60 KB | 0.03 秒（キャッシュ時） |
+| `max_results=5` | **4.6 KB（-92%）** | 0.03 秒 |
+| `max_results=5&include_raw_content=1` | 21 KB | 3.5 秒 |
+
+`include_raw_content` は上位 5 件のページを取得して本文（約 4,000 文字/件）を入れるため、その分だけ時間がかかります。トークンを抑えたいだけなら `max_results` だけで十分です。
+
+## 実行戦略（parallel / staged）
+
+SearXNG は常に有効な全エンジンへ同時に問い合わせます。そのため、レート制限に当たったエンジンが一度に複数サスペンドされます（上流 issue #6825）。RustXNG では `strategy=staged` を指定すると、少数の段に分けて開始し、結果が十分たまった時点で次の段を止めます。
+
+| 戦略 | 初回の応答時間 | 結果件数（`q=rust async`） |
+| --- | ---: | ---: |
+| `parallel`（既定、SearXNG 互換） | 3.00 秒 | 123 件 |
+| `staged` | **0.84 秒** | 55 件 |
+
+エージェントのツール呼び出しでは、`strategy=staged` と `max_results` を組み合わせると待ち時間を抑えられます。段の大きさは `[search] staged_tier`（既定 8）、打ち切り件数は `staged_min_results`（既定 10）で調整できます。エンジンの並びは、実績のあるエンジン → 未試行 → 失敗・サスペンドの順に自動で並べ替えます。

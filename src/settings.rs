@@ -291,6 +291,23 @@ pub struct Search {
     pub formats: Vec<String>,
     pub max_page: u32,
     pub timeout_limit: f64,
+    /// How the engines of one search are started: all at once or tier by tier.
+    pub strategy: SearchStrategy,
+    /// Engines started per tier in the staged strategy.
+    pub staged_tier: usize,
+    /// The staged strategy stops starting new tiers at this many results.
+    pub staged_min_results: usize,
+}
+
+/// Search execution strategy, upstream's default is "parallel".
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Deserialize, Serialize)]
+#[serde(rename_all = "lowercase")]
+pub enum SearchStrategy {
+    /// Start every selected engine at once (SearXNG compatible).
+    #[default]
+    Parallel,
+    /// Start engines tier by tier and stop once enough results were collected.
+    Staged,
 }
 
 impl Default for Search {
@@ -314,6 +331,9 @@ impl Default for Search {
             formats: OUTPUT_FORMATS.iter().map(|f| (*f).to_string()).collect(),
             max_page: 0,
             timeout_limit: 3.0,
+            strategy: SearchStrategy::Parallel,
+            staged_tier: 8,
+            staged_min_results: 10,
         }
     }
 }

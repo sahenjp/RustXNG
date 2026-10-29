@@ -19,7 +19,7 @@ pub fn upstream_json(response: &SearchResponse) -> serde_json::Value {
         .results
         .iter()
         .map(|result| {
-            serde_json::json!({
+            let mut object = serde_json::json!({
                 "url": result.url,
                 "template": format!("{}.html", result.template.as_str()),
                 "engine": result.engine,
@@ -43,7 +43,11 @@ pub fn upstream_json(response: &SearchResponse) -> serde_json::Value {
                     .map(|(key, value)| format!("{key}: {value}"))
                     .collect::<Vec<_>>()
                     .join(" | "),
-            })
+            });
+            if let Some(raw) = &result.raw_content {
+                object["raw_content"] = serde_json::json!(raw);
+            }
+            object
         })
         .collect();
     let answers: Vec<serde_json::Value> = response
