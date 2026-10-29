@@ -39,6 +39,8 @@ SearXNG のパラメータと衝突しない名前で、LLM のツール呼び�
 | `include_raw_content=1` | 上位 `search.raw_content_limit` 件（既定 5）のページ本文を取得して `raw_content` フィールドに入れる | 約 4,000 文字/件を追加。ページはキャッシュされ 2 回目以降は即返し |
 | `strategy=staged` | エンジンを少数の段に分けて開始し、`search.staged_min_results` 件で打ち切る（既定は並列） | 応答時間は短縮、返る件数は減る |
 
+**ランキングの差分（`search.relevance_weight`）**: 一般（マルチエンジン）検索では、URL + タイトルのクエリ語一致度でスコアを補正します（既定 4.0。Exa の意味検索に肉薄させるため）。**単一エンジン指定では補正せず上流順を維持**するので、`engines=` での overlap@10 は上流と一致します。`relevance_weight = 0` にすれば一般検索も上流と完全に同一の順序になります。
+
 応答自体の検証も行います。パースは通るが内容が明らかに架空・プレースホルダ・クエリと無関係な応答（上流 issue #6358 の「静かなゴミ混入」）は、結果に混ぜずにエンジンをサスペンドし、`unresponsive_engines` に `Suspicious response` として出します。
 
 ### ディープリサーチ（`GET /research`、上流にない）

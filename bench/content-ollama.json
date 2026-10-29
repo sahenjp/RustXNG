@@ -1,0 +1,125 @@
+{
+ "source": "ollama",
+ "queries": [
+  {
+   "id": "en-tokio",
+   "query": "tokio rust async runtime",
+   "gold_url": "https://tokio.rs",
+   "results": []
+  },
+  {
+   "id": "en-rust-book",
+   "query": "rust programming language book",
+   "gold_url": "https://doc.rust-lang.org/book",
+   "results": []
+  },
+  {
+   "id": "en-asyncio",
+   "query": "python asyncio documentation",
+   "gold_url": "https://docs.python.org/3/library/asyncio",
+   "results": []
+  },
+  {
+   "id": "en-pg-json",
+   "query": "postgresql json functions",
+   "gold_url": "https://www.postgresql.org/docs/current/functions-json",
+   "results": []
+  },
+  {
+   "id": "en-attention",
+   "query": "attention is all you need arxiv",
+   "gold_url": "https://arxiv.org/abs/1706.03762",
+   "results": []
+  },
+  {
+   "id": "en-turing",
+   "query": "alan turing wikipedia",
+   "gold_url": "https://en.wikipedia.org/wiki/Alan_Turing",
+   "results": []
+  },
+  {
+   "id": "en-rust-repo",
+   "query": "rust-lang rust github",
+   "gold_url": "https://github.com/rust-lang/rust",
+   "results": []
+  },
+  {
+   "id": "en-compose",
+   "query": "docker compose file reference",
+   "gold_url": "https://docs.docker.com/reference/compose-file",
+   "results": []
+  },
+  {
+   "id": "en-numpy",
+   "query": "numpy indexing arrays",
+   "gold_url": "https://numpy.org/doc/stable/user/basics.indexing",
+   "results": []
+  },
+  {
+   "id": "en-serde",
+   "query": "serde rust crate serialization",
+   "gold_url": "https://serde.rs",
+   "results": []
+  },
+  {
+   "id": "en-kernel",
+   "query": "linux kernel documentation scheduler",
+   "gold_url": "https://docs.kernel.org/scheduler",
+   "results": []
+  },
+  {
+   "id": "en-mdn-array",
+   "query": "mdn javascript array",
+   "gold_url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
+   "results": []
+  },
+  {
+   "id": "ja-fuji",
+   "query": "富士山 wikipedia",
+   "gold_url": "https://ja.wikipedia.org/wiki/富士山",
+   "results": []
+  },
+  {
+   "id": "ja-genji",
+   "query": "源氏物語 wikipedia",
+   "gold_url": "https://ja.wikipedia.org/wiki/源氏物語",
+   "results": []
+  },
+  {
+   "id": "ja-tokyo-station",
+   "query": "東京駅 wikipedia",
+   "gold_url": "https://ja.wikipedia.org/wiki/東京駅",
+   "results": []
+  },
+  {
+   "id": "ja-python",
+   "query": "python 入門 公式",
+   "gold_url": "https://docs.python.org/ja/3/tutorial",
+   "results": []
+  },
+  {
+   "id": "ja-rust",
+   "query": "rust プログラミング言語 公式",
+   "gold_url": "https://www.rust-lang.org/ja",
+   "results": []
+  },
+  {
+   "id": "ja-jma",
+   "query": "気象庁 天気予報",
+   "gold_url": "https://www.jma.go.jp",
+   "results": []
+  },
+  {
+   "id": "ja-ndl",
+   "query": "国立国会図書館 サーチ",
+   "gold_url": "https://ndlsearch.ndl.go.jp",
+   "results": []
+  },
+  {
+   "id": "ja-tokyo-tourism",
+   "query": "東京 観光 公式",
+   "gold_url": "https://www.gotokyo.org",
+   "results": []
+  }
+ ]
+}

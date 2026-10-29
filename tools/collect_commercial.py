@@ -64,7 +64,41 @@ def ollama(key: str) -> dict:
     return {"source": "ollama", "queries": rows}
 
 
+def exa(key: str) -> dict:
+    """Exa neural search: request text content so the metrics match Tavily."""
+    rows = []
+    for q in QUESTIONS:
+        try:
+            data = post(
+                "https://api.exa.ai/search",
+                key,
+                {
+                    "query": q["query"],
+                    "numResults": 10,
+                    "type": "auto",
+                    "contents": {"text": True},
+                },
+            )
+            # contents.text: True makes Exa return the page text in "text"
+            results = [
+                {"url": r.get("url"), "title": r.get("title"), "content": r.get("text") or ""}
+                for r in data.get("results", [])
+            ]
+        except Exception as error:  # noqa: BLE001
+            print("  exa error", q["id"], error, file=sys.stderr)
+            results = []
+        rows.append({"id": q["id"], "query": q["query"], "gold_url": q["gold"][0], "results": results})
+        print("exa", q["id"], len(results))
+        time.sleep(1.5)
+    return {"source": "exa", "queries": rows}
+
+
 def main() -> int:
+    if os.environ.get("EXA_API_KEY"):
+        Path("bench/content-exa.json").write_text(json.dumps(exa(os.environ["EXA_API_KEY"]), ensure_ascii=False, indent=1), encoding="utf-8")
+        print("wrote bench/content-exa.json")
+    else:
+        print("EXA_API_KEY not set; skipping exa", file=sys.stderr)
     if os.environ.get("TAVILY_API_KEY"):
         Path("bench/content-tavily.json").write_text(json.dumps(tavily(os.environ["TAVILY_API_KEY"]), ensure_ascii=False, indent=1), encoding="utf-8")
         print("wrote bench/content-tavily.json")

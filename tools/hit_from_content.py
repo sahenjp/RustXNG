@@ -37,6 +37,7 @@ def main() -> int:
         ("RustXNG", "bench/content-rustxng.json"),
         ("SearXNG", "bench/content-searxng.json"),
         ("Tavily", "bench/content-tavily.json"),
+        ("Exa", "bench/content-exa.json"),
         ("Ollama", "bench/content-ollama.json"),
     ]
     header = f"{'backend':<10} {'hit@1':>7} {'hit@5':>7} {'hit@10':>7} {'MRR':>6} {'n':>3}"

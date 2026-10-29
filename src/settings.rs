@@ -336,6 +336,10 @@ pub struct Search {
     /// How many of the top results get their page text when the request asks
     /// for raw content. Larger means richer answers, slower fetches.
     pub raw_content_limit: usize,
+    /// Strength of the URL/title query-term signal blended into the ranking.
+    /// 0 keeps pure upstream position fusion; higher values lift the page that
+    /// actually matches the query the way a neural ranker does.
+    pub relevance_weight: f64,
 }
 
 /// Search execution strategy, upstream's default is "parallel".
@@ -374,6 +378,7 @@ impl Default for Search {
             staged_tier: 8,
             staged_min_results: 10,
             raw_content_limit: 5,
+            relevance_weight: 4.0,
         }
     }
 }

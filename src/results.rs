@@ -319,7 +319,12 @@ impl ResultContainer {
     }
 
     /// Score and freeze the container (upstream `close`).
-    pub fn close(&mut self, weight_of: impl Fn(&str) -> f64) {
+    pub fn close(
+        &mut self,
+        weight_of: impl Fn(&str) -> f64,
+        query_terms: &[String],
+        relevance_weight: f64,
+    ) {
         if self.closed {
             return;
         }
@@ -341,7 +346,11 @@ impl ResultContainer {
                     Priority::Medium => score += weight / (*position as f64),
                 }
             }
-            result.score = score;
+            // Blend in how well the URL + title cover the query terms. Position
+            // fusion alone ranks a homepage above the page that actually answers
+            // the query; this lifts the latter the way a neural ranker does.
+            result.score =
+                score + relevance_weight * relevance(&result.url, &result.title, query_terms);
         }
 
         self.ordered = order_results(&self.main);
@@ -509,6 +518,49 @@ fn order_results(results: &[SearchResult]) -> Vec<SearchResult> {
 struct GroupState {
     index: usize,
     count: i32,
+}
+
+/// Lowercase query terms (latin words of 3+, plus CJK bigrams) used by
+/// [`relevance`].
+pub fn query_terms(text: &str) -> Vec<String> {
+    let lower = text.to_lowercase();
+    let mut terms: Vec<String> = lower
+        .split(|character: char| !character.is_alphanumeric())
+        .filter(|word| word.chars().count() >= 3)
+        .map(str::to_string)
+        .collect();
+    let cjk: Vec<char> = lower
+        .chars()
+        .filter(|character| !character.is_ascii() && character.is_alphanumeric())
+        .collect();
+    for window in cjk.windows(2) {
+        terms.push(window.iter().collect());
+    }
+    terms.sort();
+    terms.dedup();
+    terms
+}
+
+/// How many of the query terms appear in the URL + title (0.0 ..= 1.0).
+///
+/// A query term in the path/slug (e.g. `functions-json` for "json functions")
+/// is a strong signal; the helper counts distinct terms present in the
+/// lowercased URL and title.
+fn relevance(url: &str, title: &str, terms: &[String]) -> f64 {
+    if terms.is_empty() {
+        return 0.0;
+    }
+    // Percent-decode so CJK paths (ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB...)
+    // match the query's character bigrams; otherwise Japanese gold URLs score 0.
+    let decoded_url = percent_encoding::percent_decode_str(url)
+        .decode_utf8_lossy()
+        .to_lowercase();
+    let haystack = format!("{decoded_url} {}", title.to_lowercase());
+    let hits = terms
+        .iter()
+        .filter(|term| haystack.contains(term.as_str()))
+        .count();
+    hits as f64 / terms.len() as f64
 }
 
 /// The host of a URL, lowercased and without a port.
@@ -690,7 +742,7 @@ mod tests {
                 result("https://example.com/second", "second"),
             ],
         );
-        container.close(|_| 1.0);
+        container.close(|_| 1.0, &[], 0.0);
         let ordered = container.ordered();
         assert_eq!(ordered[0].url, "https://example.com/first");
         assert!(ordered[0].score > ordered[1].score);
@@ -701,7 +753,7 @@ mod tests {
         let mut container = ResultContainer::new();
         container.extend("a", 0.5, vec![result("https://example.com/a", "a")]);
         container.extend("b", 2.0, vec![result("https://example.com/b", "b")]);
-        container.close(|engine| if engine == "a" { 0.5 } else { 2.0 });
+        container.close(|engine| if engine == "a" { 0.5 } else { 2.0 }, &[], 0.0);
         // `ordered` is the ranking the UI shows: engine weight wins.
         assert_eq!(container.ordered()[0].url, "https://example.com/b");
     }
@@ -739,7 +791,7 @@ mod tests {
             items.push(EngineItem::Result(web));
         }
         container.extend("a", 1.0, items);
-        container.close(|_| 1.0);
+        container.close(|_| 1.0, &[], 0.0);
         let ordered = container.ordered();
         // Within the first 8 entries of the images group every second entry is an
         // image result (upstream groups results of one category).

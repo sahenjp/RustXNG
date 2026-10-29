@@ -24,6 +24,7 @@ BACKENDS = [
     ("RustXNG", "bench/content-rustxng.json"),
     ("SearXNG", "bench/content-searxng.json"),
     ("Tavily", "bench/content-tavily.json"),
+    ("Exa", "bench/content-exa.json"),
     ("Ollama", "bench/content-ollama.json"),
 ]
 

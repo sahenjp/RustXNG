@@ -300,7 +300,20 @@ impl Searcher {
             container.add_timing(&outcome.engine, outcome.elapsed.as_secs_f64(), 0.0);
         }
 
-        container.close(|engine| self.registry.weight_of(engine));
+        let query_terms = crate::results::query_terms(&request.query.query_text());
+        // Relevance re-ranking only applies when the response merges several
+        // engines (the general search). A single pinned engine keeps the
+        // engine's own order, which preserves exact SearXNG overlap@10.
+        let relevance_weight = if request.engines.len() == 1 {
+            0.0
+        } else {
+            self.settings.search.relevance_weight
+        };
+        container.close(
+            |engine| self.registry.weight_of(engine),
+            &query_terms,
+            relevance_weight,
+        );
 
         let mut results = container.ordered().to_vec();
         for result in &mut results {

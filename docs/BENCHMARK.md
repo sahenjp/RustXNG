@@ -167,3 +167,32 @@ Ollama の web_search API（`POST https://ollama.com/api/web_search`）は API �
 認証自体は成功しますが、**このアカウントは利用クレジットが無く HTTP 402** を返しました
 （`Add usage credits to use web search`）。クレジットを追加すれば同じ 20 問で 4 者比較に
 拡張できます（`tools/collect_commercial.py` は `OLLAMA_API_KEY` が入れば Ollama 分も収集します）。
+
+## Exa との比較（URL 品質・20 問）
+
+Exa（意味検索の商用 API）を `EXA_API_KEY` で同じ 20 問に問い、URL 中率を測りました。
+Tavily を大きく上回るとされる Exa を、RustXNG は関連度ランキングでほぼ同等にまで詰めています。
+
+| バックエンド | hit@1 | hit@5 | MRR | 検索方式 |
+| --- | ---: | ---: | ---: | --- |
+| Exa | 16/20 | 19/20 | 0.867 | 意味（ニューラル）検索 |
+| **RustXNG（関連度 4.0・cold）** | 15/20 | **19/20（同率）** | 0.838 | 位置融合 + 関連度 |
+| RustXNG（従来・位置融合のみ） | 14/20 | 16/20 | 0.750 | 位置融合 |
+| Tavily | 4/20 | 13/20 | 0.394 | — |
+
+### 何を改善したか
+
+Exa の強みは「公式ドキュメントの意図を掴む意味検索」。RustXNG は **URL + タイトルのクエリ語一致度**をランキングに加え（`relevance_weight`、URL はパーセントデコードして日本語も照合）、従来の位置融合のみ（MRR 0.750）から **0.838** に改善し、hit@5 は Exa と同率（19/20）まで詰めました。
+
+- `relevance_weight`（既定 4.0、`settings.toml` の `[search]`）で強さを調整。**0 にすると上流 SearXNG と完全一致の順序**に戻る
+- **単一エンジン指定では関連度を適用しない**（→ SearXNG との overlap@10 は github で 1.00 を維持）
+- MRR で 0.838 vs 0.867 とわずかに Exa 下（hit@1 は 1 差）。**これを完全に超えるには意味（埋め込み）検索の追加が必要**
+
+### 再現
+
+```bash
+set -a; source ~/.dsh/search-keys.env; set +a
+python3 tools/collect_commercial.py            # Exa/Tavily/Ollama を収集
+python3 tools/hit_from_content.py --top 10     # URL 中率
+python3 tools/eval_quality.py --base http://127.0.0.1:8888  # RustXNG 単体
+```
