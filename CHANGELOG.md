@@ -4,6 +4,23 @@
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-10-29
+
+商用 API との直接比較を完成させたリリースです。
+
+### Added
+
+- **3 者直接比較**（`docs/BENCHMARK.md`）— 同じ 20 問・同じ gold URL で RustXNG / SearXNG / Tavily を測定
+  - URL 中率: RustXNG MRR 0.750 / SearXNG 0.650 / Tavily 0.415（RustXNG が Tavily の 1.8 倍）
+  - 内容: RustXNG raw 付 4,158 字 vs Tavily 1,248 字（gold 記述度 1.000 で同等）
+- **Ollama Web Search の状況を記録** — API キー認証は成功するが、このアカウントは利用クレジット無しで HTTP 402。クレジット追加で 4 者比較に拡張可能（`tools/collect_commercial.py` 対応済み）
+
+### ツール
+
+- `tools/hit_from_content.py` — 収集済み `bench/content-*.json` から URL 中率（hit@k / MRR）を一括計算
+- `tools/collect_commercial.py` — Tavily / Ollama REST API から同一 20 問を収集
+- `tools/compare_content.py` / `tools/eval_content.py` — 内容品質（カバレッジ・スニペット長・クエリ語含有）を採点
+
 ## [0.6.0] - 2026-10-29
 
 Tavily を全次元で上回る推奨設定を既定に組み込んだリリースです。

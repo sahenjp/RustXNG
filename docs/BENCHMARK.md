@@ -133,3 +133,37 @@ SearXNG は常に有効な全エンジンへ同時に問い合わせます。そ
 - `[cache] max_bytes = 32 MB` — ページ本文もキャッシュするため 8 MB では足りない
 
 **ページ本文キャッシュ**により、`include_raw_content` は初回のみ取得し、2 回目以降は 60ms で返します（本文 4,001 字 × 上位 5 件）。エージェントの繰り返し検索で Tavily を速度でも上回れます。
+
+## 商用 API との直接比較（20 問ベンチ・3 者）
+
+`tools/hit_from_content.py` と `tools/compare_content.py` で、同じ 20 問・同じ gold URL で
+RustXNG / SearXNG / Tavily を並べて測りました（`bench/content-*.json` に全データを保存）。
+
+### URL 中率（上位 10 件）
+
+| バックエンド | hit@1 | hit@5 | hit@10 | MRR |
+| --- | ---: | ---: | ---: | ---: |
+| **RustXNG** | **14/20** | **16/20** | **18/20** | **0.750** |
+| SearXNG | 11/20 | 15/20 | 18/20 | 0.650 |
+| Tavily | 5/20 | 12/20 | 14/20 | 0.415 |
+
+RustXNG は Tavily の 1.8 倍の MRR。正しいページを見つける精度で勝ります。
+
+### 内容（スニペット / 本文）
+
+| バックエンド | カバレッジ | テキスト/件 | クエリ語 | gold記述 |
+| --- | ---: | ---: | ---: | ---: |
+| RustXNG（既定） | 0.980 | 154 字 | 0.681 | 0.865 |
+| **RustXNG（raw 付）** | 1.000 | **4,158 字** | 0.857 | **1.000** |
+| SearXNG | 1.000 | 117 字 | 0.678 | 1.000 |
+| Tavily | 1.000 | 1,248 字 | 0.918 | 1.000 |
+
+Tavily の既定スニペットは RustXNG より長い（1,248 vs 154 字）ですが、RustXNG に
+`include_raw_content=1` を付けると 4,158 字で上回り、gold 記述度も 1.000 で同等です。
+
+### Ollama Web Search
+
+Ollama の web_search API（`POST https://ollama.com/api/web_search`）は API キー方式で、
+認証自体は成功しますが、**このアカウントは利用クレジットが無く HTTP 402** を返しました
+（`Add usage credits to use web search`）。クレジットを追加すれば同じ 20 問で 4 者比較に
+拡張できます（`tools/collect_commercial.py` は `OLLAMA_API_KEY` が入れば Ollama 分も収集します）。
