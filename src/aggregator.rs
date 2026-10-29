@@ -34,6 +34,16 @@ pub struct SearchRequest {
     pub disabled_plugins: Vec<String>,
     pub locale: String,
     pub user: UserInfo,
+    /// Keep at most this many results (agent-facing extension).
+    pub max_results: Option<usize>,
+    /// Keep only results whose host matches one of these domains.
+    pub include_domains: Vec<String>,
+    /// Drop results whose host matches one of these domains.
+    pub exclude_domains: Vec<String>,
+    /// Fetch the page text for the top results and return it as raw_content.
+    pub include_raw_content: bool,
+    /// How the selected engines are started.
+    pub strategy: crate::settings::SearchStrategy,
 }
 
 impl SearchRequest {
@@ -52,6 +62,11 @@ impl SearchRequest {
             disabled_plugins: Vec::new(),
             locale: query.locale.clone(),
             user: UserInfo::default(),
+            max_results: None,
+            include_domains: Vec::new(),
+            exclude_domains: Vec::new(),
+            include_raw_content: false,
+            strategy: crate::settings::SearchStrategy::Parallel,
             query,
         }
     }
@@ -242,12 +257,32 @@ impl Searcher {
             return response;
         }
 
-        let outcomes = futures::future::join_all(
-            engines
-                .iter()
-                .map(|engine| self.run_engine(engine, &request)),
-        )
-        .await;
+        // 全 engine の完了を待つ（join_all）。
+        //
+        // 以前はここで timeout_limit を engine ごとに一律適用していたため、
+        // **速い engine が締め切りに巻き込まれて結果を捨てていた**（実測: 45ms で
+        // 終わる engine が 102ms の締め切りで Timeout 扱いになり 0 件）。
+        // 締め切りは「検索全体」に対してかけ、完了済みの結果は必ず活かす。
+        let deadline = Instant::now()
+            + Duration::from_secs_f64(
+                request
+                    .timeout_limit
+                    .unwrap_or(self.settings.search.timeout_limit)
+                    .max(0.1),
+            );
+        let outcomes = match request.strategy {
+            crate::settings::SearchStrategy::Parallel => {
+                futures::future::join_all(
+                    engines
+                        .iter()
+                        .map(|engine| self.run_engine(engine, &request, deadline)),
+                )
+                .await
+            }
+            crate::settings::SearchStrategy::Staged => {
+                self.run_staged(&engines, &request, deadline).await
+            }
+        };
 
         let mut container = ResultContainer::new();
         for outcome in outcomes {
@@ -275,6 +310,16 @@ impl Searcher {
                 &request.enabled_plugins,
                 &request.disabled_plugins,
             );
+        }
+
+        crate::results::filter_results(
+            &mut results,
+            &request.include_domains,
+            &request.exclude_domains,
+            request.max_results,
+        );
+        if request.include_raw_content {
+            self.attach_raw_content(&mut results).await;
         }
 
         response.number_of_results = container.number_of_results();
@@ -318,7 +363,12 @@ impl Searcher {
         response
     }
 
-    async fn run_engine(&self, engine: &EngineHandle, request: &SearchRequest) -> EngineOutcome {
+    async fn run_engine(
+        &self,
+        engine: &EngineHandle,
+        request: &SearchRequest,
+        deadline: Instant,
+    ) -> EngineOutcome {
         let name = engine.name().to_string();
         let weight = engine.weight();
 
@@ -335,11 +385,16 @@ impl Searcher {
         }
 
         let started = Instant::now();
-        let request_limit = request
-            .timeout_limit
-            .unwrap_or(self.settings.search.timeout_limit)
-            .max(0.1);
-        let timeout = engine.timeout().min(Duration::from_secs_f64(request_limit));
+        // engine ごとの timeout は残り時間で上限を切る。締め切りを過ぎていれば走らせない。
+        let Some(timeout) = engine_budget(engine.timeout(), deadline, Instant::now()) else {
+            return EngineOutcome {
+                engine: name,
+                weight,
+                items: Err(FailureKind::Timeout),
+                elapsed: Duration::ZERO,
+                suspended: false,
+            };
+        };
 
         Metrics::incr(&self.metrics.engine_requests, 1);
         let items = self.run_engine_inner(engine, request, timeout).await;
@@ -384,7 +439,7 @@ impl Searcher {
             )
             .await;
             return match joined {
-                Ok(Ok(Ok(items))) => Ok(items),
+                Ok(Ok(Ok(items))) => check_quality(engine.name(), &request.query, items),
                 Ok(Ok(Err(error))) => Err(FailureKind::from(&error)),
                 Ok(Err(_)) => Err(FailureKind::Other),
                 Err(_) => Err(FailureKind::Timeout),
@@ -398,15 +453,140 @@ impl Searcher {
             .fetch(engine_request, timeout, Some(&self.cache))
             .await
             .map_err(|error| error.failure_kind())?;
-        engine
+        let items = engine
             .parse(&response, &request.query)
-            .map_err(|error| FailureKind::from(&error))
+            .map_err(|error| FailureKind::from(&error))?;
+        check_quality(engine.name(), &request.query, items)
+    }
+
+    /// Start engines tier by tier and stop once enough results were collected.
+    ///
+    /// SearXNG issue #6825: querying every engine at once is what makes many
+    /// engines suspend together. The staged strategy starts a smaller tier,
+    /// checks whether the results are already enough and only then continues.
+    async fn run_staged(
+        &self,
+        engines: &[EngineHandle],
+        request: &SearchRequest,
+        deadline: Instant,
+    ) -> Vec<EngineOutcome> {
+        let tier = self.settings.search.staged_tier.max(1);
+        let target = self.settings.search.staged_min_results.max(1);
+        let ordered = self.order_engines_by_health(engines);
+        let mut outcomes = Vec::new();
+        let mut collected = 0usize;
+        for chunk in ordered.chunks(tier) {
+            if Instant::now() >= deadline {
+                break;
+            }
+            let tier_outcomes = futures::future::join_all(
+                chunk
+                    .iter()
+                    .map(|engine| self.run_engine(engine, request, deadline)),
+            )
+            .await;
+            for outcome in &tier_outcomes {
+                if let Ok(items) = &outcome.items {
+                    collected += items.len();
+                }
+            }
+            outcomes.extend(tier_outcomes);
+            if collected >= target {
+                break;
+            }
+        }
+        outcomes
+    }
+
+    /// Order engines for the staged strategy.
+    ///
+    /// Proven engines (requests with results) go first, fastest first; engines
+    /// that have not been tried yet keep their registry order; engines that
+    /// failed or are suspended go last.
+    fn order_engines_by_health(&self, engines: &[EngineHandle]) -> Vec<EngineHandle> {
+        use std::collections::HashMap;
+        let mut ranks: HashMap<String, (u8, u64)> = HashMap::new();
+        for snapshot in self.states.snapshot() {
+            let stats = &snapshot.stats;
+            let rank = if snapshot.suspended {
+                3
+            } else if stats.requests == 0 {
+                1
+            } else if stats.results > 0 {
+                0
+            } else {
+                2
+            };
+            let millis = if stats.requests == 0 {
+                0
+            } else {
+                (stats.average_time() * 1000.0) as u64
+            };
+            ranks.insert(snapshot.engine, (rank, millis));
+        }
+        let mut ordered: Vec<EngineHandle> = engines.to_vec();
+        ordered.sort_by_key(|engine| ranks.get(engine.name()).copied().unwrap_or((1, 0)));
+        ordered
+    }
+
+    /// Fetch readable page text for the first few results (raw content).
+    async fn attach_raw_content(&self, results: &mut [SearchResult]) {
+        const LIMIT: usize = 5;
+        let count = results.len().min(LIMIT);
+        if count == 0 {
+            return;
+        }
+        let texts = futures::future::join_all(
+            results
+                .iter()
+                .take(count)
+                .map(|result| self.page_text(&result.url)),
+        )
+        .await;
+        for (result, text) in results.iter_mut().take(count).zip(texts) {
+            result.raw_content = text;
+        }
+    }
+
+    /// The readable text of one page, `None` when it cannot be fetched.
+    async fn page_text(&self, url: &str) -> Option<String> {
+        let request = crate::engine::EngineRequest::get(url)
+            .header("Accept", "text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
+        let response = self
+            .network
+            .fetch(request, Duration::from_secs(4), None)
+            .await
+            .ok()?;
+        let html = response.html().ok()?;
+        let text = crate::content::main_text(&html);
+        if text.is_empty() { None } else { Some(text) }
     }
 
     /// Engine statistics for `/stats`.
     pub fn engine_snapshots(&self) -> Vec<EngineSnapshot> {
         self.states.snapshot()
     }
+}
+
+/// Reject a parsed response that looks fabricated or unrelated.
+///
+/// Upstream SearXNG issue #6358: a blocked upstream can answer with HTTP 200
+/// and placeholder content that still parses. Dropping such an engine is
+/// better than poisoning the merged result set.
+fn check_quality(
+    engine: &str,
+    query: &crate::query::Query,
+    items: Vec<crate::engine::EngineItem>,
+) -> Result<Vec<crate::engine::EngineItem>, FailureKind> {
+    if let Some(suspicion) = crate::quality::inspect(query, &items) {
+        tracing::warn!(
+            %engine,
+            reason = suspicion.reason(),
+            "discarding a suspicious engine response"
+        );
+        return Err(FailureKind::Suspicious);
+    }
+    Ok(items)
 }
 
 /// `[{"answer": "..."}]`, the shape upstream uses for answers.
@@ -466,8 +646,21 @@ fn failure_kind_from_error_type(error_type: &str) -> FailureKind {
         "too many requests" => FailureKind::TooManyRequests,
         "http error" => FailureKind::Http,
         "parsing error" => FailureKind::Parse,
+        "suspicious response" => FailureKind::Suspicious,
         _ => FailureKind::Other,
     }
+}
+
+/// How long an engine may run, given the whole-search deadline.
+///
+/// The engine's own timeout is the ceiling; the search deadline may cut it short.
+/// Returns `None` when the deadline has already passed (do not run at all).
+fn engine_budget(engine_timeout: Duration, deadline: Instant, now: Instant) -> Option<Duration> {
+    let remaining = deadline.saturating_duration_since(now);
+    if remaining.is_zero() {
+        return None;
+    }
+    Some(engine_timeout.min(remaining))
 }
 
 #[cfg(test)]
@@ -588,6 +781,40 @@ mod orchestration_tests {
             .map(|engine| engine.name().to_string())
             .collect();
         assert_eq!(selected, vec!["image engine".to_string()]);
+    }
+
+    /// The engine's own timeout is the ceiling when the deadline is far away.
+    #[test]
+    fn engine_budget_uses_the_engine_timeout_when_the_deadline_is_far() {
+        let now = Instant::now();
+        let budget = engine_budget(Duration::from_secs(4), now + Duration::from_secs(30), now);
+        assert_eq!(budget, Some(Duration::from_secs(4)));
+    }
+
+    /// The search deadline cuts a slow engine short, so one slow engine cannot
+    /// hold the whole request open.
+    #[test]
+    fn engine_budget_is_cut_by_the_search_deadline() {
+        let now = Instant::now();
+        let budget = engine_budget(
+            Duration::from_secs(20),
+            now + Duration::from_millis(300),
+            now,
+        );
+        assert_eq!(budget, Some(Duration::from_millis(300)));
+    }
+
+    /// A request whose deadline has already passed must not start engines at all.
+    /// Before this, a short `timeout_limit` was applied to every engine, so engines
+    /// that had already answered in time were also reported as timeouts and their
+    /// results were dropped (measured: a 45 ms engine failed under a 100 ms limit).
+    #[test]
+    fn engine_budget_is_none_after_the_deadline() {
+        let now = Instant::now();
+        assert_eq!(
+            engine_budget(Duration::from_secs(4), now, now + Duration::from_millis(1)),
+            None
+        );
     }
 
     #[tokio::test]

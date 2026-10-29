@@ -72,6 +72,25 @@ curl 'http://127.0.0.1:8888/search?q=%21wikipedia+rust&format=json'   # Wikipedi
 curl 'http://127.0.0.1:8888/search?q=%21github+tokio&format=json'      # GitHub のみ
 ```
 
+### AI エージェント向けの絞り込み
+
+LLM のツール呼び出しでは、返す件数と本文の有無を指定できます。SearXNG にはない追加パラメータです（省略時は今までどおりの動作）。
+
+| パラメータ | 意味 | 実測（`q=rust async`） |
+| :--- | :--- | ---: |
+| `max_results=5` | 上位 N 件だけ返す（1〜200） | 60 KB → **4.6 KB**（-92%） |
+| `include_domains=github.com` | このドメインとサブドメインだけに絞る | — |
+| `exclude_domains=example.com` | このドメインを除外する | — |
+| `include_raw_content=1` | 上位 5 件のページ本文を `raw_content` に入れる | +16 KB / +3.5 秒 |
+| `strategy=staged` | 少数のエンジンから順に開始し、十分な結果で打ち切る（既定は parallel） | 3.0 秒 → **0.84 秒**（結果 123 → 55 件） |
+
+```bash
+# エージェントの検索ツールとして使う例
+curl 'http://127.0.0.1:8888/search?q=rust+async&format=json&max_results=5'
+curl 'http://127.0.0.1:8888/search?q=llm&format=json&max_results=5&include_domains=arxiv.org'
+curl 'http://127.0.0.1:8888/search?q=tokio&format=json&max_results=2&include_raw_content=1'
+```
+
 ## 対応している検索サイト
 
 SearXNG が標準で用意している **226 種類すべて**を移植済みです（352 の設定エントリ）。

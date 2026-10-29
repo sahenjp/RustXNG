@@ -9,7 +9,8 @@ use std::sync::Arc;
 use std::time::Duration;
 
 use crate::engine::util::*;
-use crate::engine::xpath::{Node, XPath};
+use crate::engine::xml::{XmlDocument, looks_like_xml};
+use crate::engine::xpath::{Node, XPath, XmlNode};
 use crate::engine::{
     Engine, EngineDefaults, EngineError, EngineItem, EngineMeta, EngineRequest, EngineResponse,
 };
@@ -177,7 +178,27 @@ impl Engine for XPathEngine {
         response: &EngineResponse,
         _query: &Query,
     ) -> Result<Vec<EngineItem>, EngineError> {
-        let html = parse_html(&response.text());
+        let body = response.text();
+        // RSS/RDF feeds (JVN, JPCERT/CC, IPA) are XML. Running them through
+        // the HTML parser loses the text of <link> — a void element in HTML —
+        // which silently turned every result's URL empty and produced 0 items.
+        // See `crate::engine::xml` for the diagnosis and the tree it builds.
+        if looks_like_xml(&body, response.header("content-type")) {
+            if let Some(document) = XmlDocument::parse(&body) {
+                return Ok(self.parse_xml(&document));
+            }
+            // Declared XML but not well-formed: fall through to the HTML
+            // parser rather than reporting a parse error, so a slightly broken
+            // feed still yields whatever an HTML scrape can find.
+        }
+        Ok(self.parse_html(&body))
+    }
+}
+
+impl XPathEngine {
+    /// The HTML path: unchanged behaviour for every CSS/XPath scraped engine.
+    fn parse_html(&self, body: &str) -> Vec<EngineItem> {
+        let html = parse_html(body);
         let base = origin_of(&self.search_url);
         let mut items = Vec::new();
 
@@ -233,7 +254,62 @@ impl Engine for XPathEngine {
                 }
             }
         }
-        Ok(items)
+        items
+    }
+
+    /// The XML path: same field extraction, XML node set instead of HTML.
+    fn parse_xml(&self, document: &XmlDocument) -> Vec<EngineItem> {
+        let base = origin_of(&self.search_url);
+        let mut items = Vec::new();
+
+        let containers: Vec<XmlNode<'_>> = match &self.results_xpath {
+            Some(expression) => expression.select_xml(document),
+            None => document.roots.iter().map(XmlNode::Element).collect(),
+        };
+
+        for container in containers {
+            let XmlNode::Element(element) = container else {
+                continue;
+            };
+            let evaluate = |expression: &Option<XPath>| -> Option<String> {
+                let expression = expression.as_ref()?;
+                expression
+                    .select_xml_in(element)
+                    .into_iter()
+                    .map(|node| node.text())
+                    .find(|text| !text.is_empty())
+            };
+            let Some(url) = evaluate(&self.url_xpath).map(|url| {
+                let with_prefix = format!("{}{}", self.url_prefix, url);
+                absolute_url(&with_prefix, &base).unwrap_or(with_prefix)
+            }) else {
+                continue;
+            };
+            let title = evaluate(&self.title_xpath)
+                .or_else(|| Some(XmlNode::Element(element).text()))
+                .unwrap_or_default();
+            if title.is_empty() || url.is_empty() {
+                continue;
+            }
+            let content = evaluate(&self.content_xpath).unwrap_or_default();
+            let mut builder = ResultBuilder::new(url, title).content(content);
+            if let Some(thumbnail) = evaluate(&self.thumbnail_xpath) {
+                if let Some(thumbnail) = absolute_url(&thumbnail, &base) {
+                    builder = builder.thumbnail(thumbnail);
+                }
+            }
+            items.push(builder.build());
+        }
+
+        if let Some(expression) = &self.suggestion_xpath {
+            for node in expression.select_xml(document) {
+                let suggestion = node.text();
+                if !suggestion.is_empty() {
+                    items.push(EngineItem::Suggestion(suggestion));
+                }
+            }
+        }
+        items
     }
 }
 
@@ -327,5 +403,133 @@ mod tests {
             EngineItem::Result(result) => assert_eq!(result.url, "https://example.com/x"),
             _ => panic!("expected a result"),
         }
+    }
+
+    /// An RSS 1.0 / RDF feed shaped like `https://jvn.jp/rss/jvn.rdf`.
+    const RDF_FIXTURE: &str = r#"<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns="http://purl.org/rss/1.0/"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:dc="http://purl.org/dc/elements/1.1/">
+ <channel rdf:about="https://jvn.jp/">
+  <title>JVN RSS Feed</title>
+ </channel>
+ <item rdf:about="https://jvn.jp/jp/JVN51223238/">
+  <title>GROWI vulnerability</title>
+  <link>https://jvn.jp/jp/JVN51223238/</link>
+  <description>desc one</description>
+  <dc:date>2026-10-27T15:00:00+09:00</dc:date>
+ </item>
+ <item rdf:about="https://jvn.jp/vu/JVNVU97400824/">
+  <title>Brotli out-of-bounds write</title>
+  <link>https://jvn.jp/vu/JVNVU97400824/</link>
+  <description>desc two</description>
+ </item>
+</rdf:RDF>"#;
+
+    /// An `xpath` engine configured for the RDF feed above.
+    fn rss_engine() -> Arc<XPathEngine> {
+        let mut config = EngineConfig::new("jvn-rss", "xpath", "jvn", &["general"]);
+        config.search_url = Some("https://jvn.jp/rss/jvn.rdf".into());
+        config
+            .extra
+            .insert("results_xpath".into(), toml::Value::String("//item".into()));
+        config
+            .extra
+            .insert("url_xpath".into(), toml::Value::String("./link".into()));
+        config
+            .extra
+            .insert("title_xpath".into(), toml::Value::String("./title".into()));
+        config.extra.insert(
+            "content_xpath".into(),
+            toml::Value::String("./description".into()),
+        );
+        XPathEngine::from_config(&config).unwrap()
+    }
+
+    #[test]
+    fn parses_an_rss_rdf_feed() {
+        // The feed is XML, so the XML path must be taken.
+        let response = EngineResponse::new(200, "https://jvn.jp/", RDF_FIXTURE.as_bytes().to_vec());
+        let query = Query::parse("x", &EngineRegistry::default(), &[]);
+        let items = rss_engine().parse(&response, &query).unwrap();
+        assert_eq!(items.len(), 2, "both feed items must survive");
+        match &items[0] {
+            EngineItem::Result(result) => {
+                // <link> keeps its text: this is exactly what the HTML parser lost.
+                assert_eq!(result.url, "https://jvn.jp/jp/JVN51223238/");
+                assert_eq!(result.title, "GROWI vulnerability");
+                assert_eq!(result.content, "desc one");
+            }
+            _ => panic!("expected a result"),
+        }
+        match &items[1] {
+            EngineItem::Result(result) => {
+                assert_eq!(result.url, "https://jvn.jp/vu/JVNVU97400824/");
+            }
+            _ => panic!("expected a result"),
+        }
+    }
+
+    #[test]
+    fn the_html_fixture_still_takes_the_html_path() {
+        // Guard the regression this change could cause: a page that is not XML
+        // must keep using the HTML parser and keep producing the same results.
+        let response = EngineResponse::new(200, "https://lobste.rs/", FIXTURE.as_bytes().to_vec());
+        let query = Query::parse("rust", &EngineRegistry::default(), &[]);
+        assert_eq!(engine().parse(&response, &query).unwrap().len(), 2);
+    }
+
+    #[test]
+    fn a_declared_xml_response_that_is_not_well_formed_falls_back_to_html() {
+        // A broken feed must not become a silent 0: the HTML parser still runs.
+        let broken = r#"<?xml version="1.0"?><rdf:RDF><item><link>https://x/"></rdf:RDF>"#;
+        let mut config = EngineConfig::new("feed", "xpath", "f", &["general"]);
+        config.search_url = Some("https://example.com/feed".into());
+        config
+            .extra
+            .insert("results_xpath".into(), toml::Value::String("//item".into()));
+        config
+            .extra
+            .insert("url_xpath".into(), toml::Value::String(".//a/@href".into()));
+        config
+            .extra
+            .insert("title_xpath".into(), toml::Value::String(".//a".into()));
+        let engine = XPathEngine::from_config(&config).unwrap();
+        let body = broken.replace("https://x/", "<a href=\"https://x/\">t</a>");
+        let response = EngineResponse::new(200, "https://example.com/feed", body.into_bytes());
+        let query = Query::parse("x", &EngineRegistry::default(), &[]);
+        // No panic and no parse error: the HTML path handled it.
+        let items = engine.parse(&response, &query).unwrap();
+        assert_eq!(items.len(), 1);
+    }
+
+    #[test]
+    fn the_document_root_can_be_named_in_a_path() {
+        use crate::engine::xml::XmlDocument;
+        use crate::engine::xpath::XPath;
+        let document = XmlDocument::parse(RDF_FIXTURE).unwrap();
+        // The root is rdf:RDF, so //RDF//item must reach the items by local name,
+        // and //rdf:RDF//item by the qualified name. Before the root was made a
+        // candidate of the first step, both returned 0.
+        for expression in ["//item", "//RDF//item", "//rdf:RDF//item", "/RDF//item"] {
+            let items = XPath::parse(expression).unwrap().select_xml(&document);
+            assert_eq!(items.len(), 2, "{expression} must reach both items");
+        }
+    }
+
+    #[test]
+    fn prefixed_elements_and_attributes_are_reachable() {
+        use crate::engine::xml::XmlDocument;
+        use crate::engine::xpath::XPath;
+        let document = XmlDocument::parse(RDF_FIXTURE).unwrap();
+        // dc:date by qualified name.
+        let dates = XPath::parse("//dc:date").unwrap().select_xml(&document);
+        assert_eq!(dates.len(), 1);
+        assert_eq!(dates[0].text(), "2026-10-27T15:00:00+09:00");
+        // rdf:about as an attribute predicate.
+        let items = XPath::parse("//item[@rdf:about]")
+            .unwrap()
+            .select_xml(&document);
+        assert_eq!(items.len(), 2);
     }
 }

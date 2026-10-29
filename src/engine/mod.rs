@@ -6,6 +6,7 @@
 
 pub mod state;
 pub mod util;
+pub mod xml;
 pub mod xpath;
 
 use std::collections::{BTreeMap, HashMap};
@@ -176,6 +177,8 @@ pub enum FailureKind {
     TooManyRequests,
     Http,
     Parse,
+    /// The response parsed, but looks fabricated or unrelated (see \`quality\`).
+    Suspicious,
     Other,
 }
 
@@ -189,6 +192,7 @@ impl FailureKind {
             Self::TooManyRequests => "too many requests",
             Self::Http => "http error",
             Self::Parse => "parsing error",
+            Self::Suspicious => "suspicious response",
             Self::Other => "unexpected error",
         }
     }

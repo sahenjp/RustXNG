@@ -14,6 +14,8 @@
 
 use scraper::{ElementRef, Html, Selector};
 
+use crate::engine::xml::{XmlDocument, XmlElement};
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 enum Predicate {
     Exists(String),
@@ -207,6 +209,150 @@ impl XPath {
                 })
                 .collect(),
         }
+    }
+    /// Select matching values from an XML document (see crate::engine::xml).
+    ///
+    /// Mirrors XPath::select step for step, but walks the XML tree instead of an
+    /// HTML tree. Kept as a parallel implementation rather than a generic one
+    /// because the HTML path must not change behaviour at all: every CSS-scraped
+    /// engine depends on it.
+    pub fn select_xml<'a>(&self, document: &'a XmlDocument) -> Vec<XmlNode<'a>> {
+        let mut nodes: Vec<&XmlElement> = document.roots.iter().collect();
+        for (index, step) in self.steps.iter().enumerate() {
+            let mut matched: Vec<&XmlElement> = Vec::new();
+            for element in &nodes {
+                // The document root is itself a candidate for the first step.
+                // XPath's //RDF matches the document element, but the loop below
+                // only ever looks at children/descendants, so without this the
+                // root would be unreachable and //RDF//item could never match.
+                if index == 0 && step.matches_xml(element) {
+                    matched.push(element);
+                }
+                let candidates: Vec<&XmlElement> = if step.descendant {
+                    element.descendants()
+                } else {
+                    element.children.iter().collect()
+                };
+                matched.extend(candidates.into_iter().filter(|c| step.matches_xml(c)));
+            }
+            nodes = step.apply_positions_xml(matched);
+        }
+        self.terminal_map_xml(nodes)
+    }
+
+    /// Select matching values from an XML subtree (per-result fields).
+    pub fn select_xml_in<'a>(&self, context: &'a XmlElement) -> Vec<XmlNode<'a>> {
+        let mut nodes: Vec<&XmlElement> = vec![context];
+        for step in &self.steps {
+            let mut matched: Vec<&XmlElement> = Vec::new();
+            for element in &nodes {
+                let candidates: Vec<&XmlElement> = if step.descendant {
+                    element.descendants()
+                } else {
+                    element.children.iter().collect()
+                };
+                matched.extend(candidates.into_iter().filter(|c| step.matches_xml(c)));
+            }
+            nodes = step.apply_positions_xml(matched);
+        }
+        self.terminal_map_xml(nodes)
+    }
+
+    fn terminal_map_xml<'a>(&self, nodes: Vec<&'a XmlElement>) -> Vec<XmlNode<'a>> {
+        match &self.terminal {
+            Terminal::Element => nodes.into_iter().map(XmlNode::Element).collect(),
+            Terminal::Text => nodes
+                .into_iter()
+                .map(|element| XmlNode::Text(crate::engine::util::clean(&xml_text(element))))
+                .collect(),
+            Terminal::Attribute(name) => nodes
+                .into_iter()
+                .filter_map(|element| {
+                    element
+                        .attr(name)
+                        .map(|v| XmlNode::Text(v.trim().to_string()))
+                })
+                .collect(),
+        }
+    }
+}
+
+/// A value selected from an XML document.
+#[derive(Debug, Clone)]
+pub enum XmlNode<'a> {
+    Element(&'a XmlElement),
+    Text(String),
+}
+
+impl<'a> XmlNode<'a> {
+    /// The text of the node, collapsed like Node::text.
+    pub fn text(&self) -> String {
+        match self {
+            Self::Element(element) => crate::engine::util::clean(&xml_text(element)),
+            Self::Text(text) => crate::engine::util::clean(text),
+        }
+    }
+}
+
+/// The text of an element and its descendants, joined with spaces.
+///
+/// Mirrors scraper's ElementRef::text so an XML result and an HTML result
+/// produce the same string for the same markup.
+fn xml_text(element: &XmlElement) -> String {
+    let mut parts: Vec<String> = Vec::new();
+    if !element.text.trim().is_empty() {
+        parts.push(element.text.clone());
+    }
+    for child in &element.children {
+        let text = xml_text(child);
+        if !text.trim().is_empty() {
+            parts.push(text);
+        }
+    }
+    parts.join(" ")
+}
+
+impl Step {
+    /// Positional predicates over an XML node set (see apply_positions).
+    fn apply_positions_xml<'a>(&self, matched: Vec<&'a XmlElement>) -> Vec<&'a XmlElement> {
+        let mut current = matched;
+        for predicate in &self.predicates {
+            match predicate {
+                Predicate::Position(index) => {
+                    current = if *index > 0 && *index <= current.len() {
+                        vec![current[*index - 1]]
+                    } else {
+                        Vec::new()
+                    };
+                }
+                Predicate::Last => {
+                    current = current.last().copied().map(|e| vec![e]).unwrap_or_default();
+                }
+                _ => {}
+            }
+        }
+        current
+    }
+
+    /// Whether an XML element matches this step.
+    ///
+    /// Tag matching is namespace tolerant (see XmlElement::matches_tag), so a
+    /// feed that puts its items in a default namespace still answers to //item.
+    fn matches_xml(&self, element: &XmlElement) -> bool {
+        if !element.matches_tag(&self.tag) {
+            return false;
+        }
+        self.predicates.iter().all(|predicate| match predicate {
+            Predicate::Exists(attribute) => element.attr(attribute).is_some(),
+            Predicate::Equals(attribute, expected) => {
+                element.attr(attribute) == Some(expected.as_str())
+            }
+            Predicate::Contains(attribute, needle) => element
+                .attr(attribute)
+                .map(|value| value.contains(needle.as_str()))
+                .unwrap_or(false),
+            Predicate::Position(_) | Predicate::Last => true,
+        })
     }
 }
 

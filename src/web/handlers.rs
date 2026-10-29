@@ -43,6 +43,16 @@ pub struct SearchParams {
     pub image_proxy: Option<String>,
     /// \`full=1\` returns the rich JSON with timings and counters.
     pub full: Option<String>,
+    /// Agent-facing extension: keep at most this many results.
+    pub max_results: Option<usize>,
+    /// Agent-facing extension: keep only these domains (comma separated).
+    pub include_domains: Option<String>,
+    /// Agent-facing extension: drop these domains (comma separated).
+    pub exclude_domains: Option<String>,
+    /// Agent-facing extension: fetch and return the page text of the top results.
+    pub include_raw_content: Option<String>,
+    /// Engine start strategy: "parallel" (default) or "staged".
+    pub strategy: Option<String>,
 }
 
 /// Parameters of `/autocompleter`.
@@ -215,6 +225,19 @@ async fn run_search(
         disabled_plugins,
         locale: query.locale.clone(),
         user,
+        max_results: params.max_results.map(|limit| limit.clamp(1, 200)),
+        include_domains: split_param(params.include_domains.as_deref()).unwrap_or_default(),
+        exclude_domains: split_param(params.exclude_domains.as_deref()).unwrap_or_default(),
+        include_raw_content: params
+            .include_raw_content
+            .as_deref()
+            .map(|value| matches!(value, "1" | "true" | "on" | "yes"))
+            .unwrap_or(false),
+        strategy: match params.strategy.as_deref() {
+            Some("staged") => crate::settings::SearchStrategy::Staged,
+            Some("parallel") => crate::settings::SearchStrategy::Parallel,
+            _ => settings.search.strategy,
+        },
     };
 
     let response = searcher.search(request).await;
