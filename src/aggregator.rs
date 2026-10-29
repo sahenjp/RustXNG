@@ -531,8 +531,8 @@ impl Searcher {
 
     /// Fetch readable page text for the first few results (raw content).
     async fn attach_raw_content(&self, results: &mut [SearchResult]) {
-        const LIMIT: usize = 5;
-        let count = results.len().min(LIMIT);
+        let limit = self.settings.search.raw_content_limit.max(1);
+        let count = results.len().min(limit);
         if count == 0 {
             return;
         }
@@ -554,7 +554,7 @@ impl Searcher {
             .header("Accept", "text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
         let response = self
             .network
-            .fetch(request, Duration::from_secs(4), None)
+            .fetch(request, Duration::from_secs(4), Some(&self.cache))
             .await
             .ok()?;
         let html = response.html().ok()?;

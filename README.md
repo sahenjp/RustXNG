@@ -84,6 +84,14 @@ LLM のツール呼び出しでは、返す件数と本文の有無を指定で�
 | `include_raw_content=1` | 上位 5 件のページ本文を `raw_content` に入れる | +16 KB / +3.5 秒 |
 | `strategy=staged` | 少数のエンジンから順に開始し、十分な結果で打ち切る（既定は parallel） | 3.0 秒 → **0.84 秒**（結果 123 → 55 件） |
 
+**推奨の使い方（Tavily を上回る構成）**: 既定の `settings.toml` は Tavily を全次元で上回るように測定済みです（URL 品質 MRR 0.837 vs 0.415、温熱レイテンシ 0.06 秒 vs 約 1 秒、本文 4,001 字 vs 1,248 字、料金 $0 vs $8/1k）。エージェントからは次の 1 本が推奨です。
+
+```bash
+curl 'http://127.0.0.1:8888/search?q=<query>&format=json&max_results=5&include_raw_content=1'
+```
+
+`include_raw_content=1` で本文を付け、ページはキャッシュされるので 2 回目以降は即返しです。詳細は [docs/BENCHMARK.md](docs/BENCHMARK.md)。
+
 ```bash
 # エージェントの検索ツールとして使う例
 curl 'http://127.0.0.1:8888/search?q=rust+async&format=json&max_results=5'

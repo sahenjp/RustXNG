@@ -36,7 +36,7 @@ SearXNG のパラメータと衝突しない名前で、LLM のツール呼び�
 | `max_results=N` | 並べ替え後の上位 N 件だけを返す（1〜200 に丸める） | `results` を切り詰め |
 | `include_domains=a.com,b.com` | URL のホストが指定ドメイン（サブドメイン含む）の結果だけを残す | 絞り込み |
 | `exclude_domains=a.com` | 指定ドメインの結果を落とす | 絞り込み |
-| `include_raw_content=1` | 上位 5 件のページ本文を取得して `raw_content` フィールドに入れる | 約 4,000 文字/件を追加 |
+| `include_raw_content=1` | 上位 `search.raw_content_limit` 件（既定 5）のページ本文を取得して `raw_content` フィールドに入れる | 約 4,000 文字/件を追加。ページはキャッシュされ 2 回目以降は即返し |
 | `strategy=staged` | エンジンを少数の段に分けて開始し、`search.staged_min_results` 件で打ち切る（既定は並列） | 応答時間は短縮、返る件数は減る |
 
 応答自体の検証も行います。パースは通るが内容が明らかに架空・プレースホルダ・クエリと無関係な応答（上流 issue #6358 の「静かなゴミ混入」）は、結果に混ぜずにエンジンをサスペンドし、`unresponsive_engines` に `Suspicious response` として出します。

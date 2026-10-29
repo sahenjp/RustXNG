@@ -1,0 +1,1145 @@
+{
+ "source": "http://127.0.0.1:8905",
+ "queries": [
+  {
+   "id": "en-tokio",
+   "query": "tokio rust async runtime",
+   "gold_url": "https://tokio.rs",
+   "results": [
+    {
+     "url": "http://tokio.rs/tokio/tutorial/async",
+     "title": "Async in depth | Tokio - An asynchronous Rust runtime",
+     "content": "At this point, we have completed a fairly comprehensive tour of asynchronous Rust and Tokio . Now we will dig deeper into Rust 's asynchronous runtime model. At the very beginning of the tutorial, we hinted that asynchronous Rust takes a unique approach. Now, we explain what that means. As a quick review, let's take a very basic asynchronous function. This is nothing new compared to what the tutorial has covered so far. We call the function and it returns some value. We call .await on that value. ...."
+    },
+    {
+     "url": "https://news.ycombinator.com/item?id=25520353",
+     "title": "Tokio 1.0 – async runtime for Rust | Hacker News",
+     "content": "I don't really get these modern async APIs. In languages like Javascript I thought they only made sense because JS interpreters are (historically) single-threaded, so you really have no choice but async to express some concepts. Fine. But in Rust you can just spawn threads, share data through channels or mutexes, use OS-provided async IO primitives to poll file descriptors and do event-driven programming etc... I tried looking into Tokio a little while ago and I found that it led to some incredi...."
+    },
+    {
+     "url": "http://tokio.rs/tokio/tutorial",
+     "title": "Tutorial | Tokio - An asynchronous Rust runtime",
+     "content": "Tokio is an asynchronous runtime for the Rust programming language. It provides the building blocks needed for writing networking applications. It gives t…"
+    },
+    {
+     "url": "https://ja.wikipedia.org/wiki/TOKIO",
+     "title": "TOKIO - Wikipedia",
+     "content": "長瀬は「TOKIOの楽曲は彼の演奏する音がないと全く形にならない」「僕らは23年間バンドでやってきましたから、やはり、一つ …"
+    },
+    {
+     "url": "http://tokio.rs/tokio/topics",
+     "title": "Topics | Tokio - An asynchronous Rust runtime",
+     "content": "Tokio is a runtime for writing reliable asynchronous applications with Rust. It provides async I/O, networking, scheduling, timers, and more."
+    },
+    {
+     "url": "https://tokio.rs/",
+     "title": "Tokio - An asynchronous Rust runtime",
+     "content": "Tokio is a runtime for writing reliable asynchronous applications with Rust. It provides async I/O, networking, scheduling, timers, and more."
+    },
+    {
+     "url": "https://en.wikipedia.org/?curid=68638997",
+     "title": "Tokio (software)",
+     "content": "and open-source software portal Tokio is a software library for the Rust programming language. It provides a runtime and functions that enable the use"
+    },
+    {
+     "url": "https://lib.rs/",
+     "title": "Lib.rs — home for Rust crates // Lib.rs",
+     "content": "jni cbindgen pyo3-async-runtimes inkwell pyo3-file glean-sym savefile-abi prebindgen-jni yog-inventory harn-kernel and 1781 more… Profiling Figure out the performance of your code"
+    },
+    {
+     "url": "http://docs.rs/tokio",
+     "title": "tokio - Rust",
+     "content": "A runtime for writing reliable network applications without compromising speed. Tokio is an event-driven, non-blocking I/O platform for writing asynchronous applications with the Rust programming language."
+    },
+    {
+     "url": "https://www.fujisawa-co.com/tokio/product/",
+     "title": "製品情報 - TOKIO",
+     "content": "デスク オフィスデスク一覧 人に、地球にやさしいTOKIOのブランド フジサワのオリジナルブランド「TOKIO」の製品は、人と地球 …"
+    }
+   ]
+  },
+  {
+   "id": "en-rust-book",
+   "query": "rust programming language book",
+   "gold_url": "https://doc.rust-lang.org/book",
+   "results": [
+    {
+     "url": "http://doc.rust-lang.org/book/",
+     "title": "The Rust Programming Language - The Rust Programming Language",
+     "content": "by Steve Klabnik, Carol Nichols, and Chris Krycho, with contributions from the Rust Community This version of the text assumes you’re using Rust 1.97.0 (released 2026-07-09) or later with edition = \"2024\" in the Cargo.toml file of all projects to configure them to use Rust 2024 Edition idioms. See the “Installation” section of Chapter 1 for instructions on installing or updating Rust , and see Appendix E for information on editions. The HTML format is available online at https://doc. rust -la...."
+    },
+    {
+     "url": "https://rust-lang.org/",
+     "title": "Rust Programming Language",
+     "content": "Rust A language empowering everyone to build reliable and efficient software. Why Rust? Performance Rust is blazingly fast and memory-efficient: with no r…"
+    },
+    {
+     "url": "https://rust-book.cs.brown.edu/",
+     "title": "What's Different About This Book ? - The Rust Programming Language",
+     "content": "This book is an experimental fork of The Rust Programming Language created by researchers at the Cognitive Engineering Lab at Brown University. If you’re curious, this page explains what makes this book different from the original TRPL book . But if you just want to get started learning Rust , then feel free to skip this page and come back later."
+    },
+    {
+     "url": "http://doc.rust-lang.org",
+     "title": "Learn Rust - Rust Programming Language",
+     "content": "Affectionately nicknamed “the book,” The Rust Programming Language will give you an overview of the language from first principles. You’ll build a few pro…"
+    },
+    {
+     "url": "https://en.wikipedia.org/?curid=29414838",
+     "title": "Rust (programming language)",
+     "content": "Rust is a general-purpose programming language that emphasizes performance, type safety, concurrency, and memory safety. Rust supports multiple programming"
+    },
+    {
+     "url": "https://openlibrary.org/works/OL34391195W",
+     "title": "Zero To Production In Rust",
+     "content": "by Luca Palmieri. First published in 2022. 1 editions."
+    },
+    {
+     "url": "https://longest.voyage/log/making-a-programming-language/",
+     "title": "Making a Programming Language – Longest Voyage",
+     "content": "Gallery Making a Programming Language March 26, 2022 ~5 min read In the last year or so, I’ve been going through a few books on compilers and programming languages. I highly"
+    },
+    {
+     "url": "https://books.google.nl/",
+     "title": "Google Books: Find, Preview, and Read Books Online.",
+     "content": "Doorzoek de meest uitgebreide index ter wereld van boeken met volledige tekst. Je bibliotheek · UitgeversOverPrivacyVoorwaardenHelp."
+    },
+    {
+     "url": "https://baike.baidu.com/item/Rust%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/60358927",
+     "title": "Rust程序设计-百度百科",
+     "content": "《Rust程序设计》是由美国系统程序员吉姆·布兰迪与贾森·奥伦多夫合著、李松峰翻译的技术专著，2020年由人民邮电出版社作为“图灵程序设计丛书”出版。该书于2023年9月出版了第2版，作者增加了..."
+    },
+    {
+     "url": "https://rust-lang.org/learn/",
+     "title": "Learn Rust - Rust Programming Language",
+     "content": "Affectionately nicknamed “the book ,” The Rust Programming Language will give you an overview of the language from first principles. You’ll build a few projects along the way, and by the end, you’ll have a solid grasp of the language ."
+    }
+   ]
+  },
+  {
+   "id": "en-asyncio",
+   "query": "python asyncio documentation",
+   "gold_url": "https://docs.python.org/3/library/asyncio",
+   "results": [
+    {
+     "url": "http://docs.python.org/3/library/asyncio.html",
+     "title": "asyncio — Asynchronous I/O — Python 3.13.1 documentation",
+     "content": "Hello World!: asyncio is a library to write concurrent code using the async/await syntax. asyncio is used as a foundation for multiple Python asynchronous frameworks that provide high-performance n..."
+    },
+    {
+     "url": "https://docs.python.org/3/library/asyncio-api-index.html",
+     "title": "High-level API Index — Python 3.15.2 documentation",
+     "content": "See also the documentation of asyncio synchronization primitives. Exceptions ¶ asyncio.CancelledError Raised when a Task is cancelled.See also Task.cancel(). asyncio...."
+    },
+    {
+     "url": "https://docs.python.org/3/howto/a-conceptual-overview-of-asyncio.html",
+     "title": "A conceptual overview of asyncio — Python 3.15.2 documentation",
+     "content": "Creating a task automatically schedules it for execution (by adding a callback to run it in the event loop’s to-do list, that is, collection of jobs). The recommended way to create tasks is via asyncio.create_task()."
+    },
+    {
+     "url": "http://docs.python.org/3.12/library/asyncio.html",
+     "title": "asyncio — Asynchronous I/O — Python 3.12.9 documentation",
+     "content": "Hello World!: asyncio is a library to write concurrent code using the async/await syntax. asyncio is used as a foundation for multiple Python asynchronous frameworks that provide high-performance n..."
+    },
+    {
+     "url": "https://realpython.com/async-io-python/",
+     "title": "Python 's asyncio : A Hands-On Walkthrough – Real Python",
+     "content": "Explore how Python asyncio works and when to use it. Follow hands-on examples to build efficient programs with coroutines and awaitable tasks."
+    },
+    {
+     "url": "https://docs.python.org/3/library/asyncio-dev.html",
+     "title": "Developing with asyncio — Python 3.15.2 documentation",
+     "content": "There is currently no way to schedule coroutines or callbacks directly from a different process (such as one started with multiprocessing). The Event loop methods section lists APIs that can read from pipes and watch file descriptors without blocking the event loop. In addition, asyncio’s Subprocess APIs provide a way to start a process and communicate with it from the event loop."
+    },
+    {
+     "url": "https://m.blog.csdn.net/m0_73656461/article/details/163923978",
+     "title": "Python asyncio 异步编程全套学习文档（零基础完整版）-CSDN博客",
+     "content": "本文档提供Python asyncio异步编程全套学习文档，包含前言、异步核心四大基础概念、串行VS并发、异步最大坑、类中的异步方法、异步并发限流、高频报错及解决方案、异步使用"
+    },
+    {
+     "url": "https://www.testmuai.com/blog/python-asyncio/",
+     "title": "Python Asyncio Tutorial: Async/Await Examples",
+     "content": "Python asyncio runs asynchronous code with coroutines, an event loop, and tasks. Learn async/await with runnable examples and where asyncio beats threads."
+    },
+    {
+     "url": "https://docs.python.org/3/library/asyncio-runner.html",
+     "title": "Runners",
+     "content": "本文档介绍了Python asyncio的runners模块，提供asyncio.run函数。该函数用于运行异步代码，管理事件循环、关闭执行器，并作为asyncio程序的主入口。"
+    },
+    {
+     "url": "http://docs.python.org",
+     "title": "Python 3.15.2 documentation",
+     "content": "The official Python documentation."
+    }
+   ]
+  },
+  {
+   "id": "en-pg-json",
+   "query": "postgresql json functions",
+   "gold_url": "https://www.postgresql.org/docs/current/functions-json",
+   "results": [
+    {
+     "url": "https://www.postgresql.org/",
+     "title": "PostgreSQL : The world's most advanced open source database",
+     "content": "9.16. JSON Functions and Operators # 9.16.1. Processing and Creating JSON Data 9.16.2. The SQL/ JSON Path Language 9.16.3. SQL/ JSON Query Functions …"
+    },
+    {
+     "url": "https://www.datacamp.com/doc/postgresql/category/json-functions",
+     "title": "PostgreSQL JSON Functions",
+     "content": "Modern applications often deal with flexible, nested, and semi-structured data. From user preferences to API responses, the JSON format has become a go-to standard for handling such cases. Thankfully, PostgreSQL offers first-class support for JSON , allowing you to store, query, and transform JSON data directly in your database. In this overview, we’ll explore what PostgreSQL JSON functions are, why they’re useful, and how they’re applied in real-world projects. PostgreSQL supports two type...."
+    },
+    {
+     "url": "https://lwn.net/Articles/459647/",
+     "title": "PostgreSQL and the SQL standards process [LWN.net]",
+     "content": "/ Subscribe / Register PostgreSQL and the SQL standards process September 21, 2011 This article was contributed by Nathan Willis Open source and free software projects often encou"
+    },
+    {
+     "url": "https://www.tigerdata.com/learn/how-to-query-jsonb-in-postgresql",
+     "title": "How to Query JSONB in PostgreSQL",
+     "content": "Learn how to query JSON in PostgreSQL using various operators along with JSONB functions. A practical guide for PostgreSQL and TimescaleDB ..."
+    },
+    {
+     "url": "https://www.postgresql.org/download/",
+     "title": "PostgreSQL : Downloads",
+     "content": "PostgreSQL is available for download as ready-to-use packages or installers for various platforms, as well as a source code archive if …"
+    },
+    {
+     "url": "https://hevodata.com/learn/postgresql-json-functions/",
+     "title": "PostgreSQL JSON Functions and Operators | Hevo",
+     "content": "Prerequisites PostgreSQL must be installed appropriately & working efficiently. Basic knowledge of JSON data, including its types & usage. What are Postg…"
+    },
+    {
+     "url": "https://nlnet.nl/project/current.html",
+     "title": "NLnet; Current projects",
+     "content": "Column Encryption for PostgreSQL CryptPad Auth Improvements Better user management, 2FA and SSO for CryptPad CryptPad Scalable Server Improve the architecture of CryptPad CurveFor"
+    },
+    {
+     "url": "https://www.incodom.kr/PostgreSQL/JSON_Functions_and_Operators",
+     "title": "PostgreSQL / JSON Functions and Operators - 인코덤, 생물정보 전문위키",
+     "content": "PostgreSQL / JSON Types에서 JSON 데이터 타입으로 컬럼을 만들고 데이터를 저장하고 조회했다. 조금 더 자세하고 편리하게 질의하기 위해 JSON Functions 를 사용한다. 자주 쓰는 Function 은 Operator라는 연산자를 통하여 간편하게 조회할 수 있다. 9.2 버전 이후로 JSON Function 과 Operators가 새롭..."
+    },
+    {
+     "url": "https://pgse.jp/postgresql/",
+     "title": "【完全入門】 PostgreSQL とは何か？現場で本当に役立つ使い方 ...",
+     "content": "Jun 3, 2026 · その中でも、近年ますます存在感を増しているのが PostgreSQL（ポストグレスキューエル） です。 私自身、エンジ …"
+    },
+    {
+     "url": "http://www.postgresql.org/docs/current/functions-json.html",
+     "title": "PostgreSQL: Documentation: 16: 9.16. JSON Functions and Operators",
+     "content": "The comparison operators follow the ordering rules for B-tree operations outlined in Section 8.14.4. See also Section 9.21 for the aggregate function json_agg which aggregates record values as JSON, the aggregate function json_object_agg which aggregates pairs of values into a JSON object, and their jsonb equivalents, jsonb_agg and jsonb_object_agg."
+    }
+   ]
+  },
+  {
+   "id": "en-attention",
+   "query": "attention is all you need arxiv",
+   "gold_url": "https://arxiv.org/abs/1706.03762",
+   "results": [
+    {
+     "url": "https://en.wikipedia.org/wiki/Attention_Is_All_You_Need",
+     "title": "Attention Is All You Need",
+     "content": "\"Attention is All you Need\" (PDF). In I. Guyon and U. Von Luxburg and S. Bengio and H. Wallach and R. Fergus and S. Vishwanathan and R. Garnett (ed.). 31st Conference on Neural Information Processing Systems (NIPS). Advances in Neural Information Processing Systems. Vol. 30. Curran Associates, Inc. arXiv..."
+    },
+    {
+     "url": "https://arxiv.org/pdf/1706.03762",
+     "title": "arXiv :1706.03762v7 [cs.CL] 2 Aug 2023",
+     "content": "An attention function can be described as mapping a query and a set of key-value pairs to an output, where the query, keys, values, and output are all vectors."
+    },
+    {
+     "url": "http://dhushara.com/",
+     "title": "Dhushara",
+     "content": "conscious attention, with a sub-conscious periphery, common to global neuronal workspace theories. SEC asserts that these phase modulations are homologous to the foundation concept"
+    },
+    {
+     "url": "http://arxiv.org/abs/1706.03762v3",
+     "title": "[1706.03762v3] Attention Is All You Need",
+     "content": "Abstract:The dominant sequence transduction models are based on complex recurrent or convolutional neural networks in an encoder-decoder configuration. T…"
+    },
+    {
+     "url": "https://alexalemi.com/",
+     "title": "alexalemi.com",
+     "content": "embeddings via graph attention [arxiv] [pdf] S Abu-El-Haija, B Perozzi, R Al-Rfou, AA Alemi 2018-12 NeurIPS Building better graph representations. GILBO: one metric to measure the"
+    },
+    {
+     "url": "https://www.alphaxiv.org/abs/1706.03762",
+     "title": "Attention Is All You Need",
+     "content": "A self-attention layer uses a constant number of sequential operations across sequence positions, while a recurrent layer needs a number that grows with ..."
+    },
+    {
+     "url": "https://arxiv.org/html/1706.03762v7",
+     "title": "Attention Is All You Need",
+     "content": "An attention function can be described as mapping a query and a set of key-value pairs to an output, where the query, keys, values, and output are all vectors. The output is computed as a weighted sum of the values, where the weight assigned to each value is computed by a compatibility function of the query with the corresponding key."
+    },
+    {
+     "url": "https://proceedings.neurips.cc/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf",
+     "title": "Attention Is All You Need - NeurIPS",
+     "content": "In this work we propose the Transformer, a model architecture eschewing recurrence and instead relying entirely on an attention …"
+    },
+    {
+     "url": "http://arxiv.org/abs/1706.03762v7",
+     "title": "[1706.03762v7] Attention Is All You Need",
+     "content": "Abstract:The dominant sequence transduction models are based on complex recurrent or convolutional neural networks in an encoder-decoder configuration. T…"
+    },
+    {
+     "url": "https://arxiv.org/abs/1706.03762",
+     "title": "[1706.03762] Attention Is All You Need - arXiv .org",
+     "content": "Abstract:The dominant sequence transduction models are based on complex recurrent or convolutional neural networks in an encoder-decoder configuration. T…"
+    }
+   ]
+  },
+  {
+   "id": "en-turing",
+   "query": "alan turing wikipedia",
+   "gold_url": "https://en.wikipedia.org/wiki/Alan_Turing",
+   "results": [
+    {
+     "url": "https://en.wikipedia.org/wiki/Alan_Turing",
+     "title": "Alan Turing",
+     "content": "Alan Mathison Turing (/ˈtjʊərɪŋ/; 23 June 1912 – 7 June 1954) was an English mathematician and logician widely regarded as the father of theoretical computer science. He formalised the concepts of algorithm and computation with the Turing machine, a model of a general-purpose computer, ..."
+    },
+    {
+     "url": "https://en.wikipedia.org/wiki/Alan_Turing_Memorial",
+     "title": "Alan Turing Memorial",
+     "content": "476722; -2.236028 The Alan Turing Memorial, situated in Sackville Gardens in Manchester, England, is a sculpture in memory of Alan Turing, a pioneer of modern"
+    },
+    {
+     "url": "https://milesmathis.com/updates.html",
+     "title": "updates",
+     "content": "Magnetic Resonance. Wikipedia is caught deleting text and diagrams in response to my papers again. NEW PAPER, added 6/5/25, A Load off my Mind. Galaxy collisions. TOPLISTED from 1"
+    },
+    {
+     "url": "http://plato.stanford.edu/entries/turing/",
+     "title": "Alan Turing (Stanford Encyclopedia of Philosophy)",
+     "content": "Alan Turing Alan Turing (1912–1954) never described himself as a philosopher, but his 1950 paper “Computing Machinery and Intelligence” is one of the mos…"
+    },
+    {
+     "url": "http://www.couperus.org/Apprentice/",
+     "title": "Couperus Reminiscences",
+     "content": "1960. Source: Wikipedia By the time I met him, I think Tommy was actually employed by Standard Telephones and Cables (a manufacturing company based in Harlow, usually refer"
+    },
+    {
+     "url": "https://simple.wikipedia.org/wiki/Alan_Turing",
+     "title": "Alan Turing - Simple English Wikipedia, the free encyclopedia",
+     "content": "Alan Mathison Turing (London, 23 June 1912 – Wilmslow, Cheshire, 7 June 1954) was an English mathematician and computer scientist. He is known as the father of computer science. He was born in Maida Vale, London. Turing was born in Maida Vale, London. His father came from a Scottish merchant ..."
+    },
+    {
+     "url": "https://blog.fosketts.net/tag/alan-turing/",
+     "title": "Alan Turing Archives - Stephen Foskett, Pack Rat",
+     "content": "Alan Turing Many of you have probably heard the name of Alan Turing, but most of those probably don’t appreciate the extent of his contributions. To say …"
+    },
+    {
+     "url": "http://philip.greenspun.com/business/internet-software-patents",
+     "title": "Internet Software Patents",
+     "content": "Anyone want to edit the wikipedia pages on software patents? http://en.wikipedia.org/wiki/Software_patents http://en.wikipedia.org/wiki/Software_patent_debate -- Tom Turner , Febr"
+    },
+    {
+     "url": "https://en.wikipedia.org/wiki/Legacy_of_Alan_Turing",
+     "title": "Legacy of Alan Turing - Wikipedia",
+     "content": "Alan Turing OBE FRS (/ˈtjʊərɪŋ/; 23 June 1912 – 7 June 1954) was an English mathematician, computer scientist, logician, cryptanalyst, philosopher, and theoretical biologist. He left an extensive legacy in mathematics, science, society and popular culture."
+    },
+    {
+     "url": "https://ko.wikipedia.org/wiki/%EC%9C%84%ED%82%A4%EB%B0%B1%EA%B3%BC:%EB%8C%80%EB%AC%B8",
+     "title": "앨런 튜링 - 위키백과 한국어",
+     "content": "앨런 매시슨 튜링 ( 영어: Alan Mathison Turing , 1912년 6월 23일 ~ 1954년 6월 7일)은 영국의 수학자, 컴퓨터 과학자, 논리학자, 암호학자, 철학자이며 이론 컴퓨터 과학의 선구적 인물이다. 알고리즘과 계산 개념을 튜링 기계라는 추상 모델을 통해 형식화함으로써 컴퓨터 과학의 발전에 지대한 공헌을 했으며, 오늘날 \"컴퓨터 과학의 아버지\"로서 널리 알려져 있다. 1950년..."
+    }
+   ]
+  },
+  {
+   "id": "en-rust-repo",
+   "query": "rust-lang rust github",
+   "gold_url": "https://github.com/rust-lang/rust",
+   "results": [
+    {
+     "url": "http://github.com/rust-lang/rust",
+     "title": "GitHub - rust-lang/rust: Empowering everyone to build reliable a…",
+     "content": "This is the main source code repository for Rust. It contains the compiler, standard library, and documentation. Performance: Fast and memory-efficient, suitable for critical services, embedded devices, and easily integrated with other languages."
+    },
+    {
+     "url": "https://github.com/rust-lang/reference",
+     "title": "rust-lang/reference: The Rust Reference",
+     "content": "This document is the primary reference for the Rust programming language. Contributor docs. See the Reference Developer Guide for information on contributing to ..."
+    },
+    {
+     "url": "https://github.com/rust-lang/rust/issues",
+     "title": "Issues · rust-lang/rust · GitHub",
+     "content": "You signed in with another tab or window. Reload to refresh your session.You signed out in another tab or window. Reload to refresh your session.You swit…"
+    },
+    {
+     "url": "http://github.com/rust-lang/book",
+     "title": "GitHub - rust-lang/book: The Rust Programming Language",
+     "content": "You signed in with another tab or window. Reload to refresh your session. You signed out in another tab or window. Reload to refresh your session. You swi…"
+    },
+    {
+     "url": "http://github.com/orgs/rust-lang/repositories",
+     "title": "rust-lang repositories · GitHub",
+     "content": "You signed in with another tab or window. Reload to refresh your session. You signed out in another tab or window. Reload to refresh your session. You swi…"
+    },
+    {
+     "url": "https://github.com/topics/rust",
+     "title": "rust · GitHub Topics · GitHub",
+     "content": "electron editor markdown rust app wiki notes table rust-language workspace whiteboard tableview rust-lang crdt knowledge-base notion miro notion-alternative"
+    },
+    {
+     "url": "https://github.com/rust-lang",
+     "title": "The Rust Programming Language · GitHub",
+     "content": "The Rust Programming Language has 248 repositories available. Follow their code on GitHub."
+    },
+    {
+     "url": "https://rustc-dev-guide.rust-lang.org/git.html",
+     "title": "Using Git - Rust Compiler Development Guide",
+     "content": "The Rust project uses Git to manage its source code. In order to contribute, you’ll need some familiarity with its features so that your changes can be incorporated into the compiler. The goal of this page is to cover some of the more common questions and problems new contributors face. Although some Git basics will be covered here, if you find that this is still a little too fast for you, it might make sense to first read some introductions to Git, such as the Beginner and Getting started sec...."
+    },
+    {
+     "url": "https://github.com/rust-lang/rustlings",
+     "title": "GitHub - rust-lang/rustlings: :crab: Small exercises to get you used to reading and writing Rust code! · GitHub",
+     "content": "Small exercises to get you used to reading and writing Rust code - Recommended in parallel to reading the official Rust book 📚️"
+    },
+    {
+     "url": "https://rust-lang.org/",
+     "title": "Rust Programming Language",
+     "content": "Rust is blazingly fast and memory-efficient: with no runtime or garbage collector, it can power performance-critical services, run on …"
+    }
+   ]
+  },
+  {
+   "id": "en-compose",
+   "query": "docker compose file reference",
+   "gold_url": "https://docs.docker.com/reference/compose-file",
+   "results": [
+    {
+     "url": "http://docs.docker.com/reference/compose-file/",
+     "title": "Compose file reference | Docker Docs",
+     "content": "Compose file reference The Compose Specification is the latest and recommended version of the Compose file format. It helps you define a Compose file whic…"
+    },
+    {
+     "url": "https://www.docker.com/",
+     "title": "Docker | Secure Sandboxes for AI Agents",
+     "content": "Oct 21, 2026 · Run AI agents and containers safely, anywhere. Docker gives builders trusted sandboxes, governance, and a secure …"
+    },
+    {
+     "url": "https://docs.docker.com/reference/compose-file/extension/",
+     "title": "Extensions | Docker Docs",
+     "content": "Extensions Extensions can be used to make your Compose file more efficient and easier to maintain. Use the prefix x- as a top-level element to modularize…"
+    },
+    {
+     "url": "https://openlibrary.org/works/OL34391195W",
+     "title": "Zero To Production In Rust",
+     "content": "by Luca Palmieri. First published in 2022. 1 editions."
+    },
+    {
+     "url": "https://jvns.ca/",
+     "title": "Julia Evans",
+     "content": "Nov 2017 What&#39;s a reference in Rust? Sep 2016 ★ Learning systems programming with Rust May 2016 A second try at using Rust Jan 2016 Calling C from Rust Jan 2016 ★ Why I ❤ Rust"
+    },
+    {
+     "url": "https://github.com/compose-spec/compose-spec/blob/master/spec.md",
+     "title": "compose-spec/spec.md at main",
+     "content": "The default path for a Compose file is compose.yaml (preferred) or compose.yml that is placed in the working directory. Compose also supports docker-compose."
+    },
+    {
+     "url": "https://www.okteto.com/docs/reference/docker-compose",
+     "title": "Docker Compose Reference | Okteto Documentation",
+     "content": "Okteto allows you to develop applications using docker - compose files"
+    },
+    {
+     "url": "https://qiita.com/Sicut_study/items/4f301d000ecee98e78c9",
+     "title": "Docker がわからない人へ。これ1本で0から学べる丁寧な Docker ...",
+     "content": "Jul 8, 2024 · Dockerは、コンテナ技術を利用してアプリケーションを効率的にデプロイ、スケール、および管理するためのプラット …"
+    },
+    {
+     "url": "https://immich.app/docker-compose-builder",
+     "title": "Docker Compose Builder | Immich",
+     "content": "Build a custom docker-compose.yml file for Immich."
+    },
+    {
+     "url": "https://docs.divio.com/reference/docker-docker-compose/",
+     "title": "The docker-compose.yml file | Divio Documentation",
+     "content": "To configure the orchestration, Docker Compose uses a docker-compose.yml file. It specifies what images are required, what ports they need to expose, whether they have access to the host filesystem, what commands should be run when they start up, and so on."
+    }
+   ]
+  },
+  {
+   "id": "en-numpy",
+   "query": "numpy indexing arrays",
+   "gold_url": "https://numpy.org/doc/stable/user/basics.indexing",
+   "results": [
+    {
+     "url": "https://numpy.org/doc/stable/user/basics.indexing.html",
+     "title": "Indexing on ndarrays — NumPy v2.5 Manual",
+     "content": "ndarrays can be indexed using the standard Python x[obj] syntax, where x is the array and obj the selection. There are different kinds of indexing available depending on obj : basic indexing , advanced indexing and field access. Most of the following examples show the use of indexing when referencing data in an array. The examples work just as well when assigning to an array. See Assigning values to indexed arrays for specific examples and explanations on how assignments work. Note that in Python...."
+    },
+    {
+     "url": "https://numpy.org/",
+     "title": "NumPy",
+     "content": "NumPy brings the computational power of languages like C and Fortran to Python, a language much easier to learn and use. With …"
+    },
+    {
+     "url": "https://www.datacamp.com/doc/numpy/array-indexing",
+     "title": "NumPy Array Indexing",
+     "content": "Learn the essentials of NumPy indexing with clear examples and detailed explanations. Enhance your data manipulation skills by understanding advanced indexing techniques in Python's powerful NumPy ..."
+    },
+    {
+     "url": "http://nim-by-example.github.io/arrays/",
+     "title": "Nim by Example - Arrays",
+     "content": "Alternate methods of indexing arrays are also allowed, the first type parameter is actually a range (just a value, as above, is syntactic sugar for 0..N-…"
+    },
+    {
+     "url": "https://openlibrary.org/works/OL19891648W",
+     "title": "NumPy Cookbook",
+     "content": "by Ivan Idris. First published in 2012. 3 editions."
+    },
+    {
+     "url": "https://www.programiz.com/python-programming/numpy/array-indexing",
+     "title": "Numpy Array Indexing (With Examples)",
+     "content": "In NumPy , each element in an array is associated with a number. The number is known as an array index. Let's see an example to demonstrate NumPy array indexing . In the above array, 5 is the 3rd element. However, its index is 2. This is because the array indexing starts from 0, that is, the first element of the array has index 0, the second element has index 1, and so on. Now, we'll see how we can access individual items from the array using the index number. We can use indices to access individu...."
+    },
+    {
+     "url": "https://www.geeksforgeeks.org/python/numpy-indexing/",
+     "title": "Numpy Array Indexing",
+     "content": "Array indexing in NumPy is used to access, select, and modify elements of an array. NumPy supports indexing for one-dimensional and multidimensional arrays , along with slicing, Boolean indexing, fancy indexing, and tools such as np.newaxis…"
+    },
+    {
+     "url": "https://www.tutorialspoint.com/numpy/numpy_indexing_and_slicing.htm",
+     "title": "NumPy - Indexing & Slicing",
+     "content": "Contents of ndarray object can be accessed and modified by indexing or slicing, just like Python's in-built container objects. NumPy Indexing is used to access or modify elements in an array."
+    },
+    {
+     "url": "https://quansight-labs.github.io/ndindex/indexing-guide/index.html",
+     "title": "Guide to NumPy Indexing - ndindex documentation",
+     "content": "This section is itself split into six subsections. First is a basic introduction to what a NumPy array is. Following this are pages for each of the remaining index types, the basic indices: tuples, ellipses, and newaxis; and the advanced indices: integer arrays and boolean arrays (i.e., masks)."
+    },
+    {
+     "url": "https://www.w3schools.com/python/numpy/numpy_array_indexing.asp",
+     "title": "NumPy Array Indexing",
+     "content": "You can access an array element by referring to its index number. The indexes in NumPy arrays start with 0, meaning that the first element has index 0, and the second has index 1 etc."
+    }
+   ]
+  },
+  {
+   "id": "en-serde",
+   "query": "serde rust crate serialization",
+   "gold_url": "https://serde.rs",
+   "results": [
+    {
+     "url": "https://serde.rs/",
+     "title": "Overview · Serde",
+     "content": "Serde is a framework for serializing and deserializing Rust data structures efficiently and generically. The Serde ecosystem consists of data structures that know how to serialize and deserialize themselves along with data formats that know how to serialize and deserialize other things. Serde provides the layer by which these two groups interact with each other, allowing any supported data structure to be serialized and deserialized using any supported data format. The following is a partial lis...."
+    },
+    {
+     "url": "https://en.wikipedia.org/wiki/Serialization",
+     "title": "Serialization",
+     "content": "of this class. Serde is the most widely used library, or crate, for serialization in Rust which provides the serde::Serialize and serde::Deserialize traits"
+    },
+    {
+     "url": "https://www.reddit.com/r/rust/comments/1audfxo/serde/",
+     "title": "Serde : r/rust",
+     "content": "When you want to serialize/deserialize some custom struct, you write serializer/deserializer that transforms between custom struct & serde data ..."
+    },
+    {
+     "url": "https://docs.serde.rs/",
+     "title": "serde - Rust",
+     "content": "Serde ... Serde is a framework for serializing and deserializing Rust data structures efficiently and generically. The Serde ecosystem consists of data structures that know how to serialize and deserialize themselves along with data formats that know how to serialize and deserialize other things. Serde provides the layer by which these two groups interact with each other, allowing any supported data structure to be serialized and deserialized using any supported data format. See the Serde websit...."
+    },
+    {
+     "url": "https://burntsushi.net/csv/",
+     "title": "Rust and CSV parsing - Andrew Gallant's Blog",
+     "content": "The new CSV library comes with a csv-core crate , which can parse CSV data without Rust ’s standard library and is predominantly responsible for the performance improvements."
+    },
+    {
+     "url": "https://zenn.dev/sileader/articles/c16929968e00e9",
+     "title": "serde に入門しよう！ - Zenn",
+     "content": "Oct 18, 2025 · serdeとは？ serdeはRust向けのシリアライゼーションライブラリです。 serialize + deserializeでser + de、合わせ …"
+    },
+    {
+     "url": "https://en.wikipedia.org/wiki/Outline_of_the_Rust_programming_language",
+     "title": "Outline of the Rust programming language",
+     "content": "package manager Crates.io – official Rust package registry Rocket – web framework focused on type safety Serde – framework for serialization and deserialization"
+    },
+    {
+     "url": "https://docs.rs/serde_core",
+     "title": "serde_core - Rust",
+     "content": "Serde is a framework for serializing and deserializing Rust data structures efficiently and generically. The serde_core crate contains Serde's trait ..."
+    },
+    {
+     "url": "https://codeberg.org/jplatte/serde_html_form",
+     "title": "jplatte/serde_html_form: Rust crate for (de-) serialization of…",
+     "content": "Serde_html_form - Rust crate for (de-) serialization of `application/x-www-form-urlencoded` data."
+    },
+    {
+     "url": "https://crates.io/crates/serde",
+     "title": "serde - crates.io: Rust Package Registry",
+     "content": "Serde is a framework for serializing and deserializing Rust data structures efficiently and generically."
+    }
+   ]
+  },
+  {
+   "id": "en-kernel",
+   "query": "linux kernel documentation scheduler",
+   "gold_url": "https://docs.kernel.org/scheduler",
+   "results": [
+    {
+     "url": "https://static.lwn.net/kerneldoc/scheduler/index.html",
+     "title": "Scheduler — The Linux Kernel documentation",
+     "content": "The Linux Kernel. 6.13.0-rc2. Quick search. Contents. Development process · Submitting patches · Code of conduct · Maintainer handbook · All development-process ..."
+    },
+    {
+     "url": "https://www.sejuku.net/blog/4948",
+     "title": "Linux とは？できることやメリット・デメリットをやさしく解説 ...",
+     "content": "Dec 26, 2025 · 「Linuxとは」という疑問を抱える初心者向けに、基本からわかりやすく解説します。 Linuxを使ってできることや用語、メ …"
+    },
+    {
+     "url": "http://www.mjmwired.net/kernel/Documentation/scheduler/sched-stats.rst",
+     "title": "Linux Kernel Documentation / scheduler / sched-stats.rst",
+     "content": "==================== Scheduler Statistics ==================== Version 16 of schedstats changed the order of definitions within 'enum cpu_idle_type', whic…"
+    },
+    {
+     "url": "https://openlibrary.org/works/OL4795715W",
+     "title": "Unix System Administration Handbook",
+     "content": "by Evi Nemeth, Garth Snyder, Scott Seebass. First published in 1989. 12 editions."
+    },
+    {
+     "url": "https://sysprog21.github.io/lkmpg/",
+     "title": "The Linux Kernel Module Programming Guide",
+     "content": "Licensing and Module Documentation 4.5 Passing Command Line Arguments to a Module 4.6 Modules Spanning Multiple Files 4.7 Building modules for a precompiled kernel 2 Core"
+    },
+    {
+     "url": "https://www.datart.cz/novinky/technologie/operacni-system-linux",
+     "title": "Operační systém Linux | Datart",
+     "content": "Co je operační systém Linux a vyplatí se místo Windows? Poznejte výhody open-source, nové herní možnosti i nejlepší distribuce. Objevte svět bez virů!"
+    },
+    {
+     "url": "https://docs.kernel.org/scheduler/index.html",
+     "title": "Scheduler — The Linux Kernel documentation",
+     "content": "Unsorted documentation · Translations · Translations · Show Source · English · Chinese (Simplified) Spanish · Completions - “wait for completion” barrier APIs · membarrier() System Call · CPU Scheduler implementation hints for architecture specific code ·"
+    },
+    {
+     "url": "https://docs.kernel.org/scheduler/sched-ext.html",
+     "title": "Extensible Scheduler Class — The Linux Kernel documentation",
+     "content": "See the “Scheduling Cycle” section for a more detailed description of how a freshly woken up task gets on a CPU. include/linux/sched/ext.h defines the core data structures and constants, while the ops table (struct sched_ext_ops) is defined in kernel/sched/ext/internal.h."
+    },
+    {
+     "url": "https://www.kernel.org/doc/html/next",
+     "title": "The Linux Kernel documentation — The Linux Kernel documentation",
+     "content": "This is the top level of the kernel’s documentation tree. Kernel documentation, like the kernel itself, is very much a work in progress; that is especiall…"
+    },
+    {
+     "url": "https://ubuntu.com/real-time/docs/explanation/schedulers/",
+     "title": "Linux kernel schedulers - Real-time Ubuntu documentation",
+     "content": "Understand the different Linux kernel schedulers, including the priority-based scheduler designed for real-time applications."
+    }
+   ]
+  },
+  {
+   "id": "en-mdn-array",
+   "query": "mdn javascript array",
+   "gold_url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
+   "results": [
+    {
+     "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
+     "title": "Array - JavaScript | MDN",
+     "content": "The Array object, as with arrays in other programming languages, enables storing a collection of multiple items under a single variable name, and has members for performing common array operations."
+    },
+    {
+     "url": "http://datatables.net/ref/core/type/array",
+     "title": "array",
+     "content": "JavaScript Array type."
+    },
+    {
+     "url": "https://www.alm.website/blog/",
+     "title": "Athena&#39;s blog - Athena&#39;s Site",
+     "content": "It is possible to use JavaScript to send DELETE, PUT, and PATCH requests, but this obviously only works if JavaScript is enabled. Note 1 from 2025-03-20 Published on 2025-03-20 Ma"
+    },
+    {
+     "url": "https://developer.mozilla.org/",
+     "title": "MDN Web Docs",
+     "content": "The MDN Web Docs site provides information about Open Web technologies including HTML, CSS, and APIs for both Web sites and progressive web apps."
+    },
+    {
+     "url": "https://developer.mozilla.org/ko/",
+     "title": "parseInt()",
+     "content": "This page was translated from English by the community. Learn more and join the MDN Web Docs community. View in English Always switch to English"
+    },
+    {
+     "url": "https://en.wikipedia.org/wiki/JavaScript",
+     "title": "JavaScript",
+     "content": "JavaScript\". tc39.es. Retrieved 25 April 2026. \"JavaScript technologies overview - JavaScript | MDN\". MDN Web Docs. 27 October 2025. Retrieved 25 April"
+    },
+    {
+     "url": "https://calcish.com/blog/",
+     "title": "Calcish Blog",
+     "content": "thousands of pages of JavaScript help, describing the functions, methods, and features, including the ones that are available in the standard ECMAScript and the ones that are spec"
+    },
+    {
+     "url": "https://www.mozilla.org/nl/about/legal/terms/mdn-plus/",
+     "title": "Servicevoorwaarden MDN Plus - Mozilla",
+     "content": "MDN Plus is een abonnementsservice die premium functionaliteit verzorgt, waaronder MDN offline, collecties, thema's en updates. (de Service). Lees deze ..."
+    },
+    {
+     "url": "https://stackoverflow.com/questions",
+     "title": "javascript - Generating random result from array",
+     "content": "I am trying to generate a random result from array using JavaScript. My goal is, when the user clicks the button, I want to grab a random result from array named 'favorites'. It only works once the..."
+    },
+    {
+     "url": "https://en.wikipedia.org/wiki/Talk:JavaScript",
+     "title": "Talk: JavaScript - Wikipedia",
+     "content": "Miller, F. P., Vandome, A. F., & McBrewster, J. (2009), JSON: Computer programming, human-readable medium, data structure, associative array , Douglas Crockford, Internet media type, serialization, Ajax (programming), XML, JavaScript , Ecma…"
+    }
+   ]
+  },
+  {
+   "id": "ja-fuji",
+   "query": "富士山 wikipedia",
+   "gold_url": "https://ja.wikipedia.org/wiki/富士山",
+   "results": [
+    {
+     "url": "https://ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E5%B1%B1",
+     "title": "富士山 - Wikipedia",
+     "content": "富士山（ふじさん）は、日本の活火山である。標高は3775.56 m、山体の最高地点は3776.12 mで、日本最高峰（剣ヶ峰）の独立峰で、その優美な風貌は日本国外でも日本の象徴として広く知られている。山梨県（富士吉田市..."
+    },
+    {
+     "url": "http://orientals.web.fc2.com/Koreanoldtextbooken.html",
+     "title": "Korean textbooks during the period of Japanese rule",
+     "content": "mountains Mount Fuji (富士山) is in the center of Honshu and its height is 12,000 Shaku (= 3,776m). It does the form that laid a fan. There is always snow in the top of the mountain."
+    },
+    {
+     "url": "https://gan.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E5%B1%B1",
+     "title": "富士山",
+     "content": "富士山係日本嗰最高峰，係一座睡火山，亦有人話係活火山，日本人當佢做日本嗰象徵。 富士山位嘚日本中部嗰山野縣嗰，每年有好多人去旅行。 CommonsDelinker最後編輯於9 ..."
+    },
+    {
+     "url": "https://cs.wikipedia.org/wiki/Cura%C3%A7ao",
+     "title": "Curaçao – Wikipedie",
+     "content": "Curaçao ([kuʀaˈsaːo] IPA, v češtině běžně [kiraso], papiamentsky Kòrsou, nizozemsky Land Curaçao) je ostrov, který leží v jižní části Karibského moře přibližně 65 kilometrů od pobřeží Venezuely, patří do jižní části Závětrných Antil a je…"
+    },
+    {
+     "url": "https://www.fujisan-climb.jp/",
+     "title": "富士登山オフィシャルサイト",
+     "content": "本影片由**富士山官方登山網站（Mt. Fuji Climbing Official Website）**製作，介紹富士山非開放登山期間登山的危險性。 在非開放登 …"
+    },
+    {
+     "url": "https://shudo.net/diary/2023jun.html",
+     "title": "Shudo&#39;s Notes (2023/6)",
+     "content": "車両 車内 ソーラーアーク 名古屋駅 浜名湖 富士山 品川駅 直前 品川駅 睡眠 3時間半。 2023/6/21 (水) メモ: 令和4年度 未踏的な地方の若手人材発掘育成支援事業補助金 AKATSUKIプロジェクト 補助事業者募集サイト ( http://mitouteki.jp/ ) 地域ごとの未踏の、運営公募 (3月) サイト。 デスクワーク。 スラ"
+    },
+    {
+     "url": "https://zh.wikipedia.org/zh-hans/%E6%B2%B3%E5%8F%A3%E6%B9%96",
+     "title": "河口湖- 维基百科，自由的百科全书",
+     "content": "为富士五湖之一。富士箱根伊豆国立公园的一部分。是富士五湖中湖岸线最长、标高最低的一湖。面积在富士五湖中位于第二。最大水深与精进湖并列第三。湖中央有一名为鹈之岛（ ..."
+    },
+    {
+     "url": "https://cs.wikipedia.org/wiki/Logro%C3%B1o",
+     "title": "Logroño – Wikipedie",
+     "content": "Žije zde přibližně 152 tisíc obyvatel, což je přibližně polovina celého společenství; přes 10% tvoří imigranti především z Jižní Ameriky a Rumunska."
+    },
+    {
+     "url": "https://ja.wikipedia.org/wiki/Category:%E5%AF%8C%E5%A3%AB%E5%B1%B1",
+     "title": "Category:富士山 - Wikipedia",
+     "content": "ウィキメディア・コモンズには、富士山に関するカテゴリがあります。 · このカテゴリには下位カテゴリ 7 件が含まれており、そのうち以下の 7 件を表示しています。 · 郷土富士 （1サブカテゴリ、133ページ） · ..."
+    },
+    {
+     "url": "https://maidonanews.jp/article/14949705",
+     "title": "「みんな 富士山 が大好きすぎて、キレられてる」ウィキペディアの注意書きに「ワロタ」「気持....",
+     "content": "「 Wikipedia の『 富士山 』の記事，あまりにもみんなが 富士山 大好きすぎて写真を貼りまくるせいでキレられてるのが好きですわ！」というツイートに注目が集まりました。コメントとともに、ＷＥＢフリー百科事典「ウィキペディア」の『 富士山 』のページ…"
+    }
+   ]
+  },
+  {
+   "id": "ja-genji",
+   "query": "源氏物語 wikipedia",
+   "gold_url": "https://ja.wikipedia.org/wiki/源氏物語",
+   "results": [
+    {
+     "url": "https://ja.wikipedia.org/wiki/%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E%E5%90%84%E5%B8%96%E3%81%AE%E3%81%82%E3%82%89%E3%81%99%E3%81%98",
+     "title": "源氏物語各帖のあらすじ",
+     "content": "この項目では『源氏物語』の各帖のあらすじを簡潔に記載する。詳細は各帖の項目を参照。 · 登場人物プロフィールは「源氏物語の登場人物」を参照。 ... 帝（桐壺帝）はそれほど身分が高くない桐壺更衣を寵愛し皇..."
+    },
+    {
+     "url": "https://zh.wikipedia.org/zh-hant/%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E%E5%8D%83%E5%B9%B4%E7%B4%80_Genji",
+     "title": "源氏物語千年紀Genji",
+     "content": "《源氏物語千年紀Genji》是一部日本動畫作品，於2009年1月15日至3月26日在富士電視台noitaminA播出。 源氏物語千年紀Genji. 源氏物語千年紀Genji. The Tale of Genji:"
+    },
+    {
+     "url": "https://cs.wikipedia.org/wiki/Eduard_Cup%C3%A1k",
+     "title": "Eduard Cupák – Wikipedie",
+     "content": "Eduard Cupák (10. března 1932 Brno – 23. června 1996 Praha) byl český filmový a divadelní herec, rozhlasový umělec a dabér."
+    },
+    {
+     "url": "https://ja.wikipedia.org/wiki/%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E",
+     "title": "源氏物語 - Wikipedia",
+     "content": "『源氏物語』（げんじものがたり、）は、平安時代中期に成立した日本の長編物語、小説。全54帖、文献初出は1008年（寛弘五年）、平安末期に「源氏物語絵巻」として絵画化された。作者とされる紫式部は平安中期に..."
+    },
+    {
+     "url": "https://ja.wikipedia.org/wiki/%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E%E3%81%AE%E7%99%BB%E5%A0%B4%E4%BA%BA%E7%89%A9",
+     "title": "源氏物語の登場人物",
+     "content": "源氏物語の登場人物（げんじものがたりのとうじょうじんぶつ）は、『源氏物語』に登場する、架空の人物の一覧である。 · 基本的に登場順であるが、一部は血縁関係でまとめてある。物語詳細は「源氏物語各帖のあ..."
+    },
+    {
+     "url": "https://mysterious-world.fandom.com/zh/wiki/%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E?variant=zh-hant",
+     "title": "源氏物語| 神秘世界维基 - Mysterious world Wiki",
+     "content": "日本女作家紫式部筆下寫實小説《源氏物語》中，頗具特色的“生魂”、“死靈”作祟描寫，即御靈信仰，為讀者展現了日本平安時代人們對“靈”的一種信仰。"
+    },
+    {
+     "url": "https://www.aozora.gr.jp/cards/000052/card362.html",
+     "title": "図書カード：No.362 - 아오조라문고",
+     "content": "平安時代中期、11世紀の始め頃、紫式部によって創作された長編小説。日本文学に多大な影響を与えただけではなく、英訳もされ、海外でも広く読まれている。現代語訳として、與謝野晶子の他、窪田空穂、谷崎潤一郎、五十嵐力、円地文子のものがある。最近では、瀬戸内寂聴の訳した作品が刊行され話題になった。"
+    },
+    {
+     "url": "https://cs.wikipedia.org/wiki/Pirah%C3%A3",
+     "title": "Pirahã – Wikipedie",
+     "content": "Pirahã (také pirahá, pirahán, pirarrã; v jazyce samotném xapaitíiso) je jazyk, kterým mluví amazonské lovecko-sběračské etnikum Pirahã, žijící v okolí brazilské řeky Maici."
+    },
+    {
+     "url": "https://zh.wikipedia.org/zh-hant/%E5%8D%83%E5%B9%B4%E4%B9%8B%E6%81%8B_%E5%85%89%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AF%AD",
+     "title": "千年之戀光源氏物語",
+     "content": "故事發生在千年之前的越前國，紫氏部（吉永小百合飾）嫁給比自己大很多的丈夫，生下女兒賢子。丈夫婚後不久就去世，紫氏一直過著孀居的生活並開始創作小說《源氏物語》。"
+    },
+    {
+     "url": "https://caswc.co.kr/cate/product/farhc4fcstv505c.htm",
+     "title": "希少 教養フランス語 解釈篇 田辺貞之助著 白水社 1962年3版 仏文解釈 - 源氏物語 Wikipedia 人事コン....",
+     "content": "参考書 ; 希少 教養フランス語 解釈篇 田辺貞之助著 白水社 1962年3版 仏文解釈 - 源氏物語 Wikipedia 人事コンサルタントの読書・映画備忘録: は フランス文法大全"
+    }
+   ]
+  },
+  {
+   "id": "ja-tokyo-station",
+   "query": "東京駅 wikipedia",
+   "gold_url": "https://ja.wikipedia.org/wiki/東京駅",
+   "results": [
+    {
+     "url": "https://ja.wikipedia.org/wiki/東京駅",
+     "title": "東京駅 - Wikipedia",
+     "content": "東京駅（とうきょうえき）は、東京都千代田区丸の内一丁目にある、東日本旅客鉄道（JR東日本）・東海旅客鉄道（JR東海）・東京地下鉄（東京メトロ）の駅。JR東日本の在来線と新幹線各路線、JR東海の東海道新幹線、..."
+    },
+    {
+     "url": "http://www.tokyostationcity.com/learning/",
+     "title": "東京駅の概要・歴史",
+     "content": "所在地: 〒100-0005 東京都千代田区丸の内1丁目 ; 開業: 大正3年（1914年）12月20日 ; 総面積: 182,000㎡（東京ドーム3.9個分） ; 一日平均乗車人員: 約460,000人 ; 運転本数（ ..."
+    },
+    {
+     "url": "https://www.tokyometro.jp/index.html",
+     "title": "副都心線/F | 路線・駅の情報",
+     "content": "影響区間：全線"
+    },
+    {
+     "url": "https://cs.wikipedia.org/wiki/V%C3%B5ru",
+     "title": "Võru – Wikipedie",
+     "content": "Võru (setucky Võro, německy Werro) je město ležící v jihovýchodním Estonsku u jezera Tamula. Je správním centrem kraje Võrumaa."
+    },
+    {
+     "url": "https://w.atwiki.jp/ekimerowiki/pages/8.html",
+     "title": "東京駅 - 首都圏駅メロwiki",
+     "content": "本Wikiは7月29日より移転いたしました。 詳細はトップページをご参照ください。 ... 主要ページ. ※「特定列車時刻表」「発車メロディ変更履歴」を除き、 ..."
+    },
+    {
+     "url": "https://timetables.jreast.co.jp/timetable/list0401.html",
+     "title": "時刻表 小山駅：JR東日本",
+     "content": ""
+    },
+    {
+     "url": "https://cs.wikipedia.org/wiki/Pi%C3%B1ata",
+     "title": "Piñata – Wikipedie",
+     "content": "Piñata je uzavřená nádoba buď keramická nebo papírová, obalená staniolem, také pestrobarevným papírem a různými třásněmi a rohy, jež dávají nádobě tvar připomínající hvězdici, resp."
+    },
+    {
+     "url": "https://ja.wikipedia.org/wiki/%E6%9D%B1%E4%BA%AC%E9%A7%85%E3%81%AE%E6%AD%B4%E5%8F%B2",
+     "title": "東京駅の歴史 - Wikipedia",
+     "content": "東京駅の歴史（とうきょうえきのれきし）では、東日本旅客鉄道（JR東日本）・東海旅客鉄道（JR東海）・東京地下鉄（東京メトロ）東京駅の歴史を説明する。 · 日本の鉄道開業（1872年）から約12年後、東京中心部にお..."
+    },
+    {
+     "url": "https://commons.wikimedia.org/wiki/File:%E6%9D%B1%E4%BA%AC%E9%A7%85_Tokyo_Station_(8164152017).jpg",
+     "title": "File:東京駅 Tokyo Station (8164152017).jpg",
+     "content": "2012年10月6日、ドームの復元工事が行われ67年ぶりに創建当時の姿を取り戻した東京駅。 ... 東京駅に訪れたそうです。地下街はなかったけれども、当時から大変賑わっ ..."
+    },
+    {
+     "url": "https://railway.jr-central.co.jp/station-guide/shinkansen/tokyo/map.html",
+     "title": "東京駅 ｜ＪＲ東海",
+     "content": "運賃・経路・時刻表 · アクセス検索 · 各駅の時刻表 · 東海道・山陽新幹線の時刻表 · ＪＲ東海の路線図 · 空席情報 ..."
+    }
+   ]
+  },
+  {
+   "id": "ja-python",
+   "query": "python 入門 公式",
+   "gold_url": "https://docs.python.org/ja/3/tutorial",
+   "results": [
+    {
+     "url": "https://utokyo-ipp.github.io/",
+     "title": "Python プログラミング 入門 — Python プログラミング 入門 documentation",
+     "content": "2-1. 文字列 (string) ; 文字列とインデックス · 文字列とスライス · 空文字列 · 文字列の検索 · ▲エスケープシーケンス · バックスラッシュの表示と入力 · 文字列の連結 · 文字列とメソッド · 文字列の比較演算 · 練習 · 初心者によくある誤解 — 変数と文字列の混乱 · 練習 · 練習の解答"
+    },
+    {
+     "url": "http://www.amazon.co.jp/o/ASIN/B07D6ZGH8W/gihyojp-22",
+     "title": "Amazon.co.jp: 3ステップでしっかり学ぶ Python 入門 eBook : 山田 祥寛, 山田 奈美: Kindl…",
+     "content": "You've subscribed to ! We will preorder your items within 24 hours of when they become available. When new books are released, we'll charge your default p…"
+    },
+    {
+     "url": "https://www.55188.com/thread-35623565-1-1.html",
+     "title": "【技术分析】Python数学公式编程小技巧：轻松上手，一看就会！",
+     "content": "本文主要介绍了Python数学公式编程在股市交易中的应用。首先强调了Python数学公式编程不是孤立的，需要结合具体的编程环境和工具来实现。"
+    },
+    {
+     "url": "https://www.python51.com/jc/131178.html",
+     "title": "python零基础入门第一讲函数入门",
+     "content": "函数不仅可以完成简单的输出，还可以接收参数和返回值，增加了函数的灵活性和通用性。就像是魔法师手中的法杖，轻松应对不同的情景，让代码变得更加强大。"
+    },
+    {
+     "url": "https://python.cz/",
+     "title": "Python v ČR",
+     "content": "PyLadies CZ - Česká větev mezinárodní iniciativy PyLadies. (Nejen) Prostřednictvím kurzů programování v Pythonu pomáháme ženám otevřít dveře do IT."
+    },
+    {
+     "url": "https://www.isc.meiji.ac.jp/~be00085/Python3/index.html",
+     "title": "Python入門",
+     "content": "このページでは，C言語をひと通り学習した人向けに，ざっと Python3 の文法の基礎を説明します． Python言語はインタプリタ言語であるため，ソーティングや数値計算などの基本的な処理アルゴリズムを記述・実行すると，同じ内容をC言語で記述した方が圧倒的に高速である． したがって，Pythonではすでに用意されている様々なパッケージ・ライブラリを順次組み合わせて，それをスクリプト的に実行するような書き方が一般的である．"
+    },
+    {
+     "url": "https://docs.qq.com/doc/DZXdIT2FxVHpIYmpk",
+     "title": "https://docs.qq.com/doc/DZXdIT2FxVHpIYmpk",
+     "content": "Er is geen informatie beschikbaar voor deze pagina."
+    },
+    {
+     "url": "https://matplotlib.org/",
+     "title": "here - Matplotlib",
+     "content": ""
+    },
+    {
+     "url": "https://www.knihydobrovsky.cz/e-kniha/python-421779448",
+     "title": "Python [eBook] - Rudolf Pecinovský | Knihy Dobrovský: E-knihy…",
+     "content": "Python je podle serveru Tiobe již déle než dva roky třetím nejpopulárnějším programovacím jazykem po jazycích C/C++ a Java. Jeho popularita stále sílí a ve světě vychází další a další učebnice Pythonu ."
+    },
+    {
+     "url": "https://www.python.jp/train/index.html",
+     "title": "ゼロからの Python入門 講座 - python .jp",
+     "content": "この Python入門 講座では、プログラミング経験の未経験者・初心者を対象に、ブラウザから Python を実行できるサービスGoogle Colaboratory(Colab)を使って、 Python の基礎をチュートリアル形式で解説します。 Colab は、Googl"
+    }
+   ]
+  },
+  {
+   "id": "ja-rust",
+   "query": "rust プログラミング言語 公式",
+   "gold_url": "https://www.rust-lang.org/ja",
+   "results": [
+    {
+     "url": "https://rust-lang.org/ja/",
+     "title": "Rust プログラミング言語",
+     "content": "パフォーマンス ; Rust は非常に高速でメモリ効率が高くランタイムやガベージコレクタがないため、パフォーマンス重視のサービスを実装できますし、組込み機器上で実行したり他の 言語 との調和も簡単にできます。"
+    },
+    {
+     "url": "https://gihyo.jp/book/2024/978-4-297-14192-9",
+     "title": "Rust で作る プログラミング言語 | 技術評論社",
+     "content": "コンピュータサイエンス、とくにプログラミング言語そのものやコンパイラについての素養を得たいと考えている人 · 他言語でのプログラミング経験があり、Rustの習得に興味のある人。とくに、学習のための題材を探..."
+    },
+    {
+     "url": "https://iwasiman.hatenablog.com/entry/20230110-rust-books",
+     "title": "【 Rust 】日本語で読める Rust 言語 の商業本まとめ(2023年4月)【おすすめ】 - Rのつく財団入り口",
+     "content": "機運高まる Rust 言語 に入門しよう ; Windows自体の開発に使われていることも判明、次期Android OSの開発 言語 にも採用、ついにLinuxでも採用される(かも)とのことで最近機運が高まっているMozilla 発の Rust 言語 。 このエントリでは商業本を分野別に、その中では発行日が新しい順にまとめてみました。第2版がある本の初版含め合計約25冊。そのうち2022年に出たのが計9冊、 【追記】...."
+    },
+    {
+     "url": "https://qiita.com/elipmoc101/items/3c8b6d8332a9019e578c",
+     "title": "プログラミング言語 Rust のススメ #C++ - Qiita",
+     "content": "導入 皆さんこんにちは。趣味で Rust を使ってコンパイラを作ってるらいパン粉です。 プログラミング言語 Rust の良さを雑にあっぴるしていきます。 では、早速cargo run！(このコマンドで Rust のプログラムが実行される) C,C のコードが出てくるので覚悟してくだ..."
+    },
+    {
+     "url": "https://staff.persol-xtech.co.jp/hatalabo/it_engineer/582.html",
+     "title": "Rust言語とは？「安全性」「並行処理」「処理速度」の観点から、できることや将来性・難易度を解説",
+     "content": "Rustは2006年から開発された比較的新しいプログラミング言語で、Microsoft(※1)も「CやC++に代わる最有力のプログラミング言語である」と発言するほど、一目置かれた新世代言語です。C++のような速度やメモリの安全性に配慮され、かつ並行処理にも適しているため、OSカーネル等のシステム作成に最適といわれています。"
+    },
+    {
+     "url": "https://rust-lang.org/ja/learn/",
+     "title": "Rustを学ぶ - Rustプログラミング言語",
+     "content": "「the book」としても親しまれているプログラミング言語Rustは、この言語の概観を基本原理から説明します。読み進める中で複数のプロジェクトを構築し、読み終わるまでにはこの言語の確かな理解が得られます。"
+    },
+    {
+     "url": "https://zenn.dev/mebiusbox/books/22d4c1ed9b0003",
+     "title": "Rust 入門",
+     "content": "プログラミング言語 Rust 入門です．なるべくわかりやすいように解説しました． 公式 ドキュメントを読んでみたけど，あまりよくわからなかったという人に向いているかもしれません． 誤字や間違いなどのご指摘は以下からコメントをお願いします． https://zenn.dev/mebius"
+    },
+    {
+     "url": "https://rust-jp.rs/",
+     "title": "rust-jp.rs",
+     "content": "本サイトでは Rust を使うにあたって役立つ情報を日本語で提供しています。 Rustは速度、安全性、並行性の3つのゴールにフォーカスしたプログラミング言語です。 日本語 ..."
+    },
+    {
+     "url": "https://ja.wikipedia.org/wiki/Rust_(%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E8%A8%80%E8%AA%9E)",
+     "title": "Rust (プログラミング言語) - Wikipedia",
+     "content": "Rust（ラスト）は、性能、メモリ安全性、安全な並行性を目指して設計されたマルチパラダイムのプログラミング言語である。C言語、C++に代わるシステムプログラミング言語を目指しており、構文的にはC++に似ているが..."
+    },
+    {
+     "url": "https://rust-lang.org/",
+     "title": "Rust Programming Language",
+     "content": "Rust is blazingly fast and memory-efficient: with no runtime or garbage collector, it can power performance-critical services, run on …"
+    }
+   ]
+  },
+  {
+   "id": "ja-jma",
+   "query": "気象庁 天気予報",
+   "gold_url": "https://www.jma.go.jp",
+   "results": [
+    {
+     "url": "https://www.jma.go.jp/jma/index.html",
+     "title": "気象庁 | 天気予報",
+     "content": "全国やご覧になりたい地方の向こう1週間の 天気予報 について表形式で確認できます。"
+    },
+    {
+     "url": "https://www.jma.go.jp/bosai/forecast/",
+     "title": "気象庁 | 天気予報",
+     "content": "全国やご覧になりたい地方の向こう1週間の天気予報について表形式で確認できます。"
+    },
+    {
+     "url": "https://www.weather.go.kr/w/index.do",
+     "title": "기상청 날씨 누리",
+     "content": "지역별 기온, 강수, 바람, 폭염, 태풍, 미세먼지 등 날씨 정보 제공."
+    },
+    {
+     "url": "https://www.jma.go.jp/bosai/weather_map/",
+     "title": "気象庁 | 天気図",
+     "content": "実況天気図、48時間先までの予報天気図をご覧いただけます。"
+    },
+    {
+     "url": "https://www.data.jma.go.jp/stats/etrn/",
+     "title": "過去の気象データ検索",
+     "content": "過去の気象データ検索 ... 最新の統計データにより、現在の気象状況をご覧頂けます。 週ごとの値等、気象データをカスタマイズしてダウンロードできます。"
+    },
+    {
+     "url": "https://www.data.jma.go.jp/multi/yoho/yoho_detail.html?code=270000&lang=jp",
+     "title": "天気予報:大阪府",
+     "content": "天気予報 : 大阪府 · 3日間の天気 · 週間天気. 2026/10/28 17:00 発表. 日付, 29日（木）, 30日（金 ..."
+    },
+    {
+     "url": "https://www.jma.go.jp/jma/kishou/know/yougo_hp/tenki.html",
+     "title": "天気",
+     "content": "気象庁では国内用として、次の15種類に分けているが、国際的には96種類が決められている。快晴、晴れ、薄曇り、曇り、煙霧、砂じん嵐、地ふぶき、霧、霧雨、雨、みぞれ、雪 ..."
+    },
+    {
+     "url": "https://www.jma.go.jp/bosai/map.html#contents=forecast",
+     "title": "気象庁｜統合地図ページ",
+     "content": "申し訳ございません。ページの読み込みに失敗しました。 通信状況によってはこのページが表示されることがありますので、その場合はリロードをお願いします。 · N o w L o a d i n g . ."
+    },
+    {
+     "url": "https://www.jma.go.jp/bosai/kaikotan/",
+     "title": "気象庁 | 今後の雨（降水短時間予報）",
+     "content": "[広告]"
+    },
+    {
+     "url": "https://tenki.jp/",
+     "title": "日本気象協会 tenki.jp / 全国の天気予報・地震・台風",
+     "content": "日本気象協会公式の天気予報専門メディアです。市区町村別のピンポイントな天気予報に加え、専門的な気象情報、地震・津波などの防災情報を提供します。気象予報士が ..."
+    }
+   ]
+  },
+  {
+   "id": "ja-ndl",
+   "query": "国立国会図書館 サーチ",
+   "gold_url": "https://ndlsearch.ndl.go.jp",
+   "results": [
+    {
+     "url": "https://dl.ndl.go.jp/",
+     "title": "国立国会図書館デジタルコレクション",
+     "content": "国立国会図書館 デジタルコレクションは、 国立国会図書館 で収集・保存しているデジタル資料を検索・閲覧できるサービスです。"
+    },
+    {
+     "url": "https://ndlsearch.ndl.go.jp/",
+     "title": "国立国会図書館サーチ（NDLサーチ）",
+     "content": "国⽴国会図書館の蔵書（有形の資料）のうち、日本で出版された資料や外国で出版された日本語資料を検索し、書誌データをMARC、TSV等の形式でまとめて ..."
+    },
+    {
+     "url": "http://iss.ndl.go.jp/somoku/",
+     "title": "国立国会図書館総合目録ネットワーク | NDLサーチ | 国立国会図書館",
+     "content": ""
+    },
+    {
+     "url": "https://www.ndl.go.jp/",
+     "title": "일본 국립국회도서관",
+     "content": "国立国会図書館 の公式ウェブサイトです。当館は、国内外の資料・情報を広く収集・保存して、知識・文化の基盤となり、 国会 の活動を補佐するとともに、行政・司法及び国民に 図書館 サービスを提供しています。"
+    },
+    {
+     "url": "http://id.ndl.go.jp/bib/000001948535",
+     "title": "国立国会図書館所蔵貴重書解題 第14巻 (書簡の部 第3 藤田幽谷書簡) | NDLサーチ | 国立国会図書館",
+     "content": ""
+    },
+    {
+     "url": "https://www.lib.u-tokyo.ac.jp/en/library/contents/database/185",
+     "title": "国立国会図書館サーチ （NDLサーチ） | 東京大学附属図書館",
+     "content": "The two existing web services, \"NDL Online\" and \"NDL Search\" were integrated and renewed, and released as a new web service, \"NDL Search\", on January 5, 2024. You can search the collections and digital materials of the National Diet Library, request browsing and copying, and use a variety of ..."
+    },
+    {
+     "url": "https://ndlsearch.ndl.go.jp/bib/ndlcat",
+     "title": "国立国会図書館蔵書目録データ検索 | NDLサーチ | 国立国会図書館",
+     "content": ""
+    },
+    {
+     "url": "https://waseda-jp.libguides.com/az/47316916",
+     "title": "国立国会図書館サーチ ／ NDL Search - 早稲田大学図書館",
+     "content": "国立国会図書館オンライン（NDLオンライン）と国立国会図書館サーチ （NDLサーチ）が2024年1月に統合・リニューアルされた。国立国会図書館の所蔵資料やデジタル資料を検索 ..."
+    },
+    {
+     "url": "https://rnavi.ndl.go.jp/",
+     "title": "リ サーチ ・ナビ | 国立国会図書館",
+     "content": "調査のポイントや参考資料、専門室の情報、便利なデータベースの紹介、使えるWebサイトの案内など、調べものに役立つ情報を提供しています。"
+    },
+    {
+     "url": "https://jpsearch.go.jp/organization/ndl",
+     "title": "国立国会図書館 - ジャパンサーチ",
+     "content": "国立国会図書館 は、 国会 に属する唯一の 国立 の 図書館 です。国内外の資料・情報を広く収集・保存して、知識・文化の基盤となり、 国会 の活動を補佐するとともに、行政・司法及び国民に 図書館 サービスを提供しています。"
+    }
+   ]
+  },
+  {
+   "id": "ja-tokyo-tourism",
+   "query": "東京 観光 公式",
+   "gold_url": "https://www.gotokyo.org",
+   "results": [
+    {
+     "url": "https://www.gotokyo.org/jp/index.html",
+     "title": "東京 の観光公式サイトGO TOKYO",
+     "content": "東京都オフィシャル観光サイト。東京の観光ルート、有名スポット、食事、クルーズや船・ボートの楽しみ方、運河や川沿いのエリア紹介、宿泊先検索など、東京都全域の ..."
+    },
+    {
+     "url": "https://www.gotokyo.org/en/index.html",
+     "title": "Visit Tokyo - The Official Travel Guide of Tokyo, GO TOKYO",
+     "content": "東京 の 観光 案内所では、市内各地の便利な場所に、無料の多言語対応 観光 情報、地図、Wi-Fiを提供しています。"
+    },
+    {
+     "url": "https://www.metro.tokyo.lg.jp/kyoiku/kanko/kanko",
+     "title": "東京都の観光情報 - 都庁総合ホームページ",
+     "content": "... 観光産業振興の方向性や施策を掲載しています。 東京の観光公式サイト（GO TOKYO）. 東京の観光情報を、多言語でご案内しています。 9言語10種類（日 ..."
+    },
+    {
+     "url": "https://www.tcvb.or.jp/jp/project/hasshin/welcome/",
+     "title": "東京の観光公式ガイド「東京トラベルガイド」のご案内",
+     "content": "全言語、東京観光デジタルパンフレットギャラリー（リンク）でオンライン閲覧も可能です。 2次元コードから、各言語別のトラベルガイドに ..."
+    },
+    {
+     "url": "https://travel.rakuten.co.jp/mytrip/ranking/spot-tokyo",
+     "title": "【2026年最新】 東京 観光おすすめスポット76選！名所 穴場 最新 ...",
+     "content": "宿・航空券・ツアー予約 · 東京観光の見どころスポットをエリア別にまとめてご紹介！東京のランドマークはもちろん、下町情緒が残る名所、おしゃれな最新スポットなど東京旅行や都内のデートで外せない観光スポ..."
+    },
+    {
+     "url": "https://tokyotouristinfo.com/",
+     "title": "東京観光案内窓口",
+     "content": "東京都内の各観光案内窓口を検索できるサイトです。各案内窓口の周辺マップ、サービス内容のご案内、お知らせなどを取りまとめています。各観光案内窓口では多言語での ..."
+    },
+    {
+     "url": "https://www.hatobus.co.jp/",
+     "title": "東京観光 ベストセラー｜はとバス【 公式 】",
+     "content": "東京観光 バスツアー！浅草、 東京 スカイツリー、皇居、 東京 タワー、 東京 夜景など1日コースから、半日、短時間コースまで！オープンバスも人気です。"
+    },
+    {
+     "url": "https://www.youtube.com/",
+     "title": "府中 観光 協会 公式 チャンネル",
+     "content": "약 4.3만 명의 구독자를 보유한 東京 タワー 公式 チャンネル의 유튜브. 약 350 개의 동영상이 있습니다. 東京 タワーのオフィシャルチャンネルです！ 東京 タワーの現在の様子を配信するライブカメラをはじめ、 東京 タワーのイベント動画などを公開しています。"
+    },
+    {
+     "url": "https://www.tickets.gotokyo.org/jp/",
+     "title": "Tokyo Events and Tickets／ 東京 の 観光公式 サイトGO TOKYO",
+     "content": "歌舞伎鑑賞、相撲観戦、各種体験や公演等のチケット情報を掲載した 東京 都オフィシャル 観光 サイト。"
+    },
+    {
+     "url": "https://en.wikipedia.org/wiki/Tokyo",
+     "title": "Tokyo",
+     "content": "original on September 2, 2020. Retrieved July 13, 2024. 平成31年・令和元年東京都観光客数等実態調査|統計・調査|東京都産業労働局. Bureau of Industrial and Labor Affairs, Tokyo (in Japanese)"
+    }
+   ]
+  }
+ ]
+}

@@ -297,6 +297,9 @@ pub struct Search {
     pub staged_tier: usize,
     /// The staged strategy stops starting new tiers at this many results.
     pub staged_min_results: usize,
+    /// How many of the top results get their page text when the request asks
+    /// for raw content. Larger means richer answers, slower fetches.
+    pub raw_content_limit: usize,
 }
 
 /// Search execution strategy, upstream's default is "parallel".
@@ -334,6 +337,7 @@ impl Default for Search {
             strategy: SearchStrategy::Parallel,
             staged_tier: 8,
             staged_min_results: 10,
+            raw_content_limit: 5,
         }
     }
 }
