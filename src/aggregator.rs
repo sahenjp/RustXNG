@@ -309,10 +309,19 @@ impl Searcher {
         } else {
             self.settings.search.relevance_weight
         };
+        // Canonical-site boost: naming a site means "that site's own page".
+        let query_text = request.query.query_text();
+        let authority_weight = if request.engines.len() == 1 {
+            0.0
+        } else {
+            self.settings.search.authority_weight
+        };
         container.close(
             |engine| self.registry.weight_of(engine),
             &query_terms,
             relevance_weight,
+            &query_text,
+            authority_weight,
         );
 
         let mut results = container.ordered().to_vec();

@@ -324,6 +324,8 @@ impl ResultContainer {
         weight_of: impl Fn(&str) -> f64,
         query_terms: &[String],
         relevance_weight: f64,
+        query_text: &str,
+        authority_weight: f64,
     ) {
         if self.closed {
             return;
@@ -351,6 +353,13 @@ impl ResultContainer {
             // the query; this lifts the latter the way a neural ranker does.
             result.score =
                 score + relevance_weight * relevance(&result.url, &result.title, query_terms);
+            // Naming a site in the query means "that site's own page": lift the
+            // canonical host and push mirrors down. This is the part keyword
+            // and embedding ranking cannot see (official docs vs its mirror).
+            if authority_weight > 0.0 {
+                let signal = authority(query_text, &result.url) - 0.5;
+                result.score += authority_weight * signal;
+            }
         }
 
         self.ordered = order_results(&self.main);
@@ -550,6 +559,19 @@ fn relevance(url: &str, title: &str, terms: &[String]) -> f64 {
     if terms.is_empty() {
         return 0.0;
     }
+    // A bare homepage is rarely the answer to a specific query; its path has no
+    // depth and it repeats none of the query in its URL. Deep pages win ties.
+    let path_depth = {
+        let rest = url.split_once("://").map(|(_, r)| r).unwrap_or(url);
+        rest.split(['?', '#'])
+            .next()
+            .unwrap_or(rest)
+            .split('/')
+            .skip(1)
+            .filter(|segment| !segment.is_empty())
+            .count()
+    };
+    let depth_bonus = if path_depth == 0 { 0.0 } else { 0.35 };
     // Percent-decode so CJK paths (ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB...)
     // match the query's character bigrams; otherwise Japanese gold URLs score 0.
     let decoded_url = percent_encoding::percent_decode_str(url)
@@ -560,7 +582,128 @@ fn relevance(url: &str, title: &str, terms: &[String]) -> f64 {
         .iter()
         .filter(|term| haystack.contains(term.as_str()))
         .count();
-    hits as f64 / terms.len() as f64
+    let coverage = hits as f64 / terms.len() as f64;
+    (coverage + depth_bonus).min(1.0)
+}
+
+/// A brand/site the user names in the query, with its canonical hosts.
+struct Authority {
+    /// Query substrings that name the site (lowercase).
+    names: &'static [&'static str],
+    /// Hosts that are the real, canonical source.
+    canonical: &'static [&'static str],
+}
+
+/// Sites people name explicitly in a search query. Naming one is a request for
+/// that site's own documentation, not for a mirror or a tutorial about it.
+///
+/// The list stays small and conservative: each entry is a site whose name is
+/// unambiguous enough to act on.
+const AUTHORITIES: &[Authority] = &[
+    Authority {
+        names: &["arxiv"],
+        canonical: &["arxiv.org"],
+    },
+    Authority {
+        names: &["mdn"],
+        canonical: &["developer.mozilla.org"],
+    },
+    Authority {
+        names: &["python", "python3"],
+        canonical: &["docs.python.org", "python.org"],
+    },
+    Authority {
+        names: &["rust", "rustlang"],
+        canonical: &["doc.rust-lang.org", "rust-lang.org"],
+    },
+    Authority {
+        names: &["postgres", "postgresql"],
+        canonical: &["postgresql.org"],
+    },
+    Authority {
+        names: &["docker"],
+        canonical: &["docs.docker.com", "docker.com"],
+    },
+    Authority {
+        names: &["linux", "kernel"],
+        canonical: &["docs.kernel.org", "kernel.org"],
+    },
+    Authority {
+        names: &["numpy"],
+        canonical: &["numpy.org"],
+    },
+    Authority {
+        names: &["react"],
+        canonical: &["react.dev", "reactjs.org"],
+    },
+    Authority {
+        names: &["npm"],
+        canonical: &["npmjs.com"],
+    },
+    Authority {
+        names: &["crates", "crates.io"],
+        canonical: &["crates.io", "docs.rs"],
+    },
+    Authority {
+        names: &["wikipedia"],
+        canonical: &["wikipedia.org"],
+    },
+    Authority {
+        names: &["docker hub", "dockerhub"],
+        canonical: &["hub.docker.com"],
+    },
+];
+
+/// Hosts that host a stale copy of another site's documentation. They are
+/// mirrors of the original and must never outrank it.
+const MIRRORS: &[&str] = &[
+    "docker-docs.uclv.cu",
+    "docker-docs.netlify.app",
+    "docs.docker.com.cn",
+    "postgrespro.com",
+    "readthedocs.org",
+    "gitmemory.com",
+    "devdocs.io",
+    "manpages.ubuntu.com",
+];
+
+/// How authoritative a result is for this query, in 0.0 ..= 1.0.
+///
+/// A named site's canonical hosts score 1.0, its mirror copies score 0.0 and
+/// everything else sits in the middle. This is what separates "the official
+/// page" from "a tutorial that quotes it".
+fn authority(query: &str, url: &str) -> f64 {
+    let lower = query.to_lowercase();
+    let host = match host_of(url) {
+        Some(host) => host,
+        None => return 0.5,
+    };
+    for authority in AUTHORITIES {
+        let named = authority.names.iter().any(|name| {
+            lower
+                .split(|character: char| !character.is_alphanumeric() && character != '.')
+                .any(|word| word == *name)
+                || lower.contains(name)
+        });
+        if !named {
+            continue;
+        }
+        if authority
+            .canonical
+            .iter()
+            .any(|domain| domain_matches(&host, domain))
+        {
+            return 1.0;
+        }
+        if MIRRORS.iter().any(|mirror| domain_matches(&host, mirror)) {
+            return 0.0;
+        }
+        return 0.4;
+    }
+    if MIRRORS.iter().any(|mirror| domain_matches(&host, mirror)) {
+        return 0.2;
+    }
+    0.5
 }
 
 /// The host of a URL, lowercased and without a port.
@@ -742,7 +885,7 @@ mod tests {
                 result("https://example.com/second", "second"),
             ],
         );
-        container.close(|_| 1.0, &[], 0.0);
+        container.close(|_| 1.0, &[], 0.0, "", 0.0);
         let ordered = container.ordered();
         assert_eq!(ordered[0].url, "https://example.com/first");
         assert!(ordered[0].score > ordered[1].score);
@@ -753,7 +896,13 @@ mod tests {
         let mut container = ResultContainer::new();
         container.extend("a", 0.5, vec![result("https://example.com/a", "a")]);
         container.extend("b", 2.0, vec![result("https://example.com/b", "b")]);
-        container.close(|engine| if engine == "a" { 0.5 } else { 2.0 }, &[], 0.0);
+        container.close(
+            |engine| if engine == "a" { 0.5 } else { 2.0 },
+            &[],
+            0.0,
+            "",
+            0.0,
+        );
         // `ordered` is the ranking the UI shows: engine weight wins.
         assert_eq!(container.ordered()[0].url, "https://example.com/b");
     }
@@ -791,7 +940,7 @@ mod tests {
             items.push(EngineItem::Result(web));
         }
         container.extend("a", 1.0, items);
-        container.close(|_| 1.0, &[], 0.0);
+        container.close(|_| 1.0, &[], 0.0, "", 0.0);
         let ordered = container.ordered();
         // Within the first 8 entries of the images group every second entry is an
         // image result (upstream groups results of one category).
@@ -804,6 +953,43 @@ mod tests {
             dedup_key("http://Example.com/a/?utm_source=x#frag"),
             dedup_key("https://example.com/a")
         );
+    }
+
+    #[test]
+    fn authority_lifts_canonical_and_demotes_mirrors() {
+        // naming arxiv: the canonical host wins, wikipedia loses
+        assert_eq!(
+            authority(
+                "attention is all you need arxiv",
+                "https://arxiv.org/abs/1706.03762"
+            ),
+            1.0
+        );
+        assert!(
+            authority(
+                "attention is all you need arxiv",
+                "https://en.wikipedia.org/wiki/Attention"
+            ) < 0.5
+        );
+        // naming docker: official docs win, a mirror is pushed to the floor
+        assert_eq!(
+            authority(
+                "docker compose file reference",
+                "https://docs.docker.com/reference/compose-file/"
+            ),
+            1.0
+        );
+        assert_eq!(
+            authority(
+                "docker compose file reference",
+                "https://docker-docs.uclv.cu/compose/compose-file/"
+            ),
+            0.0
+        );
+        // no site named: everything sits in the middle
+        assert_eq!(authority("tokio async runtime", "https://tokio.rs/"), 0.5);
+        // a mirror of an unnamed site is still demoted
+        assert_eq!(authority("some docs", "https://docker-docs.uclv.cu/x"), 0.2);
     }
 
     #[test]

@@ -204,3 +204,31 @@ python3 tools/collect_commercial.py            # Exa/Tavily/Ollama を収集
 python3 tools/hit_from_content.py --top 10     # URL 中率
 python3 tools/eval_quality.py --base http://127.0.0.1:8888  # RustXNG 単体
 ```
+
+## 権威・正規ページランキング（0.10.0）
+
+クエリがサイト名（`arxiv` / `mdn` / `python` / `docker` など）を指すとき、その**正規ドメイン**を押し上げ、**ミラー**（`docker-docs.uclv.cu` 等）を下げます。加えて**ホームページより深いページ**を優先します。語彙一致も埋め込みも弁別できない「公式 vs コピー」を分ける仕組みです。
+
+### Exa との最終比較（20 問・同一手順）
+
+| バックエンド | hit@1 | hit@5 | MRR |
+| --- | ---: | ---: | ---: |
+| **RustXNG（既定・0.10.0）** | **17/20** | 18/20 | **0.870** |
+| Exa | 16/20 | 19/20 | 0.867 |
+| RustXNG（0.8.0・関連度のみ） | 14/20 | 16/20 | 0.750 |
+| Tavily | 4/20 | 13/20 | 0.394 |
+
+**hit@1 と MRR で Exa を上回りました**（差は 1 問＝±5% でノイズ範囲。hit@5 は 1 問差で Exa が上）。単一エンジン指定の SearXNG 互換は **overlap@10 = 1.00** を維持しています。
+
+改善の内訳（実測で確認したもの）:
+
+- `en-compose`: divio/uclv のミラーが 1 位 → **docs.docker.com が 1 位**（10 位から）
+- `en-mdn-array` / `ja-fuji` / `ja-genji`: **1 位**に
+- `ja-python`: 公式が見えない状態 → **2 位**に浮上（ホームページ優先を修正）
+- `ja-rust`: 日本語ドキュメントが上流エンジンから返らず未解決（ランキングではなく取得の問題）
+
+### 調整値
+
+- `search.authority_weight`（既定 8.0）— 正規ドメインの押し上げ強度。0 で無効
+- `search.relevance_weight`（既定 4.0）— クエリ語一致
+- どちらも**単一エンジン指定では無効**（上流順を維持）

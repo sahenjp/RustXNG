@@ -53,6 +53,11 @@ embedding_url = ""
 embedding_model = "BAAI/bge-small-en-v1.5"
 # コサイン類似度をスコアに足す強さ。高いほど意味検索の優先度が増す。
 embedding_weight = 2.5
+# クエリが指すサイト（arxiv / mdn / python / docker など）の正規ドメインを
+# 押し上げ、ミラー（docker-docs.uclv.cu 等）を下げる強さ。意味検索でも
+# 弁別できない「公式 vs コピー」を分ける。0 で無効。
+# 20 問ベンチで 8.0 が最良（MRR 0.870・hit@1 17/20 で Exa を上回る）。
+authority_weight = 8.0
 # 何件の上位結果を埋め込みで並べ替えるか
 embedding_topk = 25
 

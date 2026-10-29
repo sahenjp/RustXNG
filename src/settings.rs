@@ -345,6 +345,10 @@ pub struct Search {
     /// Empty disables semantic re-ranking.
     pub embedding_url: String,
     pub embedding_model: String,
+    /// How strongly canonical-site authority is blended into the ranking.
+    /// Naming a site (arxiv, mdn, python, ...) lifts its canonical host and
+    /// pushes its mirror copies down, which keywords and embeddings cannot see.
+    pub authority_weight: f64,
     /// How strongly the cosine similarity is blended into the ranking.
     pub embedding_weight: f64,
     /// How many of the top results are re-ranked by embedding similarity.
@@ -390,6 +394,7 @@ impl Default for Search {
             relevance_weight: 4.0,
             embedding_url: String::new(),
             embedding_model: "BAAI/bge-small-en-v1.5".into(),
+            authority_weight: 8.0,
             embedding_weight: 2.5,
             embedding_topk: 25,
         }
