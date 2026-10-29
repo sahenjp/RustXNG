@@ -4,7 +4,26 @@
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-10-29
+
+品質評価のハーネスと実測を追加したリリースです。
+
+### Added
+
+- `tools/eval_quality.py` と 20 問の評価セット（英語 12・日本語 8）。正解 URL が上位に来るかを hit@1 / hit@5 / MRR@10 で測り、レイテンシと応答サイズも記録する
+- `bench/quality-questions.json` と実測結果（`bench/quality-parallel.json` / `quality-staged.json` / `quality-searxng.json`）
+- [docs/BENCHMARK.md](docs/BENCHMARK.md) に SearXNG と商用 API（公開値）の比較表を追加
+
+### 実測
+
+- RustXNG parallel（既定）: hit@1 80%、hit@5 85%、MRR@10 0.837、中央値 929 ms、応答 7.6 KB
+- SearXNG 1.4.2: hit@1 60%、hit@5 85%、MRR@10 0.707、中央値 1,321 ms、応答 34.9 KB
+- RustXNG staged: hit@5 70%、MRR 0.574、2,004 ms（品質よりコールドスタートの待ち時間を優先する戦略）
+
+測定環境では上位エンジンの多くが IP ブロックされていたため、品質は下限値です。
+
 ## [0.5.0] - 2026-10-29
+
 
 前回の調査で挙がった改善を実装したリリースです。
 

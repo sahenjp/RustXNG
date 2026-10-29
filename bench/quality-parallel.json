@@ -1,0 +1,499 @@
+{
+  "base": "http://127.0.0.1:8905",
+  "params": {},
+  "questions": 20,
+  "hit@1": 16,
+  "hit@5": 17,
+  "mrr@10": 0.837,
+  "median_ms": 928.7,
+  "median_bytes": 7559,
+  "errors": 0,
+  "rows": [
+    {
+      "id": "en-tokio",
+      "lang": "en",
+      "query": "tokio rust async runtime",
+      "gold": [
+        "https://tokio.rs"
+      ],
+      "rank": 1,
+      "millis": 3005.153653997695,
+      "urls": [
+        "http://tokio.rs/tokio/tutorial/async",
+        "https://tokio.rs",
+        "http://tokio.rs/tokio/tutorial",
+        "https://news.ycombinator.com/item?id=25520353",
+        "https://ja.wikipedia.org/wiki/TOKIO",
+        "http://tokio.rs/tokio/topics",
+        "https://en.wikipedia.org/?curid=68638997",
+        "https://lib.rs/",
+        "https://rust-lang.github.io/async-book/part-guide/async-await.html",
+        "https://oneuptime.com/blog/post/2026-02-01-rust-tokio-async-runtime/view"
+      ],
+      "bytes": 6922,
+      "unresponsive": 28
+    },
+    {
+      "id": "en-rust-book",
+      "lang": "en",
+      "query": "rust programming language book",
+      "gold": [
+        "https://doc.rust-lang.org/book"
+      ],
+      "rank": 1,
+      "millis": 3001.7670870001893,
+      "urls": [
+        "http://doc.rust-lang.org/book/",
+        "https://rust-book.cs.brown.edu/",
+        "http://doc.rust-lang.org",
+        "https://openlibrary.org/works/OL34391195W",
+        "https://longest.voyage/log/making-a-programming-language/",
+        "https://books.google.nl/",
+        "https://www.megabooks.cz/p/14597916/rust-programming-language",
+        "https://doc.rust-lang.org/book/ch00-00-introduction.html",
+        "https://users.rust-lang.org/t/the-rust-programming-language-book/47535",
+        "https://rust-lang.org/learn/"
+      ],
+      "bytes": 7430,
+      "unresponsive": 34
+    },
+    {
+      "id": "en-asyncio",
+      "lang": "en",
+      "query": "python asyncio documentation",
+      "gold": [
+        "https://docs.python.org/3/library/asyncio"
+      ],
+      "rank": 1,
+      "millis": 874.257473013131,
+      "urls": [
+        "http://docs.python.org/3/library/asyncio.html",
+        "https://realpython.com/async-io-python/",
+        "https://docs.python.org/3/howto/a-conceptual-overview-of-asyncio.html",
+        "http://docs.python.org/3.12/library/asyncio.html",
+        "https://www.python.org/",
+        "http://docs.python.org",
+        "https://gunicorn.org/",
+        "https://docs.micropython.org/en/latest/library/asyncio.html",
+        "https://grpclib.readthedocs.io/",
+        "https://python-can.readthedocs.io/en/stable/asyncio.html"
+      ],
+      "bytes": 7692,
+      "unresponsive": 36
+    },
+    {
+      "id": "en-pg-json",
+      "lang": "en",
+      "query": "postgresql json functions",
+      "gold": [
+        "https://www.postgresql.org/docs/current/functions-json",
+        "https://www.postgresql.org/docs/current/datatype-json"
+      ],
+      "rank": 10,
+      "millis": 947.1126940043177,
+      "urls": [
+        "https://www.postgresql.org/",
+        "http://www.postgresql.org/docs/9.3/functions-json.html",
+        "https://www.datacamp.com/doc/postgresql/category/json-functions",
+        "http://www.postgresql.org/docs/9.4/functions-json.html",
+        "https://lwn.net/Articles/459647/",
+        "https://www.tigerdata.com/learn/how-to-query-jsonb-in-postgresql",
+        "https://www.postgresql.org/download/",
+        "https://nlnet.nl/project/current.html",
+        "https://www.incodom.kr/PostgreSQL/JSON_Functions_and_Operators",
+        "http://www.postgresql.org/docs/current/functions-json.html"
+      ],
+      "bytes": 7822,
+      "unresponsive": 36
+    },
+    {
+      "id": "en-attention",
+      "lang": "en",
+      "query": "attention is all you need arxiv",
+      "gold": [
+        "https://arxiv.org/abs/1706.03762"
+      ],
+      "rank": 1,
+      "millis": 3001.766094006598,
+      "urls": [
+        "https://arxiv.org/abs/1706.03762",
+        "https://papers.nips.cc/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf",
+        "http://arxiv.org/abs/1706.03762v2",
+        "https://hwaaaaanii.github.io/posts/Attention/",
+        "https://huggingface.co/",
+        "https://en.wikipedia.org/wiki/Attention_Is_All_You_Need",
+        "https://arxiv.org/pdf/1706.03762",
+        "http://dhushara.com/",
+        "http://arxiv.org/abs/1706.03762v3",
+        "https://alexalemi.com/"
+      ],
+      "bytes": 7808,
+      "unresponsive": 37
+    },
+    {
+      "id": "en-turing",
+      "lang": "en",
+      "query": "alan turing wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Alan_Turing"
+      ],
+      "rank": 1,
+      "millis": 1892.4728970014257,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Alan_Turing",
+        "https://simple.wikipedia.org/wiki/Alan_Turing",
+        "https://mypikpak.com/s/VOE4ryZZf0oFoJRMC4f4rqFEo1",
+        "https://en.wikipedia.org/wiki/Alan_Turing_Memorial",
+        "https://milesmathis.com/updates.html",
+        "https://cs.wikipedia.org/wiki/Alan_Turing",
+        "https://mypikpak.com/s/VO8wl-XpS4Hp6Tklcc3dljsFo1",
+        "http://plato.stanford.edu/entries/turing/",
+        "http://www.couperus.org/Apprentice/",
+        "https://ko.wikipedia.org/wiki/%EC%9C%84%ED%82%A4%EB%B0%B1%EA%B3%BC:%EB%8C%80%EB%AC%B8"
+      ],
+      "bytes": 7502,
+      "unresponsive": 37
+    },
+    {
+      "id": "en-rust-repo",
+      "lang": "en",
+      "query": "rust-lang rust github",
+      "gold": [
+        "https://github.com/rust-lang/rust"
+      ],
+      "rank": 1,
+      "millis": 3002.319366991287,
+      "urls": [
+        "http://github.com/rust-lang/rust",
+        "https://github.com/rust-lang/reference",
+        "http://github.com/rust-lang/book",
+        "https://github.com/topics/rust",
+        "https://github.com/rust-lang",
+        "https://rustc-dev-guide.rust-lang.org/git.html",
+        "https://github.com/rust-lang/rustlings",
+        "https://namu.wiki/w/%EB%82%98%EB%AC%B4%EC%9C%84%ED%82%A4:%EB%8C%80%EB%AC%B8",
+        "http://github.com/orgs/rust-lang/repositories",
+        "https://github.com/rust-lang/rust/pull/60900"
+      ],
+      "bytes": 8254,
+      "unresponsive": 37
+    },
+    {
+      "id": "en-compose",
+      "lang": "en",
+      "query": "docker compose file reference",
+      "gold": [
+        "https://docs.docker.com/reference/compose-file",
+        "https://docs.docker.com/compose/compose-file"
+      ],
+      "rank": 1,
+      "millis": 739.896093000425,
+      "urls": [
+        "http://docs.docker.com/reference/compose-file/",
+        "https://www.docker.com/",
+        "https://docs.docker.com/reference/compose-file/extension/",
+        "https://openlibrary.org/works/OL34391195W",
+        "https://jvns.ca/",
+        "https://www.okteto.com/docs/reference/docker-compose",
+        "https://www.docker.com/products/docker-desktop/",
+        "https://immich.app/docker-compose-builder",
+        "https://dataswamp.org/~solene/index-full.html",
+        "https://www.reddit.com/r/docker/comments/st8kfz/docker_compose_reference/"
+      ],
+      "bytes": 6242,
+      "unresponsive": 37
+    },
+    {
+      "id": "en-numpy",
+      "lang": "en",
+      "query": "numpy indexing arrays",
+      "gold": [
+        "https://numpy.org/doc/stable/user/basics.indexing"
+      ],
+      "rank": 1,
+      "millis": 820.6624710001051,
+      "urls": [
+        "https://numpy.org/doc/stable/user/basics.indexing.html",
+        "https://numpy.org/",
+        "http://nim-by-example.github.io/arrays/",
+        "https://openlibrary.org/works/OL19891648W",
+        "https://www.programiz.com/python-programming/numpy/array-indexing",
+        "https://www.datacamp.com/doc/numpy/array-indexing",
+        "https://www.tutorialspoint.com/numpy/numpy_indexing_and_slicing.htm",
+        "https://quansight-labs.github.io/ndindex/indexing-guide/index.html",
+        "https://qiita.com/juri_engineer/items/f641870b0644d2f8d667",
+        "https://www.w3schools.com/python/numpy/numpy_array_indexing.asp"
+      ],
+      "bytes": 7573,
+      "unresponsive": 37
+    },
+    {
+      "id": "en-serde",
+      "lang": "en",
+      "query": "serde rust crate serialization",
+      "gold": [
+        "https://serde.rs",
+        "https://crates.io/crates/serde"
+      ],
+      "rank": 1,
+      "millis": 1732.2910160000902,
+      "urls": [
+        "https://serde.rs/",
+        "https://docs.serde.rs/",
+        "https://burntsushi.net/csv/",
+        "https://zenn.dev/sileader/articles/c16929968e00e9",
+        "https://codeberg.org/jplatte/serde_html_form",
+        "https://docs.rs/serde/latest/serde/",
+        "https://tikv.github.io/doc/serde/index.html",
+        "https://github.com/x52dev/oas3-rs",
+        "https://syu-m-5151.hatenablog.com/entry/2024/11/26/141035",
+        "https://crates.io/crates/serde"
+      ],
+      "bytes": 7551,
+      "unresponsive": 37
+    },
+    {
+      "id": "en-kernel",
+      "lang": "en",
+      "query": "linux kernel documentation scheduler",
+      "gold": [
+        "https://docs.kernel.org/scheduler"
+      ],
+      "rank": 7,
+      "millis": 910.3683620051015,
+      "urls": [
+        "https://static.lwn.net/kerneldoc/scheduler/index.html",
+        "https://www.sejuku.net/blog/4948",
+        "http://www.mjmwired.net/kernel/Documentation/scheduler/sched-stats.rst",
+        "https://openlibrary.org/works/OL4795715W",
+        "https://sysprog21.github.io/lkmpg/",
+        "https://www.datart.cz/novinky/technologie/operacni-system-linux",
+        "https://docs.kernel.org/scheduler/index.html",
+        "https://docs.kernel.org/scheduler/sched-ext.html",
+        "https://www.kernel.org/doc/html/next",
+        "https://ubuntu.com/real-time/docs/explanation/schedulers/"
+      ],
+      "bytes": 7105,
+      "unresponsive": 36
+    },
+    {
+      "id": "en-mdn-array",
+      "lang": "en",
+      "query": "mdn javascript array",
+      "gold": [
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array"
+      ],
+      "rank": 1,
+      "millis": 837.351927999407,
+      "urls": [
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
+        "http://datatables.net/ref/core/type/array",
+        "https://www.alm.website/blog/",
+        "https://developer.mozilla.org/",
+        "https://developer.mozilla.org/ko/",
+        "https://ja.wikibooks.org/wiki/JavaScript/Array/prototype",
+        "https://calcish.com/blog/",
+        "https://www.mozilla.org/nl/about/legal/terms/mdn-plus/",
+        "https://www.clien.net/service/",
+        "https://en.wikipedia.org/wiki/Talk:JavaScript"
+      ],
+      "bytes": 6743,
+      "unresponsive": 36
+    },
+    {
+      "id": "ja-fuji",
+      "lang": "ja",
+      "query": "富士山 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/富士山"
+      ],
+      "rank": 1,
+      "millis": 980.402889996185,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E5%B1%B1",
+        "http://orientals.web.fc2.com/Koreanoldtextbooken.html",
+        "https://gan.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E5%B1%B1",
+        "https://cs.wikipedia.org/wiki/Cura%C3%A7ao",
+        "https://www.fujisan-climb.jp/",
+        "https://shudo.net/diary/2023jun.html",
+        "https://zh.wikipedia.org/zh-hans/%E6%B2%B3%E5%8F%A3%E6%B9%96",
+        "https://cs.wikipedia.org/wiki/Logro%C3%B1o",
+        "https://ja.wikipedia.org/wiki/Category:%E5%AF%8C%E5%A3%AB%E5%B1%B1",
+        "https://maidonanews.jp/article/14949705"
+      ],
+      "bytes": 7919,
+      "unresponsive": 36
+    },
+    {
+      "id": "ja-genji",
+      "lang": "ja",
+      "query": "源氏物語 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/源氏物語"
+      ],
+      "rank": 1,
+      "millis": 793.0482919909991,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E%E5%90%84%E5%B8%96%E3%81%AE%E3%81%82%E3%82%89%E3%81%99%E3%81%98",
+        "https://zh.wikipedia.org/zh-hant/%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E%E5%8D%83%E5%B9%B4%E7%B4%80_Genji",
+        "https://cs.wikipedia.org/wiki/Eduard_Cup%C3%A1k",
+        "https://ja.wikipedia.org/wiki/%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E",
+        "https://ja.wikipedia.org/wiki/%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E%E3%81%AE%E7%99%BB%E5%A0%B4%E4%BA%BA%E7%89%A9",
+        "https://mysterious-world.fandom.com/zh/wiki/%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E?variant=zh-hant",
+        "https://www.aozora.gr.jp/cards/000052/card362.html",
+        "https://cs.wikipedia.org/wiki/Pirah%C3%A3",
+        "https://zh.wikipedia.org/zh-hant/%E5%8D%83%E5%B9%B4%E4%B9%8B%E6%81%8B_%E5%85%89%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AF%AD",
+        "https://caswc.co.kr/cate/product/farhc4fcstv505c.htm"
+      ],
+      "bytes": 8272,
+      "unresponsive": 36
+    },
+    {
+      "id": "ja-tokyo-station",
+      "lang": "ja",
+      "query": "東京駅 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/東京駅"
+      ],
+      "rank": 1,
+      "millis": 2001.832166002714,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/東京駅",
+        "http://www.tokyostationcity.com/learning/",
+        "https://www.tokyometro.jp/index.html",
+        "https://cs.wikipedia.org/wiki/V%C3%B5ru",
+        "https://w.atwiki.jp/ekimerowiki/pages/8.html",
+        "https://timetables.jreast.co.jp/timetable/list0401.html",
+        "https://cs.wikipedia.org/wiki/Pi%C3%B1ata",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E4%BA%AC%E9%A7%85%E3%81%AE%E6%AD%B4%E5%8F%B2",
+        "https://commons.wikimedia.org/wiki/File:%E6%9D%B1%E4%BA%AC%E9%A7%85_Tokyo_Station_(8164152017).jpg",
+        "https://railway.jr-central.co.jp/station-guide/shinkansen/tokyo/map.html"
+      ],
+      "bytes": 7151,
+      "unresponsive": 36
+    },
+    {
+      "id": "ja-python",
+      "lang": "ja",
+      "query": "python 入門 公式",
+      "gold": [
+        "https://docs.python.org/ja/3/tutorial"
+      ],
+      "rank": null,
+      "millis": 3002.457687005517,
+      "urls": [
+        "https://www.python.org/",
+        "https://www.python.jp/train/index.html",
+        "https://progate.com/courses/python",
+        "https://utokyo-ipp.github.io/",
+        "http://www.amazon.co.jp/o/ASIN/B07D6ZGH8W/gihyojp-22",
+        "https://www.55188.com/thread-35623565-1-1.html",
+        "https://www.python.org/downloads/",
+        "https://www.python51.com/jc/131178.html",
+        "https://python.cz/",
+        "https://www.isc.meiji.ac.jp/~be00085/Python3/index.html"
+      ],
+      "bytes": 7921,
+      "unresponsive": 36
+    },
+    {
+      "id": "ja-rust",
+      "lang": "ja",
+      "query": "rust プログラミング言語 公式",
+      "gold": [
+        "https://www.rust-lang.org/ja",
+        "https://doc.rust-lang.org/ja",
+        "https://prev.rust-lang.org/ja-JP",
+        "https://rust-jp.rs"
+      ],
+      "rank": 1,
+      "millis": 779.945709000458,
+      "urls": [
+        "https://rust-jp.rs/",
+        "https://prev.rust-lang.org/ja-JP/",
+        "https://cs.wikipedia.org/wiki/Rust_(Burgenland)",
+        "https://rust-lang.org/en-US/",
+        "https://en.wikipedia.org/wiki/Non-English-based_programming_languages",
+        "https://hnavi.co.jp/knowledge/blog/rust/",
+        "https://www.csfd.cz/film/1097024-rust/prehled/",
+        "https://ja.wikipedia.org/wiki/Rust_(%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E8%A8%80%E8%AA%9E)",
+        "http://hsp.tv",
+        "https://rust-lang.org/ja/"
+      ],
+      "bytes": 6859,
+      "unresponsive": 36
+    },
+    {
+      "id": "ja-jma",
+      "lang": "ja",
+      "query": "気象庁 天気予報",
+      "gold": [
+        "https://www.jma.go.jp"
+      ],
+      "rank": 1,
+      "millis": 851.9842120003887,
+      "urls": [
+        "https://www.jma.go.jp/jma/index.html",
+        "https://www.jma.go.jp/bosai/forecast/",
+        "https://www.jma.go.jp/bosai/weather_map/",
+        "https://www.data.jma.go.jp/stats/etrn/",
+        "https://www.data.jma.go.jp/multi/yoho/yoho_detail.html?code=270000&lang=jp",
+        "https://www.jma.go.jp/jma/kishou/know/yougo_hp/tenki.html",
+        "https://weather.yahoo.co.jp/weather/",
+        "https://www.jma.go.jp/bosai/map.html#contents=forecast",
+        "https://www.toshin.com/weather/detail?id=56682",
+        "https://tenki.jp/"
+      ],
+      "bytes": 7503,
+      "unresponsive": 36
+    },
+    {
+      "id": "ja-ndl",
+      "lang": "ja",
+      "query": "国立国会図書館 サーチ",
+      "gold": [
+        "https://ndlsearch.ndl.go.jp"
+      ],
+      "rank": 2,
+      "millis": 856.1471510038245,
+      "urls": [
+        "https://dl.ndl.go.jp/",
+        "https://ndlsearch.ndl.go.jp/",
+        "http://iss.ndl.go.jp/somoku/",
+        "https://www.ndl.go.jp/",
+        "http://id.ndl.go.jp/bib/000001948535",
+        "https://www.lib.u-tokyo.ac.jp/en/library/contents/database/185",
+        "https://ndlsearch.ndl.go.jp/bib/ndlcat",
+        "https://waseda-jp.libguides.com/az/47316916",
+        "https://rnavi.ndl.go.jp/",
+        "https://jpsearch.go.jp/organization/ndl"
+      ],
+      "bytes": 7568,
+      "unresponsive": 36
+    },
+    {
+      "id": "ja-tokyo-tourism",
+      "lang": "ja",
+      "query": "東京 観光 公式",
+      "gold": [
+        "https://www.gotokyo.org"
+      ],
+      "rank": 1,
+      "millis": 865.7645310013322,
+      "urls": [
+        "https://www.gotokyo.org/jp/index.html",
+        "https://www.gotokyo.org/en/index.html",
+        "https://www.metro.tokyo.lg.jp/kyoiku/kanko/kanko",
+        "https://www.tcvb.or.jp/jp/project/hasshin/welcome/",
+        "https://travel.rakuten.co.jp/mytrip/ranking/spot-tokyo",
+        "https://tokyotouristinfo.com/",
+        "https://www.hatobus.co.jp/",
+        "https://www.youtube.com/",
+        "https://www.tickets.gotokyo.org/jp/",
+        "https://en.wikipedia.org/wiki/Tokyo"
+      ],
+      "bytes": 8887,
+      "unresponsive": 36
+    }
+  ]
+}

@@ -3,3 +3,4 @@
 *.log
 .env
 searxng.toml
+__pycache__/
