@@ -45,6 +45,17 @@ raw_content_limit = 5
 # 20 問ベンチで 4.0 が最良（MRR 0.838・hit@5 19/20 で Exa と同率）。
 relevance_weight = 4.0
 
+# 意味（埋め込み）リランキング — Exa のニューラル検索に完全対抗するため。
+# OpenAI 互換の embeddings エンドポイントを指す。tools/embed_server.py
+# （ローカル・高速・キー不要）か、クラウドの embeddings API を指定。
+# 空文字列で無効（位置融合 + 関連度のみ）。
+embedding_url = ""
+embedding_model = "BAAI/bge-small-en-v1.5"
+# コサイン類似度をスコアに足す強さ。高いほど意味検索の優先度が増す。
+embedding_weight = 2.5
+# 何件の上位結果を埋め込みで並べ替えるか
+embedding_topk = 25
+
 [ui]
 default_theme = "simple"
 default_locale = "en"

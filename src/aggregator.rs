@@ -325,6 +325,12 @@ impl Searcher {
             );
         }
 
+        // Semantic re-ranking (embeddings) for merged multi-engine results.
+        // Matches neural rankers like Exa; single-engine keeps upstream order.
+        if request.engines.len() != 1 && !self.settings.search.embedding_url.is_empty() {
+            results = self.rerank_by_embedding(&request.query, results).await;
+        }
+
         crate::results::filter_results(
             &mut results,
             &request.include_domains,
@@ -543,6 +549,97 @@ impl Searcher {
     }
 
     /// Fetch readable page text for the first few results (raw content).
+    /// Re-rank the top results by cosine similarity between the query and each
+    /// result's title + snippet, using an OpenAI-compatible embeddings endpoint.
+    ///
+    /// Returns the input unchanged when the endpoint fails (degrades to the
+    /// position + relevance ranking).
+    async fn rerank_by_embedding(
+        &self,
+        query: &Query,
+        mut results: Vec<SearchResult>,
+    ) -> Vec<SearchResult> {
+        let settings = &self.settings.search;
+        let topk = results.len().min(settings.embedding_topk);
+        if topk < 2 {
+            return results;
+        }
+        let mut texts = vec![query.query_text()];
+        for result in &results[..topk] {
+            let snippet: String = result.content.chars().take(240).collect();
+            texts.push(format!("{} {snippet}", result.title));
+        }
+        let vectors = match self.embed(&texts).await {
+            Ok(vectors) if vectors.len() == texts.len() => vectors,
+            Ok(_) | Err(_) => {
+                tracing::warn!("embedding re-ranking skipped (bad response)");
+                return results;
+            }
+        };
+        let query_vec = &vectors[0];
+        for (index, result) in results.iter_mut().take(topk).enumerate() {
+            let cosine = dot(query_vec, &vectors[index + 1]);
+            result.score += settings.embedding_weight * cosine;
+        }
+        results[..topk].sort_by(|a, b| {
+            b.score
+                .partial_cmp(&a.score)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
+        results
+    }
+
+    /// Ask the embeddings endpoint for one vector per input text.
+    async fn embed(&self, texts: &[String]) -> Result<Vec<Vec<f32>>, String> {
+        let base = self.settings.search.embedding_url.trim_end_matches('/');
+        let url = if base.ends_with("/embeddings") {
+            base.to_string()
+        } else if base.ends_with("/v1") {
+            format!("{base}/embeddings")
+        } else {
+            format!("{base}/v1/embeddings")
+        };
+        let body = serde_json::json!({
+            "model": self.settings.search.embedding_model,
+            "input": texts,
+        });
+        let client = reqwest::Client::builder()
+            .timeout(Duration::from_secs(15))
+            .build()
+            .map_err(|error| error.to_string())?;
+        let response = client
+            .post(&url)
+            .json(&body)
+            .send()
+            .await
+            .map_err(|error| error.to_string())?;
+        let status = response.status();
+        let payload: serde_json::Value =
+            response.json().await.map_err(|error| error.to_string())?;
+        if !status.is_success() {
+            return Err(format!("embeddings http {}", status.as_u16()));
+        }
+        let mut data = payload
+            .get("data")
+            .and_then(|value| value.as_array())
+            .cloned()
+            .ok_or_else(|| "embeddings: missing data".to_string())?;
+        data.sort_by_key(|item| item.get("index").and_then(|v| v.as_u64()).unwrap_or(0));
+        data.iter()
+            .map(|item| {
+                item.get("embedding")
+                    .and_then(|v| v.as_array())
+                    .map(|arr| {
+                        arr.iter()
+                            .filter_map(|v| v.as_f64())
+                            .map(|v| v as f32)
+                            .collect()
+                    })
+                    .ok_or_else(|| "embeddings: missing vector".to_string())
+            })
+            .collect()
+    }
+
     async fn attach_raw_content(&self, results: &mut [SearchResult]) {
         let limit = self.settings.search.raw_content_limit.max(1);
         let count = results.len().min(limit);
@@ -649,6 +746,28 @@ where
         .collect();
     pairs.sort();
     pairs.serialize(serializer)
+}
+
+/// Cosine similarity of two equally sized vectors.
+fn dot(a: &[f32], b: &[f32]) -> f64 {
+    if a.is_empty() || a.len() != b.len() {
+        return 0.0;
+    }
+    let mut dot = 0.0f64;
+    let mut norm_a = 0.0f64;
+    let mut norm_b = 0.0f64;
+    for (x, y) in a.iter().zip(b) {
+        let x = *x as f64;
+        let y = *y as f64;
+        dot += x * y;
+        norm_a += x * x;
+        norm_b += y * y;
+    }
+    if norm_a == 0.0 || norm_b == 0.0 {
+        0.0
+    } else {
+        dot / (norm_a.sqrt() * norm_b.sqrt())
+    }
 }
 
 fn failure_kind_from_error_type(error_type: &str) -> FailureKind {
@@ -881,5 +1000,17 @@ mod orchestration_tests {
             response.unresponsive_engines[0].error_type,
             "too many requests"
         );
+    }
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn cosine_similarity_behaves_as_expected() {
+        assert!((dot(&[1.0f32, 0.0], &[1.0f32, 0.0]) - 1.0).abs() < 1e-6);
+        assert!((dot(&[1.0f32, 0.0], &[0.0f32, 1.0])).abs() < 1e-6);
+        assert_eq!(dot(&[], &[1.0]), 0.0);
+        assert_eq!(dot(&[1.0f32], &[1.0, 0.0]), 0.0);
     }
 }

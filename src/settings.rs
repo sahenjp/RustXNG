@@ -340,6 +340,15 @@ pub struct Search {
     /// 0 keeps pure upstream position fusion; higher values lift the page that
     /// actually matches the query the way a neural ranker does.
     pub relevance_weight: f64,
+    /// OpenAI-compatible embeddings endpoint for semantic re-ranking
+    /// (e.g. the bundled tools/embed_server.py, or any cloud embeddings API).
+    /// Empty disables semantic re-ranking.
+    pub embedding_url: String,
+    pub embedding_model: String,
+    /// How strongly the cosine similarity is blended into the ranking.
+    pub embedding_weight: f64,
+    /// How many of the top results are re-ranked by embedding similarity.
+    pub embedding_topk: usize,
 }
 
 /// Search execution strategy, upstream's default is "parallel".
@@ -379,6 +388,10 @@ impl Default for Search {
             staged_min_results: 10,
             raw_content_limit: 5,
             relevance_weight: 4.0,
+            embedding_url: String::new(),
+            embedding_model: "BAAI/bge-small-en-v1.5".into(),
+            embedding_weight: 2.5,
+            embedding_topk: 25,
         }
     }
 }
