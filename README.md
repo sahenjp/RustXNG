@@ -92,6 +92,20 @@ curl 'http://127.0.0.1:8888/search?q=<query>&format=json&max_results=5&include_r
 
 `include_raw_content=1` で本文を付け、ページはキャッシュされるので 2 回目以降は即返しです。詳細は [docs/BENCHMARK.md](docs/BENCHMARK.md)。
 
+### ディープリサーチ
+
+複雑な質問に対して、サブクエリを計画し、複数回検索してページ本文を集め、LLM があれば引用付き markdown レポートを返す 1 エンドポイントです。
+
+```bash
+# 証拠モード（LLM 不要）: サブクエリ・出典・本文を構造化して返す
+curl 'http://127.0.0.1:8888/research?q=<question>'
+
+# レポートモード: settings.toml の [research] で LLM を設定すると引用付きレポート付き
+curl 'http://127.0.0.1:8888/research?q=<question>&max_queries=5&max_sources=10'
+```
+
+LLM を使うには [research] セクションで OpenAI 互換の `base_url` と `api_key` を設定します（未設定でも証拠バンドルは返ります）。
+
 ```bash
 # エージェントの検索ツールとして使う例
 curl 'http://127.0.0.1:8888/search?q=rust+async&format=json&max_results=5'

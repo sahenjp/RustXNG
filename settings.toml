@@ -78,6 +78,18 @@ ttl = 300
 # 早々に押し出される。32 MB に広げて繰り返しの検索・本文取得を速く保つ。
 max_bytes = 33554432
 
+# Deep research: GET /research?q=... がサブクエリを計画し、複数回検索して
+# ページ本文を集め、LLM があれば引用付き markdown レポートを生成する。
+# enabled = true かつ api_key があれば LLM を使う。無ければ証拠バンドルのみ。
+[research]
+enabled = false
+base_url = "https://api.openai.com/v1"
+api_key = ""
+model = "gpt-4o-mini"
+max_queries = 5
+max_sources = 10
+timeout = 60
+
 [plugins]
 enabled = []
 disabled = []

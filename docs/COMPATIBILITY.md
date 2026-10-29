@@ -41,6 +41,10 @@ SearXNG のパラメータと衝突しない名前で、LLM のツール呼び�
 
 応答自体の検証も行います。パースは通るが内容が明らかに架空・プレースホルダ・クエリと無関係な応答（上流 issue #6358 の「静かなゴミ混入」）は、結果に混ぜずにエンジンをサスペンドし、`unresponsive_engines` に `Suspicious response` として出します。
 
+### ディープリサーチ（`GET /research`、上流にない）
+
+質問を受け取り、(1) サブクエリを計画（LLM があれば LLM、無ければ質問から派生）、(2) 各クエリを検索して上位ページの本文を取得、(3) LLM があれば引用付き markdown レポートを生成して返します。LLM 未設定でも証拠バンドル（`queries` / `sources` / 本文）は返ります。設定は `settings.toml` の `[research]`（`enabled` / `base_url` / `api_key` / `model` / `max_queries` / `max_sources`）。
+
 ## 互換でない領域
 
 | 領域 | 差分 |

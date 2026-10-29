@@ -53,11 +53,47 @@ pub struct Settings {
     /// Response cache backend (upstream `cache` and `valkey`).
     #[serde(default)]
     pub cache: CacheSettings,
+    /// Deep research: plan queries, search, fetch, synthesise a cited report.
+    #[serde(default)]
+    pub research: ResearchSettings,
     /// Categories shown as tabs (upstream `categories_as_tabs`).
     pub categories_as_tabs: Vec<String>,
     /// Accepted for compatibility with SearXNG configs.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub doi_resolvers: Option<toml::Table>,
+}
+
+/// Deep research configuration. `enabled` requires an OpenAI-compatible
+/// `base_url` and `api_key`; without them the /research endpoint still returns
+/// a thorough evidence bundle (no synthesised report).
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(default)]
+pub struct ResearchSettings {
+    pub enabled: bool,
+    /// OpenAI-compatible base URL, e.g. `https://api.openai.com/v1`.
+    pub base_url: String,
+    pub api_key: String,
+    pub model: String,
+    /// Sub-queries generated per question.
+    pub max_queries: usize,
+    /// Sources kept after deduplication.
+    pub max_sources: usize,
+    /// LLM request timeout in seconds.
+    pub timeout: u64,
+}
+
+impl Default for ResearchSettings {
+    fn default() -> Self {
+        Self {
+            enabled: false,
+            base_url: "https://api.openai.com/v1".into(),
+            api_key: String::new(),
+            model: "gpt-4o-mini".into(),
+            max_queries: 5,
+            max_sources: 10,
+            timeout: 60,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -663,6 +699,8 @@ impl Settings {
         base.ui = merge_table(&base.ui, &user.ui)?;
         base.outgoing = merge_table(&base.outgoing, &user.outgoing)?;
         base.plugins = merge_table(&base.plugins, &user.plugins)?;
+        base.cache = merge_table(&base.cache, &user.cache)?;
+        base.research = merge_table(&base.research, &user.research)?;
         if !user.categories_as_tabs.is_empty() {
             base.categories_as_tabs = user.categories_as_tabs;
         }

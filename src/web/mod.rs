@@ -75,6 +75,7 @@ pub fn router(state: AppState) -> Router {
         .route("/metrics", get(handlers::metrics))
         .route("/image_proxy", get(image_proxy::handler))
         .route("/favicon_proxy", get(favicons::handler))
+        .route("/research", get(handlers::research))
         .route("/healthz", get(handlers::healthz))
         .route("/about", get(handlers::about))
         .route("/opensearch.xml", get(handlers::opensearch))

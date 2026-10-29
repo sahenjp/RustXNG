@@ -141,6 +141,37 @@ async fn agent_facing_filters_limit_and_scope_the_results() {
 }
 
 #[tokio::test]
+async fn research_returns_evidence_without_an_llm() {
+    let base_url = start_fake_engine().await;
+    let app = app(settings_for(&base_url));
+
+    let (status, body, headers) = get_uri(&app, "/research?q=rust").await;
+    assert_eq!(status, StatusCode::OK);
+    assert!(
+        headers
+            .get(header::CONTENT_TYPE)
+            .unwrap()
+            .to_str()
+            .unwrap()
+            .starts_with("application/json")
+    );
+
+    let json: serde_json::Value = serde_json::from_str(&body).unwrap();
+    // No LLM configured: sub-queries still run and an evidence bundle returns.
+    assert!(json["llm_used"] == false);
+    assert!(json["report"].is_null());
+    assert!(!json["queries"].as_array().unwrap().is_empty());
+    let sources = json["sources"].as_array().unwrap();
+    assert!(!sources.is_empty());
+    assert!(sources[0]["url"].is_string());
+    assert!(sources[0]["content"].is_string());
+
+    // A missing question is a client error.
+    let (status, _, _) = get_uri(&app, "/research").await;
+    assert_eq!(status, StatusCode::BAD_REQUEST);
+}
+
+#[tokio::test]
 async fn staged_strategy_returns_the_same_results() {
     let base_url = start_fake_engine().await;
     let mut settings = settings_for(&base_url);

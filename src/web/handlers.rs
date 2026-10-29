@@ -880,6 +880,40 @@ fn prometheus_metrics(state: &AppState) -> String {
 }
 
 /// `GET /healthz`.
+/// Query parameters of `/research`.
+#[derive(Debug, Clone, Default, Deserialize)]
+pub struct ResearchParams {
+    pub q: Option<String>,
+    pub max_queries: Option<usize>,
+    pub max_sources: Option<usize>,
+}
+
+/// `GET /research` — deep research: plan sub-queries, search, fetch pages and
+/// (when an LLM is configured) synthesise a cited markdown report.
+pub async fn research(
+    State(state): State<AppState>,
+    Query(params): Query<ResearchParams>,
+) -> Response {
+    let question = params.q.clone().unwrap_or_default();
+    if question.trim().is_empty() {
+        return error_page(&state, StatusCode::BAD_REQUEST, "missing question");
+    }
+    let settings = state.settings();
+    let max_queries = params
+        .max_queries
+        .unwrap_or(settings.research.max_queries)
+        .clamp(1, 10);
+    let max_sources = params
+        .max_sources
+        .unwrap_or(settings.research.max_sources)
+        .clamp(1, 50);
+    let report = state
+        .searcher
+        .research(&question, max_queries, max_sources)
+        .await;
+    axum::Json(report).into_response()
+}
+
 pub async fn healthz() -> Response {
     (StatusCode::OK, "OK").into_response()
 }
