@@ -72,3 +72,39 @@ SearXNG のパラメータと衝突しない名前で、LLM のツール呼び�
 2. `/stats` と UI テンプレートを上流資産に合わせる
 3. i18n のテンプレート全面適用とロケール拡大
 4. UI テンプレートのマークアップを上流に合わせる
+
+## 商用 API をエンジンとして併用する
+
+RustXNG はメタ検索のハブなので、商用検索 API を「170 のエンジンの 1 つ」として足せます。API のカバレッジと RustXNG 側のランキング（関連度・権威・本文）を組み合わせられます。
+
+`exaapi` / `braveapi` は実装済みで既定は無効です。設定ファイルで有効化します。
+
+```toml
+# my-settings.toml
+use_default_settings = true
+
+[[engines]]
+name = "exaapi"
+engine = "exaapi"
+shortcut = "exa"
+categories = ["general", "web"]
+disabled = false          # 既定で無効なエンジンを有効化できる
+api_key = "YOUR_EXA_KEY"
+content_mode = "highlights"   # highlights | text
+```
+
+```bash
+SEARXNG_SETTINGS_PATH=my-settings.toml ./rustxng --port 8888
+```
+
+> 0.13.0 で `EngineConfig::disabled` を三状態（`Option<bool>`）にしました。以前は `disabled = false` が「未指定」と区別できず、既定で無効なエンジンを有効化できませんでした。
+
+### 実測（100 問）
+
+| 構成 | hit@1 | hit@5 | MRR |
+| --- | ---: | ---: | ---: |
+| Exa 単体（API 直） | 74 | **88** | **0.808** |
+| **RustXNG + exaapi** | **75** | 85 | 0.799 |
+| RustXNG 単体（4 回平均） | 62 | 79 | 0.710 |
+
+API を併用すると **hit@1 は Exa 単体を上回ります**（75 対 74）。hit@5 と MRR は僅差で Exa が上（−3 問 / −0.009）で、全体としてはほぼ同等です。上流エンジンがブロックされる環境では、API の安定したカバレッジが効きます。
