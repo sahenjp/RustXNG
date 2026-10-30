@@ -4,6 +4,28 @@
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-10-30
+
+100 問の評価セットに拡張し、そこで見つかった品質バグを修正したリリースです。
+
+### Added
+
+- **100 問の評価セット**（`bench/quality-questions.json`、英語 65 / 日本語 35、doc 55 / wiki 25 / official 10 / paper 5 / repo 5）
+- **`tools/eval_quality.py --restart-binary`** — N 問ごとにインスタンスを再起動して計測する。連続計測で自らエンジンのレート制限を溜め、後半の設問が不当に落ちるのを防ぐ（測定の再現性のため）
+- **権威リストを 13 → 47 サイトに拡充** — kubernetes / git / nginx / fastapi / django / flask / RFC / man7 / tokio / serde / sqlite / redis / go / node / typescript / aws / gcp / cppreference / 気象庁 / 国会図書館 など
+
+### Fixed
+
+- **エンジンのリダイレクト URL が結果に混入** — `google.com/goto?url=...`、`duckduckgo.com/l/?uddg=...`、`bing.com/ck/a`、`l.facebook.com/l.php` を解除し、解除先が無いものは結果から除外（実測で Google のラッパー URL が 1 位に出ていた）
+- **クエリ言語と違う Wikipedia 版が上位に混入** — 英語クエリに `cs.wikipedia.org` / `gan.wikipedia.org` が 38 回、日本語クエリに `en.wikipedia.org` が出ていた。言語が合わない版を降格
+- **サブドメインが正規サイトの権威を借りていた** — `users.rust-lang.org`（フォーラム）が `doc.rust-lang.org`（ドキュメント）と同じ権威 1.0 になっていた。正規サイトは完全一致（www のみ許容）、Wikipedia だけ全言語版を許容
+- **ホームページが具体ページに勝つ** — URL パス深さを関連度に加算（`python.org` が `docs.python.org/ja/3/tutorial` に勝っていた）
+- **スニペット本文がランキングに使われていなかった** — URL + タイトルに加えて本文（先頭 600 字）のクエリ語一致も加算
+
+### Tests
+
+- 787 ユニット + 17 統合（リダイレクト解除・Wikipedia 言語・正規サブドメインのテストを追加）
+
 ## [0.10.0] - 2026-10-30
 
 権威・正規ページランキングを追加し、20 問ベンチで Exa の hit@1 / MRR を上回りました。

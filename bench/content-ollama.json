@@ -2,21 +2,81 @@
  "source": "ollama",
  "queries": [
   {
-   "id": "en-tokio",
-   "query": "tokio rust async runtime",
-   "gold_url": "https://tokio.rs",
+   "id": "en-py-list",
+   "query": "python list methods documentation",
+   "gold_url": "https://docs.python.org/3/tutorial/datastructures",
    "results": []
   },
   {
-   "id": "en-rust-book",
+   "id": "en-py-dict",
+   "query": "python dict get method",
+   "gold_url": "https://docs.python.org/3/library/stdtypes",
+   "results": []
+  },
+  {
+   "id": "en-py-asyncio",
+   "query": "python asyncio documentation",
+   "gold_url": "https://docs.python.org/3/library/asyncio",
+   "results": []
+  },
+  {
+   "id": "en-py-re",
+   "query": "python re module regular expressions",
+   "gold_url": "https://docs.python.org/3/library/re",
+   "results": []
+  },
+  {
+   "id": "en-py-typing",
+   "query": "python typing generics",
+   "gold_url": "https://docs.python.org/3/library/typing",
+   "results": []
+  },
+  {
+   "id": "en-rs-book",
    "query": "rust programming language book",
    "gold_url": "https://doc.rust-lang.org/book",
    "results": []
   },
   {
-   "id": "en-asyncio",
-   "query": "python asyncio documentation",
-   "gold_url": "https://docs.python.org/3/library/asyncio",
+   "id": "en-rs-vec",
+   "query": "rust vector documentation",
+   "gold_url": "https://doc.rust-lang.org/std/vec",
+   "results": []
+  },
+  {
+   "id": "en-rs-trait",
+   "query": "rust traits documentation",
+   "gold_url": "https://doc.rust-lang.org/book/ch10-02-traits.html",
+   "results": []
+  },
+  {
+   "id": "en-rs-result",
+   "query": "rust result enum documentation",
+   "gold_url": "https://doc.rust-lang.org/std/result",
+   "results": []
+  },
+  {
+   "id": "en-rs-cargo",
+   "query": "cargo book manifest format",
+   "gold_url": "https://doc.rust-lang.org/cargo/reference/manifest",
+   "results": []
+  },
+  {
+   "id": "en-docker-compose",
+   "query": "docker compose file reference",
+   "gold_url": "https://docs.docker.com/reference/compose-file",
+   "results": []
+  },
+  {
+   "id": "en-docker-build",
+   "query": "dockerfile reference build",
+   "gold_url": "https://docs.docker.com/reference/dockerfile",
+   "results": []
+  },
+  {
+   "id": "en-docker-run",
+   "query": "docker run command reference",
+   "gold_url": "https://docs.docker.com/reference/cli/docker/container/run",
    "results": []
   },
   {
@@ -26,33 +86,111 @@
    "results": []
   },
   {
-   "id": "en-attention",
-   "query": "attention is all you need arxiv",
-   "gold_url": "https://arxiv.org/abs/1706.03762",
+   "id": "en-pg-index",
+   "query": "postgresql create index documentation",
+   "gold_url": "https://www.postgresql.org/docs/current/sql-createindex",
    "results": []
   },
   {
-   "id": "en-turing",
-   "query": "alan turing wikipedia",
-   "gold_url": "https://en.wikipedia.org/wiki/Alan_Turing",
+   "id": "en-pg-window",
+   "query": "postgresql window functions",
+   "gold_url": "https://www.postgresql.org/docs/current/tutorial-window",
    "results": []
   },
   {
-   "id": "en-rust-repo",
-   "query": "rust-lang rust github",
-   "gold_url": "https://github.com/rust-lang/rust",
-   "results": []
-  },
-  {
-   "id": "en-compose",
-   "query": "docker compose file reference",
-   "gold_url": "https://docs.docker.com/reference/compose-file",
-   "results": []
-  },
-  {
-   "id": "en-numpy",
+   "id": "en-numpy-index",
    "query": "numpy indexing arrays",
    "gold_url": "https://numpy.org/doc/stable/user/basics.indexing",
+   "results": []
+  },
+  {
+   "id": "en-numpy-broadcast",
+   "query": "numpy broadcasting rules",
+   "gold_url": "https://numpy.org/doc/stable/user/basics.broadcasting",
+   "results": []
+  },
+  {
+   "id": "en-react-hooks",
+   "query": "react hooks reference",
+   "gold_url": "https://react.dev/reference/react",
+   "results": []
+  },
+  {
+   "id": "en-react-usestate",
+   "query": "react usestate hook",
+   "gold_url": "https://react.dev/reference/react/useState",
+   "results": []
+  },
+  {
+   "id": "en-mdn-array",
+   "query": "mdn javascript array",
+   "gold_url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
+   "results": []
+  },
+  {
+   "id": "en-mdn-fetch",
+   "query": "mdn fetch api",
+   "gold_url": "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API",
+   "results": []
+  },
+  {
+   "id": "en-mdn-promise",
+   "query": "mdn promise javascript",
+   "gold_url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
+   "results": []
+  },
+  {
+   "id": "en-k8s-pod",
+   "query": "kubernetes pod documentation",
+   "gold_url": "https://kubernetes.io/docs/concepts/workloads/pods",
+   "results": []
+  },
+  {
+   "id": "en-k8s-deploy",
+   "query": "kubernetes deployment documentation",
+   "gold_url": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment",
+   "results": []
+  },
+  {
+   "id": "en-git-rebase",
+   "query": "git rebase documentation",
+   "gold_url": "https://git-scm.com/docs/git-rebase",
+   "results": []
+  },
+  {
+   "id": "en-git-merge",
+   "query": "git merge documentation",
+   "gold_url": "https://git-scm.com/docs/git-merge",
+   "results": []
+  },
+  {
+   "id": "en-nginx-conf",
+   "query": "nginx configuration file reference",
+   "gold_url": "https://nginx.org/en/docs",
+   "results": []
+  },
+  {
+   "id": "en-linux-sched",
+   "query": "linux kernel documentation scheduler",
+   "gold_url": "https://docs.kernel.org/scheduler",
+   "results": []
+  },
+  {
+   "id": "en-linux-sysctl",
+   "query": "linux kernel sysctl documentation",
+   "gold_url": "https://docs.kernel.org/admin-guide/sysctl",
+   "results": []
+  },
+  {
+   "id": "en-sql-join",
+   "query": "sql join types tutorial",
+   "gold_url": "https://www.postgresql.org/docs/current/queries-table-expressions",
+   "results": []
+  },
+  {
+   "id": "en-tokio",
+   "query": "tokio rust async runtime",
+   "gold_url": "https://tokio.rs",
    "results": []
   },
   {
@@ -62,15 +200,195 @@
    "results": []
   },
   {
-   "id": "en-kernel",
-   "query": "linux kernel documentation scheduler",
-   "gold_url": "https://docs.kernel.org/scheduler",
+   "id": "en-fastapi",
+   "query": "fastapi documentation tutorial",
+   "gold_url": "https://fastapi.tiangolo.com",
    "results": []
   },
   {
-   "id": "en-mdn-array",
-   "query": "mdn javascript array",
-   "gold_url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
+   "id": "en-django-orm",
+   "query": "django queryset documentation",
+   "gold_url": "https://docs.djangoproject.com/en/stable/topics/db/queries",
+   "results": []
+  },
+  {
+   "id": "en-flask",
+   "query": "flask quickstart documentation",
+   "gold_url": "https://flask.palletsprojects.com/en/stable/quickstart",
+   "results": []
+  },
+  {
+   "id": "en-rfc-http",
+   "query": "http semantics rfc 9110",
+   "gold_url": "https://www.rfc-editor.org/rfc/rfc9110",
+   "results": []
+  },
+  {
+   "id": "en-json-schema",
+   "query": "json schema specification",
+   "gold_url": "https://json-schema.org/specification",
+   "results": []
+  },
+  {
+   "id": "en-oauth",
+   "query": "oauth 2.0 rfc 6749",
+   "gold_url": "https://www.rfc-editor.org/rfc/rfc6749",
+   "results": []
+  },
+  {
+   "id": "en-unix-man",
+   "query": "unix find command manual",
+   "gold_url": "https://man7.org/linux/man-pages/man1/find.1",
+   "results": []
+  },
+  {
+   "id": "en-turing",
+   "query": "alan turing wikipedia",
+   "gold_url": "https://en.wikipedia.org/wiki/Alan_Turing",
+   "results": []
+  },
+  {
+   "id": "en-shakespeare",
+   "query": "william shakespeare wikipedia",
+   "gold_url": "https://en.wikipedia.org/wiki/William_Shakespeare",
+   "results": []
+  },
+  {
+   "id": "en-einstein",
+   "query": "albert einstein wikipedia",
+   "gold_url": "https://en.wikipedia.org/wiki/Albert_Einstein",
+   "results": []
+  },
+  {
+   "id": "en-rust-topic",
+   "query": "rust programming language wikipedia",
+   "gold_url": "https://en.wikipedia.org/wiki/Rust_(programming_language)",
+   "results": []
+  },
+  {
+   "id": "en-transformer",
+   "query": "transformer deep learning wikipedia",
+   "gold_url": "https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)",
+   "results": []
+  },
+  {
+   "id": "en-mt-fuji",
+   "query": "mount fuji wikipedia",
+   "gold_url": "https://en.wikipedia.org/wiki/Mount_Fuji",
+   "results": []
+  },
+  {
+   "id": "en-amazon-river",
+   "query": "amazon river wikipedia",
+   "gold_url": "https://en.wikipedia.org/wiki/Amazon_River",
+   "results": []
+  },
+  {
+   "id": "en-tokyo",
+   "query": "tokyo wikipedia",
+   "gold_url": "https://en.wikipedia.org/wiki/Tokyo",
+   "results": []
+  },
+  {
+   "id": "en-black-hole",
+   "query": "black hole wikipedia",
+   "gold_url": "https://en.wikipedia.org/wiki/Black_hole",
+   "results": []
+  },
+  {
+   "id": "en-internet",
+   "query": "internet wikipedia",
+   "gold_url": "https://en.wikipedia.org/wiki/Internet",
+   "results": []
+  },
+  {
+   "id": "en-photosynthesis",
+   "query": "photosynthesis wikipedia",
+   "gold_url": "https://en.wikipedia.org/wiki/Photosynthesis",
+   "results": []
+  },
+  {
+   "id": "en-roman-empire",
+   "query": "roman empire wikipedia",
+   "gold_url": "https://en.wikipedia.org/wiki/Roman_Empire",
+   "results": []
+  },
+  {
+   "id": "en-tcp-ip",
+   "query": "tcp ip wikipedia",
+   "gold_url": "https://en.wikipedia.org/wiki/Internet_protocol_suite",
+   "results": []
+  },
+  {
+   "id": "en-ml",
+   "query": "machine learning wikipedia",
+   "gold_url": "https://en.wikipedia.org/wiki/Machine_learning",
+   "results": []
+  },
+  {
+   "id": "en-relativity",
+   "query": "theory of relativity wikipedia",
+   "gold_url": "https://en.wikipedia.org/wiki/Theory_of_relativity",
+   "results": []
+  },
+  {
+   "id": "en-attention",
+   "query": "attention is all you need arxiv",
+   "gold_url": "https://arxiv.org/abs/1706.03762",
+   "results": []
+  },
+  {
+   "id": "en-bert",
+   "query": "bert pre-training arxiv",
+   "gold_url": "https://arxiv.org/abs/1810.04805",
+   "results": []
+  },
+  {
+   "id": "en-gpt3",
+   "query": "language models are few shot learners arxiv",
+   "gold_url": "https://arxiv.org/abs/2005.14165",
+   "results": []
+  },
+  {
+   "id": "en-resnet",
+   "query": "deep residual learning arxiv",
+   "gold_url": "https://arxiv.org/abs/1512.03385",
+   "results": []
+  },
+  {
+   "id": "en-adam",
+   "query": "adam optimizer arxiv",
+   "gold_url": "https://arxiv.org/abs/1412.6980",
+   "results": []
+  },
+  {
+   "id": "en-rust-repo",
+   "query": "rust-lang rust github",
+   "gold_url": "https://github.com/rust-lang/rust",
+   "results": []
+  },
+  {
+   "id": "en-tokio-repo",
+   "query": "tokio-rs tokio github",
+   "gold_url": "https://github.com/tokio-rs/tokio",
+   "results": []
+  },
+  {
+   "id": "en-ripgrep",
+   "query": "burntsushi ripgrep github",
+   "gold_url": "https://github.com/BurntSushi/ripgrep",
+   "results": []
+  },
+  {
+   "id": "en-crates-serde",
+   "query": "crates.io serde crate",
+   "gold_url": "https://crates.io/crates/serde",
+   "results": []
+  },
+  {
+   "id": "en-npm-react",
+   "query": "npm react package",
+   "gold_url": "https://www.npmjs.com/package/react",
    "results": []
   },
   {
@@ -92,15 +410,87 @@
    "results": []
   },
   {
-   "id": "ja-python",
+   "id": "ja-momotaro",
+   "query": "桃太郎 wikipedia",
+   "gold_url": "https://ja.wikipedia.org/wiki/桃太郎",
+   "results": []
+  },
+  {
+   "id": "ja-basho",
+   "query": "松尾芭蕉 wikipedia",
+   "gold_url": "https://ja.wikipedia.org/wiki/松尾芭蕉",
+   "results": []
+  },
+  {
+   "id": "ja-soseki",
+   "query": "夏目漱石 wikipedia",
+   "gold_url": "https://ja.wikipedia.org/wiki/夏目漱石",
+   "results": []
+  },
+  {
+   "id": "ja-fuji-san",
+   "query": "富士山 標高",
+   "gold_url": "https://ja.wikipedia.org/wiki/富士山",
+   "results": []
+  },
+  {
+   "id": "ja-tokaido",
+   "query": "東海道新幹線 wikipedia",
+   "gold_url": "https://ja.wikipedia.org/wiki/東海道新幹線",
+   "results": []
+  },
+  {
+   "id": "ja-kimono",
+   "query": "着物 wikipedia",
+   "gold_url": "https://ja.wikipedia.org/wiki/着物",
+   "results": []
+  },
+  {
+   "id": "ja-sushi",
+   "query": "寿司 wikipedia",
+   "gold_url": "https://ja.wikipedia.org/wiki/寿司",
+   "results": []
+  },
+  {
+   "id": "ja-py-doc",
    "query": "python 入門 公式",
    "gold_url": "https://docs.python.org/ja/3/tutorial",
    "results": []
   },
   {
-   "id": "ja-rust",
+   "id": "ja-py-lib",
+   "query": "python 標準ライブラリ 日本語",
+   "gold_url": "https://docs.python.org/ja/3/library",
+   "results": []
+  },
+  {
+   "id": "ja-rs-doc",
    "query": "rust プログラミング言語 公式",
    "gold_url": "https://www.rust-lang.org/ja",
+   "results": []
+  },
+  {
+   "id": "ja-rs-book",
+   "query": "rust 日本語 ドキュメント",
+   "gold_url": "https://doc.rust-lang.org/book/",
+   "results": []
+  },
+  {
+   "id": "ja-mdn",
+   "query": "mdn javascript 配列",
+   "gold_url": "https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Array",
+   "results": []
+  },
+  {
+   "id": "ja-nginx",
+   "query": "nginx 設定 ドキュメント",
+   "gold_url": "https://nginx.org/en/docs",
+   "results": []
+  },
+  {
+   "id": "ja-docker",
+   "query": "docker compose ファイル リファレンス",
+   "gold_url": "https://docs.docker.com/reference/compose-file",
    "results": []
   },
   {
@@ -119,6 +509,96 @@
    "id": "ja-tokyo-tourism",
    "query": "東京 観光 公式",
    "gold_url": "https://www.gotokyo.org",
+   "results": []
+  },
+  {
+   "id": "ja-jr",
+   "query": "JR東日本 時刻表",
+   "gold_url": "https://www.jreast.co.jp",
+   "results": []
+  },
+  {
+   "id": "ja-gsi",
+   "query": "国土地理院 地図",
+   "gold_url": "https://www.jma.go.jp/",
+   "results": []
+  },
+  {
+   "id": "ja-e-gov",
+   "query": "e-Gov 法令検索",
+   "gold_url": "https://elaws.e-gov.go.jp",
+   "results": []
+  },
+  {
+   "id": "ja-python-org",
+   "query": "python japan ユーザー会",
+   "gold_url": "https://www.python.jp",
+   "results": []
+  },
+  {
+   "id": "ja-rust-jp",
+   "query": "rust japan ユーザー会",
+   "gold_url": "https://rust-jp.rs",
+   "results": []
+  },
+  {
+   "id": "ja-rust-crate",
+   "query": "rust crates.io 使い方",
+   "gold_url": "https://crates.io",
+   "results": []
+  },
+  {
+   "id": "ja-git-doc",
+   "query": "git rebase 使い方 公式",
+   "gold_url": "https://git-scm.com/docs/git-rebase",
+   "results": []
+  },
+  {
+   "id": "ja-sql",
+   "query": "postgresql 日本語 ドキュメント",
+   "gold_url": "https://www.postgresql.jp/document",
+   "results": []
+  },
+  {
+   "id": "ja-linux",
+   "query": "linux kernel ドキュメント",
+   "gold_url": "https://docs.kernel.org",
+   "results": []
+  },
+  {
+   "id": "ja-aws",
+   "query": "aws ec2 ドキュメント",
+   "gold_url": "https://docs.aws.amazon.com/ec2",
+   "results": []
+  },
+  {
+   "id": "ja-gcp",
+   "query": "google cloud ドキュメント",
+   "gold_url": "https://cloud.google.com/docs",
+   "results": []
+  },
+  {
+   "id": "ja-mdn-js",
+   "query": "mdn javascript 入門",
+   "gold_url": "https://developer.mozilla.org/ja/docs/Web/JavaScript",
+   "results": []
+  },
+  {
+   "id": "ja-react",
+   "query": "react 公式 ドキュメント",
+   "gold_url": "https://ja.react.dev",
+   "results": []
+  },
+  {
+   "id": "ja-docker-hub",
+   "query": "docker hub 公式",
+   "gold_url": "https://hub.docker.com",
+   "results": []
+  },
+  {
+   "id": "ja-npm",
+   "query": "npm 公式 パッケージ",
+   "gold_url": "https://www.npmjs.com",
    "results": []
   }
  ]

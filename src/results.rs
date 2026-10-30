@@ -296,6 +296,12 @@ impl ResultContainer {
                         .insert(key, value);
                 }
                 EngineItem::Result(mut result) => {
+                    // Unwrap engine redirectors; drop dead wrappers outright so
+                    // a redirector URL never reaches the user.
+                    match unwrap_redirect(&result.url) {
+                        Some(url) => result.url = url,
+                        None => continue,
+                    }
                     position += 1;
                     result.positions = vec![position];
                     result.engine = engine_name.to_string();
@@ -351,14 +357,20 @@ impl ResultContainer {
             // Blend in how well the URL + title cover the query terms. Position
             // fusion alone ranks a homepage above the page that actually answers
             // the query; this lifts the latter the way a neural ranker does.
-            result.score =
-                score + relevance_weight * relevance(&result.url, &result.title, query_terms);
+            result.score = score
+                + relevance_weight
+                    * relevance(&result.url, &result.title, &result.content, query_terms);
             // Naming a site in the query means "that site's own page": lift the
             // canonical host and push mirrors down. This is the part keyword
             // and embedding ranking cannot see (official docs vs its mirror).
             if authority_weight > 0.0 {
                 let signal = authority(query_text, &result.url) - 0.5;
                 result.score += authority_weight * signal;
+            }
+            // A Wikipedia edition in the wrong language is noise for this query.
+            let wiki_penalty = wikipedia_language_penalty(query_text, &result.url);
+            if wiki_penalty != 0.0 {
+                result.score += relevance_weight * wiki_penalty;
             }
         }
 
@@ -555,7 +567,7 @@ pub fn query_terms(text: &str) -> Vec<String> {
 /// A query term in the path/slug (e.g. `functions-json` for "json functions")
 /// is a strong signal; the helper counts distinct terms present in the
 /// lowercased URL and title.
-fn relevance(url: &str, title: &str, terms: &[String]) -> f64 {
+fn relevance(url: &str, title: &str, content: &str, terms: &[String]) -> f64 {
     if terms.is_empty() {
         return 0.0;
     }
@@ -577,13 +589,22 @@ fn relevance(url: &str, title: &str, terms: &[String]) -> f64 {
     let decoded_url = percent_encoding::percent_decode_str(url)
         .decode_utf8_lossy()
         .to_lowercase();
-    let haystack = format!("{decoded_url} {}", title.to_lowercase());
-    let hits = terms
+    let heading = format!("{decoded_url} {}", title.to_lowercase());
+    let heading_hits = terms
         .iter()
-        .filter(|term| haystack.contains(term.as_str()))
+        .filter(|term| heading.contains(term.as_str()))
         .count();
-    let coverage = hits as f64 / terms.len() as f64;
-    (coverage + depth_bonus).min(1.0)
+    let heading_coverage = heading_hits as f64 / terms.len() as f64;
+    // The snippet is what the agent actually reads. A page whose text talks
+    // about the query is a better answer than a page that only mentions it in
+    // the URL, so blend the body coverage in at a lower weight.
+    let body: String = content.chars().take(600).collect::<String>().to_lowercase();
+    let body_hits = terms
+        .iter()
+        .filter(|term| body.contains(term.as_str()))
+        .count();
+    let body_coverage = body_hits as f64 / terms.len() as f64;
+    (0.62 * heading_coverage + 0.30 * body_coverage + depth_bonus).min(1.0)
 }
 
 /// A brand/site the user names in the query, with its canonical hosts.
@@ -613,8 +634,16 @@ const AUTHORITIES: &[Authority] = &[
         canonical: &["docs.python.org", "python.org"],
     },
     Authority {
+        names: &["python japan"],
+        canonical: &["python.jp", "python.org"],
+    },
+    Authority {
         names: &["rust", "rustlang"],
         canonical: &["doc.rust-lang.org", "rust-lang.org"],
+    },
+    Authority {
+        names: &["rust japan", "rust-jp"],
+        canonical: &["rust-jp.rs", "doc.rust-lang.org"],
     },
     Authority {
         names: &["postgres", "postgresql"],
@@ -623,6 +652,10 @@ const AUTHORITIES: &[Authority] = &[
     Authority {
         names: &["docker"],
         canonical: &["docs.docker.com", "docker.com"],
+    },
+    Authority {
+        names: &["docker hub", "dockerhub"],
+        canonical: &["hub.docker.com"],
     },
     Authority {
         names: &["linux", "kernel"],
@@ -634,7 +667,7 @@ const AUTHORITIES: &[Authority] = &[
     },
     Authority {
         names: &["react"],
-        canonical: &["react.dev", "reactjs.org"],
+        canonical: &["react.dev", "reactjs.org", "ja.react.dev"],
     },
     Authority {
         names: &["npm"],
@@ -649,8 +682,136 @@ const AUTHORITIES: &[Authority] = &[
         canonical: &["wikipedia.org"],
     },
     Authority {
-        names: &["docker hub", "dockerhub"],
-        canonical: &["hub.docker.com"],
+        names: &["kubernetes", "k8s"],
+        canonical: &["kubernetes.io"],
+    },
+    Authority {
+        names: &["git"],
+        canonical: &["git-scm.com"],
+    },
+    Authority {
+        names: &["nginx"],
+        canonical: &["nginx.org", "docs.nginx.com"],
+    },
+    Authority {
+        names: &["fastapi"],
+        canonical: &["fastapi.tiangolo.com"],
+    },
+    Authority {
+        names: &["django"],
+        canonical: &["docs.djangoproject.com", "djangoproject.com"],
+    },
+    Authority {
+        names: &["flask"],
+        canonical: &["flask.palletsprojects.com"],
+    },
+    Authority {
+        names: &["rfc"],
+        canonical: &["rfc-editor.org", "ietf.org"],
+    },
+    Authority {
+        names: &["json schema"],
+        canonical: &["json-schema.org"],
+    },
+    Authority {
+        names: &["oauth"],
+        canonical: &["rfc-editor.org", "oauth.net"],
+    },
+    Authority {
+        names: &["man page", "man7"],
+        canonical: &["man7.org", "linux.die.net"],
+    },
+    Authority {
+        names: &["tokio"],
+        canonical: &["tokio.rs"],
+    },
+    Authority {
+        names: &["serde"],
+        canonical: &["serde.rs", "crates.io", "docs.rs"],
+    },
+    Authority {
+        names: &["sqlite"],
+        canonical: &["sqlite.org"],
+    },
+    Authority {
+        names: &["redis"],
+        canonical: &["redis.io"],
+    },
+    Authority {
+        names: &["golang"],
+        canonical: &["go.dev", "pkg.go.dev"],
+    },
+    Authority {
+        names: &["nodejs", "node.js"],
+        canonical: &["nodejs.org"],
+    },
+    Authority {
+        names: &["typescript"],
+        canonical: &["typescriptlang.org"],
+    },
+    Authority {
+        names: &["tailwind"],
+        canonical: &["tailwindcss.com"],
+    },
+    Authority {
+        names: &["vite"],
+        canonical: &["vitejs.dev", "vite.dev"],
+    },
+    Authority {
+        names: &["pytorch"],
+        canonical: &["pytorch.org"],
+    },
+    Authority {
+        names: &["tensorflow"],
+        canonical: &["tensorflow.org"],
+    },
+    Authority {
+        names: &["huggingface", "hugging face"],
+        canonical: &["huggingface.co"],
+    },
+    Authority {
+        names: &["aws", "ec2"],
+        canonical: &["docs.aws.amazon.com", "aws.amazon.com"],
+    },
+    Authority {
+        names: &["google cloud", "gcp"],
+        canonical: &["cloud.google.com"],
+    },
+    Authority {
+        names: &["cppreference"],
+        canonical: &["en.cppreference.com", "cppreference.com"],
+    },
+    Authority {
+        names: &["arch wiki", "archlinux"],
+        canonical: &["wiki.archlinux.org", "archlinux.org"],
+    },
+    Authority {
+        names: &["whatwg"],
+        canonical: &["whatwg.org"],
+    },
+    Authority {
+        names: &["jquery"],
+        canonical: &["jquery.com"],
+    },
+    Authority {
+        names: &["気象庁"],
+        canonical: &["jma.go.jp"],
+    },
+    Authority {
+        names: &["国立国会図書館"],
+        canonical: &["ndlsearch.ndl.go.jp", "ndl.go.jp"],
+    },
+    Authority {
+        names: &["gotokyo"],
+        canonical: &["gotokyo.org"],
+    },
+    Authority {
+        names: &["jr東日本", "jreast"],
+        canonical: &["jreast.co.jp"],
+    },
+    Authority {
+        names: &["e-gov", "法令"],
+        canonical: &["elaws.e-gov.go.jp", "e-gov.go.jp"],
     },
 ];
 
@@ -667,6 +828,53 @@ const MIRRORS: &[&str] = &[
     "manpages.ubuntu.com",
 ];
 
+/// Does the query look Japanese (any CJK / kana)?
+fn query_is_japanese(query: &str) -> bool {
+    query.chars().any(|c| {
+        matches!(c as u32, 0x3040..=0x30ff | 0x3400..=0x4dbf | 0x4e00..=0x9fff | 0xf900..=0xfaff)
+    })
+}
+
+/// Penalty for a Wikipedia edition that does not match the query language.
+///
+/// A Czech or Gan Wikipedia article is almost never the answer to an English
+/// or Japanese query; those editions only add noise to the merged results.
+fn wikipedia_language_penalty(query: &str, url: &str) -> f64 {
+    let Some(host) = host_of(url) else { return 0.0 };
+    let Some(subdomain) = host.strip_suffix(".wikipedia.org") else {
+        return 0.0;
+    };
+    if subdomain.contains('.') {
+        return 0.0; // e.g. zh-min-nan.wikipedia.org counts as its own lang
+    }
+    let japanese = query_is_japanese(query);
+    let matches = if japanese {
+        matches!(subdomain, "ja")
+    } else {
+        matches!(subdomain, "en" | "simple")
+    };
+    if matches { 0.0 } else { -0.45 }
+}
+
+/// Match a canonical host.
+///
+/// Most sites run separate services on subdomains (\`users.rust-lang.org\` is the
+/// forum, not the documentation), so only the bare host and its \`www.\` variant
+/// match. Wikipedia is the exception: it is partitioned by language and every
+/// edition is genuinely the same encyclopaedia.
+fn canonical_matches(host: &str, domain: &str) -> bool {
+    if host == domain || host == format!("www.{domain}") {
+        return true;
+    }
+    if host.strip_prefix("www.") == Some(domain) {
+        return true;
+    }
+    const WHOLE_SITE: &[&str] = &["wikipedia.org"];
+    WHOLE_SITE
+        .iter()
+        .any(|site| domain == *site && domain_matches(host, site))
+}
+
 /// How authoritative a result is for this query, in 0.0 ..= 1.0.
 ///
 /// A named site's canonical hosts score 1.0, its mirror copies score 0.0 and
@@ -678,12 +886,17 @@ fn authority(query: &str, url: &str) -> f64 {
         Some(host) => host,
         None => return 0.5,
     };
+    let words: Vec<&str> = lower
+        .split(|character: char| {
+            !character.is_alphanumeric() && character != '.' && character != '-'
+        })
+        .collect();
     for authority in AUTHORITIES {
+        // A short name only matches a whole word ("git" must not match "github");
+        // a distinctive name may appear inside a compound ("postgresql").
         let named = authority.names.iter().any(|name| {
-            lower
-                .split(|character: char| !character.is_alphanumeric() && character != '.')
-                .any(|word| word == *name)
-                || lower.contains(name)
+            words.iter().any(|word| word == name)
+                || (name.chars().count() >= 6 && lower.contains(name))
         });
         if !named {
             continue;
@@ -691,7 +904,7 @@ fn authority(query: &str, url: &str) -> f64 {
         if authority
             .canonical
             .iter()
-            .any(|domain| domain_matches(&host, domain))
+            .any(|domain| canonical_matches(&host, domain))
         {
             return 1.0;
         }
@@ -704,6 +917,53 @@ fn authority(query: &str, url: &str) -> f64 {
         return 0.2;
     }
     0.5
+}
+
+/// Search engines wrap outbound links in their own redirector
+/// (\`google.com/goto?url=\`, \`duckduckgo.com/l/?uddg=\`, ...). Left alone, those
+/// wrappers pollute the result set with links that are not the page at all.
+///
+/// Returns the real destination, \`None\` when the wrapper carries no usable
+/// target (the result must be dropped), and the input unchanged otherwise.
+pub fn unwrap_redirect(url: &str) -> Option<String> {
+    let trimmed = url.trim();
+    let Ok(parsed) = url::Url::parse(trimmed) else {
+        return Some(trimmed.to_string());
+    };
+    let host = parsed.host_str().unwrap_or_default().to_lowercase();
+    let path = parsed.path().to_lowercase();
+
+    // Which query parameter carries the destination, per wrapper.
+    let wrapper = if (host.ends_with("google.") || host.contains(".google."))
+        && (path.starts_with("/goto") || path.starts_with("/url"))
+    {
+        Some(&["url", "q", "continue"][..])
+    } else if host.ends_with("duckduckgo.com") && path.starts_with("/l/") {
+        Some(&["uddg"][..])
+    } else if host.ends_with("bing.com") && path.starts_with("/ck/a") {
+        Some(&["u", "url"][..])
+    } else if host.ends_with("l.facebook.com") && path.starts_with("/l.php") {
+        Some(&["u"][..])
+    } else if (host.ends_with("link.zhihu.com") || host.ends_with("link.juejin.cn"))
+        && path.starts_with("/")
+    {
+        Some(&["target"][..])
+    } else {
+        None
+    };
+    let Some(keys) = wrapper else {
+        return Some(trimmed.to_string());
+    };
+    for (key, value) in parsed.query_pairs() {
+        if keys.contains(&key.as_ref())
+            && (value.starts_with("http://") || value.starts_with("https://"))
+        {
+            return Some(value.into_owned());
+        }
+    }
+    // A wrapper without a target is a dead end: drop the result rather than
+    // showing the redirector itself.
+    None
 }
 
 /// The host of a URL, lowercased and without a port.
@@ -956,6 +1216,77 @@ mod tests {
     }
 
     #[test]
+    fn canonical_subsites_do_not_lend_authority_to_neighbours() {
+        // docs.rust-lang.org is exact: the forum next door is not "the docs"
+        assert_eq!(
+            authority("rust traits", "https://doc.rust-lang.org/book/"),
+            1.0
+        );
+        assert!(authority("rust traits", "https://users.rust-lang.org/t/x") < 1.0);
+        // a whole-site canonical still covers its subdomains
+        assert_eq!(
+            authority("numpy indexing", "https://numpy.org/doc/stable/"),
+            1.0
+        );
+        assert_eq!(
+            authority("wikipedia tokyo", "https://ja.wikipedia.org/wiki/東京"),
+            1.0
+        );
+    }
+
+    #[test]
+    fn wrong_language_wikipedia_is_penalised() {
+        // English query: en/simple fine, cs/gan are noise
+        assert_eq!(
+            wikipedia_language_penalty("tokyo wikipedia", "https://en.wikipedia.org/wiki/Tokyo"),
+            0.0
+        );
+        assert!(
+            wikipedia_language_penalty("tokyo wikipedia", "https://cs.wikipedia.org/wiki/Tokyo")
+                < 0.0
+        );
+        assert!(
+            wikipedia_language_penalty("tokyo wikipedia", "https://gan.wikipedia.org/wiki/Tokyo")
+                < 0.0
+        );
+        // Japanese query: ja fine, en is noise
+        assert_eq!(
+            wikipedia_language_penalty("富士山 wikipedia", "https://ja.wikipedia.org/wiki/富士山"),
+            0.0
+        );
+        assert!(
+            wikipedia_language_penalty(
+                "富士山 wikipedia",
+                "https://en.wikipedia.org/wiki/Mount_Fuji"
+            ) < 0.0
+        );
+        // non-wikipedia hosts are untouched
+        assert_eq!(
+            wikipedia_language_penalty("tokyo", "https://tokyo.rs/"),
+            0.0
+        );
+    }
+
+    #[test]
+    fn redirect_wrappers_are_unwrapped_or_dropped() {
+        assert_eq!(
+            unwrap_redirect("https://www.google.com/goto?url=https%3A%2F%2Ftokio.rs%2F"),
+            Some("https://tokio.rs/".to_string())
+        );
+        assert_eq!(
+            unwrap_redirect("https://duckduckgo.com/l/?uddg=https%3A%2F%2Fexample.com%2Fa&rut=x"),
+            Some("https://example.com/a".to_string())
+        );
+        // a wrapper with no destination is dropped
+        assert_eq!(unwrap_redirect("https://www.google.com/goto?url="), None);
+        // an ordinary URL is untouched
+        assert_eq!(
+            unwrap_redirect("https://tokio.rs/tokio/tutorial"),
+            Some("https://tokio.rs/tokio/tutorial".to_string())
+        );
+    }
+
+    #[test]
     fn authority_lifts_canonical_and_demotes_mirrors() {
         // naming arxiv: the canonical host wins, wikipedia loses
         assert_eq!(
@@ -986,8 +1317,10 @@ mod tests {
             ),
             0.0
         );
-        // no site named: everything sits in the middle
-        assert_eq!(authority("tokio async runtime", "https://tokio.rs/"), 0.5);
+        // a named site in the list is lifted to its canonical host
+        assert_eq!(authority("tokio async runtime", "https://tokio.rs/"), 1.0);
+        // no listed site named: everything sits in the middle
+        assert_eq!(authority("some random topic", "https://example.com/"), 0.5);
         // a mirror of an unnamed site is still demoted
         assert_eq!(authority("some docs", "https://docker-docs.uclv.cu/x"), 0.2);
     }

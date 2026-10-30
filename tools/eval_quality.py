@@ -63,6 +63,35 @@ def hit_rank(urls: list[str], gold: list[str]) -> int | None:
     return None
 
 
+def restart_instance(binary: str, port: int, base: str) -> None:
+    """Stop whatever listens on the port, start the binary, wait for /healthz."""
+    import subprocess
+    import time as _time
+
+    # Kill whatever listens on the port. A pkill -f pattern would also match the
+    # shell that launched this script (its command line contains the pattern).
+    subprocess.run(
+        f"fuser -k {port}/tcp",
+        shell=True,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+    _time.sleep(1)
+    subprocess.Popen(
+        [binary, "--port", str(port)],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+    for _ in range(40):
+        _time.sleep(0.5)
+        try:
+            with urllib.request.urlopen(f"{base}/healthz", timeout=2) as response:
+                if response.status == 200:
+                    return
+        except Exception:  # noqa: BLE001 - still starting
+            continue
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--base", default="http://127.0.0.1:8905")
@@ -71,6 +100,14 @@ def main() -> int:
     parser.add_argument("--timeout", type=float, default=60.0)
     parser.add_argument("--json", dest="json_path", default=None)
     parser.add_argument("--delay", type=float, default=1.0)
+    parser.add_argument(
+        "--restart-binary",
+        default=None,
+        help="restart this binary every --restart-every questions, so engine "
+        "suspensions from the run itself do not pollute the later questions",
+    )
+    parser.add_argument("--restart-every", type=int, default=20)
+    parser.add_argument("--port", type=int, default=8979)
     args = parser.parse_args()
 
     extra: dict[str, str] = {}
@@ -83,7 +120,16 @@ def main() -> int:
     questions = json.loads(Path(args.questions).read_text(encoding="utf-8"))["queries"]
     rows = []
     ranks = []
-    for question in questions:
+    if args.restart_binary:
+        # start a fresh instance for the first batch too
+        base = f"http://127.0.0.1:{args.port}"
+        restart_instance(args.restart_binary, args.port, base)
+        print("  (started instance)", file=sys.stderr)
+    for index, question in enumerate(questions):
+        if args.restart_binary and index and index % args.restart_every == 0:
+            base = f"http://127.0.0.1:{args.port}"
+            restart_instance(args.restart_binary, args.port, base)
+            print(f"  (restarted instance at question {index})", file=sys.stderr)
         result = search(args.base, question["query"], extra, args.timeout)
         rank = hit_rank(result.get("urls") or [], question["gold"])
         if rank is not None:

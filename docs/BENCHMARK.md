@@ -232,3 +232,69 @@ python3 tools/eval_quality.py --base http://127.0.0.1:8888  # RustXNG 単体
 - `search.authority_weight`（既定 8.0）— 正規ドメインの押し上げ強度。0 で無効
 - `search.relevance_weight`（既定 4.0）— クエリ語一致
 - どちらも**単一エンジン指定では無効**（上流順を維持）
+
+## 100 問ベンチマーク（0.11.0）
+
+20 問では差が出にくいため、100 問に拡張して測り直しました。
+
+### 手法
+
+- 設問: 英語 65 / 日本語 35。doc 55 / wiki 25 / official 10 / paper 5 / repo 5
+- 正解: gold URL の前置き一致。スキームとパーセントエンコードは正規化
+- 指標: hit@1 / hit@5 / MRR@10（上位 10 件）
+- **測定の公平性**: `--restart-binary --restart-every 20` で 20 問ごとにインスタンスを再起動。連続計測で自らエンジンのレート制限を溜め、後半が不当に落ちるのを防ぐ
+
+```bash
+python3 tools/eval_quality.py --base http://127.0.0.1:8888 --port 8888 \
+  --restart-binary "$(pwd)/target/release/rustxng" --restart-every 20 \
+  --json bench/eval-100-rustxng-fair.json
+```
+
+### 結果
+
+| バックエンド | hit@1 | hit@5 | MRR | 中央値 |
+| --- | ---: | ---: | ---: | ---: |
+| Exa | **74/100** | **88/100** | **0.808** | — |
+| **RustXNG** | 68/100 | 82/100 | 0.749 | **859 ms** |
+| Tavily | 32/100 | 73/100 | 0.475 | — |
+
+- **Tavily を全指標で大きく上回る**（hit@1 で 2.1 倍、MRR 1.6 倍）
+- **Exa には及ばない**（hit@1 で 6 問差）。理由は下記のカバレッジ
+
+### 改善の推移
+
+| 版 | hit@1 | hit@5 | MRR |
+| --- | ---: | ---: | ---: |
+| 0.8.0（関連度のみ） | 60 | 74 | 0.674 |
+| 0.11.0（本リリース） | **68** | **82** | **0.749** |
+
+0.11.0 で直したもの（すべて実測で確認）:
+
+- エンジンのリダイレクト URL が結果に混入（`google.com/goto?url=...` が 1 位に）
+- クエリ言語と違う Wikipedia 版（英語クエリに `cs.wikipedia.org` が 38 回）
+- サブドメインが正規サイトの権威を借用（`users.rust-lang.org` が `doc.rust-lang.org` と同格）
+- ホームページが具体ページに勝つ（`python.org` > `docs.python.org/ja/3/tutorial`）
+- スニペット本文がランキングに未使用
+
+### Exa との差はどこから来るか（実測）
+
+残差 6 問の内訳を調べると、**ランキングではなくカバレッジ**でした。
+
+- `python dict get method` の正解 `docs.python.org/3/library/stdtypes` は**結果に含まれない**（代わりに `docs.python.org/3/tutorial/datastructures` が 1 位）
+- 新鮮なインスタンスでも **169 エンジン中 27 がブロック**（Google / DuckDuckGo の CAPTCHA、Brave の 429 など）
+- Exa は**自前インデックス**なので上流のブロックの影響を受けない
+
+つまり **RustXNG のランキングは Exa と競合できる水準**だが、メタ検索である以上、上流エンジンがブロックされると取りこぼす。これはアーキテクチャ上の差です。
+
+### クラス別
+
+| クラス | 設問 | hit@1 | hit@5 |
+| --- | ---: | ---: | ---: |
+| repo（GitHub / crates / npm） | 5 | **5** | 5 |
+| wiki（英語） | 15 | 12 | 14 |
+| wiki（日本語） | 10 | 9 | 10 |
+| doc（英語） | 40 | 31 | 33 |
+| doc（日本語） | 15 | 4 | 10 |
+| official（日本語） | 10 | 4 | 7 |
+
+**GitHub / crates / npm は 5/5 で完全**。日本語ドキュメントが最弱（hit@1 4/15）で、これは日本語公式ページを返すエンジンが少ないためです。
