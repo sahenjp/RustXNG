@@ -265,6 +265,7 @@ pub mod xpath;
 pub mod xprivo;
 pub mod yacy;
 pub mod yahoo;
+pub mod yahoo_japan;
 pub mod yahoo_news;
 pub mod yandex;
 pub mod yandex_api;
@@ -382,6 +383,7 @@ pub fn build(config: &EngineConfig) -> Result<EngineHandle, String> {
         "marginalia" => marginalia::Marginalia::from_config(config)?,
         "seznam" => seznam::Seznam::from_config(config)?,
         "yahoo" => yahoo::Yahoo::from_config(config)?,
+        "yahoo_japan" => yahoo_japan::YahooJapan::from_config(config)?,
         "yandex" => yandex::Yandex::from_config(config)?,
         "ebay" => ebay::Ebay::from_config(config)?,
         "europepmc" => europepmc::EuropePmc::from_config(config)?,

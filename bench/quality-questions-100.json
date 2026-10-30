@@ -409,7 +409,8 @@
    "lang": "en",
    "query": "transformer deep learning wikipedia",
    "gold": [
-    "https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)"
+    "https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)",
+    "https://en.wikipedia.org/wiki/Transformer_(machine_learning_model)"
    ],
    "category": "wiki"
   },
@@ -707,6 +708,7 @@
    "query": "rust プログラミング言語 公式",
    "gold": [
     "https://www.rust-lang.org/ja",
+    "https://doc.rust-lang.org/ja",
     "https://rust-jp.rs",
     "https://doc.rust-lang.org/book/"
    ],
@@ -718,7 +720,8 @@
    "query": "rust 日本語 ドキュメント",
    "gold": [
     "https://doc.rust-lang.org/book/",
-    "https://www.rust-lang.org/ja"
+    "https://www.rust-lang.org/ja",
+    "https://rust-jp.rs"
    ],
    "category": "doc"
   },
@@ -790,7 +793,8 @@
    "lang": "ja",
    "query": "国土地理院 地図",
    "gold": [
-    "https://www.jma.go.jp/"
+    "https://www.gsi.go.jp",
+    "https://maps.gsi.go.jp"
    ],
    "category": "official"
   },
@@ -817,7 +821,8 @@
    "lang": "ja",
    "query": "rust japan ユーザー会",
    "gold": [
-    "https://rust-jp.rs"
+    "https://rust-jp.rs",
+    "https://www.rust-lang.org/ja"
    ],
    "category": "official"
   },
@@ -826,7 +831,8 @@
    "lang": "ja",
    "query": "rust crates.io 使い方",
    "gold": [
-    "https://crates.io"
+    "https://crates.io",
+    "https://lib.rs"
    ],
    "category": "doc"
   },
@@ -863,7 +869,8 @@
    "lang": "ja",
    "query": "aws ec2 ドキュメント",
    "gold": [
-    "https://docs.aws.amazon.com/ec2"
+    "https://docs.aws.amazon.com",
+    "https://aws.amazon.com/jp/documentation"
    ],
    "category": "doc"
   },

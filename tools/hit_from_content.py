@@ -33,12 +33,24 @@ def normalise(url: str) -> str:
     return host + "/" + "/".join(parts)
 
 
-def rank(results: list[dict], gold: str) -> int | None:
-    prefix = normalise(gold)
+def rank(results: list[dict], gold: str | list[str]) -> int | None:
+    """First rank whose URL starts with one of the accepted gold URLs."""
+    prefixes = [normalise(g) for g in ([gold] if isinstance(gold, str) else gold)]
     for i, r in enumerate(results, start=1):
-        if normalise(str(r.get("url", ""))).startswith(prefix):
+        candidate = normalise(str(r.get("url", "")))
+        if any(candidate.startswith(prefix) for prefix in prefixes):
             return i
     return None
+
+
+def gold_by_id() -> dict:
+    """Gold URLs from the question file, so a fixed gold applies to every
+    backend without re-collecting them."""
+    path = Path("bench/quality-questions.json")
+    if not path.exists():
+        return {}
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return {q["id"]: q["gold"] for q in data.get("queries", []) if q.get("gold")}
 
 
 def main() -> int:
@@ -63,9 +75,11 @@ def main() -> int:
             print(f"{name:<10} {'(未収集)':>7}")
             continue
         data = json.loads(path.read_text(encoding="utf-8"))
+        golds = gold_by_id()
         ranks = []
         for q in data["queries"]:
-            rk = rank((q.get("results") or [])[: args.top], q["gold_url"])
+            gold = golds.get(q["id"]) or [q["gold_url"]]
+            rk = rank((q.get("results") or [])[: args.top], gold)
             ranks.append(rk)
         n = len(ranks)
         hit1 = sum(1 for r in ranks if r == 1)

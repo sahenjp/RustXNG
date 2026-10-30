@@ -630,7 +630,19 @@ fn relevance(url: &str, title: &str, content: &str, terms: &[String]) -> f64 {
         .filter(|term| body.contains(term.as_str()))
         .count();
     let body_coverage = body_hits as f64 / terms.len() as f64;
-    (0.62 * heading_coverage + 0.30 * body_coverage + depth_bonus).min(1.0)
+    // An identifier in the query (rfc 9110, oauth 6749, python 3.12) is the most
+    // discriminating token there is: when the URL carries it, the page really is
+    // the one being asked for.
+    let id_bonus = if terms
+        .iter()
+        .filter(|term| term.chars().any(|c| c.is_ascii_digit()) && term.len() >= 3)
+        .any(|term| decoded_url.contains(term.as_str()))
+    {
+        0.25
+    } else {
+        0.0
+    };
+    (0.62 * heading_coverage + 0.30 * body_coverage + depth_bonus + id_bonus).min(1.0)
 }
 
 /// A brand/site the user names in the query, with its canonical hosts.
@@ -1371,6 +1383,24 @@ mod tests {
             Some("docs.docker.com")
         );
         assert_eq!(canonical_host_for_query("some random topic"), None);
+    }
+
+    #[test]
+    fn identifiers_in_the_query_boost_the_matching_url() {
+        let terms = query_terms("http semantics rfc 9110");
+        let exact = relevance(
+            "https://www.rfc-editor.org/rfc/rfc9110",
+            "RFC 9110: HTTP Semantics",
+            "",
+            &terms,
+        );
+        let other = relevance(
+            "https://www.rfc-editor.org/rfc/rfc2616",
+            "RFC 2616: HTTP/1.1",
+            "",
+            &terms,
+        );
+        assert!(exact > other, "{exact} should beat {other}");
     }
 
     #[test]

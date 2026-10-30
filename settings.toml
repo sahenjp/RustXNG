@@ -1262,6 +1262,12 @@ paging = true
 time_range_support = true
 
 [[engines]]
+name = "yahoo japan"
+engine = "yahoo_japan"
+shortcut = "yjp"
+categories = ["general", "web"]
+
+[[engines]]
 name = "yandex"
 engine = "yandex"
 shortcut = "yd"
@@ -1628,7 +1634,7 @@ name = "lib_rs"
 engine = "lib_rs"
 shortcut = "lrs"
 categories = ["it", "packages"]
-disabled = true  # unverified; remove when confirmed working
+# verified working (returned results in the engine sweep)
 
 [[engines]]
 name = "metacpan"
@@ -1778,7 +1784,7 @@ engine = "microsoft_learn"
 shortcut = "msl"
 categories = ["it"]
 paging = true
-disabled = true  # unverified; remove when confirmed working
+# verified working (returned results in the engine sweep)
 
 [[engines]]
 name = "moviepilot"
@@ -1834,7 +1840,7 @@ engine = "s1search"
 shortcut = "s1"
 categories = ["general"]
 paging = true
-disabled = true  # unverified; remove when confirmed working
+disabled = true  # needs a base_url (an instance to query)
 
 [[engines]]
 name = "s1search_rampjs"
