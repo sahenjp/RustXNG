@@ -512,8 +512,10 @@ pub struct EngineConfig {
     pub shortcut: Option<String>,
     #[serde(default)]
     pub categories: Vec<String>,
+    /// `None` means "not specified"; an explicit `false` re-enables an engine
+    /// that ships disabled in the defaults.
     #[serde(default)]
-    pub disabled: bool,
+    pub disabled: Option<bool>,
     #[serde(default)]
     pub inactive: bool,
     #[serde(default)]
@@ -548,7 +550,7 @@ impl EngineConfig {
             engine: engine.into(),
             shortcut: Some(shortcut.into()),
             categories: categories.iter().map(|c| (*c).to_string()).collect(),
-            disabled: false,
+            disabled: None,
             inactive: false,
             weight: None,
             timeout: None,
@@ -865,7 +867,7 @@ impl Settings {
     pub fn enabled_engines(&self) -> impl Iterator<Item = &EngineConfig> {
         self.engines
             .iter()
-            .filter(|engine| !engine.disabled && !engine.inactive)
+            .filter(|engine| engine.disabled != Some(true) && !engine.inactive)
     }
 
     pub fn engine(&self, name: &str) -> Option<&EngineConfig> {
@@ -936,8 +938,8 @@ fn merge_engines_by_name(
                 if !engine.categories.is_empty() {
                     existing.categories = engine.categories.clone();
                 }
-                if engine.disabled {
-                    existing.disabled = true;
+                if let Some(disabled) = engine.disabled {
+                    existing.disabled = Some(disabled);
                 }
                 if engine.inactive {
                     existing.inactive = true;
@@ -982,6 +984,31 @@ fn merge_engines_by_name(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn a_user_can_enable_an_engine_that_ships_disabled() {
+        let defaults = Settings::defaults();
+        // exaapi ships disabled in the defaults
+        let shipped = defaults.engine("exaapi").expect("exaapi exists");
+        assert_eq!(shipped.disabled, Some(true));
+
+        let user: Settings = toml::from_str(
+            r#"
+[[engines]]
+name = "exaapi"
+engine = "exaapi"
+shortcut = "exa"
+categories = ["general", "web"]
+disabled = false
+api_key = "test-key"
+"#,
+        )
+        .expect("user settings parse");
+        let merged = Settings::merge(defaults, user).expect("merge");
+        let enabled = merged.engine("exaapi").expect("exaapi kept");
+        assert_eq!(enabled.disabled, Some(false), "explicit false must win");
+        assert_eq!(enabled.api_key.as_deref(), Some("test-key"));
+    }
 
     #[test]
     fn builtin_defaults_are_valid() {
@@ -1035,7 +1062,7 @@ engines:
         .unwrap();
         let merged = Settings::merge(defaults, user).unwrap();
         let google = merged.engine("google").expect("google kept");
-        assert!(google.disabled);
+        assert_eq!(google.disabled, Some(true));
         assert!(merged.engine("my instance").is_some());
     }
 
