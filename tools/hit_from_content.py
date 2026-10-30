@@ -11,13 +11,26 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import re
 import json
 from pathlib import Path
 
 
+_VERSION_SEGMENT = re.compile(r"^(?:stable|current|latest|v?\d+(?:\.\d+)*|\d+(?:\.\d+)*)$")
+
+
 def normalise(url: str) -> str:
+    """Strip the scheme and percent escapes, and treat version segments
+    (stable / current / 6.1 / 3 / v2) as wildcards: the same page under a
+    different version path still counts as the answer."""
     from urllib.parse import unquote
-    return unquote(url.split("://", 1)[-1]).rstrip("/").lower()
+
+    rest = unquote(str(url).split("://", 1)[-1]).rstrip("/").lower()
+    host, _, path = rest.partition("/")
+    parts = []
+    for segment in path.split("/"):
+        parts.append("*" if _VERSION_SEGMENT.match(segment) else segment)
+    return host + "/" + "/".join(parts)
 
 
 def rank(results: list[dict], gold: str) -> int | None:

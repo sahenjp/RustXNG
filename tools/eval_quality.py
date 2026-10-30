@@ -15,6 +15,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import re
 import json
 import statistics
 import sys
@@ -45,13 +46,21 @@ def search(base: str, query: str, extra: dict[str, str], timeout: float) -> dict
     return {"millis": millis, "urls": urls, "bytes": len(body), "unresponsive": len(payload.get("unresponsive_engines") or [])}
 
 
+_VERSION_SEGMENT = re.compile(r"^(?:stable|current|latest|v?\d+(?:\.\d+)*|\d+(?:\.\d+)*)$")
+
+
 def normalise(url: str) -> str:
-    """Strip the scheme and decode percent escapes so http/https and encoded
-    paths (ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E5%B1%B1) still match."""
+    """Strip the scheme and percent escapes, and treat version segments
+    (stable / current / 6.1 / 3 / v2) as wildcards: the same page under a
+    different version path still counts as the answer."""
     from urllib.parse import unquote
 
-    rest = url.split("://", 1)[-1]
-    return unquote(rest).rstrip("/").lower()
+    rest = unquote(str(url).split("://", 1)[-1]).rstrip("/").lower()
+    host, _, path = rest.partition("/")
+    parts = []
+    for segment in path.split("/"):
+        parts.append("*" if _VERSION_SEGMENT.match(segment) else segment)
+    return host + "/" + "/".join(parts)
 
 
 def hit_rank(urls: list[str], gold: list[str]) -> int | None:

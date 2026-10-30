@@ -287,6 +287,14 @@ impl Searcher {
             }
         };
 
+        // Remember which engines answered before the outcomes are consumed;
+        // the deep-page pass only asks those again.
+        let healthy: Vec<String> = outcomes
+            .iter()
+            .filter(|outcome| outcome.items.is_ok())
+            .map(|outcome| outcome.engine.clone())
+            .collect();
+
         let mut container = ResultContainer::new();
         for outcome in outcomes {
             response.engines.push(outcome.engine.clone());
@@ -301,6 +309,35 @@ impl Searcher {
                 }
             }
             container.add_timing(&outcome.engine, outcome.elapsed.as_secs_f64(), 0.0);
+        }
+
+        // Extra result pages: coverage, not ranking, is what limits recall for
+        // documentation questions, so page 2 is worth fetching when asked for.
+        let deep_pages = self.settings.search.deep_pages;
+        if deep_pages > 0 && request.engines.len() != 1 && Instant::now() < deadline {
+            let paging: Vec<EngineHandle> = engines
+                .iter()
+                .filter(|engine| engine.paging() && healthy.contains(&engine.name().to_string()))
+                .cloned()
+                .collect();
+            for extra in 1..=deep_pages {
+                if paging.is_empty() || Instant::now() >= deadline {
+                    break;
+                }
+                let mut deeper = request.clone();
+                deeper.pageno = request.pageno + extra;
+                let page_outcomes = futures::future::join_all(
+                    paging
+                        .iter()
+                        .map(|engine| self.run_engine(engine, &deeper, deadline)),
+                )
+                .await;
+                for outcome in page_outcomes {
+                    if let Ok(items) = outcome.items {
+                        container.extend_from_page(&outcome.engine, outcome.weight, items, extra);
+                    }
+                }
+            }
         }
 
         let query_terms = crate::results::query_terms(&request.query.query_text());

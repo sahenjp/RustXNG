@@ -345,6 +345,9 @@ pub struct Search {
     /// Empty disables semantic re-ranking.
     pub embedding_url: String,
     pub embedding_model: String,
+    /// How many extra result pages of the paging engines to merge into the
+    /// answer. 0 (the default) only uses page 1; 1 adds page 2, and so on.
+    pub deep_pages: u32,
     /// Run a site-scoped second pass when the named site is missing from the
     /// first pass (finds the reference page that a tutorial page outranks).
     pub site_scoped_retry: bool,
@@ -397,6 +400,7 @@ impl Default for Search {
             relevance_weight: 4.0,
             embedding_url: String::new(),
             embedding_model: "BAAI/bge-small-en-v1.5".into(),
+            deep_pages: 0,
             site_scoped_retry: false,
             authority_weight: 8.0,
             embedding_weight: 2.5,

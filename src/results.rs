@@ -110,6 +110,9 @@ pub struct SearchResult {
     /// A short URL shown in the UI.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub pretty_url: Option<String>,
+    /// Which extra result page this came from (0 = page 1).
+    #[serde(skip)]
+    pub deep_page: u32,
     /// Readable page text, only when the request asked for raw content.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub raw_content: Option<String>,
@@ -258,10 +261,27 @@ impl ResultContainer {
 
     /// Merge the results of one engine, weighting them with `weight`.
     pub fn extend(&mut self, engine_name: &str, weight: f64, items: Vec<EngineItem>) {
+        self.extend_from_page(engine_name, weight, items, 0);
+    }
+
+    /// Merge one engine's results that came from a deeper result page.
+    ///
+    /// Deeper pages score lower because their positions are shifted by
+    /// PAGE_POSITION_STRIDE per extra page, so a page-2 hit never outranks the
+    /// same engine's page-1 hits.
+    pub fn extend_from_page(
+        &mut self,
+        engine_name: &str,
+        weight: f64,
+        items: Vec<EngineItem>,
+        page_offset: u32,
+    ) {
         if self.closed {
             return;
         }
-        let mut position = 0u32;
+        const PAGE_POSITION_STRIDE: u32 = 100;
+        let mut position = page_offset * PAGE_POSITION_STRIDE;
+        let deep_page = page_offset;
         for item in items {
             match item {
                 EngineItem::Suggestion(suggestion) => {
@@ -296,6 +316,7 @@ impl ResultContainer {
                         .insert(key, value);
                 }
                 EngineItem::Result(mut result) => {
+                    result.deep_page = deep_page;
                     // Unwrap engine redirectors; drop dead wrappers outright so
                     // a redirector URL never reaches the user.
                     match unwrap_redirect(&result.url) {
@@ -363,6 +384,11 @@ impl ResultContainer {
             // Naming a site in the query means "that site's own page": lift the
             // canonical host and push mirrors down. This is the part keyword
             // and embedding ranking cannot see (official docs vs its mirror).
+            // A page-2 hit is a fallback: it never outranks the same engine's
+            // page-1 answer for the query.
+            if result.deep_page > 0 {
+                result.score *= 0.5f64.powi(result.deep_page as i32);
+            }
             if authority_weight > 0.0 {
                 let signal = authority(query_text, &result.url) - 0.5;
                 result.score += authority_weight * signal;
@@ -929,12 +955,22 @@ fn authority(query: &str, url: &str) -> f64 {
         if !named {
             continue;
         }
-        if authority
+        // Prefer the most specific canonical host: docs.python.org answers a
+        // documentation question better than python.org does.
+        let mut matched = authority
             .canonical
             .iter()
-            .any(|domain| canonical_matches(&host, domain))
-        {
-            return 1.0;
+            .filter(|domain| canonical_matches(&host, domain))
+            .map(|domain| domain.split('.').count())
+            .max();
+        if let Some(labels) = matched.take() {
+            let best = authority
+                .canonical
+                .iter()
+                .map(|domain| domain.split('.').count())
+                .max()
+                .unwrap_or(labels);
+            return if labels >= best { 1.0 } else { 0.85 };
         }
         if MIRRORS.iter().any(|mirror| domain_matches(&host, mirror)) {
             return 0.0;

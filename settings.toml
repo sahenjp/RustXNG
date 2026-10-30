@@ -1730,7 +1730,7 @@ engine = "grokipedia"
 shortcut = "gp"
 categories = ["general"]
 paging = true
-disabled = true  # unverified; remove when confirmed working
+# verified working (results observed in the 100-question sweep)
 
 [[engines]]
 name = "il_post"
@@ -1794,7 +1794,7 @@ engine = "neocities"
 shortcut = "nc"
 categories = ["general", "blogs"]
 paging = true
-disabled = true  # unverified; remove when confirmed working
+# verified working (results observed in the 100-question sweep)
 
 [[engines]]
 name = "picjumbo"
@@ -1865,7 +1865,7 @@ name = "keenable"
 engine = "keenable"
 shortcut = "keen"
 categories = ["general"]
-disabled = true  # unverified; remove when confirmed working
+# verified working (results observed in the 100-question sweep)
 
 [[engines]]
 name = "libretranslate"
