@@ -44,6 +44,8 @@ pub struct SearchRequest {
     pub include_raw_content: bool,
     /// How the selected engines are started.
     pub strategy: crate::settings::SearchStrategy,
+    /// Set once the site-scoped second pass already ran, so it cannot recurse.
+    pub site_retry_done: bool,
 }
 
 impl SearchRequest {
@@ -67,6 +69,7 @@ impl SearchRequest {
             exclude_domains: Vec::new(),
             include_raw_content: false,
             strategy: crate::settings::SearchStrategy::Parallel,
+            site_retry_done: false,
             query,
         }
     }
@@ -340,6 +343,14 @@ impl Searcher {
             results = self.rerank_by_embedding(&request.query, results).await;
         }
 
+        // Site-scoped second pass: when the query names a known site but that
+        // site barely shows up, search within it explicitly. Metasearch engines
+        // answer "python dict get method" with a tutorial page; asking for a
+        // site-scoped query surfaces the reference page itself.
+        if !request.site_retry_done {
+            results = self.site_scoped_retry(&request, results).await;
+        }
+
         crate::results::filter_results(
             &mut results,
             &request.include_domains,
@@ -558,6 +569,104 @@ impl Searcher {
     }
 
     /// Fetch readable page text for the first few results (raw content).
+    /// Run a site-scoped search when the site named in the query is missing
+    /// from the first pass, and splice its best pages into the results.
+    async fn site_scoped_retry(
+        &self,
+        request: &SearchRequest,
+        mut results: Vec<SearchResult>,
+    ) -> Vec<SearchResult> {
+        if !self.settings.search.site_scoped_retry || request.engines.len() == 1 {
+            return results;
+        }
+        let text = request.query.query_text();
+        let Some(host) = crate::results::canonical_host_for_query(&text) else {
+            return results;
+        };
+        // Only the top of the list matters: a docs page buried at rank 40 does
+        // not answer the query, even if the site is technically present.
+        let present = results
+            .iter()
+            .take(3)
+            .filter(|result| {
+                crate::results::host_of(&result.url)
+                    .is_some_and(|h| h == host || h.ends_with(&format!(".{host}")))
+            })
+            .count();
+        if present >= 2 {
+            return results;
+        }
+
+        let scoped = format!("site:{host} {text}");
+        let mut second = request.clone();
+        second.query =
+            crate::query::Query::parse(&scoped, &self.registry, &request.disabled_engines);
+        second.site_retry_done = true;
+        second.timeout_limit = Some(
+            request
+                .timeout_limit
+                .unwrap_or(self.settings.search.timeout_limit)
+                .min(2.0),
+        );
+        second.include_raw_content = false;
+        second.max_results = None;
+        let response = Box::pin(self.search(second)).await;
+        tracing::debug!(
+            host,
+            present,
+            second_results = response.results.len(),
+            "site-scoped second pass ran"
+        );
+
+        let reference = results.first().map(|result| result.score).unwrap_or(1.0);
+        let terms = crate::results::query_terms(&text);
+        // Pick the pages of this site that best match the original query, not
+        // merely the ones the scoped pass happened to rank first.
+        let mut candidates: Vec<SearchResult> = response
+            .results
+            .into_iter()
+            .filter(|candidate| {
+                crate::results::host_of(&candidate.url)
+                    .is_some_and(|h| h == host || h.ends_with(&format!(".{host}")))
+            })
+            .collect();
+        candidates.sort_by(|a, b| {
+            crate::results::relevance_score(b, &terms)
+                .partial_cmp(&crate::results::relevance_score(a, &terms))
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
+        let mut added = 0usize;
+        let mut by_key: std::collections::HashMap<String, usize> = results
+            .iter()
+            .enumerate()
+            .map(|(index, result)| (crate::results::dedup_key(&result.url), index))
+            .collect();
+        for candidate in candidates {
+            if added >= 3 {
+                break;
+            }
+            let key = crate::results::dedup_key(&candidate.url);
+            if let Some(index) = by_key.get(&key).copied() {
+                results[index].score = results[index].score.max(reference * 0.95);
+                continue;
+            }
+            let mut promoted = candidate;
+            promoted.score = reference * (0.95 - 0.10 * added as f64);
+            by_key.insert(key, results.len());
+            results.push(promoted);
+            added += 1;
+        }
+        if added > 0 {
+            tracing::debug!(host, added, "site-scoped second pass added pages");
+            results.sort_by(|a, b| {
+                b.score
+                    .partial_cmp(&a.score)
+                    .unwrap_or(std::cmp::Ordering::Equal)
+            });
+        }
+        results
+    }
+
     /// Re-rank the top results by cosine similarity between the query and each
     /// result's title + snippet, using an OpenAI-compatible embeddings endpoint.
     ///

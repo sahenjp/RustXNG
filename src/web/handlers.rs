@@ -233,6 +233,7 @@ async fn run_search(
             .as_deref()
             .map(|value| matches!(value, "1" | "true" | "on" | "yes"))
             .unwrap_or(false),
+        site_retry_done: false,
         strategy: match params.strategy.as_deref() {
             Some("staged") => crate::settings::SearchStrategy::Staged,
             Some("parallel") => crate::settings::SearchStrategy::Parallel,

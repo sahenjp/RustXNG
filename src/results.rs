@@ -875,6 +875,34 @@ fn canonical_matches(host: &str, domain: &str) -> bool {
         .any(|site| domain == *site && domain_matches(host, site))
 }
 
+/// The canonical host the query asks for, when it names a known site.
+///
+/// \`"python dict get method"\` -> \`Some("docs.python.org")\`. Used to run a
+/// site-scoped second pass when the site's own page did not surface.
+pub fn canonical_host_for_query(query: &str) -> Option<&'static str> {
+    let lower = query.to_lowercase();
+    let words: Vec<&str> = lower
+        .split(|character: char| {
+            !character.is_alphanumeric() && character != '.' && character != '-'
+        })
+        .collect();
+    for authority in AUTHORITIES {
+        let named = authority.names.iter().any(|name| {
+            words.iter().any(|word| word == name)
+                || (name.chars().count() >= 6 && lower.contains(name))
+        });
+        if named {
+            // Prefer the most specific canonical host (the documentation one).
+            return authority
+                .canonical
+                .iter()
+                .max_by_key(|domain| domain.split('.').count())
+                .copied();
+        }
+    }
+    None
+}
+
 /// How authoritative a result is for this query, in 0.0 ..= 1.0.
 ///
 /// A named site's canonical hosts score 1.0, its mirror copies score 0.0 and
@@ -964,6 +992,12 @@ pub fn unwrap_redirect(url: &str) -> Option<String> {
     // A wrapper without a target is a dead end: drop the result rather than
     // showing the redirector itself.
     None
+}
+
+/// Relevance of one result to the query terms, for callers outside this
+/// module (the site-scoped second pass picks a site's best page with this).
+pub fn relevance_score(result: &SearchResult, terms: &[String]) -> f64 {
+    relevance(&result.url, &result.title, &result.content, terms)
 }
 
 /// The host of a URL, lowercased and without a port.
@@ -1284,6 +1318,23 @@ mod tests {
             unwrap_redirect("https://tokio.rs/tokio/tutorial"),
             Some("https://tokio.rs/tokio/tutorial".to_string())
         );
+    }
+
+    #[test]
+    fn canonical_host_for_query_finds_the_named_site() {
+        assert_eq!(
+            canonical_host_for_query("python dict get method"),
+            Some("docs.python.org")
+        );
+        assert_eq!(
+            canonical_host_for_query("rust traits"),
+            Some("doc.rust-lang.org")
+        );
+        assert_eq!(
+            canonical_host_for_query("docker compose reference"),
+            Some("docs.docker.com")
+        );
+        assert_eq!(canonical_host_for_query("some random topic"), None);
     }
 
     #[test]

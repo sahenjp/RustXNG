@@ -45,6 +45,12 @@ raw_content_limit = 5
 # 20 問ベンチで 4.0 が最良（MRR 0.838・hit@5 19/20 で Exa と同率）。
 relevance_weight = 4.0
 
+# クエリがサイト名を指すとき、そのサイト内検索（site: 付き）を二段目として
+# 実行し、公式リファレンスページを取りこぼさないようにする。
+# 100 問ベンチでは全体として逆効果（hit@1 68→62）だったため既定は false。
+# 特定サイトのリファレンスを狙う用途では true にすると見つかりやすい。
+site_scoped_retry = false
+
 # 意味（埋め込み）リランキング — Exa のニューラル検索に完全対抗するため。
 # OpenAI 互換の embeddings エンドポイントを指す。tools/embed_server.py
 # （ローカル・高速・キー不要）か、クラウドの embeddings API を指定。

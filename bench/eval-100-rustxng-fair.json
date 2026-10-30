@@ -1,12 +1,12 @@
 {
-  "base": "http://127.0.0.1:8977",
+  "base": "http://127.0.0.1:8988",
   "params": {},
   "questions": 100,
-  "hit@1": 68,
-  "hit@5": 82,
-  "mrr@10": 0.749,
-  "median_ms": 859.1,
-  "median_bytes": 7892,
+  "hit@1": 55,
+  "hit@5": 73,
+  "mrr@10": 0.647,
+  "median_ms": 586.4,
+  "median_bytes": 7983,
   "errors": 0,
   "rows": [
     {
@@ -18,22 +18,22 @@
         "https://docs.python.org/3/library/stdtypes"
       ],
       "category": "doc",
-      "rank": 1,
-      "millis": 3003.0613060225733,
+      "rank": 10,
+      "millis": 3003.1516579911113,
       "urls": [
-        "https://docs.python.org/3/tutorial/datastructures.html",
-        "https://docs.python.org/3/c-api/list.html",
-        "https://www.w3schools.com/python/python_lists_methods.asp",
-        "https://www.scaleway.com/en/docs/tutorials/python-lists-dicts/",
-        "https://www.tutorialspoint.com/python/python_list_methods.htm",
-        "https://mindmajix.com/python-sort",
-        "https://www.w3schools.com/python/python_ref_list.asp",
-        "https://www.digitalocean.com/community/tutorials/python-join-list",
         "http://python.org/sf/1215887",
-        "https://www.python.org/"
+        "https://www.python.org/",
+        "https://www.python.org/downloads/",
+        "https://docs.python.org/ja/3/tutorial/",
+        "https://cs.du.edu/~intropython/intro-to-programming/list_methods.html",
+        "https://www.scaler.com/topics/list-methods-in-python/",
+        "https://en.wikibooks.org/wiki/Python_Programming%2FPrint_version#List_methods",
+        "https://en.wikiversity.org/wiki/Python_Concepts%2FLists#Built-in_List_Methods",
+        "https://www.digitalocean.com/community/tutorials/how-to-use-list-methods-in-python-3",
+        "https://docs.python.org/3/tutorial/datastructures.html"
       ],
-      "bytes": 7957,
-      "unresponsive": 26
+      "bytes": 6659,
+      "unresponsive": 28
     },
     {
       "id": "en-py-dict",
@@ -44,21 +44,21 @@
       ],
       "category": "doc",
       "rank": null,
-      "millis": 2856.162301002769,
+      "millis": 3003.308764018584,
       "urls": [
         "https://docs.python.org/3/tutorial/datastructures.html",
         "https://www.tutorialspoint.com/python/dictionary_get.htm",
         "https://www.w3schools.com/python/ref_dictionary_get.asp",
-        "https://www.reddit.com/r/learnpython/comments/1jd9n3w/what_does_get_mean_and_do_in_python/",
         "https://stackoverflow.com/questions/61141025/not-understanding-a-trick-on-get-method-in-python",
         "https://www.reddit.com/r/pythontips/comments/113z0x3/beginner_tip_use_dictionary_get_method_to_improve/",
+        "https://www.reddit.com/r/learnpython/comments/1jd9n3w/what_does_get_mean_and_do_in_python/",
         "https://labex.io/tutorials/python-how-to-use-dict-get-method-correctly-421297",
         "https://www.freecodecamp.org/news/create-a-dictionary-in-python-python-dict-methods/",
         "https://www.datacamp.com/tutorial/python-dictionary-methods",
         "https://www.python.org/downloads/"
       ],
-      "bytes": 9400,
-      "unresponsive": 33
+      "bytes": 9385,
+      "unresponsive": 34
     },
     {
       "id": "en-py-asyncio",
@@ -69,21 +69,21 @@
       ],
       "category": "doc",
       "rank": 1,
-      "millis": 1246.3771759939846,
+      "millis": 474.04419400845654,
       "urls": [
         "http://docs.python.org/3/library/asyncio.html",
         "https://docs.python.org/3/howto/a-conceptual-overview-of-asyncio.html",
         "http://docs.python.org/3.12/library/asyncio.html",
         "https://docs.python.org/3/library/asyncio-dev.html",
-        "https://docs.python.org/3.11//library/asyncio.html",
         "https://docs.python.org/3/library/asyncio-task.html",
         "https://docs.python.org/3/library/asyncio-queue.html",
         "https://docs.python.org/3/library/asyncio-eventloop.html",
         "https://docs.python.org/3/library/asyncio-api-index.html",
+        "https://docs.python.org/3.9/library/asyncio.html",
         "https://docs.python.org/fr/3.8/library/asyncio.html"
       ],
-      "bytes": 8585,
-      "unresponsive": 35
+      "bytes": 8506,
+      "unresponsive": 36
     },
     {
       "id": "en-py-re",
@@ -93,22 +93,22 @@
         "https://docs.python.org/3/library/re"
       ],
       "category": "doc",
-      "rank": 1,
-      "millis": 1237.8824509796686,
+      "rank": null,
+      "millis": 496.5436500206124,
       "urls": [
-        "https://docs.python.org/3/library/re.html",
-        "https://docs.python.org/3/howto/regex.html",
-        "https://realpython.com/regex-python/",
-        "https://www.simplilearn.com/tutorials/python-tutorial/python-regular-expressions",
         "https://docs.python.org/fr/2/howto/regex.html",
         "https://docs.python.org/howto/regex.html",
         "https://docs.python.org/3.12/howto/regex.html",
         "http://docs.python.org/dev/howto/regex",
         "http://docs.python.org/2.6/howto/regex.html",
-        "http://docs.python.org/howto/regex"
+        "http://docs.python.org/howto/regex",
+        "http://docs.python.org/3.0/howto/regex.html",
+        "http://docs.python.org/2/howto/regex.html",
+        "http://python.org/sf/529923",
+        "https://docs.python.org/3/howto/regex.html"
       ],
-      "bytes": 7972,
-      "unresponsive": 35
+      "bytes": 7107,
+      "unresponsive": 36
     },
     {
       "id": "en-py-typing",
@@ -119,21 +119,21 @@
       ],
       "category": "doc",
       "rank": 1,
-      "millis": 1048.4589659899939,
+      "millis": 562.4614669941366,
       "urls": [
         "https://docs.python.org/3/library/typing.html",
         "https://weaviate.io/blog/typing-systems-in-python",
-        "https://realpython.com/python312-typing/",
         "https://www.ryuslog.com/blog/python-typing-guide",
         "https://www.gaohongnan.com/computer_science/type_theory/04-generics.html",
-        "https://www.tutorialspoint.com/python/python_generics.htm",
         "https://www.marktechpost.com/2026/04/30/a-coding-implementation-on-pyright-type-checking-covering-generics-protocols-strict-mode-type-narrowing-and-modern-python-typing/",
+        "https://realpython.com/python312-typing/",
         "https://stackoverflow.com/questions/72028012/how-to-specialize-a-class-in-python-typing-generics",
         "https://taoa.io/posts/Shape-typing-numpy-with-pyright-and-variadic-generics",
+        "https://arjancodes.com/blog/python-generics-syntax/",
         "https://www.python.org/downloads/"
       ],
-      "bytes": 8967,
-      "unresponsive": 36
+      "bytes": 9063,
+      "unresponsive": 37
     },
     {
       "id": "en-rs-book",
@@ -144,12 +144,12 @@
       ],
       "category": "doc",
       "rank": 1,
-      "millis": 1002.8537470207084,
+      "millis": 562.009515997488,
       "urls": [
         "https://doc.rust-lang.org/book/",
-        "https://doc.rust-lang.org/book/ch00-00-introduction.html",
         "https://rust-lang.org/",
         "https://doc.rust-lang.org/stable/book/",
+        "https://doc.rust-lang.org/book/ch00-00-introduction.html",
         "http://doc.rust-lang.org/book/README.html",
         "https://doc.rust-lang.org/book/foreword.html",
         "http://doc.rust-lang.org",
@@ -157,8 +157,8 @@
         "https://www.rust-lang.org/f",
         "https://rust-lang.org/learn/"
       ],
-      "bytes": 7236,
-      "unresponsive": 35
+      "bytes": 7258,
+      "unresponsive": 36
     },
     {
       "id": "en-rs-vec",
@@ -169,10 +169,9 @@
       ],
       "category": "doc",
       "rank": 1,
-      "millis": 918.8874780084006,
+      "millis": 353.7325079960283,
       "urls": [
         "https://doc.rust-lang.org/std/vec/struct.Vec.html",
-        "https://doc.rust-lang.org/stable/",
         "https://doc.rust-lang.org/book/ch08-01-vectors.html",
         "https://doc.rust-lang.org/1.8.0/book/vectors.html",
         "https://doc.rust-lang.org/rust-by-example/std/vec.html",
@@ -180,10 +179,11 @@
         "https://doc.rust-lang.org/std/macro.vec.html",
         "https://rust-lang.org/zh-CN/",
         "https://doc.rust-lang.org/std/vec/index.html",
-        "https://doc.rust-lang.org/book/"
+        "https://doc.rust-lang.org/book/",
+        "https://doc.rust-lang.org/stable/std/"
       ],
-      "bytes": 7157,
-      "unresponsive": 35
+      "bytes": 7054,
+      "unresponsive": 36
     },
     {
       "id": "en-rs-trait",
@@ -193,10 +193,9 @@
         "https://doc.rust-lang.org/book/ch10-02-traits.html"
       ],
       "category": "doc",
-      "rank": 5,
-      "millis": 938.7786010047421,
+      "rank": 4,
+      "millis": 464.92790000047535,
       "urls": [
-        "https://doc.rust-lang.org/book/ch20-02-advanced-traits.html",
         "https://doc.rust-lang.org/1.8.0/book/traits.html",
         "https://doc.rust-lang.org/rust-by-example/trait.html",
         "https://doc.rust-lang.org/reference/special-types-and-traits.html",
@@ -205,10 +204,11 @@
         "https://doc.rust-lang.org",
         "https://doc.rust-lang.org/reference/items/traits.html",
         "https://rust-lang.org/zh-CN/",
-        "https://doc.rust-lang.org/stable/std/"
+        "https://doc.rust-lang.org/stable/std/",
+        "https://doc.rust-lang.org/book/"
       ],
-      "bytes": 6378,
-      "unresponsive": 35
+      "bytes": 6346,
+      "unresponsive": 36
     },
     {
       "id": "en-rs-result",
@@ -219,7 +219,7 @@
       ],
       "category": "doc",
       "rank": 1,
-      "millis": 2002.52429099055,
+      "millis": 442.52801197580993,
       "urls": [
         "https://doc.rust-lang.org/std/result/enum.Result.html",
         "https://doc.rust-lang.org/std/io/type.Result.html",
@@ -232,8 +232,8 @@
         "https://rust-lang.org/zh-CN/",
         "https://doc.rust-lang.org/book/"
       ],
-      "bytes": 7525,
-      "unresponsive": 35
+      "bytes": 7601,
+      "unresponsive": 36
     },
     {
       "id": "en-rs-cargo",
@@ -244,7 +244,7 @@
       ],
       "category": "doc",
       "rank": 1,
-      "millis": 3001.7106430022977,
+      "millis": 399.7027360019274,
       "urls": [
         "https://doc.rust-lang.org/cargo/reference/manifest.html",
         "https://www.facebook.com/ShippersGhana/posts/cargo-manifest-what-an-agent-must-know-cargomanifests-cargo-import-cargocontaine/405972854890993/",
@@ -257,8 +257,8 @@
         "http://doc.rust-lang.org/cargo/commands/cargo-new.html",
         "https://www.scribd.com/document/509086440/Sea-Cargo-Manifest-Format"
       ],
-      "bytes": 7573,
-      "unresponsive": 35
+      "bytes": 7635,
+      "unresponsive": 36
     },
     {
       "id": "en-docker-compose",
@@ -270,21 +270,21 @@
       ],
       "category": "doc",
       "rank": 1,
-      "millis": 1068.049533991143,
+      "millis": 562.8042419848498,
       "urls": [
         "http://docs.docker.com/reference/compose-file/",
         "https://docs.docker.com/reference/compose-file/extension/",
         "https://www.docker.com/blog/compose-1-6/",
-        "https://docs.docker.com/reference/cli/docker/compose",
         "https://docs.docker.com/compose/extends/",
-        "https://docs.docker.com/compose",
-        "https://www.docker.com/products/docker-desktop/",
+        "https://www.docker.com/ja-jp/get-started/",
         "https://docs.docker.com/desktop/setup/install/windows-install/",
+        "https://docs.docker.com/engine/install/",
         "https://www.docker.com/",
+        "https://gist.github.com/ju2wheels/1885539d63dbcfb20729",
         "https://www.docker.com/blog/how-to-dockerize-wordpress/"
       ],
-      "bytes": 6946,
-      "unresponsive": 35
+      "bytes": 6902,
+      "unresponsive": 36
     },
     {
       "id": "en-docker-build",
@@ -295,21 +295,21 @@
       ],
       "category": "doc",
       "rank": 1,
-      "millis": 1012.3513200087473,
+      "millis": 632.929791987408,
       "urls": [
         "https://docs.docker.com/reference/dockerfile/",
         "https://docs.docker.com/engine/reference/builder/",
         "https://docs.docker.com/",
         "https://docs.docker.com/engine/reference/build/",
         "https://docs.docker.com/compose/reference/build/",
-        "https://docs.digitalocean.com/products/app-platform/reference/dockerfile/",
         "https://cleanor.app/reference/dockerfile",
-        "https://unkey.com/docs/compute/build/dockerfile",
+        "https://docs.digitalocean.com/products/app-platform/reference/dockerfile/",
         "https://developercommunity.visualstudio.com/content/problem/371175/the-docker-build-task-cannot-find-the-file-referen.html",
+        "http://www.mozilla.org/projects/nspr/reference/build/index.html",
         "https://www.docker.com/blog/dockerfiles-now-support-multiple-build-contexts/"
       ],
-      "bytes": 7164,
-      "unresponsive": 35
+      "bytes": 7191,
+      "unresponsive": 36
     },
     {
       "id": "en-docker-run",
@@ -320,21 +320,21 @@
       ],
       "category": "doc",
       "rank": null,
-      "millis": 1076.490075996844,
+      "millis": 2003.3555070112925,
       "urls": [
-        "https://www.docker.com/blog/docker-best-practices-choosing-between-run-cmd-and-entrypoint/",
-        "https://www.docker.com/blog/run-llms-locally/",
-        "https://stackoverflow.com/questions/66760944/run-a-command-line-when-starting-a-docker-container",
-        "https://stackoverflow.com/questions/26153686/how-do-i-run-a-command-on-an-already-existing-docker-container",
-        "https://www.reddit.com/r/docker/comments/ggs57p/the_basic_anatomy_of_a_docker_run_command/",
-        "https://www.cloudbees.com/blog/the-basics-of-the-docker-run-command",
-        "https://www.reddit.com/r/docker/comments/1ag7wrc/docker_desktop_how_to_run_a_command/",
-        "https://www.akamai.com/cloud/guides/docker-commands-quick-reference-cheat-sheet/",
         "https://docs.docker.com/docker-hub/quickstart/",
-        "https://docs.docker.com/reference/dockerfile"
+        "https://docs.docker.com/",
+        "https://www.docker.com/ja-jp/get-started/",
+        "https://docs.docker.com/desktop/setup/install/windows-install/",
+        "https://docs.docker.com/engine/install/",
+        "https://www.docker.com/",
+        "https://help.hcl-software.com/domino/14.5.1/admin/inst_dock_docker_commands.html",
+        "https://docs.tibco.com/pub/amsgce/1.0.0/doc/html/Installation_Guide/docker-run-command-reference.htm",
+        "http://stackoverflow.com/q/48342406",
+        "https://www.docker.com/blog/docker-best-practices-choosing-between-run-cmd-and-entrypoint/"
       ],
-      "bytes": 9018,
-      "unresponsive": 35
+      "bytes": 7462,
+      "unresponsive": 36
     },
     {
       "id": "en-pg-json",
@@ -346,21 +346,21 @@
       ],
       "category": "doc",
       "rank": 1,
-      "millis": 1379.548442986561,
+      "millis": 3002.817719010636,
       "urls": [
         "http://www.postgresql.org/docs/current/functions-json.html",
         "http://www.postgresql.org/docs/9.5/functions-json.html",
         "http://www.postgresql.org/docs/12/functions-json.html",
-        "https://hevodata.com/learn/postgresql-json-functions/",
-        "https://www.red-gate.com/simple-talk/databases/mysql-vs-postgresql-json-data-type/",
-        "https://neon.com/postgresql/postgresql-json-functions/postgresql-to_jsonb",
         "https://www.beekeeperstudio.io/blog/jsonb-functions-in-postgresql",
+        "https://neon.com/postgresql/postgresql-json-functions/postgresql-to_jsonb",
         "https://www.freecodecamp.org/news/postgresql-and-json-use-json-data-in-postgresql/",
         "https://risingwave.com/blog/mastering-json-functions-in-postgresql-the-ultimate-guide/",
+        "https://devhints.io/postgresql-json",
+        "https://www.postgresql.org/",
         "http://www.postgresql.org/docs/9.3/functions-json.html"
       ],
-      "bytes": 9629,
-      "unresponsive": 35
+      "bytes": 9171,
+      "unresponsive": 36
     },
     {
       "id": "en-pg-index",
@@ -371,12 +371,12 @@
       ],
       "category": "doc",
       "rank": 1,
-      "millis": 954.0355369972531,
+      "millis": 566.8376170215197,
       "urls": [
         "https://www.postgresql.org/docs/current/sql-createindex.html",
-        "https://www.postgresql.org/docs/8.1/sql-createindex.html",
         "https://www.postgresql.org/docs/current/indexes.html",
         "https://www.postgresql.org/docs/9.1/sql-createindex.html",
+        "https://www.postgresql.org/docs/8.1/sql-createindex.html",
         "https://www.postgresql.org/docs/13/sql-createindex.html",
         "https://www.postgresql.org/docs/15/sql-createindex.html",
         "https://www.postgresql.org/docs/10/sql-createindex.html",
@@ -384,8 +384,8 @@
         "https://www.postgresql.org/docs/9.0/sql-createindex.html",
         "https://www.postgresql.org/docs/8.0/sql-createindex.html"
       ],
-      "bytes": 9112,
-      "unresponsive": 35
+      "bytes": 9144,
+      "unresponsive": 36
     },
     {
       "id": "en-pg-window",
@@ -396,22 +396,22 @@
         "https://www.postgresql.org/docs/current/functions-window"
       ],
       "category": "doc",
-      "rank": 1,
-      "millis": 965.7597239711322,
+      "rank": 3,
+      "millis": 563.7658729974646,
       "urls": [
-        "https://www.postgresql.org/docs/current/tutorial-window.html",
         "https://www.postgresql.org/docs/15/functions-window.html",
         "https://www.postgresql.org/docs/16/functions-window.html",
+        "https://www.postgresql.org/docs/current/tutorial-window.html",
         "https://www.postgresql.org/docs/current/functions-window.html",
-        "http://www.postgresql.org/docs/17/functions-window.html",
         "http://www.postgresql.org/docs/15/tutorial-window.html",
         "https://www.postgresql.org/docs/9.1/tutorial-window.html",
         "https://www.postgresql.org/docs/16/tutorial-window.html",
         "https://www.postgresql.org/docs/19/functions-window.html",
-        "https://www.postgresql.org/"
+        "https://www.postgresql.org/",
+        "http://www.postgresql.org/docs/13/functions-window.html"
       ],
-      "bytes": 7888,
-      "unresponsive": 35
+      "bytes": 7789,
+      "unresponsive": 36
     },
     {
       "id": "en-numpy-index",
@@ -422,21 +422,21 @@
       ],
       "category": "doc",
       "rank": 1,
-      "millis": 1777.4379370093811,
+      "millis": 601.801369979512,
       "urls": [
         "https://numpy.org/doc/stable/user/basics.indexing.html",
-        "https://numpy.org/",
         "https://numpy.org/doc/1.21/reference/arrays.indexing.html",
         "https://numpy.org/devdocs/user/basics.indexing.html",
+        "https://numpy.org/",
         "https://numpy.org/doc/1.26/reference/arrays.indexing.html",
         "https://numpy.org/doc/1.16/reference/arrays.indexing.html",
         "https://numpy.org/devdocs/user/how-to-index.html",
         "https://www.programiz.com/python-programming/numpy/array-indexing",
         "https://numpy.org/ja/",
-        "https://www.w3schools.com/python/numpy/numpy_array_indexing.asp"
+        "https://quansight-labs.github.io/ndindex/indexing-guide/index.html"
       ],
-      "bytes": 9116,
-      "unresponsive": 35
+      "bytes": 9245,
+      "unresponsive": 36
     },
     {
       "id": "en-numpy-broadcast",
@@ -446,9 +446,10 @@
         "https://numpy.org/doc/stable/user/basics.broadcasting"
       ],
       "category": "doc",
-      "rank": 1,
-      "millis": 1082.9892839828972,
+      "rank": 2,
+      "millis": 563.9286490040831,
       "urls": [
+        "https://numpy.org/",
         "https://numpy.org/doc/stable/user/basics.broadcasting.html",
         "https://numpy.org/doc/1.25/reference/generated/numpy.linalg.solve.html",
         "https://numpy.org/doc/1.17/user/basics.broadcasting.html",
@@ -457,11 +458,10 @@
         "https://numpy.org/doc/2.0/reference/generated/numpy.linalg.solve.html",
         "https://numpy.org/devdocs/reference/generated/numpy.linalg.solve.html",
         "https://numpy.org/doc/1.16/reference/generated/numpy.linalg.solve.html",
-        "https://numpy.org/doc/1.24/reference/generated/numpy.linalg.solve.html",
-        "https://numpy.org/"
+        "https://numpy.org/doc/1.24/reference/generated/numpy.linalg.solve.html"
       ],
-      "bytes": 7340,
-      "unresponsive": 35
+      "bytes": 7258,
+      "unresponsive": 36
     },
     {
       "id": "en-react-hooks",
@@ -472,7 +472,7 @@
       ],
       "category": "doc",
       "rank": 1,
-      "millis": 2003.6933420051355,
+      "millis": 530.7323340093717,
       "urls": [
         "https://react.dev/reference/react/hooks",
         "https://react.dev/reference/react",
@@ -485,8 +485,8 @@
         "https://ru.react.js.org/docs/hooks-reference.html",
         "https://reactjs.org/hooks"
       ],
-      "bytes": 7986,
-      "unresponsive": 35
+      "bytes": 8064,
+      "unresponsive": 36
     },
     {
       "id": "en-react-usestate",
@@ -496,22 +496,22 @@
         "https://react.dev/reference/react/useState"
       ],
       "category": "doc",
-      "rank": 1,
-      "millis": 3002.739549992839,
+      "rank": 10,
+      "millis": 561.5151049860287,
       "urls": [
-        "http://react.dev/reference/react/useState",
-        "https://www.w3schools.com/react/react_usestate.asp",
-        "https://legacy.reactjs.org/docs/hooks-state.html",
-        "https://blog.logrocket.com/guide-usestate-react",
-        "https://www.telerik.com/blogs/react-usestate-hook",
-        "https://velog.io/",
-        "http://daveceddia.com/usestate-hook-examples/",
-        "https://www.contentful.com/blog/react-usestate-hook/",
-        "https://junilhwang.github.io/TIL/Javascript/Design/Vanilla-JS-Make-useSate-hook/",
-        "http://reactjs.org/docs/hooks-faq.html"
+        "http://reactjs.org/docs/hooks-faq.html",
+        "http://reactjs.org/docs/hooks-overview.html",
+        "http://reactjs.org/docs/hooks-reference.html",
+        "http://reactjs.org/reference/react/useState",
+        "https://ja.react.dev/learn",
+        "https://react.dev/learn",
+        "https://react.dev/",
+        "https://rescript-lang.org/docs/react/hooks-state",
+        "https://www.geeksforgeeks.org/",
+        "http://react.dev/reference/react/useState"
       ],
-      "bytes": 8213,
-      "unresponsive": 35
+      "bytes": 6526,
+      "unresponsive": 36
     },
     {
       "id": "en-mdn-array",
@@ -521,22 +521,22 @@
         "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array"
       ],
       "category": "doc",
-      "rank": 1,
-      "millis": 3002.336692006793,
+      "rank": 2,
+      "millis": 2973.6384869902395,
       "urls": [
+        "https://developer.mozilla.org/en-US/docs/Glossary/Array",
         "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/length",
         "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Typed_arrays",
         "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Array",
-        "https://developer.mozilla.org/en-US/docs/Glossary/Array",
         "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/of",
         "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Indexed_collections",
         "https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Scripting/Arrays",
-        "https://developer.mozilla.org/ja/docs/Web/JavaScript/Guide/Functions",
-        "https://developer.mozilla.org/ja/",
-        "https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/String"
+        "https://developer.mozilla.org/ko/",
+        "https://stackoverflow.com/questions"
       ],
-      "bytes": 6602,
-      "unresponsive": 28
+      "bytes": 6963,
+      "unresponsive": 36
     },
     {
       "id": "en-mdn-fetch",
@@ -546,22 +546,22 @@
         "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API"
       ],
       "category": "doc",
-      "rank": 1,
-      "millis": 3002.237515000161,
+      "rank": 3,
+      "millis": 3002.7939649880864,
       "urls": [
-        "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API",
         "https://developer.mozilla.org/en-US/docs/Web/API/WorkerGlobalScope/fetch",
         "https://developer.mozilla.org/ko/docs/Web/API/Fetch_API",
-        "https://developer.mozilla.org/zh-TW/docs/Web/API/Fetch_API",
+        "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API",
         "https://developer.mozilla.org/fr/docs/Web/API/Fetch_API/Using_Fetch",
         "https://developer.mozilla.org/en-US/docs/Web/API/Window/fetch",
         "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch",
         "http://developer.mozilla.org/fr/docs/Web/API/Fetch_API",
-        "https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch",
-        "https://developer.mozilla.org/pt-BR/docs/Web/API/Fetch_API"
+        "https://developer.mozilla.org/pt-BR/docs/Web/API/Fetch_API",
+        "https://developer.mozilla.org/de/docs/Web/API/Fetch_API",
+        "https://developer.mozilla.org/en-US/docs/Web/API/BackgroundFetchManager/fetch"
       ],
-      "bytes": 6781,
-      "unresponsive": 33
+      "bytes": 6971,
+      "unresponsive": 37
     },
     {
       "id": "en-mdn-promise",
@@ -571,22 +571,22 @@
         "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
       ],
       "category": "doc",
-      "rank": 1,
-      "millis": 737.9783549986314,
+      "rank": 2,
+      "millis": 525.7591400004458,
       "urls": [
-        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
         "https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Promise/then",
-        "https://developer.mozilla.org/ja/docs/Web/JavaScript/Guide/Using_promises",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
         "https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Promise",
-        "https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise",
         "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises",
-        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled",
-        "https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise",
         "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise",
-        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all"
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise.",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/any",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve"
       ],
-      "bytes": 7873,
-      "unresponsive": 35
+      "bytes": 8007,
+      "unresponsive": 36
     },
     {
       "id": "en-k8s-pod",
@@ -597,7 +597,7 @@
       ],
       "category": "doc",
       "rank": 1,
-      "millis": 633.7597419915255,
+      "millis": 586.4404769963585,
       "urls": [
         "https://kubernetes.io/docs/concepts/workloads/pods/",
         "https://kubernetes.io/",
@@ -610,8 +610,8 @@
         "https://www.flexera.com/blog/finops/kubernetes-architecture-kubernetes-pod-why-where-and-how/",
         "http://kubernetes.io/docs"
       ],
-      "bytes": 7982,
-      "unresponsive": 35
+      "bytes": 8024,
+      "unresponsive": 36
     },
     {
       "id": "en-k8s-deploy",
@@ -622,11 +622,11 @@
       ],
       "category": "doc",
       "rank": 1,
-      "millis": 913.712433015462,
+      "millis": 587.2954480000772,
       "urls": [
         "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/",
-        "https://kubernetes.io/docs/home/",
         "https://kubernetes.io/docs/tutorials/kubernetes-basics/deploy-app/deploy-intro/",
+        "https://kubernetes.io/docs/home/",
         "https://kubernetes.io/docs/reference/kubernetes-api/apps/deployment-v1/",
         "https://kubernetes.io/docs/setup/production-environment/tools/",
         "https://kubernetes.io/docs/concepts/workloads/management/",
@@ -635,8 +635,8 @@
         "https://harrythedevopsguy.github.io/docs/devops/kubernetes-guide/",
         "http://kubernetes.io/docs"
       ],
-      "bytes": 8517,
-      "unresponsive": 35
+      "bytes": 8548,
+      "unresponsive": 36
     },
     {
       "id": "en-git-rebase",
@@ -647,21 +647,21 @@
       ],
       "category": "doc",
       "rank": 1,
-      "millis": 657.2243340197019,
+      "millis": 588.2920440053567,
       "urls": [
         "https://git-scm.com/docs/git-rebase",
         "https://git-scm.com/",
         "https://git-scm.com/book/en/v2/Git-Branching-Rebasing",
         "https://www.kernel.org/pub/software/scm/git/docs/git-rebase.html",
         "https://docs.github.com/ko",
-        "https://www.atlassian.com/git/tutorials/rewriting-history/git-rebase",
         "https://docs.rhodecode.com/5.x/rce/tutorials/rebase-commits-git.html",
-        "https://docs.fivem.net/docs/contributing/git/rebase-guide/",
-        "https://alchemists.io/articles/git_rebase",
-        "https://docs.github.com/en/get-started/using-git/about-git-rebase"
+        "http://github.com/mkloveyy/openkruise.io",
+        "http://coderwall.com/p/hh-4ea/git-rebase-autosquash",
+        "https://stackoverflow.com/a/76979706",
+        "https://tortoisegit.org/docs/tortoisegit/tgit-dug-rebase.html"
       ],
-      "bytes": 7425,
-      "unresponsive": 35
+      "bytes": 7955,
+      "unresponsive": 36
     },
     {
       "id": "en-git-merge",
@@ -672,21 +672,21 @@
       ],
       "category": "doc",
       "rank": 1,
-      "millis": 994.4453150092158,
+      "millis": 585.9395640145522,
       "urls": [
         "https://git-scm.com/docs/git-merge",
-        "https://git-scm.com/docs/git-mergetool",
         "https://git-scm.com/docs/git-merge/2.0.5",
         "https://git-scm.com/docs/git-merge-file",
-        "https://git-scm.com/docs/git-mergetool/2.20.0",
         "https://git-scm.com/docs/merge-options",
         "https://git-scm.com/docs/merge-config",
         "https://git-scm.com/docs/merge-strategies",
         "https://git-scm.com/docs/git-merge-tree",
-        "https://git-scm.com/docs/git-merge-base"
+        "https://git-scm.com/docs/git-merge-base",
+        "https://git-scm.com/docs/git-mergetool",
+        "https://git-scm.com/"
       ],
-      "bytes": 7880,
-      "unresponsive": 35
+      "bytes": 8088,
+      "unresponsive": 36
     },
     {
       "id": "en-nginx-conf",
@@ -698,7 +698,7 @@
       ],
       "category": "doc",
       "rank": 1,
-      "millis": 677.3934299999382,
+      "millis": 590.6784370017704,
       "urls": [
         "https://docs.nginx.com/nginx/admin-guide/basic-functionality/managing-configuration-files/",
         "https://docs.nginx.com/nginx-agent/configuration/configuration-overview/",
@@ -706,13 +706,13 @@
         "https://github.com/nginx/documentation/blob/main/content/nginx/admin-guide/basic-functionality/managing-configuration-files.md",
         "https://gist.github.com/1580998",
         "https://www.plesk.com/blog/various/nginx-configuration-guide/",
-        "http://nginx.org/docs/syntax.html",
-        "https://docs.nginx.com/app-delivery/platform/nginx-configuration/",
-        "https://docs.nginx.com/app-delivery/aws/deploy/nginx-configuration/",
-        "https://nginx.org/en/"
+        "https://exampleconfig.com/default/nginx/etc-nginx-nginx-conf-default",
+        "https://stackoverflow.com/questions/2936260/what-language-are-nginx-conf-files",
+        "https://www.nginx.com/resources/wiki/start/topics/examples/full/",
+        "http://nginx.org/docs/syntax.html"
       ],
-      "bytes": 7729,
-      "unresponsive": 35
+      "bytes": 8536,
+      "unresponsive": 36
     },
     {
       "id": "en-linux-sched",
@@ -723,21 +723,21 @@
       ],
       "category": "doc",
       "rank": 1,
-      "millis": 765.9984339843504,
+      "millis": 454.2217609996442,
       "urls": [
         "https://docs.kernel.org/scheduler/index.html",
-        "https://docs.kernel.org/scheduler/sched-ext.html",
         "https://www.kernel.org/doc/html/next",
         "https://www.kernel.org/doc/html/next/scheduler/sched-ext.html",
         "https://docs.kernel.org/6.8/scheduler/schedutil.html",
+        "https://docs.kernel.org/scheduler/sched-ext.html",
         "https://docs.kernel.org/scheduler/sched-eevdf.html",
         "https://docs.kernel.org/block/switching-sched.html",
         "https://www.kernel.org/doc/html/latest/scheduler/sched-design-CFS.html",
         "https://docs.kernel.org/scheduler/sched-nice-design.html",
         "https://docs.kernel.org/scheduler/sched-domains.html"
       ],
-      "bytes": 8463,
-      "unresponsive": 35
+      "bytes": 8530,
+      "unresponsive": 36
     },
     {
       "id": "en-linux-sysctl",
@@ -747,22 +747,22 @@
         "https://docs.kernel.org/admin-guide/sysctl"
       ],
       "category": "doc",
-      "rank": 6,
-      "millis": 642.6184530137107,
+      "rank": 5,
+      "millis": 301.30441099754535,
       "urls": [
-        "https://docs.kernel.org/networking/ip-sysctl.html",
         "https://www.kernel.org/doc/Documentation/sysctl/",
         "https://www.kernel.org/doc/html/v6.12/admin-guide/sysctl/kernel.html",
         "https://www.kernel.org/doc/html/next/networking/ip-sysctl.html",
         "https://www.kernel.org/doc/html//v5.7/admin-guide/sysctl/net.html",
         "https://docs.kernel.org/admin-guide/sysctl/",
-        "https://www.kernel.org/doc/html/latest/admin-guide/sysctl/fs.html",
         "https://www.kernel.org/doc/Documentation/sysctl/kernel.txt",
         "https://docs.kernel.org/admin-guide/sysctl/fs.html",
-        "https://www.kernel.org/doc/Documentation/sysctl/README"
+        "https://www.kernel.org/doc/Documentation/sysctl/README",
+        "https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt",
+        "https://www.kernel.org/doc/Documentation/admin-guide/kernel-parameters.txt"
       ],
-      "bytes": 7427,
-      "unresponsive": 35
+      "bytes": 7584,
+      "unresponsive": 36
     },
     {
       "id": "en-sql-join",
@@ -773,21 +773,21 @@
       ],
       "category": "doc",
       "rank": null,
-      "millis": 2002.9966000001878,
+      "millis": 594.2693989782128,
       "urls": [
         "http://www.sqlshack.com/sql-join-overview-and-tutorial/",
-        "https://www.w3schools.com/sql/sql_join.asp",
-        "https://datalemur.com/sql-tutorial/sql-joins-inner-outer-left-right",
         "https://www.dbvis.com/thetable/sql-cheat-sheet-every-join-explained/",
         "https://www.sqlnoir.com/blog/sql-join-types-explained",
+        "https://datalemur.com/sql-tutorial/sql-joins-inner-outer-left-right",
         "https://way2tutorial.com/sql/sql-join.php",
-        "https://mora.com/blog/sql-join-types-explained",
         "https://www.edureka.co/blog/sql-joins-types",
+        "https://www.w3schools.com/sql/sql_join.asp",
         "https://www.digitalocean.com/community/tutorials/how-to-use-joins-in-sql",
+        "https://sparkbyexamples.com/spark/spark-sql-dataframe-join/",
         "https://learnsql.com/blog/sql-joins-types-explained"
       ],
-      "bytes": 8942,
-      "unresponsive": 35
+      "bytes": 8984,
+      "unresponsive": 37
     },
     {
       "id": "en-tokio",
@@ -798,21 +798,21 @@
       ],
       "category": "doc",
       "rank": 1,
-      "millis": 2856.473586987704,
+      "millis": 591.6255000047386,
       "urls": [
         "http://tokio.rs/tokio/tutorial/async",
-        "https://tokio.rs/",
-        "http://tokio.rs/tokio/tutorial",
         "https://news.ycombinator.com/item?id=25520353",
+        "http://tokio.rs/tokio/tutorial",
         "http://tokio.rs/tokio/topics",
+        "https://tokio.rs",
         "http://docs.rs/tokio",
         "https://www.infoworld.com/article/3602776/tokio-rust-runtime-reaches-10-status.html",
         "https://sharpskill.dev/ko/technologies/rust/interview-questions/tokio-async",
-        "https://tokio.rs/tokio/tutorial/select",
+        "http://tokio.rs/tokio/tutorial/io",
         "https://github.com/tokio-rs/tokio"
       ],
-      "bytes": 7823,
-      "unresponsive": 35
+      "bytes": 7852,
+      "unresponsive": 36
     },
     {
       "id": "en-serde",
@@ -824,21 +824,21 @@
       ],
       "category": "doc",
       "rank": 1,
-      "millis": 628.9062040159479,
+      "millis": 2002.2328440099955,
       "urls": [
         "https://crates.io/crates/serde",
         "https://lib.rs/crates/serde_with",
         "https://crates.io/crates/serde_with",
         "https://github.com/serde-rs/serde",
         "https://codeberg.org/swatters/serde_html_form",
+        "https://github.com/jonasbb/serde_with",
         "https://lucumr.pocoo.org/2026/9/29/deser/",
         "https://www.shuttle.dev/blog/2024/01/23/using-serde-rust",
         "https://crates.io/crates/serde_json",
-        "https://github.com/",
-        "https://codeberg.org/jplatte/serde_html_form"
+        "https://en.wikipedia.org/wiki/Serialization"
       ],
-      "bytes": 7962,
-      "unresponsive": 35
+      "bytes": 8079,
+      "unresponsive": 36
     },
     {
       "id": "en-fastapi",
@@ -849,21 +849,21 @@
       ],
       "category": "doc",
       "rank": 1,
-      "millis": 878.4088010143023,
+      "millis": 3002.566787006799,
       "urls": [
         "https://fastapi.tiangolo.com/tutorial/",
         "https://fastapi.tiangolo.com/",
-        "https://fastapi.tiangolo.com/tutorial/first-steps/",
         "https://fastapi.tiangolo.com/ja/",
         "https://www.youtube.com/watch?v=VirndPTeRaw",
-        "https://github.com/direction/fastapi_tutorial",
         "https://www.tutorialspoint.com/fastapi/fastapi_tutorial.pdf",
         "https://ubuntu.com/containers/rockcraft/docs/latest/tutorial/fastapi/",
         "http://www.mcxtrace.org/documentation/tutorial/",
-        "https://code.visualstudio.com/docs/python/tutorial-fastapi"
+        "http://dojotoolkit.org/documentation/tutorials/1.8/",
+        "https://docs.plone.org/documentation/tutorial/richdocument",
+        "https://www.datacamp.com/tutorial/introduction-fastapi-tutorial"
       ],
-      "bytes": 7276,
-      "unresponsive": 35
+      "bytes": 7406,
+      "unresponsive": 36
     },
     {
       "id": "en-django-orm",
@@ -874,21 +874,21 @@
       ],
       "category": "doc",
       "rank": null,
-      "millis": 605.3605999913998,
+      "millis": 588.1993189977948,
       "urls": [
         "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
         "https://docs.djangoproject.com/en/6.1/topics/db/queries/",
         "https://docs.djangoproject.com/en/5.1/topics/db/optimization/",
         "https://docs.djangoproject.com/en/2.1/_modules/django/db/models/query/",
+        "https://blog.logrocket.com/querysets-and-aggregations-in-django/",
         "http://docs.djangoproject.com/en/dev/ref/models/querysets",
         "https://docs.djangoproject.com/ja/5.1/ref/models/querysets/",
         "https://www.djangoproject.com/security",
-        "https://docs.djangoproject.com/en/1.10/",
         "https://docs.djangoproject.com/ko/4.1/ref/models/querysets/",
         "https://docs.djangoproject.com/ja/2.0//ref/models/querysets/"
       ],
-      "bytes": 8087,
-      "unresponsive": 35
+      "bytes": 8169,
+      "unresponsive": 36
     },
     {
       "id": "en-flask",
@@ -899,20 +899,20 @@
       ],
       "category": "doc",
       "rank": 1,
-      "millis": 662.6328880083747,
+      "millis": 907.6202919823118,
       "urls": [
         "https://flask.palletsprojects.com/en/stable/quickstart/",
         "https://flask.palletsprojects.com/en/stable/",
         "https://flask.palletsprojects.com/",
         "https://flask-sqlalchemy.readthedocs.io/en/stable/quickstart/",
         "http://flask.pocoo.org/",
-        "https://flask-wtf.readthedocs.io/en/1.2.x/quickstart/",
         "https://flask-docs.readthedocs.io/en/latest/quickstart/",
         "https://flaskr.readthedocs.io/ko/flas_kr/quickstart.html",
-        "https://flask-user.readthedocs.io/en/latest/quickstart.html",
+        "https://flask-user.readthedocs.io/en/latest/quickstart_app.html",
+        "https://flask-restx.readthedocs.io/en/latest/quickstart.html",
         "https://flask-docs-kr.readthedocs.io/ko/latest/en/quickstart.html"
       ],
-      "bytes": 7808,
+      "bytes": 7959,
       "unresponsive": 36
     },
     {
@@ -923,22 +923,22 @@
         "https://www.rfc-editor.org/rfc/rfc9110"
       ],
       "category": "doc",
-      "rank": 5,
-      "millis": 836.2249229976442,
+      "rank": 7,
+      "millis": 1805.0873449828941,
       "urls": [
         "https://www.rfc-editor.org/info/rfc9110/",
         "https://www.rfc-editor.org/",
         "https://ftp.jaist.ac.jp/pub/RFC/rfc9110.pdf",
         "https://rfcinfo.com/rfc-9110/",
+        "https://apis.io/apis/restful/http-rfc-9110/",
+        "https://asnokaze.hatenablog.com/entry/2021/06/07/010727",
         "https://www.rfc-editor.org/rfc/rfc9110.html",
         "https://www.rfc-editor.org/rfc/rfc9110",
         "https://www.ietf.org/rfc/rfc9110.html",
-        "https://www.ietf.org/ietf-ftp/rfc/rfc9110.pdf",
-        "https://www.rfc-editor.org/rfc/rfc9110.pdf",
-        "https://www.ietf.org/"
+        "https://www.ietf.org/ietf-ftp/rfc/rfc9110.pdf"
       ],
-      "bytes": 9047,
-      "unresponsive": 35
+      "bytes": 9332,
+      "unresponsive": 36
     },
     {
       "id": "en-json-schema",
@@ -948,22 +948,22 @@
         "https://json-schema.org/specification"
       ],
       "category": "doc",
-      "rank": 1,
-      "millis": 703.9496729848906,
+      "rank": 2,
+      "millis": 736.4469970052596,
       "urls": [
-        "https://json-schema.org/specification",
         "https://json-schema.org/",
+        "https://json-schema.org/specification",
         "https://json-schema.org/draft/2020-12/draft-bhutton-json-schema-validation-00",
         "https://json-schema.org/understanding-json-schema/reference/object",
         "https://json-schema.org/understanding-json-schema/structuring",
         "https://json-schema.org/understanding-json-schema/basics",
-        "https://www.ietf.org/archive/id/draft-bhutton-json-schema-01.html",
         "http://www.openldap.org/doc/admin23/schema.html",
+        "https://www.ietf.org/archive/id/draft-bhutton-json-schema-01.html",
         "https://cswr.github.io/JsonSchema/spec/definitions_references/",
-        "https://standardschema.dev/json-schema"
+        "https://www.sanity.io/glossary/json-schema"
       ],
-      "bytes": 7919,
-      "unresponsive": 35
+      "bytes": 7763,
+      "unresponsive": 36
     },
     {
       "id": "en-oauth",
@@ -973,8 +973,8 @@
         "https://www.rfc-editor.org/rfc/rfc6749"
       ],
       "category": "doc",
-      "rank": 8,
-      "millis": 1021.4441010029987,
+      "rank": 10,
+      "millis": 3002.300506021129,
       "urls": [
         "https://www.rfc-editor.org/info/rfc6749/",
         "https://www.rfc-editor.org/",
@@ -982,13 +982,13 @@
         "https://github.com/YuanHuCoding/OAuth2.0/blob/master/RFC%206749%20-%20The%20OAuth%202.0%20Authorization%20Framework.pdf",
         "https://docs.authlib.org/en/v1.5.1/specs/rfc6749.html",
         "https://datatracker.ietf.org/doc/html/rfc6749",
-        "https://www.rfc-editor.org/info/rfc6819/",
-        "https://www.rfc-editor.org/rfc/rfc6749.txt",
-        "https://www.rfc-editor.org/info/rfc9101",
-        "https://www.ietf.org/"
+        "https://joinup.ec.europa.eu/collection/ict-standards-procurement/solution/ietf-rfc-6749-2012-oauth-20-authorization-framework/about",
+        "https://en.wikipedia.org/wiki/OAuth",
+        "https://velog.io/",
+        "https://www.rfc-editor.org/rfc/rfc6749.txt"
       ],
-      "bytes": 8312,
-      "unresponsive": 36
+      "bytes": 9188,
+      "unresponsive": 38
     },
     {
       "id": "en-unix-man",
@@ -999,7 +999,7 @@
       ],
       "category": "doc",
       "rank": null,
-      "millis": 2002.7741710073315,
+      "millis": 1242.0401950075757,
       "urls": [
         "https://shapeshed.com/unix-find/",
         "https://www.cyberciti.biz/faq/unix-linux-whereis-command-examples-to-locate-binary/",
@@ -1008,12 +1008,12 @@
         "https://www.tutorialspoint.com/unix_commands/find.htm",
         "https://dspinellis.github.io/unix-v4man/v4man.pdf",
         "http://www.vector.comm.sfu.ca/pups/PDP-11/Distributions/research/Dennis_v5/v5man.pdf",
-        "https://en.wikipedia.org/wiki/Find_(Unix)",
+        "https://www.unix.com/man-page/v7/1/find/",
         "https://www.reddit.com/r/unix/comments/1e652dd/10_example_of_find_command_in_unix_and_linux/",
-        "https://serverfault.com/questions/29489/how-do-i-master-the-unix-find-command"
+        "https://www.adminschoice.com/tag/find-command-unix"
       ],
-      "bytes": 8937,
-      "unresponsive": 35
+      "bytes": 8642,
+      "unresponsive": 36
     },
     {
       "id": "en-turing",
@@ -1024,21 +1024,21 @@
       ],
       "category": "wiki",
       "rank": 1,
-      "millis": 3002.6667029887903,
+      "millis": 3002.9942019900773,
       "urls": [
         "https://en.wikipedia.org/wiki/Alan_Turing",
-        "https://simple.wikipedia.org/wiki/Alan_Turing",
         "https://en.wikipedia.org/wiki/Alan_Turing_Memorial",
+        "https://simple.wikipedia.org/wiki/Alan_Turing",
         "https://en.wikipedia.org/wiki/Legacy_of_Alan_Turing",
+        "https://en.wikipedia.org/?curid=1208",
         "https://en.wikipedia.org/wiki/Category:Alan_Turing",
         "https://en.wikipedia.org/wiki/Alan_Turing_law",
         "https://en.wikipedia.org/wiki/Alan_Turing_Year",
         "http://en.wikipedia.org/wiki/Turing",
-        "https://simple.wikipedia.org/wiki/Turing",
         "https://en.wikipedia.org/wiki/Alan_Turing_Institute"
       ],
-      "bytes": 7370,
-      "unresponsive": 35
+      "bytes": 7002,
+      "unresponsive": 28
     },
     {
       "id": "en-shakespeare",
@@ -1048,22 +1048,22 @@
         "https://en.wikipedia.org/wiki/William_Shakespeare"
       ],
       "category": "wiki",
-      "rank": 1,
-      "millis": 2967.7671309909783,
+      "rank": 2,
+      "millis": 3002.596802980406,
       "urls": [
+        "https://en.wikipedia.org/wiki/Life_of_William_Shakespeare",
         "https://en.wikipedia.org/wiki/William_Shakespeare",
         "https://simple.wikipedia.org/wiki/William_Shakespeare",
-        "http://en.wikipedia.org/wiki/Shak-spere",
-        "https://en.wikipedia.org/wiki/Life_of_William_Shakespeare",
         "https://en.wikipedia.org/wiki/Category:William_Shakespeare",
         "https://en.wikipedia.org/wiki/William_Shakespeare_(disambiguation)",
+        "http://en.wikipedia.org/wiki/Shak-spere",
         "https://en.wikipedia.org/wiki/Category:Works_by_William_Shakespeare",
+        "https://en.wikipedia.org/wiki/Chronology_of_Shakespeare's_plays",
         "http://en.wikipedia.org/wiki/T.T.",
-        "https://hu.wikipedia.org/wiki/William_Shakespeare",
         "https://en.wikipedia.org/wiki/Outline_of_William_Shakespeare"
       ],
-      "bytes": 8018,
-      "unresponsive": 35
+      "bytes": 7910,
+      "unresponsive": 34
     },
     {
       "id": "en-einstein",
@@ -1073,21 +1073,21 @@
         "https://en.wikipedia.org/wiki/Albert_Einstein"
       ],
       "category": "wiki",
-      "rank": 1,
-      "millis": 677.8341099852696,
+      "rank": 9,
+      "millis": 586.3319330092054,
       "urls": [
+        "https://en.wikipedia.org/wiki/Hans_Albert_Einstein",
+        "https://en.wikipedia.org/wiki/List_of_scientific_publications_by_Albert_Einstein",
+        "https://en.wikipedia.org/wiki/Einstein_family",
+        "https://ko.wikipedia.org/wiki/%EC%9C%84%ED%82%A4%EB%B0%B1%EA%B3%BC:%EB%8C%80%EB%AC%B8",
+        "https://pantheon.world/profile/person/Albert_Einstein",
+        "https://www.biography.com/scientists/albert-einstein",
+        "https://www.teslasociety.com/einstein.htm",
+        "https://www.youtube.com/watch?v=JFH2F5rQ6e4",
         "https://en.wikipedia.org/wiki/Albert_Einstein",
-        "https://simple.wikipedia.org/wiki/Albert_Einstein",
-        "https://en.wikipedia.org/wiki/Outline_of_Albert_Einstein",
-        "https://en.wikipedia.org/wiki/Wikipedia:VideoWiki/Albert_Einstein",
-        "https://en.wikipedia.org/wiki/Category:Albert_Einstein",
-        "https://en.wikipedia.org/wiki/Albert_Einstein_Medal",
-        "http://en.wikipedia.org/wiki/Einstein",
-        "https://en.wikipedia.org/wiki/Albert_Einstein_College_of_Medicine",
-        "https://en.wikipedia.org/wiki/Albert_Einstein_(disambiguation)",
-        "https://en.wikipedia.org/wiki/Hans_Albert_Einstein"
+        "https://simple.wikipedia.org/wiki/Albert_Einstein"
       ],
-      "bytes": 8071,
+      "bytes": 9005,
       "unresponsive": 36
     },
     {
@@ -1098,22 +1098,22 @@
         "https://en.wikipedia.org/wiki/Rust_(programming_language)"
       ],
       "category": "wiki",
-      "rank": 2,
-      "millis": 600.557444995502,
+      "rank": 7,
+      "millis": 584.5208429964259,
       "urls": [
         "https://rust-lang.org/",
-        "https://en.wikipedia.org/wiki/Rust_(programming_language)",
         "https://doc.rust-lang.org/book/",
         "http://doc.rust-lang.org/book/README.html",
         "https://doc.rust-lang.org/book/ch13-00-functional-features.html",
         "https://www.rust-lang.org/\"",
         "https://www.rust-lang.org/f",
+        "https://en.wikipedia.org/wiki/Rust_(programming_language)",
         "http://doc.rust-lang.org",
         "https://rust-lang.org/zh-CN/",
         "http://www.rust-lang.org"
       ],
-      "bytes": 6987,
-      "unresponsive": 35
+      "bytes": 7005,
+      "unresponsive": 36
     },
     {
       "id": "en-transformer",
@@ -1124,21 +1124,21 @@
       ],
       "category": "wiki",
       "rank": null,
-      "millis": 762.2407780145295,
+      "millis": 584.7857219923753,
       "urls": [
         "https://en.wikipedia.org/wiki/Transformer_(deep_learning)",
         "https://simple.wikipedia.org/wiki/Transformer_(machine_learning_model)",
-        "https://en.wikipedia.org/wiki/Talk:Transformer_(deep_learning)",
         "https://en.wikipedia.org/wiki/DLSS",
-        "https://en.wikipedia.org/wiki/Talk:Transformer_(deep_learning)/GA1",
         "https://en.wikipedia.org/wiki/Deep_learning",
         "http://en.wikipedia.org/wiki/DLAA",
         "https://en.wikipedia.org/wiki/Hugging_Face_Transformers",
-        "https://en.wikipedia.org/wiki/Transformer",
+        "https://zh.wikipedia.org/wiki/Transformer%E6%9E%B6%E6%9E%84",
+        "https://ja.wikipedia.org/wiki/Transformer_%28%E6%A9%9F%E6%A2%B0%E5%AD%A6%E7%BF%92%E3%83%A2%E3%83%87%E3%83%AB%29",
+        "https://www.wikiwand.com/en/articles/Transformer_(deep_learning_architecture)",
         "https://en.wikipedia.org/wiki/Attention_Is_All_You_Need"
       ],
-      "bytes": 7480,
-      "unresponsive": 35
+      "bytes": 7582,
+      "unresponsive": 36
     },
     {
       "id": "en-mt-fuji",
@@ -1149,7 +1149,7 @@
       ],
       "category": "wiki",
       "rank": 1,
-      "millis": 883.8753539894242,
+      "millis": 584.2045070021413,
       "urls": [
         "https://en.wikipedia.org/wiki/Mount_Fuji",
         "https://en.wikipedia.org/wiki/Fuji",
@@ -1162,8 +1162,8 @@
         "https://en.wikipedia.org/wiki/Mount_Hōei",
         "https://en.wikipedia.org/wiki/Mount_%C5%8Cmuro_(Mount_Fuji)"
       ],
-      "bytes": 7425,
-      "unresponsive": 35
+      "bytes": 7456,
+      "unresponsive": 36
     },
     {
       "id": "en-amazon-river",
@@ -1174,21 +1174,21 @@
       ],
       "category": "wiki",
       "rank": 1,
-      "millis": 843.0064720159862,
+      "millis": 667.2781480010599,
       "urls": [
         "https://en.wikipedia.org/wiki/Amazon_River",
         "https://en.wikipedia.org/wiki/Source_of_the_Amazon_River",
-        "https://simple.wikipedia.org/wiki/Amazon_River",
         "https://en.wikipedia.org/wiki/Category:Amazon_River",
-        "https://en.wikipedia.org/wiki/Talk:Amazon_River",
         "https://en.wikipedia.org/wiki/List_of_rivers_of_Amazonas_(Brazilian_state)",
         "http://en.wikipedia.org/wiki/Lower_Amazon",
         "https://en.wikipedia.org/wiki/Category:Tributaries_of_the_Amazon_River",
         "http://en.wikipedia.org/wiki/Bufeo",
+        "https://en.wikipedia.org/wiki/Rio_Negro_(Amazon)",
+        "https://en.wikipedia.org/wiki/Amazon_Basin",
         "https://en.wikipedia.org/wiki/Amazon_basin"
       ],
-      "bytes": 7467,
-      "unresponsive": 35
+      "bytes": 7431,
+      "unresponsive": 36
     },
     {
       "id": "en-tokyo",
@@ -1199,21 +1199,21 @@
       ],
       "category": "wiki",
       "rank": 1,
-      "millis": 750.0401260040235,
+      "millis": 588.1408790010028,
       "urls": [
         "https://en.wikipedia.org/wiki/Tokyo",
         "https://simple.wikipedia.org/wiki/Tokyo",
-        "https://en.wikipedia.org/wiki/.tokyo",
         "https://en.wikipedia.org/wiki/Tokyo_City",
-        "https://en.wikipedia.org/wiki/Tokyo_Tokyo",
         "https://en.wikipedia.org/wiki/Portal:Tokyo",
         "https://en.wikipedia.org/wiki/Portal:Tokyo/Intro",
         "https://en.wikipedia.org/wiki/Category:Tokyo",
         "https://en.wikipedia.org/wiki/Tokyo_(disambiguation)",
+        "https://en.wikipedia.org/wiki/Tokio",
+        "https://no.wikipedia.org/wiki/Tokyo",
         "https://en.wikipedia.org/wiki/History_of_Tokyo"
       ],
-      "bytes": 7763,
-      "unresponsive": 35
+      "bytes": 7879,
+      "unresponsive": 36
     },
     {
       "id": "en-black-hole",
@@ -1223,22 +1223,22 @@
         "https://en.wikipedia.org/wiki/Black_hole"
       ],
       "category": "wiki",
-      "rank": 1,
-      "millis": 1006.3735439907759,
+      "rank": 6,
+      "millis": 588.3381909807213,
       "urls": [
+        "https://en.wikipedia.org/wiki/Rogue_black_hole",
+        "https://en.wikipedia.org/wiki/List_of_most_massive_black_holes",
+        "https://en.wikipedia.org/wiki/History_of_black_hole_physics",
+        "https://en.wikipedia.org/wiki/Primordial_black_hole",
+        "https://en.wikipedia.org/wiki/Rotating_black_hole",
         "https://en.wikipedia.org/wiki/Black_hole",
-        "https://simple.wikipedia.org/wiki/Black_hole",
-        "https://en.wikipedia.org/wiki/Black_hole_(disambiguation)",
         "https://en.wikipedia.org/wiki/Supermassive_black_hole",
         "https://en.wikipedia.org/wiki/Hole.io",
-        "https://en.wikipedia.org/wiki/List_of_black_holes",
-        "https://en.wikipedia.org/wiki/Outline_of_black_holes",
-        "https://en.wikipedia.org/wiki/Hypothetical_black_hole",
-        "https://en.wikipedia.org/wiki/Portal:Stars/Black_hole",
-        "https://en.wikipedia.org/wiki/Rogue_black_hole"
+        "https://simple.wikipedia.org/wiki/Black_hole",
+        "https://en.wikipedia.org/wiki/List_of_black_holes"
       ],
-      "bytes": 8057,
-      "unresponsive": 35
+      "bytes": 8999,
+      "unresponsive": 36
     },
     {
       "id": "en-internet",
@@ -1249,21 +1249,21 @@
       ],
       "category": "wiki",
       "rank": 1,
-      "millis": 1840.024250006536,
+      "millis": 595.3872929967474,
       "urls": [
+        "https://en.wikipedia.org/wiki/Internet_access",
+        "https://en.wikipedia.org/wiki/World_Wide_Web",
+        "https://mashable.com/tech/internet-archive-down-oct-21",
+        "https://blog.archive.org/2019/10/29/weaving-books-into-the-web-starting-with-wikipedia/",
+        "https://www.techpolicy.press/how-wikipedia-can-save-the-internet-with-advertising/",
+        "https://www.amazon.com/Last-Best-Place-Internet-Wikipedia/dp/0393881881",
         "https://en.wikipedia.org/wiki/Internet",
         "https://en.wikipedia.org/wiki/History_of_the_Internet",
         "https://simple.wikipedia.org/wiki/Internet",
-        "https://en.wikipedia.org/wiki/Portal:Internet",
-        "https://en.wikipedia.org/wiki/Category:Internet",
-        "https://en.wikipedia.org/wiki/Outline_of_the_Internet",
-        "https://en.wikipedia.org/wiki/Category:History_of_the_Internet",
-        "https://en.wikipedia.org/wiki/Internet_(disambiguation)",
-        "https://es.wikipedia.org/wiki/Portal:Internet",
-        "https://en.wikipedia.org/wiki/Internet_access"
+        "https://en.wikipedia.org/wiki/Category:Internet"
       ],
-      "bytes": 8186,
-      "unresponsive": 35
+      "bytes": 9140,
+      "unresponsive": 36
     },
     {
       "id": "en-photosynthesis",
@@ -1274,7 +1274,7 @@
       ],
       "category": "wiki",
       "rank": 1,
-      "millis": 2840.902667987393,
+      "millis": 1896.1194410221651,
       "urls": [
         "https://en.wikipedia.org/wiki/Photosynthesis",
         "https://simple.wikipedia.org/wiki/Photosynthesis",
@@ -1287,8 +1287,8 @@
         "https://en.wikipedia.org/wiki/Photosynthetic_efficiency",
         "https://en.wikipedia.org/wiki/Photosystem"
       ],
-      "bytes": 8067,
-      "unresponsive": 35
+      "bytes": 8122,
+      "unresponsive": 36
     },
     {
       "id": "en-roman-empire",
@@ -1299,21 +1299,21 @@
       ],
       "category": "wiki",
       "rank": 1,
-      "millis": 1034.64766201796,
+      "millis": 3002.7409349859226,
       "urls": [
         "https://en.wikipedia.org/wiki/Roman_Empire",
-        "https://simple.wikipedia.org/wiki/Roman_Empire",
         "https://en.wikipedia.org/wiki/Roman_people",
         "https://en.wikipedia.org/wiki/History_of_the_Roman_Empire",
         "https://en.wikipedia.org/wiki/Roman",
+        "https://simple.wikipedia.org/wiki/Roman_Empire",
         "https://en.wikipedia.org/wiki/Category:Roman_Empire",
         "https://en.wikipedia.org/wiki/Roman_Empire_(disambiguation)",
         "http://en.wikipedia.org/wiki/Roman_Age",
         "http://en.wikipedia.org/wiki/West_Rome",
-        "https://en.wikipedia.org/wiki/Western_Roman_Empire"
+        "https://en.wikipedia.org/wiki/Holy_Roman_Empire"
       ],
-      "bytes": 7624,
-      "unresponsive": 35
+      "bytes": 7576,
+      "unresponsive": 36
     },
     {
       "id": "en-tcp-ip",
@@ -1324,7 +1324,7 @@
       ],
       "category": "wiki",
       "rank": 2,
-      "millis": 686.8518389819656,
+      "millis": 584.2871320201084,
       "urls": [
         "https://en.wikipedia.org/wiki/Transmission_Control_Protocol",
         "https://en.wikipedia.org/wiki/Internet_protocol_suite",
@@ -1337,8 +1337,8 @@
         "https://en.wikipedia.org/wiki/IP_address",
         "https://en.wikipedia.org/wiki/TCP/IP_Illustrated"
       ],
-      "bytes": 7628,
-      "unresponsive": 35
+      "bytes": 7661,
+      "unresponsive": 36
     },
     {
       "id": "en-ml",
@@ -1349,21 +1349,21 @@
       ],
       "category": "wiki",
       "rank": 1,
-      "millis": 631.9650030054618,
+      "millis": 607.3351109807845,
       "urls": [
         "https://en.wikipedia.org/wiki/Machine_learning",
+        "https://en.wikipedia.org/wiki/Timeline_of_machine_learning",
+        "https://en.wikipedia.org/wiki/Outline_of_machine_learning",
+        "https://en.wikipedia.org/wiki/Category:Machine_learning_algorithms",
         "https://en.wikipedia.org/wiki/Category:Machine_learning",
         "https://en.wikipedia.org/wiki/Machine_Learning_(journal)",
-        "https://en.wikipedia.org/wiki/Timeline_of_machine_learning",
-        "https://en.wikipedia.org/wiki/Online_machine_learning",
-        "https://en.wikipedia.org/wiki/Outline_of_machine_learning",
-        "https://en.wikipedia.org/wiki/Automated_machine_learning",
-        "https://en.wikipedia.org/wiki/Category:Machine_learning_algorithms",
         "https://en.wikipedia.org/wiki/Quantum_machine_learning",
+        "https://en.wikipedia.org/wiki/Adversarial_machine_learning",
+        "https://en.wikipedia.org/wiki/Online_machine_learning",
         "https://en.wikipedia.org/wiki/Neural_network_(machine_learning)"
       ],
-      "bytes": 7863,
-      "unresponsive": 35
+      "bytes": 7853,
+      "unresponsive": 36
     },
     {
       "id": "en-relativity",
@@ -1374,7 +1374,7 @@
       ],
       "category": "wiki",
       "rank": 1,
-      "millis": 654.7231939912308,
+      "millis": 587.3985910147894,
       "urls": [
         "https://en.wikipedia.org/wiki/Theory_of_relativity",
         "https://simple.wikipedia.org/wiki/Theory_of_relativity",
@@ -1387,8 +1387,8 @@
         "https://en.wikipedia.org/wiki/History_of_general_relativity",
         "https://en.wikipedia.org/wiki/Relativity:_The_Special_and_the_General_Theory"
       ],
-      "bytes": 8099,
-      "unresponsive": 35
+      "bytes": 8121,
+      "unresponsive": 36
     },
     {
       "id": "en-attention",
@@ -1399,7 +1399,7 @@
       ],
       "category": "paper",
       "rank": 1,
-      "millis": 2992.8860969957896,
+      "millis": 319.1597400000319,
       "urls": [
         "http://arxiv.org/abs/1706.03762",
         "http://arxiv.org/abs/1706.03762v2",
@@ -1410,10 +1410,10 @@
         "https://arxiv.org/abs/2501.05730",
         "https://arxiv.org/abs/2412.20875",
         "https://arxiv.org/abs/2308.07661",
-        "https://en.wikipedia.org/wiki/Attention_Is_All_You_Need"
+        "https://arxiv.org/html/1706.03762v7"
       ],
-      "bytes": 7204,
-      "unresponsive": 35
+      "bytes": 7206,
+      "unresponsive": 36
     },
     {
       "id": "en-bert",
@@ -1423,22 +1423,22 @@
         "https://arxiv.org/abs/1810.04805"
       ],
       "category": "paper",
-      "rank": null,
-      "millis": 806.1760639830027,
+      "rank": 10,
+      "millis": 319.9518120090943,
       "urls": [
-        "https://arxiv.org/pdf/1810.04805",
-        "https://arxiv.org/html/1810.04805v2",
         "https://arxiv.org/abs/2111.07832v3",
         "https://arxiv.org/abs/2111.07832v1",
         "https://arxiv.org/html/2106.08254v2",
+        "https://arxiv.org/pdf/1810.04805",
         "https://arxiv.org/abs/2111.04198v2",
         "https://arxiv.org/abs/2111.12710",
+        "https://arxiv.org/html/1810.04805v2",
         "https://arxiv.org/abs/2111.07832v2",
         "https://arxiv.org/abs/1906.08101",
-        "http://arxiv.org/abs/2106.08254"
+        "https://arxiv.org/abs/1810.04805"
       ],
-      "bytes": 7169,
-      "unresponsive": 35
+      "bytes": 7121,
+      "unresponsive": 36
     },
     {
       "id": "en-gpt3",
@@ -1448,22 +1448,22 @@
         "https://arxiv.org/abs/2005.14165"
       ],
       "category": "paper",
-      "rank": 10,
-      "millis": 896.8833860126324,
+      "rank": 1,
+      "millis": 590.0461559940595,
       "urls": [
-        "https://arxiv.org/pdf/2005.14165",
-        "http://arxiv.org/abs/2007.07375",
-        "https://arxiv.org/abs/2109.01652",
-        "https://arxiv.org/html/2005.14165v4",
-        "https://arxiv.org/html/2405.01040v1",
-        "https://arxiv.org/abs/2112.10668",
-        "https://arxiv.org/html/2404.11122v1",
-        "https://arxiv.org/html/2403.17661v2",
-        "https://www.reddit.com/r/MachineLearning/comments/gsuzey/d_paper_explained_gpt3_language_models_are/",
-        "https://arxiv.org/abs/2005.14165"
+        "https://arxiv.org/abs/2005.14165",
+        "https://arxiv.org/abs/2109.07684",
+        "https://www.arxiv.org/pdf/2210.07128",
+        "https://arxiv.org/abs/2305.15525",
+        "https://arxiv.org/abs/2005.14165v2",
+        "https://arxiv.org/abs/2302.12692",
+        "https://arxiv.org/abs/2005.14165v4",
+        "https://arxiv.org/abs/2009.07118",
+        "https://arxiv.org/abs/2005.14165v1",
+        "http://arxiv.org/abs/2007.07375"
       ],
-      "bytes": 7230,
-      "unresponsive": 35
+      "bytes": 8834,
+      "unresponsive": 36
     },
     {
       "id": "en-resnet",
@@ -1474,7 +1474,7 @@
       ],
       "category": "paper",
       "rank": 1,
-      "millis": 622.0431709953118,
+      "millis": 336.88981499290094,
       "urls": [
         "http://arxiv.org/abs/1512.03385",
         "https://arxiv.org/abs/2509.24732",
@@ -1484,11 +1484,11 @@
         "https://arxiv.org/abs/1710.10361",
         "https://arxiv.org/abs/1812.11690",
         "https://arxiv.org/abs/2505.04397",
-        "https://arxiv.org/abs/2510.24036",
+        "http://arxiv.org/abs/1804.00432",
         "https://arxiv.org/abs/2009.01423v4"
       ],
-      "bytes": 7791,
-      "unresponsive": 35
+      "bytes": 7820,
+      "unresponsive": 36
     },
     {
       "id": "en-adam",
@@ -1499,7 +1499,7 @@
       ],
       "category": "paper",
       "rank": 1,
-      "millis": 708.9582830085419,
+      "millis": 332.3174549732357,
       "urls": [
         "https://arxiv.org/abs/1412.6980",
         "https://arxiv.org/abs/2402.01567",
@@ -1512,8 +1512,8 @@
         "https://arxiv.org/abs/2405.12807",
         "https://arxiv.org/abs/2512.06795"
       ],
-      "bytes": 7490,
-      "unresponsive": 35
+      "bytes": 7523,
+      "unresponsive": 36
     },
     {
       "id": "en-rust-repo",
@@ -1523,22 +1523,22 @@
         "https://github.com/rust-lang/rust"
       ],
       "category": "repo",
-      "rank": 1,
-      "millis": 3004.028285999084,
+      "rank": 6,
+      "millis": 3003.1414889963344,
       "urls": [
-        "https://github.com/rust-lang/rust",
-        "https://github.com/rust-lang/reference",
-        "https://github.com/rust-lang/rust-by-example",
-        "https://github.com/rust-lang/book",
-        "https://github.com/topics/rust",
-        "https://github.com/rust-lang",
-        "https://github.com/rust-lang/rustlings/",
-        "https://github.com/rust-lang/www.rust-lang.org",
-        "https://github.com/rust-lang/rust/blob/main/library/std/src/lib.rs",
-        "https://doc.rust-lang.org/book/"
+        "https://doc.rust-lang.org/book/",
+        "https://rust-lang.org/zh-CN/",
+        "https://rust-lang.org/tools/install/",
+        "https://rust-lang.org/",
+        "https://doc.rust-lang.org/",
+        "https://github.com/rust-lang/rust/pull/60900",
+        "https://github.com/",
+        "https://github.com/rust-lang/rust/pull/23071",
+        "https://fuchsia.googlesource.com/third_party/github.com/rust-lang/rust-bindgen/+/9d26c6eddeff9192ddedb563192abe3128fc5aae/bindgen-integration/",
+        "https://github.com/rust-lang/rust"
       ],
-      "bytes": 7213,
-      "unresponsive": 27
+      "bytes": 6911,
+      "unresponsive": 28
     },
     {
       "id": "en-tokio-repo",
@@ -1548,22 +1548,22 @@
         "https://github.com/tokio-rs/tokio"
       ],
       "category": "repo",
-      "rank": 1,
-      "millis": 3003.11454597977,
+      "rank": 2,
+      "millis": 3002.9422439984046,
       "urls": [
-        "http://github.com/tokio-rs/tokio",
         "https://github.com/tokio-rs/book",
-        "https://github.com/tokio-rs/tokio/releases",
+        "http://github.com/tokio-rs/tokio",
         "http://github.com/tokio-rs",
-        "http://github.com/topics/tokio-rs",
         "https://daily.dev/posts/github---tokio-rs-topcoat-a-batteries-included-framework-for-building-web-apps-vvuisd732",
         "http://github.com/tokio-rs/website",
+        "https://github.com/tokio-rs/tokio/releases",
         "https://github.com/tokio-rs/tokio-io",
-        "https://github.com/tokio-rs/tokio-core",
-        "https://tokio.rs/"
+        "http://github.com/tokio-rs/axum",
+        "https://github.com/tokio-rs/console",
+        "https://github.com/tokio-rs/toasty"
       ],
-      "bytes": 7492,
-      "unresponsive": 33
+      "bytes": 7588,
+      "unresponsive": 34
     },
     {
       "id": "en-ripgrep",
@@ -1574,21 +1574,21 @@
       ],
       "category": "repo",
       "rank": 1,
-      "millis": 588.9776520198211,
+      "millis": 468.6411209986545,
       "urls": [
+        "https://github.com/BurntSushi/ripgrep/pulls",
         "https://github.com/BurntSushi/ripgrep",
         "https://github.com/BurntSushi/ripgrep/releases",
-        "https://github.com/BurntSushi/ripgrep/pulls",
-        "https://github.com/BurntSushi/ripgrep/discussions",
         "https://github.com/",
+        "https://github.com/BurntSushi/ripgrep/discussions",
         "https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md",
         "https://github.com/BurntSushi/ripgrep/releases/tag/15.2.0",
         "https://github.com/cla7aye15I4nd/opensource-BurntSushi__ripgrep",
         "https://gist.github.com/origamirabbit/97e9b0b5ff5056c8efa153e6bd9f3d32",
         "https://github.com/BurntSushi/ripgrep/pull/41"
       ],
-      "bytes": 8183,
-      "unresponsive": 35
+      "bytes": 8200,
+      "unresponsive": 36
     },
     {
       "id": "en-crates-serde",
@@ -1599,7 +1599,7 @@
       ],
       "category": "repo",
       "rank": 1,
-      "millis": 682.4330290255602,
+      "millis": 381.9174579984974,
       "urls": [
         "https://crates.io/crates/serde_with",
         "https://crates.io/crates/serde",
@@ -1612,8 +1612,8 @@
         "https://crates.io/crates/serde_core/1.0.228",
         "https://crates.io/crates/rmp-serde"
       ],
-      "bytes": 7252,
-      "unresponsive": 35
+      "bytes": 7303,
+      "unresponsive": 36
     },
     {
       "id": "en-npm-react",
@@ -1623,22 +1623,22 @@
         "https://www.npmjs.com/package/react"
       ],
       "category": "repo",
-      "rank": 1,
-      "millis": 631.1054840043653,
+      "rank": 10,
+      "millis": 567.3821519885678,
       "urls": [
-        "https://www.npmjs.com/package/react",
-        "https://blog.logrocket.com/the-complete-guide-to-publishing-a-react-package-to-npm/",
-        "https://www.npmjs.com/search?q=react",
-        "https://socket.dev/blog/npm-package-for-reext-react-components-library-exfiltrates-git-credentials",
-        "https://namastedev.com/blog/creating-your-first-npm-package-with-react-6/",
-        "https://daily.dev/posts/how-to-publish-a-react-component-as-a-package-to-npm-c7hgyqjld",
-        "https://stackoverflow.com/questions/52174779/how-can-i-simply-make-a-react-component-npm-package",
-        "https://www.npmjs.com/package/react-dom",
-        "https://www.securityweek.com/critical-flaw-in-popular-react-native-npm-package-exposes-developers-to-attacks/",
-        "http://reactjs.org/concurrent"
+        "http://reactjs.org/concurrent",
+        "http://socket.dev/npm/package/react",
+        "https://snyk.io/package/npm/react",
+        "https://npm-compare.com/react",
+        "https://www.npmjs.com/",
+        "https://www.npmjs.com/package/npm",
+        "https://reactnative.dev/",
+        "https://cdn.jsdelivr.net/npm/react",
+        "https://npmx.dev/package/react-dom",
+        "https://www.npmjs.com/package/react"
       ],
-      "bytes": 8373,
-      "unresponsive": 35
+      "bytes": 6494,
+      "unresponsive": 36
     },
     {
       "id": "ja-fuji",
@@ -1649,21 +1649,21 @@
       ],
       "category": "wiki",
       "rank": 1,
-      "millis": 875.2159189898521,
+      "millis": 568.9111109822989,
       "urls": [
         "https://ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E5%B1%B1",
         "https://ja.wikipedia.org/wiki/Category:%E5%AF%8C%E5%A3%AB%E5%B1%B1",
         "https://ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E5%B1%B1_(%E6%9B%96%E6%98%A7%E3%81%95%E5%9B%9E%E9%81%BF)",
         "https://gan.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E5%B1%B1",
         "https://zh.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E7%99%BB%E5%B1%B1",
-        "https://chr.wikipedia.org/wiki/Wikipedia:%E1%8E%A4%E1%8E%A6%E1%8F%94",
-        "https://cs.wikipedia.org/wiki/Cura%C3%A7ao",
-        "https://cs.wikipedia.org/wiki/Logro%C3%B1o",
-        "https://cs.wikipedia.org/wiki/Pirah%C3%A3",
-        "https://ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E7%99%BB%E5%B1%B1"
+        "https://www.fujisan-kyokai.jp/viewspot50",
+        "https://yamahack.com/4794",
+        "https://wikitravel.org/ja/%E5%AF%8C%E5%A3%AB%E5%B1%B1",
+        "https://www.pref.yamanashi.jp/miryoku/fujisan/index.html",
+        "https://ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E5%B1%B1-%E4%BF%A1%E4%BB%B0%E3%81%AE%E5%AF%BE%E8%B1%A1%E3%81%A8%E8%8A%B8%E8%A1%93%E3%81%AE%E6%BA%90%E6%B3%89"
       ],
-      "bytes": 7782,
-      "unresponsive": 35
+      "bytes": 8089,
+      "unresponsive": 36
     },
     {
       "id": "ja-genji",
@@ -1674,7 +1674,7 @@
       ],
       "category": "wiki",
       "rank": 1,
-      "millis": 679.0709790075198,
+      "millis": 692.6121889846399,
       "urls": [
         "https://ja.wikipedia.org/wiki/%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E",
         "https://ja.wikipedia.org/wiki/%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E%E5%90%84%E5%B8%96%E3%81%AE%E3%81%82%E3%82%89%E3%81%99%E3%81%98",
@@ -1683,12 +1683,12 @@
         "https://ja.wikipedia.org/wiki/%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E_(%E6%9B%96%E6%98%A7%E3%81%95%E5%9B%9E%E9%81%BF)",
         "https://ja.wikipedia.org/wiki/%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E%E3%81%AE%E7%99%BB%E5%A0%B4%E4%BA%BA%E7%89%A9",
         "https://zh.wikipedia.org/zh-hant/%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E%E5%8D%83%E5%B9%B4%E7%B4%80_Genji",
-        "https://cs.wikipedia.org/wiki/Eduard_Cup%C3%A1k",
-        "https://cs.wikipedia.org/wiki/Pirah%C3%A3",
+        "https://ja.wikipedia.org/wiki/%e3%83%a1%e3%82%a4%e3%83%b3%e3%83%9a%e3%83%bc%e3%82%b8",
+        "https://ja.wikipedia.org/wiki/%E3%82%A6%E3%82%A3%E3%82%AD%E3%83%9A%E3%83%87%E3%82%A3%E3%82%A2",
         "https://ja.wikipedia.org/wiki/%E5%85%89%E6%BA%90%E6%B0%8F"
       ],
-      "bytes": 7897,
-      "unresponsive": 35
+      "bytes": 8047,
+      "unresponsive": 36
     },
     {
       "id": "ja-tokyo-station",
@@ -1699,21 +1699,21 @@
       ],
       "category": "wiki",
       "rank": 1,
-      "millis": 701.8577139824629,
+      "millis": 588.4497700026259,
       "urls": [
         "https://ja.wikipedia.org/wiki/東京駅",
         "https://ja.wikipedia.org/wiki/%E6%9D%B1%E4%BA%AC%E9%A7%85%E3%81%AE%E6%AD%B4%E5%8F%B2",
         "https://ja.wikipedia.org/wiki/Category:%E6%9D%B1%E4%BA%AC%E9%A7%85",
-        "https://cs.wikipedia.org/wiki/V%C3%B5ru",
-        "http://en.m.wikipedia.org/",
-        "https://cs.wikipedia.org/wiki/Pi%C3%B1ata",
-        "https://en.wikipedia.org/wiki/T%C3%BCpra%C5%9F",
         "https://www.weblio.jp/content/%E6%9D%B1%E4%BA%AC%E9%A7%85%E3%81%AE%E6%AD%B4%E5%8F%B2",
         "https://www.weblio.jp/content/%E6%9D%B1%E4%BA%AC%E9%A7%85",
+        "https://wikitravel.org/wiki/ja/index.php?title=%E6%9D%B1%E4%BA%AC%E9%A7%85&mobileaction=toggle_view_desktop",
+        "https://ja.wikid.org/%E6%9D%B1%E4%BA%AC%E9%A7%85",
+        "https://www.homemate-research-station.com/useful/14665_facil_026/",
+        "https://www.tokyometro.jp/index.html",
         "https://w.atwiki.jp/aniwotawiki/pages/45810.html"
       ],
-      "bytes": 8137,
-      "unresponsive": 35
+      "bytes": 8922,
+      "unresponsive": 36
     },
     {
       "id": "ja-momotaro",
@@ -1724,21 +1724,21 @@
       ],
       "category": "wiki",
       "rank": 1,
-      "millis": 668.5386179888155,
+      "millis": 566.1321679945104,
       "urls": [
         "https://ja.wikipedia.org/wiki/%E6%A1%83%E5%A4%AA%E9%83%8E",
         "https://ja.wikipedia.org/wiki/%E6%A1%83%E5%A4%AA%E9%83%8E_(%E3%83%9F%E3%83%A5%E3%83%BC%E3%82%B8%E3%82%B7%E3%83%A3%E3%83%B3)",
         "https://ja.wikipedia.org/wiki/%E6%A1%83%E5%A4%AA%E9%83%8E_(%E6%9B%96%E6%98%A7%E3%81%95%E5%9B%9E%E9%81%BF)",
         "https://ja.wikipedia.org/wiki/%E6%A1%83%E5%A4%AA%E9%83%8E%E4%BC%9D%E8%AA%AC",
         "https://ja.m.wikipedia.org/wiki/%E6%A1%83%E5%A4%AA%E9%83%8E_(%E7%AB%A5%E8%AC%A1)",
-        "https://ja.wikipedia.org/wiki/%E6%98%94%E3%80%85%E4%BA%AD%E6%A1%83%E5%A4%AA%E9%83%8E",
         "https://ja.wikipedia.org/wiki/%E6%A1%83%E5%A4%AA%E9%83%8E%E4%BE%8D",
+        "https://ja.wikipedia.org/wiki/%E6%98%94%E3%80%85%E4%BA%AD%E6%A1%83%E5%A4%AA%E9%83%8E",
         "https://ja.wikipedia.org/wiki/Category:%E6%A1%83%E5%A4%AA%E9%83%8E%E3%82%92%E3%83%99%E3%83%BC%E3%82%B9%E3%81%A8%E3%81%97%E3%81%9F%E3%83%95%E3%82%A3%E3%82%AF%E3%82%B7%E3%83%A7%E3%83%B3%E4%BD%9C%E5%93%81",
         "https://ja.wikipedia.org/wiki/%E6%A1%83%E5%A4%AA%E9%83%8E_(%E3%82%A2%E3%83%80%E3%83%AB%E3%83%88%E3%83%93%E3%83%87%E3%82%AA)",
         "https://ja.wikipedia.org/wiki/%E6%98%94%E6%98%94%E4%BA%AD%E6%A1%83%E5%A4%AA%E9%83%8E"
       ],
-      "bytes": 8791,
-      "unresponsive": 35
+      "bytes": 8843,
+      "unresponsive": 36
     },
     {
       "id": "ja-basho",
@@ -1749,21 +1749,21 @@
       ],
       "category": "wiki",
       "rank": 1,
-      "millis": 749.3215930007864,
+      "millis": 630.2723989938386,
       "urls": [
         "https://ja.wikipedia.org/wiki/%E6%9D%BE%E5%B0%BE%E8%8A%AD%E8%95%89",
         "https://ja.wikipedia.org/wiki/Category:%E6%9D%BE%E5%B0%BE%E8%8A%AD%E8%95%89",
         "https://ja.wikipedia.org/wiki/%E8%8A%AD%E8%95%89",
-        "https://cs.wikipedia.org/wiki/Bor%C3%A5s",
-        "https://cs.m.wikipedia.org/",
-        "https://cs.wikipedia.org/wiki/Sk%C3%A5ne",
-        "https://cs.wikipedia.org/wiki/Taurag%C4%97",
-        "https://cs.wikipedia.org/wiki/R%C3%BC%C5%9Ft%C3%BC_Re%C3%A7ber",
-        "https://cs.wikipedia.org/wiki/Kuld%C4%ABga",
+        "https://ja.wikipedia.org/wiki/WhatsApp",
+        "https://en.wikipedia.org/wiki/WhatsApp",
+        "https://ja.wikisource.org/wiki/%E4%BD%9C%E8%80%85:%E6%9D%BE%E5%B0%BE%E8%8A%AD%E8%95%89",
+        "https://www.wikipedia.cfbx.jp/wiki/index.php/%E6%9D%BE%E5%B0%BE%E8%8A%AD%E8%95%89",
+        "https://www.gov-online.go.jp/eng/publicity/book/hlj/html/202205/202205_12_jp.html",
+        "https://ja.wikid.org/%E6%9D%BE%E5%B0%BE%E8%8A%AD%E8%95%89",
         "https://ja.wikipedia.org/wiki/%E8%8A%AD%E8%95%89%E7%BF%81%E7%94%9F%E5%AE%B6"
       ],
-      "bytes": 6966,
-      "unresponsive": 35
+      "bytes": 7957,
+      "unresponsive": 36
     },
     {
       "id": "ja-soseki",
@@ -1774,21 +1774,21 @@
       ],
       "category": "wiki",
       "rank": 1,
-      "millis": 2003.2923170074355,
+      "millis": 642.2956379828975,
       "urls": [
         "https://ja.wikipedia.org/wiki/%E5%A4%8F%E7%9B%AE%E6%BC%B1%E7%9F%B3",
         "https://ja.wikipedia.org/wiki/Category:%E5%A4%8F%E7%9B%AE%E6%BC%B1%E7%9F%B3",
         "https://ja.wikipedia.org/wiki/%E5%A4%8F%E7%9B%AE%E4%BC%B8%E5%85%AD",
         "https://ja.wikipedia.org/?curid=1581400",
         "https://ja.wikipedia.org/wiki/%E3%83%A1%E3%82%A4%E3%83%B3%E3%83%9A%E3%83%BC%E3%82%B8",
-        "https://cs.wikipedia.org/wiki/Wikipedie",
-        "https://cs.wikipedia.org/wiki/A",
-        "https://cs.wikipedia.org/wiki/%C6%B8",
-        "https://cs.wikipedia.org/wiki/Pi%C3%B1ata",
+        "https://soseki-museum.jp/soseki-natsume/sosekis-life/",
+        "http://www5e.biglobe.ne.jp/~masaji/link/soseki.html",
+        "https://ja.wikisource.org/wiki/%E4%BD%9C%E8%80%85:%E5%A4%8F%E7%9B%AE%E6%BC%B1%E7%9F%B3",
+        "https://pedia.cloud.edu.tw/Entry/WikiContent?title=%E5%A4%8F%E7%9B%AE%E6%BC%B1%E7%9F%B3&search=%E5%A4%8F%E7%9B%AE%E6%BC%B1%E7%9F%B3",
         "https://en.wikipedia.org/wiki/Natsume_S%C5%8Dseki"
       ],
-      "bytes": 7506,
-      "unresponsive": 35
+      "bytes": 8580,
+      "unresponsive": 36
     },
     {
       "id": "ja-fuji-san",
@@ -1799,7 +1799,7 @@
       ],
       "category": "wiki",
       "rank": 1,
-      "millis": 2867.3143289925065,
+      "millis": 2002.0201530132908,
       "urls": [
         "https://ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E5%B1%B1",
         "https://www.gsi.go.jp/WNEW/PRESS-RELEASE/keikaku61003.html",
@@ -1807,13 +1807,13 @@
         "https://tenkura.n-kishou.co.jp/tk/kanko/kad.html?code=19150004&type=15",
         "https://mtfuji-whc.jp/%E5%AF%8C%E5%A3%AB%E5%B1%B1%E4%B8%96%E7%95%8C%E9%81%BA%E7%94%A3%E3%82%B3%E3%83%A9%E3%83%A0%EF%BC%8847%E5%8F%B7%EF%BC%89/",
         "https://townary.jp/mountain/4c259646fc5e4309/",
+        "https://www.pref.shizuoka.jp/kensei/information/myshizuoka/1040975/1011196.html",
         "https://u2elab.com/2025/12/10/%E6%97%A5%E6%9C%AC%E4%B8%80%E9%AB%98%E3%81%84%E5%B1%B1%E3%80%81%E3%80%8E%E5%AF%8C%E5%A3%AB%E5%B1%B1%E3%80%8F%E3%81%AF%E4%B8%96%E7%95%8C%E3%81%A7%E8%A6%8B%E3%81%9F%E3%82%89%E4%BD%95%E4%BD%8D%EF%BC%9F/",
         "https://www.yamareco.com/modules/yamainfo/ptinfo.php?ptid=63",
-        "https://www.yamakei-online.com/yamanavi/yama.php?yama_id=396",
         "https://autoc-one.jp/knowhow/5001819/"
       ],
-      "bytes": 8498,
-      "unresponsive": 35
+      "bytes": 8577,
+      "unresponsive": 36
     },
     {
       "id": "ja-tokaido",
@@ -1824,21 +1824,21 @@
       ],
       "category": "wiki",
       "rank": 2,
-      "millis": 665.5253029894084,
+      "millis": 3002.074629999697,
       "urls": [
         "https://ja.wikipedia.org/wiki/Category:%E6%9D%B1%E6%B5%B7%E9%81%93%E6%96%B0%E5%B9%B9%E7%B7%9A",
         "https://ja.wikipedia.org/wiki/%E6%9D%B1%E6%B5%B7%E9%81%93%E6%96%B0%E5%B9%B9%E7%B7%9A",
         "https://ja.wikipedia.org/wiki/%E6%9D%B1%E6%B5%B7%E9%81%93%E3%83%BB%E5%B1%B1%E9%99%BD%E6%96%B0%E5%B9%B9%E7%B7%9A",
         "https://zh-yue.wikipedia.org/wiki/%E6%9D%B1%E6%B5%B7%E9%81%93%E6%9C%AC%E7%B7%9A",
-        "https://cs.wikipedia.org/wiki/Lule%C3%A5",
-        "https://cs.m.wikipedia.org/",
-        "https://cs.wikipedia.org/wiki/%C3%85",
-        "https://cs.wikipedia.org/wiki/K%C3%B5inastu",
-        "https://cs.wikipedia.org/wiki/Cura%C3%A7ao",
-        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E6%B5%B7%E9%81%93%E7%89%A9%E6%B5%81%E6%96%B0%E5%B9%B9%E7%B7%9A%E6%A7%8B%E6%83%B3"
+        "https://id.ndl.go.jp/auth/ndlna/00954864",
+        "https://jisho.org/word/%E6%9D%B1%E6%B5%B7%E9%81%93%E6%96%B0%E5%B9%B9%E7%B7%9A",
+        "https://research.ibm.com/blog/project-debater-api",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E6%B5%B7%E9%81%93%E7%89%A9%E6%B5%81%E6%96%B0%E5%B9%B9%E7%B7%9A%E6%A7%8B%E6%83%B3",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E6%B5%B7%E6%97%85%E5%AE%A2%E9%89%84%E9%81%93%E6%96%B0%E5%B9%B9%E7%B7%9A%E9%89%84%E9%81%93%E4%BA%8B%E6%A5%AD%E6%9C%AC%E9%83%A8",
+        "https://ja.wikipedia.org/wiki/%E3%81%AE%E3%81%9E%E3%81%BF_(%E5%88%97%E8%BB%8A)"
       ],
-      "bytes": 7749,
-      "unresponsive": 35
+      "bytes": 8799,
+      "unresponsive": 36
     },
     {
       "id": "ja-kimono",
@@ -1849,21 +1849,21 @@
       ],
       "category": "wiki",
       "rank": 1,
-      "millis": 607.4522480193991,
+      "millis": 567.0920459961053,
       "urls": [
         "https://ja.wikipedia.org/wiki/%E7%9D%80%E7%89%A9",
         "https://ja.wikipedia.org/wiki/%E5%92%8C%E6%9C%8D",
         "https://ja.wikipedia.org/wiki/Category:%E5%92%8C%E6%9C%8D",
-        "https://cs.wikipedia.org/wiki/Tr%E1%BA%A7n_H%C6%B0ng_%C4%90%E1%BA%A1o",
-        "https://cs.wikipedia.org/wiki/%C4%B0smet_%C4%B0n%C3%B6n%C3%BC",
-        "https://cs.wikipedia.org/wiki/B%E1%BA%A3o_%C4%90%E1%BA%A1i",
-        "https://cs.wikipedia.org/wiki/Thi%E1%BB%87u_Tr%E1%BB%8B",
         "https://wa-magazine.com/culture/japanese-kimono/japanese-kimono-knowledge/",
         "https://www.kyozome.info/iroha_kind.php",
+        "https://www.rakuten.co.jp/category/206545/",
+        "https://ichiri-mall.jp/shop/default.aspx",
+        "https://search.rakuten.co.jp/search/mall/%E7%9D%80%E7%89%A9/",
+        "https://www.kimonoya.org/010kimono8/001.html",
         "https://ja.wikipedia.org/wiki/%E3%82%A2%E3%83%B3%E3%83%86%E3%82%A3%E3%83%BC%E3%82%AF%E7%9D%80%E7%89%A9"
       ],
-      "bytes": 7795,
-      "unresponsive": 35
+      "bytes": 7901,
+      "unresponsive": 36
     },
     {
       "id": "ja-sushi",
@@ -1874,7 +1874,7 @@
       ],
       "category": "wiki",
       "rank": 1,
-      "millis": 628.2642449950799,
+      "millis": 565.9098100150004,
       "urls": [
         "https://ja.wikipedia.org/wiki/%E5%AF%BF%E5%8F%B8",
         "https://ja.wikipedia.org/wiki/%E5%AF%BF%E5%8F%B8%E5%B1%8B",
@@ -1883,12 +1883,12 @@
         "https://ja.wikipedia.org/wiki/Category:%E5%AF%BF%E5%8F%B8%E7%A8%AE",
         "https://fr.wikipedia.org/wiki/Sushi",
         "https://en.wikipedia.org/wiki/Sushi",
-        "https://cs.wikipedia.org/wiki/Logro%C3%B1o",
         "https://ko.wikipedia.org/wiki/%EC%9C%84%ED%82%A4%EB%B0%B1%EA%B3%BC:%EB%8C%80%EB%AC%B8",
+        "https://zh.wikipedia.org/wiki/%E5%A3%BD%E5%8F%B8%E9%83%8E",
         "https://ja.wikipedia.org/wiki/%E6%B1%9F%E6%88%B8%E5%89%8D%E5%AF%BF%E5%8F%B8"
       ],
-      "bytes": 8092,
-      "unresponsive": 35
+      "bytes": 8218,
+      "unresponsive": 36
     },
     {
       "id": "ja-py-doc",
@@ -1898,22 +1898,22 @@
         "https://docs.python.org/ja/3/tutorial"
       ],
       "category": "doc",
-      "rank": 10,
-      "millis": 1338.103537011193,
+      "rank": 1,
+      "millis": 1939.5101720001549,
       "urls": [
-        "https://www.python.org/",
+        "https://docs.python.org/ja/3/tutorial/",
+        "https://www.python.jp/train/index.html",
+        "https://python.keicode.com/lang/",
+        "https://paiza.jp/works/python/new-primer",
+        "https://www.jikkyo.co.jp/book/detail/22510044/",
+        "https://progate.com/courses/python",
+        "https://www.kikagaku.co.jp/personal/blog/python-base",
         "https://www.python.org/downloads/",
-        "https://utokyo-ipp.github.io/",
-        "http://www.amazon.co.jp/o/ASIN/B07D6ZGH8W/gihyojp-22",
-        "https://www.skillupai.com/blog/tech/about-python/",
-        "https://www.isc.meiji.ac.jp/~be00085/Python3/index.html",
-        "https://www.tohoho-web.com/python/",
-        "https://utokyo-ipp.github.io/IPP_textbook.pdf",
-        "https://www.knihydobrovsky.cz/e-kniha/python-421779448",
-        "https://docs.python.org/ja/3/tutorial/"
+        "https://www.python.org/",
+        "https://utokyo-ipp.github.io/"
       ],
-      "bytes": 8129,
-      "unresponsive": 35
+      "bytes": 8268,
+      "unresponsive": 36
     },
     {
       "id": "ja-py-lib",
@@ -1924,7 +1924,7 @@
       ],
       "category": "doc",
       "rank": 2,
-      "millis": 803.8589610077906,
+      "millis": 613.72625399963,
       "urls": [
         "https://docs.python.org/ja/3.13/library/index.html",
         "https://docs.python.org/ja/3/library/index.html",
@@ -1937,8 +1937,8 @@
         "https://ainow.ai/2021/08/13/257462/",
         "https://docs.python.org/ja/3.10/library/index.html"
       ],
-      "bytes": 15322,
-      "unresponsive": 35
+      "bytes": 15346,
+      "unresponsive": 36
     },
     {
       "id": "ja-rs-doc",
@@ -1951,21 +1951,21 @@
       ],
       "category": "doc",
       "rank": null,
-      "millis": 730.4466439818498,
+      "millis": 566.9167349988129,
       "urls": [
         "https://rust-lang.org/ja/",
         "https://rust-lang.org/ja/learn/",
         "https://qiita.com/elipmoc101/items/3c8b6d8332a9019e578c",
         "https://gihyo.jp/book/2024/978-4-297-14192-9",
-        "https://wolfbash.hateblo.jp/entry/2017/07/30/193412",
         "https://atmarkit.itmedia.co.jp/ait/articles/2204/13/news040.html",
         "https://techtarget.itmedia.co.jp/tt/news/2401/25/news05.html",
+        "https://wolfbash.hateblo.jp/entry/2017/07/30/193412",
         "https://speakerdeck.com/helloyuk13/puroguraminguyan-yu-rustfalsegoshao-jie",
         "https://github.com/",
         "https://doc.rust-lang.org/rust-by-example/ja/index.html"
       ],
-      "bytes": 11592,
-      "unresponsive": 35
+      "bytes": 11629,
+      "unresponsive": 36
     },
     {
       "id": "ja-rs-book",
@@ -1976,22 +1976,22 @@
         "https://www.rust-lang.org/ja"
       ],
       "category": "doc",
-      "rank": 4,
-      "millis": 724.9434819968883,
+      "rank": null,
+      "millis": 563.0823559768032,
       "urls": [
-        "https://doc.rust-jp.rs/",
-        "https://rust-lang.org/zh-CN/",
-        "https://doc.rust-lang.org/rust-by-example/ja/index.html",
-        "https://doc.rust-lang.org/book/",
-        "https://rust-lang.org/en-US/",
-        "https://rust-lang.org/",
-        "https://products.aspose.ai/total/ja/ai-code-analysis/rust",
-        "https://memo.koralle-mgmg.com/rust/reference-docs/",
-        "https://rustdesk.com/ko/",
-        "https://rust-lang.org/ja/learn/"
+        "https://rust-lang.org/ja/learn/",
+        "https://rust-lang.org/ja/",
+        "https://zenn.dev/trasque/books/trasque-trpl2022/viewer/startpage",
+        "https://zenn.dev/dalance/articles/66e9498e82a72f",
+        "https://scrapbox.io/nikkie-memos/Rust%E3%81%AE%E6%97%A5%E6%9C%AC%E8%AA%9E%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88",
+        "https://github.com/",
+        "https://note.com/naoki85/n/n98eee5f0672f?hl=en",
+        "https://github.com/rust-lang-ja/book-ja-pdf",
+        "https://github.com/rust-lang-ja",
+        "https://doc.rust-jp.rs/"
       ],
-      "bytes": 7422,
-      "unresponsive": 35
+      "bytes": 9057,
+      "unresponsive": 36
     },
     {
       "id": "ja-mdn",
@@ -2002,21 +2002,21 @@
       ],
       "category": "doc",
       "rank": 2,
-      "millis": 588.1139260018244,
+      "millis": 563.2508629933,
       "urls": [
         "https://developer.mozilla.org/ja/docs/Learn/JavaScript/First_steps/Test_your_skills:_Arrays",
         "https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Array",
         "https://developer.mozilla.org/ja/docs/Learn_web_development/Core/Scripting/Arrays",
-        "https://developer.mozilla.org/ja/docs/Web/JavaScript/Guide/Functions",
         "https://developer.mozilla.org/ja/docs/Glossary/Array",
         "https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Array/isArray",
         "https://developer.mozilla.org/ja/docs/Learn/JavaScript/First_steps/Arrays",
         "https://developer.mozilla.org/ja/docs/Web/JavaScript/Guide/Indexed_collections",
         "https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Set",
+        "https://developer.mozilla.org/ja/docs/Learn_web_development/Core/Scripting/Test_your_skills/Arrays",
         "https://developer.mozilla.org/ja/docs/Web/JavaScript/Guide/Typed_arrays"
       ],
-      "bytes": 8421,
-      "unresponsive": 35
+      "bytes": 8445,
+      "unresponsive": 36
     },
     {
       "id": "ja-nginx",
@@ -2026,22 +2026,22 @@
         "https://nginx.org/en/docs"
       ],
       "category": "doc",
-      "rank": 3,
-      "millis": 3002.1464330202434,
+      "rank": 2,
+      "millis": 3002.148158993805,
       "urls": [
-        "https://nginx.org/",
         "https://nginx.org/en/",
         "https://nginx.org/en/docs/",
-        "https://docs.redhat.com/ja/documentation/red_hat_enterprise_linux/8/html/deploying_different_types_of_servers/setting-up-and-configuring-nginx_deploying-different-types-of-servers",
+        "https://nginx.org/",
         "https://qiita.com/free-honda/items/e98dbcb6f475404a6483",
+        "https://heartbeats.jp/hbblog/2012/04/nginx04.html",
         "https://docs.docker.jp/get-started/overview.html",
+        "https://docs.redhat.com/ja/documentation/red_hat_enterprise_linux/8/html/deploying_different_types_of_servers/setting-up-and-configuring-nginx_deploying-different-types-of-servers",
         "https://blog.longwin.com.tw/2016/08/letsencrypt-install-nginx-setup-2016/",
         "https://experienceleague.adobe.com/ja/docs/commerce-operations/configuration-guide/multi-sites/ms-nginx",
-        "https://docs.plesk.com/zh-TW/12.5/customer-guide/網站與域名/主機設定/web-伺服器設定/apache-web-伺服器設定.72320/",
         "https://engineering.mercari.com/blog/entry/2017-09-11-150000/"
       ],
-      "bytes": 7961,
-      "unresponsive": 35
+      "bytes": 8314,
+      "unresponsive": 36
     },
     {
       "id": "ja-docker",
@@ -2052,21 +2052,21 @@
       ],
       "category": "doc",
       "rank": 1,
-      "millis": 3002.72507200134,
+      "millis": 3002.833078004187,
       "urls": [
         "https://docs.docker.com/reference/compose-file/",
-        "https://docs.docker.com/compose",
-        "https://www.docker.com/products/docker-desktop/",
+        "https://www.docker.com/ja-jp/get-started/",
         "https://docs.docker.com/desktop/setup/install/windows-install/",
+        "https://docs.docker.com/engine/install/",
         "https://www.docker.com/",
-        "https://docs.docker.com/",
         "https://docs.docker.jp/v1.12/compose/compose-file.html",
         "https://docs.docker.jp/compose/compose-file/compose-file-v3.html",
         "https://docs.github.com/ko",
+        "https://hiroshi-sawai.com/docs/docker/docker-compose.html",
         "https://matsuand.github.io/docs.docker.jp.onthefly/compose/compose-file/compose-file-v3/"
       ],
-      "bytes": 7932,
-      "unresponsive": 35
+      "bytes": 8241,
+      "unresponsive": 36
     },
     {
       "id": "ja-jma",
@@ -2077,21 +2077,21 @@
       ],
       "category": "official",
       "rank": 1,
-      "millis": 825.0352639879566,
+      "millis": 357.43984900182113,
       "urls": [
         "https://www.jma.go.jp/bosai/forecast/",
         "https://www.jma.go.jp/jma/index.html",
         "https://www.jma.go.jp/bosai/map.html#contents=forecast",
-        "https://www.jma.go.jp/jma/kishou/know/kurashi/shukan.html",
         "https://www.jma.go.jp/jma/kishou/know/kurashi/yoho.html",
-        "https://www.jma.go.jp/bosai/weather_map/",
         "https://www.jma.go.jp/jma/kishou/know/yougo_hp/tenki.html",
+        "https://www.jma.go.jp/bosai/weather_map/",
         "https://www.jma.go.jp/bosai/numericmap/",
         "https://www.jma.go.jp/bosai/kaikotan/",
-        "https://www.jma.go.jp/bosai/nowc/m_index.html"
+        "https://www.jma.go.jp/bosai/nowc/m_index.html",
+        "https://www.otenki.com/0001_day_top.htm"
       ],
-      "bytes": 7119,
-      "unresponsive": 35
+      "bytes": 7144,
+      "unresponsive": 36
     },
     {
       "id": "ja-ndl",
@@ -2102,7 +2102,7 @@
       ],
       "category": "official",
       "rank": 2,
-      "millis": 836.1199249920901,
+      "millis": 314.6731230081059,
       "urls": [
         "https://www.ndl.go.jp/",
         "https://ndlsearch.ndl.go.jp/bib/ndlcat",
@@ -2110,13 +2110,13 @@
         "https://ndlsearch.ndl.go.jp/rnavi/humanities/link_opac",
         "https://ndlsearch.ndl.go.jp/search",
         "https://ndlsearch.ndl.go.jp/help/api/oai_pmh",
-        "https://ndlsearch.ndl.go.jp/search/detail-search",
         "https://www.ndl.go.jp/jp/use/service/index.html",
+        "https://ndlsearch.ndl.go.jp/search/detail-search",
         "https://ndlsearch.ndl.go.jp/help/contact",
         "https://ndlsearch.ndl.go.jp/help/bibsearch?lang=ja"
       ],
-      "bytes": 7338,
-      "unresponsive": 35
+      "bytes": 7392,
+      "unresponsive": 36
     },
     {
       "id": "ja-tokyo-tourism",
@@ -2127,21 +2127,21 @@
       ],
       "category": "official",
       "rank": 1,
-      "millis": 837.2266890073661,
+      "millis": 320.2338830160443,
       "urls": [
         "https://www.gotokyo.org/jp/index.html",
         "https://www.gotokyo.org/en/index.html",
         "https://travel.rakuten.co.jp/mytrip/ranking/spot-tokyo",
         "https://www.tickets.gotokyo.org/jp/",
         "https://www.gotokyo.org/jp/plan/tourist-info-center/index.html",
-        "https://www.tcvb.or.jp/jp/project/hasshin/welcome/",
         "https://www.gotokyo.org/jp/destinations/index.html",
+        "https://www.tcvb.or.jp/jp/project/hasshin/welcome/",
         "https://x.com/tokyo_kankou",
         "https://www.hatobus.co.jp/feature/tokyo",
         "https://www.gotokyo.org/jp/plan/useful-apps/index.html"
       ],
-      "bytes": 8066,
-      "unresponsive": 35
+      "bytes": 8087,
+      "unresponsive": 36
     },
     {
       "id": "ja-jr",
@@ -2152,21 +2152,21 @@
       ],
       "category": "official",
       "rank": 2,
-      "millis": 764.6942090068478,
+      "millis": 343.2967590051703,
       "urls": [
         "https://timetables.jreast.co.jp/",
         "https://www.jreast.co.jp/en/railway/",
         "https://www.jreast.co.jp/en/",
-        "https://ekitan.com/transit/railway/company/2",
         "https://timetables.jreast.co.jp/timetable/list1039.html",
+        "https://ekitan.com/transit/railway/company/2",
         "https://apps.apple.com/us/app/jr%E6%9D%B1%E6%97%A5%E6%9C%AC%E3%82%A2%E3%83%97%E3%83%AA-%E9%81%8B%E8%A1%8C%E6%83%85%E5%A0%B1-%E4%B9%97%E6%8F%9B%E6%A1%88%E5%86%85-%E6%99%82%E5%88%BB%E8%A1%A8-%E6%A7%8B%E5%86%85%E5%9B%B3/id820004378",
         "https://timetables.jreast.co.jp/timetable/list0204.html",
         "https://ekitan.com/timetable/railway/line/4900",
         "https://www.jreast-app.jp/",
         "https://www.jreast.co.jp/railway/"
       ],
-      "bytes": 8106,
-      "unresponsive": 35
+      "bytes": 8161,
+      "unresponsive": 36
     },
     {
       "id": "ja-gsi",
@@ -2177,21 +2177,21 @@
       ],
       "category": "official",
       "rank": null,
-      "millis": 813.3562830043957,
+      "millis": 315.8141910098493,
       "urls": [
-        "http://www.gsi.go.jp/kiban/",
-        "https://maps.gsi.go.jp/help/intro/municipality/renkei.html",
-        "http://www.gsi.go.jp/tizu-kutyu.html",
-        "https://play.google.com/store/apps/details?id=jp.gacool.kokudo&hl=ja",
-        "https://www.gsi.go.jp/riyousya01.html",
-        "https://maps.gsi.go.jp/vector",
-        "https://service.gsi.go.jp/map-photos/",
-        "https://gsi-cyberjapan.github.io/gsimaps_180308/",
         "https://maps.gsi.go.jp/",
+        "https://www.gsi.go.jp/tizu-kutyu.html",
+        "http://www.gsi.go.jp/kiban/",
+        "https://www.gsi.go.jp/riyousya01.html",
+        "https://maps.gsi.go.jp/help/intro/municipality/renkei.html",
+        "https://play.google.com/store/apps/details?id=jp.gacool.kokudo&hl=ja",
+        "https://www.gsi.go.jp/",
+        "https://www.gsi.go.jp/kibanjoho/mapinfo_what.html",
+        "https://maps.gsi.go.jp/index_m.html",
         "https://www.youtube.com/"
       ],
-      "bytes": 7470,
-      "unresponsive": 35
+      "bytes": 7625,
+      "unresponsive": 36
     },
     {
       "id": "ja-e-gov",
@@ -2202,7 +2202,7 @@
       ],
       "category": "official",
       "rank": 2,
-      "millis": 651.9709719868843,
+      "millis": 564.8095080105122,
       "urls": [
         "https://laws.e-gov.go.jp/",
         "http://elaws.e-gov.go.jp/",
@@ -2215,8 +2215,8 @@
         "https://laws.e-gov.go.jp/update/",
         "https://chromewebstore.google.com/detail/e-gov%E6%B3%95%E4%BB%A4%E6%A4%9C%E7%B4%A2-enhancer/jphlncbjlkhgpkpaahcgednemdahocaf?hl=ja"
       ],
-      "bytes": 8232,
-      "unresponsive": 35
+      "bytes": 8250,
+      "unresponsive": 36
     },
     {
       "id": "ja-python-org",
@@ -2227,21 +2227,21 @@
       ],
       "category": "official",
       "rank": 7,
-      "millis": 589.9819229962304,
+      "millis": 618.8832150073722,
       "urls": [
         "https://www.python.org/downloads/",
         "https://docs.python.org/ja/3/tutorial/",
         "https://www.python.org/",
         "https://relocate.me/search/python/japan",
-        "https://pentan.info/else/user_group.html",
         "https://www.hpc.cmc.osaka-u.ac.jp/lec_ws/20240902/",
+        "https://pentan.info/else/user_group.html",
         "https://www.python.jp/index.html",
-        "https://www.knihydobrovsky.cz/kniha/zaciname-programovat-v-jazyku-python-422640345",
-        "https://learning-python.com/about-pp-japan.html",
+        "https://thebridge.jp/en/tag/python",
+        "https://www.ianlewis.org/en/japanese-python-community-whos-who",
         "https://www.python.org/events/python-events/1888/"
       ],
-      "bytes": 6951,
-      "unresponsive": 35
+      "bytes": 6977,
+      "unresponsive": 36
     },
     {
       "id": "ja-rust-jp",
@@ -2252,7 +2252,7 @@
       ],
       "category": "official",
       "rank": null,
-      "millis": 681.2334799906239,
+      "millis": 1285.5789060122333,
       "urls": [
         "https://rust-lang.org/ja/community/",
         "https://rust-lang.org/ja/",
@@ -2260,13 +2260,13 @@
         "https://github.com/fnwiya/japanese-rust-companies",
         "https://steamcommunity.com/groups/rust_jp",
         "https://seesaawiki.jp/rust-japan-game-info/bbs/21538/l50",
-        "https://rust-lang.org/zh-CN/",
-        "https://doc.rust-lang.org/book/",
-        "https://rust-lang.org/",
-        "https://rust.connpass.com/event/215770/participation/"
+        "https://japan.zdnet.com/article/35199018/",
+        "https://www.oreilly.co.jp/books/9784873119595/",
+        "https://soramitsu.co.jp/ja",
+        "https://rust-lang.org/zh-CN/"
       ],
-      "bytes": 8140,
-      "unresponsive": 35
+      "bytes": 9291,
+      "unresponsive": 36
     },
     {
       "id": "ja-rust-crate",
@@ -2277,7 +2277,7 @@
       ],
       "category": "doc",
       "rank": 8,
-      "millis": 2002.675926021766,
+      "millis": 620.8754249964841,
       "urls": [
         "https://doc.rust-lang.org/book/ch14-02-publishing-to-crates-io.html",
         "https://rust-lang.org/zh-CN/",
@@ -2287,11 +2287,11 @@
         "https://rust-lang.org/",
         "https://blog.rust-lang.org/inside-rust/2023/07/21/crates-io-postmortem.html",
         "https://crates.io/crates/creo-ui",
-        "https://blog.rust-lang.org/2025/02/05/crates-io-development-update/",
+        "https://zenn.dev/lemonadern/scraps/3a8f7bff2972fb",
         "https://github.com/rust-lang/crates.io"
       ],
-      "bytes": 7255,
-      "unresponsive": 35
+      "bytes": 7344,
+      "unresponsive": 36
     },
     {
       "id": "ja-git-doc",
@@ -2301,22 +2301,22 @@
         "https://git-scm.com/docs/git-rebase"
       ],
       "category": "doc",
-      "rank": 2,
-      "millis": 2875.4562300164253,
+      "rank": null,
+      "millis": 568.0017190170474,
       "urls": [
         "https://git-scm.com/book/ja/v2/Git-%E3%81%AE%E3%83%96%E3%83%A9%E3%83%B3%E3%83%81%E6%A9%9F%E8%83%BD-%E3%83%AA%E3%83%99%E3%83%BC%E3%82%B9",
-        "https://git-scm.com/docs/git-rebase",
         "https://git-scm.com/book/ja/v2/Git-%E3%81%AE%E3%81%95%E3%81%BE%E3%81%96%E3%81%BE%E3%81%AA%E3%83%84%E3%83%BC%E3%83%AB-%E3%82%B5%E3%83%96%E3%83%A2%E3%82%B8%E3%83%A5%E3%83%BC%E3%83%AB",
         "https://transitive.info/article/git/command/rebase/",
         "https://www.youtube.com/watch?v=tmRNzPfn56k",
         "https://www.reddit.com/r/devops/comments/1mroew6/git_rebase_explained_like_youre_new_to_git/?tl=ja",
         "https://dev.classmethod.jp/articles/putting-together-commits-with-git-rebase/",
-        "https://alchemists.io/articles/git_rebase",
-        "https://gitkraken.com/learn/git/git-rebase",
+        "https://qa.mamari.jp/question/4024066",
+        "https://myenigma.hatenablog.com/entry/2019/08/03/204428",
+        "https://qa.mamari.jp/topic/9031",
         "https://it-infomation.com/git-rebase/"
       ],
-      "bytes": 8437,
-      "unresponsive": 35
+      "bytes": 8795,
+      "unresponsive": 36
     },
     {
       "id": "ja-sql",
@@ -2328,21 +2328,21 @@
       ],
       "category": "doc",
       "rank": 1,
-      "millis": 959.3744809972122,
+      "millis": 2002.6104740099981,
       "urls": [
         "https://www.postgresql.jp/document/",
         "https://www.postgresql.org/",
+        "https://www.postgresql.org/download/",
         "https://www.postgresql.jp/docupage",
         "https://www.postgresql.jp/node/265",
         "https://www.postgresql.jp/node/277",
         "https://www.postgresql.jp/node/399",
         "https://lets.postgresql.jp/node/205",
         "https://www.postgresql.jp/document/16/index.html",
-        "https://www.postgresql.jp/document/12/index.html",
         "https://www.sraoss.co.jp/tech-blog/pgsql/postgresql-document-howto1/"
       ],
-      "bytes": 8137,
-      "unresponsive": 35
+      "bytes": 7940,
+      "unresponsive": 36
     },
     {
       "id": "ja-linux",
@@ -2352,13 +2352,13 @@
         "https://docs.kernel.org"
       ],
       "category": "doc",
-      "rank": 2,
-      "millis": 672.9992360051256,
+      "rank": 1,
+      "millis": 2935.72122202022,
       "urls": [
-        "https://www.kernel.org/",
         "https://docs.kernel.org/",
         "https://www.kernel.org/doc/",
         "https://docs.kernel.org/doc-guide/kernel-doc.html",
+        "https://www.kernel.org/",
         "https://www.kernel.org/doc/Documentation/",
         "http://openwrt.org/ja/docs/start",
         "https://lore.kernel.org/kernelci",
@@ -2366,8 +2366,8 @@
         "https://www.sejuku.net/blog/4948",
         "https://www.valinux.co.jp/blog/entry/20250724"
       ],
-      "bytes": 8110,
-      "unresponsive": 35
+      "bytes": 8131,
+      "unresponsive": 36
     },
     {
       "id": "ja-aws",
@@ -2378,21 +2378,21 @@
       ],
       "category": "doc",
       "rank": null,
-      "millis": 670.8359330077656,
+      "millis": 568.0001659784466,
       "urls": [
         "https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/instance-identity-documents.html",
         "https://docs.aws.amazon.com/ja_jp/ec2/?icmpid=docs_homepage_compute",
         "https://aws.amazon.com/jp/ec2/",
         "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html",
         "https://aws.amazon.com/ko/ec2/graviton/",
-        "https://docs.aws.amazon.com/pdfs/AWSEC2/latest/UserGuide/ec2-ug.pdf",
         "https://aws.amazon.com/documentation-overview/ec2/",
+        "https://docs.aws.amazon.com/pdfs/AWSEC2/latest/UserGuide/ec2-ug.pdf",
         "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/DocumentHistory.html",
-        "https://docs.aws.amazon.com/ja_jp/ec2/latest/devguide/ec2-dg.pdf",
+        "https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/ec2-ug.pdf",
         "https://aws.amazon.com/ko/"
       ],
-      "bytes": 8409,
-      "unresponsive": 35
+      "bytes": 8390,
+      "unresponsive": 36
     },
     {
       "id": "ja-gcp",
@@ -2402,10 +2402,9 @@
         "https://cloud.google.com/docs"
       ],
       "category": "doc",
-      "rank": 9,
-      "millis": 613.9732160081621,
+      "rank": 8,
+      "millis": 563.9726819936186,
       "urls": [
-        "http://cloud.google.com",
         "https://cloud.google.com/blog/ja/topics/developers-practitioners/tips-get-most-out-google-cloud-documentation?hl=ja",
         "https://cloud.google.com/vision/on-prem?hl=ja",
         "https://cloud.google.com/blog/ja/topics/developers-practitioners/tips-get-most-out-google-cloud-documentation",
@@ -2414,10 +2413,11 @@
         "https://cloud.google.com/sql/docs?hl=ja",
         "https://cloud.google.com/pubsub/docs?hl=ja",
         "https://cloud.google.com/docs/buildpacks?hl=ja",
-        "https://cloud.google.com/docs?hl=ja"
+        "https://cloud.google.com/docs?hl=ja",
+        "https://cloud.google.com/speech/docs/?hl=ja"
       ],
-      "bytes": 7308,
-      "unresponsive": 35
+      "bytes": 6689,
+      "unresponsive": 36
     },
     {
       "id": "ja-mdn-js",
@@ -2428,21 +2428,21 @@
       ],
       "category": "doc",
       "rank": 1,
-      "millis": 588.3014790015295,
+      "millis": 569.9920660117641,
       "urls": [
-        "https://developer.mozilla.org/ja/docs/Web/JavaScript/Guide",
         "https://developer.mozilla.org/ja/docs/Web/JavaScript/Guide/Introduction",
         "https://developer.mozilla.org/ja/docs/Learn_web_development/Core/Scripting",
         "http://developer.mozilla.org/ja/docs/Learn/JavaScript/Asynchronous/Introducing",
-        "https://developer.mozilla.org/ja/docs/Learn_web_development/Core/Scripting/A_first_splash",
-        "https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Language_overview",
-        "https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Guide/Functions",
         "https://developer.mozilla.org/ja/docs/Learn_web_development/Getting_started/Your_first_website/Adding_interactivity",
+        "https://developer.mozilla.org/ja/docs/Learn_web_development/Core/Scripting/A_first_splash",
+        "https://developer.mozilla.org/ja/docs/Web/JavaScript/Guide",
+        "https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Language_overview",
         "https://developer.mozilla.org/ja/docs/Learn_web_development/Core/Scripting/What_is_JavaScript",
-        "https://developer.mozilla.org/ja/docs/Web/JavaScript"
+        "https://developer.mozilla.org/ja/docs/Web/JavaScript",
+        "https://developer.mozilla.org/zh-CN/docs/Learn_web_development/Core/Scripting/A_first_splash"
       ],
-      "bytes": 9316,
-      "unresponsive": 35
+      "bytes": 9334,
+      "unresponsive": 36
     },
     {
       "id": "ja-react",
@@ -2454,21 +2454,21 @@
       ],
       "category": "doc",
       "rank": 1,
-      "millis": 660.3111049917061,
+      "millis": 564.8992170172278,
       "urls": [
         "https://ja.react.dev/reference/react",
         "https://react.dev/learn",
-        "https://zenn.dev/zozotech/articles/fb431de6c8e0c8",
         "https://react.dev/",
+        "https://zenn.dev/zozotech/articles/fb431de6c8e0c8",
+        "https://zenn.dev/nakaakist/scraps/580ed1b8e1c8ac",
         "https://dackdive.hateblo.jp/entry/2022/10/04/114019",
         "https://note.com/pansansui/n/na51f8fd00ec4",
-        "https://zenn.dev/nakaakist/scraps/580ed1b8e1c8ac",
         "https://www.ey-office.com/blog_archive/2023/03/28/reacts-new-documentation-react-dev-is-highly-anticipated/",
         "https://zenn.dev/panda_program/articles/deep-dive-into-react",
         "https://ja.react.dev/learn/installation"
       ],
-      "bytes": 12434,
-      "unresponsive": 35
+      "bytes": 12464,
+      "unresponsive": 36
     },
     {
       "id": "ja-docker-hub",
@@ -2478,22 +2478,22 @@
         "https://hub.docker.com"
       ],
       "category": "official",
-      "rank": 1,
-      "millis": 622.9138599883299,
+      "rank": null,
+      "millis": 361.8923620088026,
       "urls": [
-        "https://hub.docker.com/",
-        "https://www.docker.com/blog/using-docker-desktop-and-docker-hub-together-part-1/",
-        "https://www.docker.com/blog/the-new-docker-hub/",
-        "https://matsuand.github.io/docs.docker.jp.onthefly/docker-hub/official_images/",
         "https://www.docker.com/",
-        "https://docs.docker.com/docker-hub/quickstart",
         "https://www.docker.com/blog/tag/docker-hub/page/6/?et_blog",
         "https://www.docker.com/docker-hub/",
         "https://docs.docker.com/docker-hub/repos/manage/trusted-content/official-images/",
-        "https://docs.docker.com/docker-hub"
+        "https://docs.docker.com/docker-hub",
+        "https://www.docker.com/increase-rate-limits",
+        "https://www.docker.com/blog/tag/docker-hub/",
+        "https://www.docker.com/blog/tag/docker-hub/page/3/?et_blog",
+        "https://docs.docker.com/docker-store/",
+        "https://www.docker.com/blog/using-docker-desktop-and-docker-hub-together-part-1/"
       ],
-      "bytes": 7322,
-      "unresponsive": 35
+      "bytes": 7031,
+      "unresponsive": 36
     },
     {
       "id": "ja-npm",
@@ -2504,21 +2504,21 @@
       ],
       "category": "official",
       "rank": 1,
-      "millis": 1059.7600959881674,
+      "millis": 565.2025479939766,
       "urls": [
         "https://www.npmjs.com/",
         "https://www.npmjs.com/package/npm",
         "https://docs.github.com/ko",
         "https://qiita.com/shibuchaaaan/items/66020718b57bdcb801ed",
         "https://gihyo.jp/article/2026/06/npm-v12-install-opt-in",
-        "https://www.npmstavebni.cz/contact/",
-        "https://sujb.gov.cz/fileadmin/sujb/docs/dokumenty/NPM/010119/Priloha_c_1_NPM_TABULKY_RADY_D.pdf",
         "https://docs.npmjs.com/creating-and-publishing-private-packages/",
-        "https://www.zivefirmy.cz/npm---stavebni-spolecnost_f1006658",
+        "https://github.com/npm/cli",
+        "https://qiita.com/mk185/items/7ad004bf202f400daea1",
+        "https://thehackernews.com/2022/02/25-malicious-javascript-libraries.html",
         "https://ja.wikipedia.org/wiki/Npm_(%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8%E7%AE%A1%E7%90%86%E3%83%84%E3%83%BC%E3%83%AB)"
       ],
-      "bytes": 7736,
-      "unresponsive": 35
+      "bytes": 7944,
+      "unresponsive": 36
     }
   ]
 }
