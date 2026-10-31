@@ -223,6 +223,22 @@ jobs:
           else
             gh release upload "$RELEASE_TAG" "${pending[@]}"
           fi
+      - name: Attach the licence files
+        if: ${{ !inputs.dry_run }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          # AGPL-3.0 requires the licence text to travel with the binaries.
+          # These are static, so a published copy is never replaced.
+          for file in LICENSE NOTICE; do
+            if gh release view "$RELEASE_TAG" --json assets --jq '.assets[].name' | grep -qxF "$file"; then
+              echo "$file already attached"
+            else
+              gh release upload "$RELEASE_TAG" "$file"
+            fi
+          done
       - name: Verify the published asset set
         if: ${{ !inputs.dry_run }}
         env:
