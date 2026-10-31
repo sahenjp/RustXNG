@@ -454,7 +454,14 @@ fn crawl(options: &Options) -> Result<(), String> {
 
                 crawl.wait_for_host(&host, delay);
                 crawl.in_flight.fetch_add(1, Ordering::SeqCst);
-                let fetched = fetch(&client, &url, depth, max_depth);
+                let mut fetched = fetch(&client, &url, depth, max_depth);
+                if let Some(page) = &mut fetched {
+                    if let Ok(mut queue) = crawl.queue.lock() {
+                        for link in page.links.drain(..) {
+                            queue.push_back((link, page.depth + 1));
+                        }
+                    }
+                }
                 crawl.in_flight.fetch_sub(1, Ordering::SeqCst);
                 if let Some(page) = fetched {
                     if sender.send(page).is_err() {
@@ -486,13 +493,6 @@ fn crawl(options: &Options) -> Result<(), String> {
             lang,
         })?;
         indexed += 1;
-        if page.depth < max_depth {
-            if let Ok(mut queue) = crawl.queue.lock() {
-                for link in page.links {
-                    queue.push_back((link, page.depth + 1));
-                }
-            }
-        }
         if indexed % 50 == 0 {
             index.commit()?;
             let queued = crawl.queue.lock().map(|q| q.len()).unwrap_or(0);
@@ -557,4 +557,85 @@ fn fetch(
         links,
         depth,
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::io::{BufRead, BufReader};
+    use std::net::{TcpListener, TcpStream};
+
+    #[test]
+    fn crawl_follows_links_from_new_and_indexed_pages() {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap();
+        let url = format!("http://{address}/");
+        let directory = tempfile::tempdir().unwrap();
+        let seeds = directory.path().join("seeds.txt");
+        std::fs::write(&seeds, &url).unwrap();
+        let mut cases = Vec::new();
+        for name in ["fresh", "resumed"] {
+            let mut options = Options::parse(&[]);
+            options.seeds = Some(seeds.clone());
+            options.index = directory.path().join(name);
+            options.workers = 1;
+            options.delay_ms = 0;
+            options.max_pages = 3;
+            options.max_depth = 2;
+            if name == "resumed" {
+                let index = LocalIndex::open_for_write(&options.index).unwrap();
+                index
+                    .add(&Page {
+                        url: &url,
+                        title: "Root",
+                        body: "Child",
+                        lang: "en",
+                    })
+                    .unwrap();
+                index.commit().unwrap();
+            }
+            cases.push(options);
+        }
+
+        let server = std::thread::spawn(move || {
+            for stream in listener.incoming() {
+                let mut stream = stream.unwrap();
+                stream
+                    .set_read_timeout(Some(Duration::from_secs(5)))
+                    .unwrap();
+                let mut reader = BufReader::new(&stream);
+                let mut request = String::new();
+                if reader.read_line(&mut request).unwrap() == 0 {
+                    break;
+                }
+                for header in reader.lines() {
+                    if header.unwrap().is_empty() {
+                        break;
+                    }
+                }
+                let body = match request.split_whitespace().nth(1).unwrap() {
+                    "/" => "<title>Root</title><a href='/child'>Child</a>",
+                    "/child" => "<title>Child</title><a href='/grandchild'>Grandchild</a>",
+                    "/grandchild" => "<title>Grandchild</title><p>The last page</p>",
+                    _ => "",
+                };
+                write!(
+                    stream,
+                    "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
+                    body.len()
+                )
+                .unwrap();
+            }
+        });
+        let results: Vec<_> = cases
+            .iter()
+            .map(|options| {
+                crawl(options)?;
+                LocalIndex::open(&options.index).map(|index| index.document_count())
+            })
+            .collect();
+        drop(TcpStream::connect(address).unwrap());
+        server.join().unwrap();
+        assert_eq!(results, vec![Ok(3), Ok(3)]);
+    }
 }
