@@ -42,7 +42,7 @@ fn attribute(start: &BytesStart<'_>, name: &[u8]) -> String {
         .flatten()
         .find(|a| a.key.local_name().as_ref() == name);
     found
-        .and_then(|a| a.unescape_value().ok())
+        .and_then(|a| a.normalized_value(quick_xml::XmlVersion::Explicit1_0).ok())
         .map(|v| v.to_string())
         .unwrap_or_default()
 }
@@ -112,7 +112,7 @@ fn parse_items(body: &str) -> Result<Vec<XmlItem>, EngineError> {
             }
             Event::Text(text) => {
                 if field.is_some() {
-                    if let Ok(value) = text.unescape() {
+                    if let Ok(value) = text.xml_content(quick_xml::XmlVersion::Explicit1_0) {
                         captured.push_str(&value);
                     }
                 }

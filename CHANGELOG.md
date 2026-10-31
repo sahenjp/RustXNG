@@ -4,6 +4,36 @@
 
 ## [Unreleased]
 
+## [0.21.0] - 2026-10-31
+
+整理・脆弱性対応・推奨設定の既定化・rdsh 連携を行いました。
+
+### Changed
+
+- **自前インデックスのモードを 1 つに削減** — 4 モード（off / fast / merge / both）を廃止し、`local_index_merge`（真偽値）だけにしました。実測で「ローカルだけで即答する」方式は精度を落とす（72/82）ため、上流との併合だけを残しています
+- **推奨設定を既定に** — `local_index_path = "index-data"` / `local_index_merge = true`。`index-data/` を置くだけで併用が始まります（ディレクトリが無ければ無効）
+
+### Security
+
+- **依存の脆弱性 6 件 → 1 件**（`cargo audit`）
+  - quick-xml 0.36 → **0.41**（DoS 2 件、CVSS 7.5。API 移行とエンティティ参照の解決を実装）
+  - rustls-webpki 0.103.15 → 0.103.16、webpki-roots 1.0.9 → 1.0.11、libz-sys 1.1.30 → 1.1.31
+  - 残る 1 件は ctutils（上流の digest が固定）で、**既定ビルドには含まれない** Postgres オプション機能のみ
+- **SECURITY.md を追加** — スキャン結果、解消済み・未解消の内訳、実行時の防御を明記
+
+### Added
+
+- **docs/RDSH.md** — rdsh から使う手順。既定ポート 8888 が rdsh の探索先と一致するため追加設定は不要。`rdsh search-web --engine rustxng --json` が実際に解釈できることを確認
+- README に自前インデックスと rdsh 連携を追記
+
+### Removed
+
+- 探索用の評価データ 40 ファイル（`bench/` を 58 → 18 ファイルへ）
+
+### Tests
+
+- 795 ユニット + 17 統合、clippy 0、markdownlint 0
+
 ## [0.20.2] - 2026-10-31
 
 インデックス規模と精度の関係を記録しました（コード変更なし）。

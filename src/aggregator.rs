@@ -278,14 +278,6 @@ impl Searcher {
                 return response;
             }
         }
-
-        // Fast path: our own BM25 index answers in milliseconds. Only used
-        // when the caller did not pick engines and does not need page text,
-        // so the result is indistinguishable from a normal search otherwise.
-        if let Some(fast) = self.local_fast_path(&request) {
-            return fast;
-        }
-
         let engines = self.select_engines(&request);
         if engines.is_empty() {
             response.error = Some("no engine selected for this request".to_string());
@@ -388,11 +380,8 @@ impl Searcher {
         } else {
             self.settings.search.authority_weight
         };
-        // Merge mode: the local index is just another source of pages.
-        if matches!(
-            self.settings.search.local_index_mode.as_str(),
-            "merge" | "both"
-        ) {
+        // The local index is just another source of pages.
+        if self.settings.search.local_index_merge {
             if let Some(index) = self.local_index.as_ref() {
                 if request.engines.len() != 1 {
                     let text = request.query.query_text();
@@ -757,83 +746,6 @@ impl Searcher {
             });
         }
         results
-    }
-
-    /// Answer from the local index when it has enough hits.
-    ///
-    /// Returns None when the index is absent, the request is not eligible, or
-    /// the index has too few matches: the caller then runs the normal fan-out.
-    fn local_fast_path(&self, request: &SearchRequest) -> Option<SearchResponse> {
-        let index = self.local_index.as_ref()?;
-        let mode = self.settings.search.local_index_mode.as_str();
-        if !matches!(mode, "fast" | "both") {
-            return None;
-        }
-        let minimum = self.settings.search.local_index_min_hits;
-        if minimum == 0
-            || !request.engines.is_empty()
-            || request.include_raw_content
-            || request.pageno != 1
-        {
-            return None;
-        }
-        let text = request.query.query_text();
-        let limit = request
-            .max_results
-            .unwrap_or(20)
-            .max(minimum)
-            .saturating_mul(2)
-            .clamp(minimum, 100);
-        let hits = index.search(&text, limit).ok()?;
-        if hits.len() < minimum {
-            return None;
-        }
-        // A hit count alone is not confidence: a thin index can always return
-        // three weak pages. Only answer locally when the top hit scores well.
-        let top = hits.first().map_or(0.0, |hit| f64::from(hit.score));
-        if top < self.settings.search.local_index_min_score {
-            return None;
-        }
-        let started = Instant::now();
-        let mut response = SearchResponse::new(&request.query);
-        response.pageno = request.pageno;
-        response.engines = vec!["local_index".to_string()];
-        let total = hits.len() as u64;
-        for hit in hits {
-            let mut result = SearchResult::new(hit.url, hit.title);
-            result.engine = "local_index".to_string();
-            result.engines = vec!["local_index".to_string()];
-            result.score = f64::from(hit.score);
-            response.results.push(result);
-        }
-        // Final confidence check with our own relevance model: a thin index can
-        // always return pages, but they must actually look like the query.
-        let terms = crate::results::query_terms(&text);
-        let confident = response
-            .results
-            .first()
-            .map(|result| {
-                crate::results::relevance_score(result, &terms)
-                    >= self.settings.search.local_index_min_relevance
-            })
-            .unwrap_or(false);
-        if !confident {
-            return None;
-        }
-        crate::results::filter_results(
-            &mut response.results,
-            &request.include_domains,
-            &request.exclude_domains,
-            request.max_results,
-        );
-        response.number_of_results = total;
-        response.timings.push(Timing {
-            engine: "local_index".to_string(),
-            total: started.elapsed().as_secs_f64(),
-            load: 0.0,
-        });
-        tracing::debug!(hits = total, "answered from the local index");
-        Some(response)
     }
 
     /// Re-rank the top results by cosine similarity between the query and each
@@ -1236,54 +1148,6 @@ mod orchestration_tests {
             engine_budget(Duration::from_secs(4), now, now + Duration::from_millis(1)),
             None
         );
-    }
-
-    #[tokio::test]
-    async fn the_local_index_answers_without_touching_any_engine() {
-        let dir = tempfile::TempDir::new().unwrap();
-        let index = crate::localindex::LocalIndex::open_for_write(dir.path()).unwrap();
-        index
-            .add(&crate::localindex::Page {
-                url: "https://tokio.rs/tokio/tutorial",
-                title: "Tutorial",
-                body: "async runtime for rust with tasks",
-                lang: "en",
-            })
-            .unwrap();
-        index
-            .add(&crate::localindex::Page {
-                url: "https://tokio.rs/tokio/tutorial/async",
-                title: "Async in depth",
-                body: "the async runtime schedules rust tasks",
-                lang: "en",
-            })
-            .unwrap();
-        index.commit().unwrap();
-
-        let mut settings = Settings::defaults();
-        settings.search.local_index_mode = "fast".to_string();
-        settings.search.local_index_min_hits = 2;
-        settings.search.local_index_min_score = 0.0;
-        settings.search.local_index_min_relevance = 0.0;
-        let network = Network::from_settings(&settings).unwrap();
-        // An empty registry proves the answer cannot have come from an engine.
-        let searcher = Searcher {
-            local_index: Some(std::sync::Arc::new(index)),
-            plugins: Arc::new(PluginManager::new()),
-            settings: Arc::new(settings),
-            registry: Arc::new(EngineRegistry::default()),
-            network: Arc::new(network),
-            cache: Arc::new(Cache::default()),
-            states: Arc::new(EngineStates::new()),
-            metrics: Arc::new(Metrics::new()),
-        };
-
-        let request = SearchRequest::new(query("async runtime", &searcher.registry));
-        let response = searcher.search(request).await;
-        assert_eq!(response.engines, vec!["local_index".to_string()]);
-        assert_eq!(response.results.len(), 2);
-        assert!(response.unresponsive_engines.is_empty());
-        assert!(response.error.is_none());
     }
 
     #[tokio::test]

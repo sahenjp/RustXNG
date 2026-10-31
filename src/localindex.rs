@@ -97,7 +97,13 @@ impl LocalIndex {
     }
 
     fn open_inner(path: &Path, writable: bool) -> Result<Self, String> {
-        std::fs::create_dir_all(path).map_err(|error| format!("create {path:?}: {error}"))?;
+        // Only the writer creates the directory: a reader that finds nothing
+        // must not litter the working tree with an empty index.
+        if writable {
+            std::fs::create_dir_all(path).map_err(|error| format!("create {path:?}: {error}"))?;
+        } else if !path.exists() {
+            return Err(format!("no index at {path:?}"));
+        }
         let schema = build_schema();
         let index = match Index::open_in_dir(path) {
             Ok(index) => index,
@@ -256,6 +262,21 @@ mod tests {
         let dir = TempDir::new().unwrap();
         let index = LocalIndex::open_for_write(dir.path()).unwrap();
         (dir, index)
+    }
+
+    #[test]
+    fn a_reader_does_not_create_the_directory() {
+        let dir = TempDir::new().unwrap();
+        let missing = dir.path().join("index-data");
+        assert!(
+            LocalIndex::open(&missing).is_err(),
+            "a missing index is an error"
+        );
+        assert!(!missing.exists(), "the reader must not create it");
+        // The writer creates it on demand.
+        let index = LocalIndex::open_for_write(&missing).unwrap();
+        index.commit().unwrap();
+        assert!(missing.exists());
     }
 
     #[test]

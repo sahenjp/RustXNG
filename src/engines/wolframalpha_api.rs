@@ -150,7 +150,7 @@ fn attributes_of(start: &BytesStart<'_>) -> Vec<(String, String)> {
         .map(|a| {
             (
                 String::from_utf8_lossy(a.key.local_name().as_ref()).to_string(),
-                a.unescape_value()
+                a.normalized_value(quick_xml::XmlVersion::Explicit1_0)
                     .map(|value| value.to_string())
                     .unwrap_or_default(),
             )
@@ -208,7 +208,10 @@ fn parse_query_result(body: &str) -> Result<QueryResult, EngineError> {
             }
             Event::Text(text) => {
                 if in_plaintext {
-                    if let (Ok(value), Some(subpod)) = (text.unescape(), subpod.as_mut()) {
+                    if let (Ok(value), Some(subpod)) = (
+                        text.xml_content(quick_xml::XmlVersion::Explicit1_0),
+                        subpod.as_mut(),
+                    ) {
                         subpod.plaintext.push_str(&value);
                     }
                 }

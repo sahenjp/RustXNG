@@ -173,7 +173,7 @@ fn parse_atom(body: &str) -> Result<Vec<AtomEntry>, EngineError> {
             }
             Event::Text(text) => {
                 if field.is_some() {
-                    if let Ok(value) = text.unescape() {
+                    if let Ok(value) = text.xml_content(quick_xml::XmlVersion::Explicit1_0) {
                         captured.push_str(&value);
                     }
                 }
@@ -214,7 +214,7 @@ fn apply_attributes(entry: &mut AtomEntry, start: &BytesStart<'_>) {
     let mut href: Option<String> = None;
     for attribute in start.attributes().flatten() {
         let value = attribute
-            .unescape_value()
+            .normalized_value(quick_xml::XmlVersion::Explicit1_0)
             .map(|value| value.to_string())
             .unwrap_or_default();
         match attribute.key.local_name().as_ref() {
