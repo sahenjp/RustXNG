@@ -785,8 +785,10 @@ impl Searcher {
         let confident = response
             .results
             .first()
-            .map(|result| crate::results::relevance_score(result, &terms)
-                >= self.settings.search.local_index_min_relevance)
+            .map(|result| {
+                crate::results::relevance_score(result, &terms)
+                    >= self.settings.search.local_index_min_relevance
+            })
             .unwrap_or(false);
         if !confident {
             return None;
