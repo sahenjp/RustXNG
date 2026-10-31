@@ -4,3 +4,8 @@
 .env
 searxng.toml
 __pycache__/
+
+# Local BM25 index built by rustxng-index crawl (never commit it)
+index-data/
+# Written by the nightly benchmark workflow
+bench/nightly.json
