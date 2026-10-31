@@ -244,6 +244,7 @@ cargo test          # 735 件、外部ネットワーク不要
 | [docs/BENCHMARK.md](docs/BENCHMARK.md) | 速度の測り方と実測値 |
 | [docs/LOCAL-INDEX.md](docs/LOCAL-INDEX.md) | 自前インデックス（実験機能・クロールと BM25 併合） |
 | [docs/RDSH.md](docs/RDSH.md) | rdsh からの使い方 |
+| [docs/COMPARISON-EXA.md](docs/COMPARISON-EXA.md) | Exa との比較をやさしく解説 |
 | [SECURITY.md](SECURITY.md) | 脆弱性スキャンの結果と既知の注意点 |
 
 ## ライセンス
