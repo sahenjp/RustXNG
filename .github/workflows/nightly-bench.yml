@@ -1,0 +1,56 @@
+name: nightly-bench
+
+on:
+  schedule:
+    # 03:00 JST every day
+    - cron: "0 18 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  accuracy:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Build the release binary
+        run: cargo build --release --locked
+      - name: Start the server
+        run: |
+          set -euo pipefail
+          nohup ./target/release/rustxng --port 8888 > /tmp/rustxng.log 2>&1 &
+          for _ in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:8888/healthz > /dev/null; then exit 0; fi
+            sleep 2
+          done
+          echo 'server did not become ready' >&2
+          cat /tmp/rustxng.log >&2
+          exit 1
+      - name: Run the 100 question benchmark
+        run: |
+          set -euo pipefail
+          python3 tools/eval_quality.py --base http://127.0.0.1:8888 \
+            --delay 1.0 --json bench/nightly.json | tee /tmp/bench.txt
+      - name: Check the result against the floor
+        run: python3 tools/check_bench.py bench/nightly.json --floor-hit1 50
+      - name: Publish the summary
+        if: always()
+        run: |
+          {
+            echo '## 100 問ベンチマーク'
+            echo ''
+            echo '```'
+            cat /tmp/bench.txt 2>/dev/null || echo 'no output'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bench-result
+          path: bench/nightly.json
+          retention-days: 30
+          if-no-files-found: warn

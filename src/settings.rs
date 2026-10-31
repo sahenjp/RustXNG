@@ -328,6 +328,10 @@ pub struct Search {
     pub languages: Vec<String>,
     pub ban_time_on_fail: u64,
     pub max_ban_time_on_fail: u64,
+    /// Consecutive empty answers before an engine is rested.
+    pub empty_result_limit: u64,
+    /// How long a rested engine stays out of the rotation.
+    pub empty_result_cooldown: u64,
     pub suspended_times: BTreeMap<String, u64>,
     pub formats: Vec<String>,
     pub max_page: u32,
@@ -403,6 +407,8 @@ impl Default for Search {
             languages: all_locale_tags(),
             ban_time_on_fail: 5,
             max_ban_time_on_fail: 120,
+            empty_result_limit: 8,
+            empty_result_cooldown: 300,
             suspended_times,
             formats: OUTPUT_FORMATS.iter().map(|f| (*f).to_string()).collect(),
             max_page: 0,

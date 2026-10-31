@@ -36,6 +36,11 @@ impl EngineStats {
 #[derive(Debug, Clone, Default)]
 struct EngineState {
     consecutive_failures: u64,
+    /// Successful answers that carried no results. An engine that keeps
+    /// answering nothing is costing every search its timeout for free.
+    empty_streak: u64,
+    /// When the engine may rejoin the rotation.
+    quiet_until: Option<Instant>,
     suspended_until: Option<Instant>,
     suspension_reason: Option<String>,
     stats: EngineStats,
@@ -72,6 +77,14 @@ impl EngineStates {
     /// Remaining suspension time, if the engine is suspended.
     pub fn suspension(&self, engine: &str) -> Option<(Duration, Option<String>)> {
         self.with_state(engine, |state| {
+            // An engine that keeps answering nothing is rested, not failed.
+            if let Some(until) = state.quiet_until {
+                let now = Instant::now();
+                if until > now {
+                    return Some((until - now, Some("resting".to_string())));
+                }
+                state.quiet_until = None;
+            }
             state.suspended_until.and_then(|until| {
                 let now = Instant::now();
                 if until > now {
@@ -86,9 +99,29 @@ impl EngineStates {
     }
 
     /// Record a successful request.
-    pub fn record_success(&self, engine: &str, results: usize, elapsed: Duration) {
+    pub fn record_success(
+        &self,
+        engine: &str,
+        results: usize,
+        elapsed: Duration,
+        settings: &Search,
+    ) {
         self.with_state(engine, |state| {
             state.consecutive_failures = 0;
+            if results == 0 {
+                state.empty_streak += 1;
+                if settings.empty_result_limit > 0
+                    && state.empty_streak >= settings.empty_result_limit
+                {
+                    state.quiet_until = Some(
+                        Instant::now() + Duration::from_secs(settings.empty_result_cooldown.max(1)),
+                    );
+                    state.empty_streak = 0;
+                }
+            } else {
+                state.empty_streak = 0;
+                state.quiet_until = None;
+            }
             state.suspended_until = None;
             state.suspension_reason = None;
             state.stats.requests += 1;
@@ -192,7 +225,7 @@ mod tests {
         let states = EngineStates::new();
         let settings = Search::default();
         states.record_failure("x", FailureKind::TooManyRequests, &settings);
-        states.record_success("x", 3, Duration::from_millis(100));
+        states.record_success("x", 3, Duration::from_millis(100), &Search::default());
         assert!(states.suspension("x").is_none());
         let snapshot = states.snapshot();
         assert_eq!(snapshot[0].stats.results, 3);

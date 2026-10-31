@@ -34,6 +34,11 @@ default_lang = "auto"
 local_index_path = "index-data"
 # インデックスのヒットを上流の結果に足す（精度が上がる）
 local_index_merge = true
+
+# 結果を返さないエンジンを自動で休ませる（連続して空の応答が続いたとき）
+empty_result_limit = 8
+# 休ませる長さ（秒）
+empty_result_cooldown = 300
 ban_time_on_fail = 5
 max_ban_time_on_fail = 120
 max_page = 0
@@ -98,6 +103,9 @@ max_redirects = 20
 keepalive_expiry = 5.0
 using_tor_proxy = false
 
+# 上流へ出るときのプロキシ。指定した scheme のリクエストがこのプロキシを通る。
+# ブロックされているエンジン（Google / Bing など）を復活させる用途で使う。
+# 注意: 現状は全エンジン共通で、エンジン個別の指定には未対応。
 # [outgoing.proxies]
 # https = "socks5h://127.0.0.1:9050"
 # http = "socks5h://127.0.0.1:9050"
@@ -1740,7 +1748,7 @@ shortcut = "gos"
 categories = ["science", "scientific publications"]
 paging = true
 time_range_support = true
-disabled = true  # unverified; remove when confirmed working
+# verified working (results observed in the engine sweep)
 
 [[engines]]
 name = "google_videos"
@@ -1853,7 +1861,7 @@ name = "rottentomatoes"
 engine = "rottentomatoes"
 shortcut = "rt"
 categories = ["movies"]
-disabled = true  # unverified; remove when confirmed working
+# verified working (results observed in the engine sweep)
 
 [[engines]]
 name = "s1search"

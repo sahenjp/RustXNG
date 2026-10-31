@@ -4,6 +4,26 @@
 
 ## [Unreleased]
 
+## [0.22.0] - 2026-10-31
+
+計測の自動化・エンジンの自動管理・クロールの網羅性を入れました。
+
+### Added
+
+- **nightly ベンチマーク CI**（`.github/workflows/nightly-bench.yml`）— 毎日 100 問を回し、結果を artifact とジョブサマリに残す。`tools/check_bench.py` が下限（hit@1 50・失敗 0）を割ったら失敗させる。マシン差で数問は振れるため、回帰の検知ではなく**破損の検知**に絞った設計
+- **エンジンの自動休止** — 結果を返さないまま成功し続けたエンジンを一定時間スキップする（`empty_result_limit` 既定 8 回 / `empty_result_cooldown` 既定 300 秒）。ブロックされて空の応答を返すエンジンが毎回タイムアウト分を消費するのを防ぐ。1 件でも返せば即復帰
+- **sitemap 対応** — `rustxng-index crawl --sitemaps` で robots.txt の `Sitemap:` を辿る。sitemap index の再帰と、平文の `sitemap.txt` の両方に対応。リンク辿りより網羅的
+- README にエンジン自動管理・プロキシ・サイドカー用途の節
+
+### Changed
+
+- 未検証エンジンを再調査し、実際に結果を返した `google_scholar` と `rottentomatoes` を有効化（`microsoft_learn` / `lib_rs` は既に有効）
+- **プロキシは実装済みであることを確認**（`outgoing.proxies`、scheme ごとに指定）。未対応点はエンジン個別のプロキシ指定のみと明記
+
+### Tests
+
+- 796 ユニット + 17 統合（エンジン休止のテストを追加）
+
 ## [0.21.1] - 2026-10-31
 
 rdsh が起動するサイドカーが残り続ける問題に対応しました。

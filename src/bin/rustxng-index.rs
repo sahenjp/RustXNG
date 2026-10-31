@@ -49,6 +49,7 @@ struct Options {
     max_depth: usize,
     delay_ms: u64,
     workers: usize,
+    use_sitemaps: bool,
     limit: usize,
     query: Vec<String>,
 }
@@ -62,6 +63,7 @@ impl Options {
             max_depth: 2,
             delay_ms: 500,
             workers: 4,
+            use_sitemaps: false,
             limit: 10,
             query: Vec::new(),
         };
@@ -94,6 +96,7 @@ impl Options {
                         options.delay_ms = value;
                     }
                 }
+                "--sitemaps" => options.use_sitemaps = true,
                 "--workers" => {
                     if let Some(value) = next().and_then(|v| v.parse::<usize>().ok()) {
                         options.workers = value.clamp(1, 32);
@@ -266,6 +269,74 @@ impl Crawl {
     }
 }
 
+/// URLs listed in a sitemap (following a sitemap index up to two levels).
+fn sitemap_urls(
+    client: &reqwest::blocking::Client,
+    url: &str,
+    depth: usize,
+    limit: usize,
+    out: &mut Vec<String>,
+) {
+    if depth > 2 || out.len() >= limit {
+        return;
+    }
+    let Ok(response) = client.get(url).send() else {
+        return;
+    };
+    let Ok(body) = response.text() else {
+        return;
+    };
+    let is_index = body.contains("<sitemapindex");
+    let mut found = 0usize;
+    for entry in body.match_indices("<loc>") {
+        let rest = &body[entry.0 + 5..];
+        let Some(end) = rest.find("</loc>") else {
+            continue;
+        };
+        let raw = rest[..end].trim();
+        let loc = raw
+            .replace("&amp;", "&")
+            .replace("&lt;", "<")
+            .replace("&gt;", ">");
+        if !loc.starts_with("http") {
+            continue;
+        }
+        found += 1;
+        if is_index {
+            sitemap_urls(client, &loc, depth + 1, limit, out);
+        } else {
+            out.push(loc);
+        }
+        if out.len() >= limit || found > 5_000 {
+            return;
+        }
+    }
+}
+
+/// Sitemaps a host advertises in its robots.txt.
+fn robots_sitemaps(client: &reqwest::blocking::Client, base: &str) -> Vec<String> {
+    let Ok(parsed) = url::Url::parse(base) else {
+        return Vec::new();
+    };
+    let Some(host) = parsed.host_str() else {
+        return Vec::new();
+    };
+    let robots = format!("{}://{host}/robots.txt", parsed.scheme());
+    let Ok(response) = client.get(&robots).send() else {
+        return Vec::new();
+    };
+    let Ok(body) = response.text() else {
+        return Vec::new();
+    };
+    body.lines()
+        .filter_map(|line| {
+            let line = line.split('#').next().unwrap_or("").trim();
+            let rest = line.strip_prefix("Sitemap:")?.trim();
+            rest.starts_with("http").then(|| rest.to_string())
+        })
+        .collect()
+}
+
 fn crawl(options: &Options) -> Result<(), String> {
     let seeds_path = options.seeds.as_ref().ok_or("crawl needs --seeds <file>")?;
     let seeds = std::fs::read_to_string(seeds_path)
@@ -280,6 +351,32 @@ fn crawl(options: &Options) -> Result<(), String> {
     }
     if queue.is_empty() {
         return Err("no seeds".to_string());
+    }
+
+    // Site roots advertise their sitemaps in robots.txt. Following them is
+    // far more thorough than walking links, and it is what lets the index
+    // cover a documentation site completely.
+    if options.use_sitemaps {
+        let client = reqwest::blocking::Client::builder()
+            .user_agent("rustxng-index/0.1 (+https://github.com/sahenjp/RustXNG)")
+            .timeout(Duration::from_secs(20))
+            .build()
+            .map_err(|error| format!("client: {error}"))?;
+        let mut expanded: Vec<String> = Vec::new();
+        for (url, _) in queue.iter() {
+            for sitemap in robots_sitemaps(&client, url) {
+                sitemap_urls(&client, &sitemap, 0, options.max_pages, &mut expanded);
+            }
+            if expanded.len() >= options.max_pages {
+                break;
+            }
+        }
+        if !expanded.is_empty() {
+            println!("sitemaps added {} urls", expanded.len());
+            for url in expanded {
+                queue.push_back((url, 0));
+            }
+        }
     }
 
     let index = LocalIndex::open_for_write(&options.index)?;

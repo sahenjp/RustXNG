@@ -521,7 +521,10 @@ impl Searcher {
         let elapsed = started.elapsed();
 
         match &items {
-            Ok(items) => self.states.record_success(&name, items.len(), elapsed),
+            Ok(items) => {
+                self.states
+                    .record_success(&name, items.len(), elapsed, &self.settings.search)
+            }
             Err(kind) => {
                 Metrics::incr(&self.metrics.engine_errors, 1);
                 if *kind == FailureKind::Timeout {
