@@ -941,6 +941,37 @@ pub fn canonical_host_for_query(query: &str) -> Option<&'static str> {
     None
 }
 
+/// Pick the canonical host this query is really asking for.
+///
+/// A site can name several hosts, and the right one depends on the wording:
+/// "docker hub" wants hub.docker.com while "docker run reference" wants
+/// docs.docker.com. Score each host by how many of its distinctive labels
+/// appear in the query, then prefer the more specific host on a tie.
+fn best_canonical_for(query: &str, host: &str, authority: &Authority) -> Option<bool> {
+    let words: Vec<String> = query
+        .to_lowercase()
+        .split(|c: char| !c.is_alphanumeric())
+        .filter(|word| !word.is_empty())
+        .map(str::to_string)
+        .collect();
+    let score = |domain: &str| -> (usize, usize) {
+        let labels: Vec<&str> = domain.split('.').collect();
+        let distinctive = labels[..labels.len().saturating_sub(2)]
+            .iter()
+            .filter(|label| words.iter().any(|word| word == *label))
+            .count();
+        (distinctive, labels.len())
+    };
+    let global = authority.canonical.iter().map(|d| score(d)).max()?;
+    let matching = authority
+        .canonical
+        .iter()
+        .filter(|domain| canonical_matches(host, domain))
+        .map(|domain| score(domain))
+        .max()?;
+    Some(matching == global)
+}
+
 /// How authoritative a result is for this query, in 0.0 ..= 1.0.
 ///
 /// A named site's canonical hosts score 1.0, its mirror copies score 0.0 and
@@ -957,42 +988,42 @@ fn authority(query: &str, url: &str) -> f64 {
             !character.is_alphanumeric() && character != '.' && character != '-'
         })
         .collect();
+    // Several sites can be named at once ("docker hub" also names "docker"), so
+    // take the most specific name that matched: the longer phrase wins.
+    let mut matched: Option<(&Authority, usize)> = None;
     for authority in AUTHORITIES {
         // A short name only matches a whole word ("git" must not match "github");
         // a distinctive name may appear inside a compound ("postgresql").
-        let named = authority.names.iter().any(|name| {
-            words.iter().any(|word| word == name)
-                || (name.chars().count() >= 6 && lower.contains(name))
-        });
-        if !named {
-            continue;
-        }
-        // Prefer the most specific canonical host: docs.python.org answers a
-        // documentation question better than python.org does.
-        let mut matched = authority
-            .canonical
+        let score = authority
+            .names
             .iter()
-            .filter(|domain| canonical_matches(&host, domain))
-            .map(|domain| domain.split('.').count())
+            .filter(|name| {
+                words.iter().any(|word| word == *name)
+                    || (name.chars().count() >= 6 && lower.contains(*name))
+            })
+            .map(|name| name.chars().count())
             .max();
-        if let Some(labels) = matched.take() {
-            let best = authority
-                .canonical
-                .iter()
-                .map(|domain| domain.split('.').count())
-                .max()
-                .unwrap_or(labels);
-            return if labels >= best { 1.0 } else { 0.85 };
+        if let Some(score) = score {
+            if matched.is_none_or(|(_, best)| score > best) {
+                matched = Some((authority, score));
+            }
+        }
+    }
+    {
+        let Some((authority, _)) = matched else {
+            if MIRRORS.iter().any(|mirror| domain_matches(&host, mirror)) {
+                return 0.2;
+            }
+            return 0.5;
+        };
+        if let Some(best) = best_canonical_for(query, &host, authority) {
+            return if best { 1.0 } else { 0.85 };
         }
         if MIRRORS.iter().any(|mirror| domain_matches(&host, mirror)) {
             return 0.0;
         }
-        return 0.4;
+        0.4
     }
-    if MIRRORS.iter().any(|mirror| domain_matches(&host, mirror)) {
-        return 0.2;
-    }
-    0.5
 }
 
 /// Search engines wrap outbound links in their own redirector
@@ -1401,6 +1432,21 @@ mod tests {
             &terms,
         );
         assert!(exact > other, "{exact} should beat {other}");
+    }
+
+    #[test]
+    fn the_canonical_host_follows_the_query_wording() {
+        // "docker hub" asks for the hub, "docker run reference" for the docs
+        assert_eq!(
+            authority("docker hub", "https://hub.docker.com/_/nginx"),
+            1.0
+        );
+        assert!(authority("docker hub", "https://docs.docker.com/engine/") < 1.0);
+        assert_eq!(
+            authority("docker run reference", "https://docs.docker.com/reference/"),
+            1.0
+        );
+        assert!(authority("docker run reference", "https://hub.docker.com/_/nginx") < 1.0);
     }
 
     #[test]

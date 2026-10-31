@@ -823,7 +823,8 @@ impl Searcher {
             .await
             .ok()?;
         let html = response.html().ok()?;
-        let text = crate::content::main_text(&html);
+        let text =
+            crate::content::main_text_limited(&html, self.settings.search.raw_content_chars.max(1));
         if text.is_empty() { None } else { Some(text) }
     }
 

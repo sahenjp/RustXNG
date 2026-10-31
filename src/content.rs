@@ -6,11 +6,17 @@
 
 use scraper::Html;
 
-/// Longest text returned per page, in characters.
+/// Longest text returned per page, in characters, unless the caller asks for
+/// a different limit.
 const MAX_CHARS: usize = 4_000;
 
 /// The readable text of a parsed HTML document.
 pub fn main_text(html: &Html) -> String {
+    main_text_limited(html, MAX_CHARS)
+}
+
+/// The readable text of a parsed HTML document, capped at the given length.
+pub fn main_text_limited(html: &Html, max: usize) -> String {
     const CANDIDATES: &[&str] = &["article", "main", "[role=main]", "body"];
     for selector in CANDIDATES {
         let Ok(selector) = scraper::Selector::parse(selector) else {
@@ -19,7 +25,7 @@ pub fn main_text(html: &Html) -> String {
         if let Some(element) = html.select(&selector).next() {
             let text = normalise(&element.text().collect::<Vec<_>>().join(" "));
             if !text.is_empty() {
-                return truncate(&text, MAX_CHARS);
+                return truncate(&text, max);
             }
         }
     }

@@ -400,10 +400,19 @@ impl Query {
         if let Some(language) = self.languages.first() {
             return language.clone();
         }
-        if self.locale.is_empty() {
-            "all".to_string()
+        if !self.locale.is_empty() {
+            return self.locale.clone();
+        }
+        // Neither the UI nor the request chose a language: follow the query.
+        // Japanese engines answer Japanese queries far better than "all" does.
+        if self
+            .query_text()
+            .chars()
+            .any(|c| matches!(c as u32, 0x3040..=0x30ff | 0x3400..=0x4dbf | 0x4e00..=0x9fff))
+        {
+            "ja".to_string()
         } else {
-            self.locale.clone()
+            "en".to_string()
         }
     }
 

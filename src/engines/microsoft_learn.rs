@@ -41,10 +41,10 @@ impl MicrosoftLearn {
 /// The locale the API expects, en-us when no language was requested.
 fn locale(query: &Query) -> String {
     let language = query.engine_language();
-    if language.is_empty() || language == "all" {
-        "en-us".to_string()
-    } else {
-        language
+    match language.as_str() {
+        // The API wants a locale (en-us), while the query gives a language (en).
+        "" | "all" | "en" => "en-us".to_string(),
+        other => other.to_string(),
     }
 }
 

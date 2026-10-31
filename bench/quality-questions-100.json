@@ -707,6 +707,7 @@
    "lang": "ja",
    "query": "rust プログラミング言語 公式",
    "gold": [
+    "https://rust-lang.org/ja",
     "https://www.rust-lang.org/ja",
     "https://doc.rust-lang.org/ja",
     "https://rust-jp.rs",
@@ -720,6 +721,7 @@
    "query": "rust 日本語 ドキュメント",
    "gold": [
     "https://doc.rust-lang.org/book/",
+    "https://rust-lang.org/ja",
     "https://www.rust-lang.org/ja",
     "https://rust-jp.rs"
    ],
@@ -832,7 +834,8 @@
    "query": "rust crates.io 使い方",
    "gold": [
     "https://crates.io",
-    "https://lib.rs"
+    "https://lib.rs",
+    "https://doc.rust-lang.org/cargo/"
    ],
    "category": "doc"
   },
