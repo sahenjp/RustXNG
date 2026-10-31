@@ -334,6 +334,9 @@ pub fn locale_language(locale: &str) -> String {
     locale
         .split(['-', '_'])
         .next()
+        .filter(|language| {
+            !language.is_empty() && language.bytes().all(|byte| byte.is_ascii_alphabetic())
+        })
         .unwrap_or("all")
         .to_lowercase()
 }
@@ -518,6 +521,29 @@ mod tests {
     #[test]
     fn query_strings_are_encoded() {
         assert_eq!(query_string(&[("q", "a b".to_string())]), "q=a%20b");
+    }
+
+    #[test]
+    fn locale_language_rejects_url_syntax() {
+        for (locale, expected) in [
+            ("ja-JP", "ja"),
+            ("EN_us", "en"),
+            ("simple", "simple"),
+            ("", "all"),
+            ("all", "all"),
+            ("auto", "all"),
+            ("en/", "all"),
+            ("en\\", "all"),
+            ("en.", "all"),
+            ("en@", "all"),
+            ("en?", "all"),
+            ("en#", "all"),
+            ("en:", "all"),
+            ("en%2f", "all"),
+            ("-US", "all"),
+        ] {
+            assert_eq!(locale_language(locale), expected, "{locale:?}");
+        }
     }
 
     #[test]
