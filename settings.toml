@@ -244,6 +244,8 @@ engine = "openlibrary"
 shortcut = "ol"
 categories = ["general", "files"]
 
+disabled = true  # always times out and returns nothing; costs every search its full timeout
+
 [[engines]]
 name = "openstreetmap"
 engine = "openstreetmap"
@@ -849,6 +851,8 @@ categories = ["general"]
 paging = true
 safesearch = true
 
+disabled = true  # always times out and returns nothing; costs every search its full timeout
+
 [[engines]]
 name = "apkmirror"
 engine = "apkmirror"
@@ -890,6 +894,8 @@ name = "goodreads"
 engine = "goodreads"
 shortcut = "good"
 categories = ["general"]
+
+disabled = true  # always times out and returns nothing; costs every search its full timeout
 
 [[engines]]
 name = "imdb"
@@ -941,6 +947,8 @@ shortcut = "bd"
 categories = ["general"]
 paging = true
 time_range_support = true
+
+disabled = true  # always times out and returns nothing; costs every search its full timeout
 
 [[engines]]
 name = "findfiles"
@@ -1095,6 +1103,8 @@ categories = ["general"]
 paging = true
 time_range_support = true
 
+disabled = true  # always times out and returns nothing; costs every search its full timeout
+
 [[engines]]
 name = "artic"
 engine = "artic"
@@ -1161,6 +1171,8 @@ shortcut = "chinaso"
 categories = ["general"]
 paging = true
 time_range_support = true
+
+disabled = true  # always times out and returns nothing; costs every search its full timeout
 
 [[engines]]
 name = "cloudflareai"
