@@ -11,6 +11,10 @@ enable_metrics = true
 [server]
 bind_address = "127.0.0.1"
 port = 8888
+# リクエストが無いままこの秒数が過ぎたら終了する（0 で無効）。
+# rdsh などが起動するサイドカーが残り続けるのを防ぐ用途。
+# 環境変数 RUSTXNG_IDLE_TIMEOUT でも指定できる。
+idle_timeout = 0
 secret_key = "ultrasecretkey"
 # The limiter is a simplified per-client rate limit (upstream uses botdetection).
 limiter = false

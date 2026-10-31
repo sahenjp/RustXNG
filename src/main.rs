@@ -3,6 +3,7 @@
 use std::net::SocketAddr;
 use std::path::PathBuf;
 use std::process::ExitCode;
+use std::sync::atomic::{AtomicU64, Ordering};
 
 use rustxng::aggregator::Searcher;
 use rustxng::settings::Settings;
@@ -123,7 +124,21 @@ async fn main() -> ExitCode {
     tracing::info!(engines = searcher.registry.len(), "{}", version_string());
 
     let state = AppState::new(searcher);
-    let app = web::router(state).layer(tower_http::trace::TraceLayer::new_for_http());
+    // Track the last request so an idle sidecar can exit on its own.
+    let idle_seconds = idle_timeout_seconds(&state);
+    let activity = std::sync::Arc::new(AtomicU64::new(unix_now()));
+    let touched = activity.clone();
+    let app = web::router(state)
+        .layer(tower_http::trace::TraceLayer::new_for_http())
+        .layer(axum::middleware::from_fn(
+            move |request: axum::extract::Request, next: axum::middleware::Next| {
+                let touched = touched.clone();
+                async move {
+                    touched.store(unix_now(), Ordering::Relaxed);
+                    next.run(request).await
+                }
+            },
+        ));
 
     let listener = match tokio::net::TcpListener::bind(address).await {
         Ok(listener) => listener,
@@ -138,13 +153,52 @@ async fn main() -> ExitCode {
         listener,
         app.into_make_service_with_connect_info::<SocketAddr>(),
     )
-    .with_graceful_shutdown(shutdown_signal())
+    .with_graceful_shutdown(shutdown_reason(activity, idle_seconds))
     .await
     {
         eprintln!("error: server failed: {error}");
         return ExitCode::FAILURE;
     }
     ExitCode::SUCCESS
+}
+
+/// Seconds since the epoch.
+fn unix_now() -> u64 {
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map(|elapsed| elapsed.as_secs())
+        .unwrap_or(0)
+}
+
+/// The idle timeout the settings or RUSTXNG_IDLE_TIMEOUT ask for.
+fn idle_timeout_seconds(state: &AppState) -> u64 {
+    if let Ok(value) = std::env::var("RUSTXNG_IDLE_TIMEOUT") {
+        if let Ok(seconds) = value.trim().parse() {
+            return seconds;
+        }
+    }
+    state.searcher.settings.server.idle_timeout
+}
+
+/// Resolve when the process should stop: a signal, or an idle timeout.
+async fn shutdown_reason(activity: std::sync::Arc<AtomicU64>, idle_seconds: u64) {
+    if idle_seconds == 0 {
+        shutdown_signal().await;
+        return;
+    }
+    tokio::select! {
+        () = shutdown_signal() => {}
+        () = async {
+            loop {
+                tokio::time::sleep(std::time::Duration::from_secs(5)).await;
+                let idle = unix_now().saturating_sub(activity.load(Ordering::Relaxed));
+                if idle >= idle_seconds {
+                    tracing::info!(idle, "idle timeout reached, shutting down");
+                    return;
+                }
+            }
+        } => {}
+    }
 }
 
 async fn shutdown_signal() {

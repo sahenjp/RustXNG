@@ -4,7 +4,18 @@
 
 ## [Unreleased]
 
-## [0.21.0] - 2026-10-31
+## [0.21.1] - 2026-10-31
+
+rdsh が起動するサイドカーが残り続ける問題に対応しました。
+
+### Added
+
+- **アイドル終了** — `server.idle_timeout`（秒、既定 0 = 無効）または環境変数 `RUSTXNG_IDLE_TIMEOUT`。指定秒数リクエストが無ければ正常終了します。rdsh は `search-web` のたびに RustXNG をサイドカーとして起動するため、終了しないプロセスが溜まることがありました
+- 実機で確認: `RUSTXNG_IDLE_TIMEOUT=8` で起動し、リクエスト後に 8 秒待つと `idle timeout reached, shutting down` を出して終了
+
+### Docs
+
+- docs/RDSH.md にサイドカーの後始末を追記## [0.21.0] - 2026-10-31
 
 整理・脆弱性対応・推奨設定の既定化・rdsh 連携を行いました。
 

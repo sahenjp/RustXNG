@@ -127,6 +127,10 @@ impl Default for General {
 pub struct Server {
     pub bind_address: String,
     pub port: u16,
+    /// Exit after this many seconds without a request (0 keeps running).
+    /// Handy for sidecars that a launcher forgets to stop.
+    #[serde(default)]
+    pub idle_timeout: u64,
     pub base_url: Option<String>,
     pub secret_key: String,
     /// `server.limiter`: the legacy boolean or a `[server.limiter]` table.
@@ -151,6 +155,7 @@ impl Default for Server {
         Self {
             bind_address: "127.0.0.1".into(),
             port: 8888,
+            idle_timeout: 0,
             base_url: None,
             secret_key: "ultrasecretkey".into(),
             limiter: LimiterSettings::default(),
