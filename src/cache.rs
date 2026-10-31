@@ -291,7 +291,7 @@ impl Cache {
 /// A cache stored in Valkey / Redis, like the upstream valkey cache backend.
 pub struct ValkeyCache {
     url: String,
-    connection: tokio::sync::OnceCell<tokio::sync::Mutex<ValkeyConnection>>,
+    connection: tokio::sync::Mutex<Option<ValkeyConnection>>,
     ttl: Duration,
     hit: AtomicU64,
     miss: AtomicU64,
@@ -303,7 +303,7 @@ impl ValkeyCache {
     pub fn new(url: &str, ttl: Duration) -> Self {
         Self {
             url: url.to_string(),
-            connection: tokio::sync::OnceCell::new(),
+            connection: tokio::sync::Mutex::new(None),
             ttl,
             hit: AtomicU64::new(0),
             miss: AtomicU64::new(0),
@@ -312,25 +312,22 @@ impl ValkeyCache {
         }
     }
 
-    async fn connection(&self) -> Option<&tokio::sync::Mutex<ValkeyConnection>> {
-        self.connection
-            .get_or_try_init(|| async {
-                ValkeyConnection::connect(&self.url)
-                    .await
-                    .map(tokio::sync::Mutex::new)
-            })
-            .await
-            .ok()
+    async fn command(&self, args: &[&str]) -> Result<Option<String>, String> {
+        let mut pooled = self.connection.lock().await;
+        // Cancellation must discard the connection.
+        let mut connection = match pooled.take() {
+            Some(connection) => connection,
+            None => ValkeyConnection::connect(&self.url).await?,
+        };
+        let response = connection.command(args).await;
+        if response.is_ok() {
+            *pooled = Some(connection);
+        }
+        response
     }
 
     pub async fn get(&self, key: &str) -> Option<CachedResponse> {
-        let Some(connection) = self.connection().await else {
-            self.error.fetch_add(1, Ordering::Relaxed);
-            self.miss.fetch_add(1, Ordering::Relaxed);
-            return None;
-        };
-        let mut connection = connection.lock().await;
-        match connection.command(&["GET", key]).await {
+        match self.command(&["GET", key]).await {
             Ok(Some(payload)) => match decode_response(&payload) {
                 Some(response) => {
                     self.hit.fetch_add(1, Ordering::Relaxed);
@@ -359,16 +356,8 @@ impl ValkeyCache {
             self.error.fetch_add(1, Ordering::Relaxed);
             return;
         };
-        let Some(connection) = self.connection().await else {
-            self.error.fetch_add(1, Ordering::Relaxed);
-            return;
-        };
         let ttl = self.ttl.as_secs().max(1).to_string();
-        let mut connection = connection.lock().await;
-        match connection
-            .command(&["SET", key, &payload, "EX", &ttl])
-            .await
-        {
+        match self.command(&["SET", key, &payload, "EX", &ttl]).await {
             Ok(_) => {
                 self.entries.fetch_add(1, Ordering::Relaxed);
             }
@@ -379,14 +368,10 @@ impl ValkeyCache {
     }
 
     pub async fn clear(&self) {
-        let Some(connection) = self.connection().await else {
-            return;
-        };
-        let mut connection = connection.lock().await;
-        if let Ok(Some(keys)) = connection.command(&["KEYS", "searxng:*"]).await {
+        if let Ok(Some(keys)) = self.command(&["KEYS", "searxng:*"]).await {
             for key in keys.split('\n') {
                 if !key.is_empty() {
-                    let _ = connection.command(&["DEL", key]).await;
+                    let _ = self.command(&["DEL", key]).await;
                 }
             }
         }
@@ -576,6 +561,131 @@ enum ValkeyReply {
 #[cfg(test)]
 mod valkey_tests {
     use super::*;
+    use tokio::io::{AsyncBufReadExt, AsyncReadExt, AsyncWriteExt};
+
+    async fn read_command(reader: &mut tokio::io::BufReader<tokio::net::TcpStream>) -> Vec<String> {
+        let mut line = String::new();
+        reader.read_line(&mut line).await.unwrap();
+        let count: usize = line[1..].trim().parse().unwrap();
+        let mut command = Vec::new();
+        for _ in 0..count {
+            line.clear();
+            reader.read_line(&mut line).await.unwrap();
+            let length: usize = line[1..].trim().parse().unwrap();
+            let mut argument = vec![0; length + 2];
+            reader.read_exact(&mut argument).await.unwrap();
+            argument.truncate(length);
+            command.push(String::from_utf8(argument).unwrap());
+        }
+        command
+    }
+
+    #[tokio::test]
+    async fn cancelled_commands_do_not_reuse_pending_replies() {
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let url = format!("redis://{}", listener.local_addr().unwrap());
+        let (requested, received) = tokio::sync::oneshot::channel();
+        let (resume, cancelled) = tokio::sync::oneshot::channel();
+        let server = tokio::spawn(async move {
+            let (stream, _) = listener.accept().await.unwrap();
+            let mut first = tokio::io::BufReader::new(stream);
+            assert_eq!(read_command(&mut first).await, ["GET", "first"]);
+            requested.send(()).unwrap();
+            cancelled.await.unwrap();
+            let payload =
+                r#"{"status":200,"final_url":"https://first.invalid/","body":"Zmlyc3Q="}"#;
+            let _ = first
+                .get_mut()
+                .write_all(format!("${}\r\n{payload}\r\n", payload.len()).as_bytes())
+                .await;
+
+            let (stream, _) = listener.accept().await.unwrap();
+            let mut second = tokio::io::BufReader::new(stream);
+            assert_eq!(read_command(&mut second).await, ["GET", "second"]);
+            let payload =
+                r#"{"status":200,"final_url":"https://second.invalid/","body":"c2Vjb25k"}"#;
+            second
+                .get_mut()
+                .write_all(format!("${}\r\n{payload}\r\n", payload.len()).as_bytes())
+                .await
+                .unwrap();
+        });
+        let cache = std::sync::Arc::new(Cache::valkey(&url, Duration::from_secs(60)));
+        let first_cache = std::sync::Arc::clone(&cache);
+        let first = tokio::spawn(async move { first_cache.get("first").await });
+        received.await.unwrap();
+        first.abort();
+        assert!(first.await.unwrap_err().is_cancelled());
+        resume.send(()).unwrap();
+        let response = tokio::time::timeout(Duration::from_secs(2), cache.get("second"))
+            .await
+            .unwrap()
+            .unwrap();
+        assert_eq!(response.body.as_slice(), b"second");
+        assert_eq!(response.final_url, "https://second.invalid/");
+        server.await.unwrap();
+    }
+
+    #[tokio::test]
+    async fn cache_reads_and_writes_respect_the_fetch_deadline() {
+        use crate::engine::EngineRequest;
+        use crate::network::{Network, NetworkError};
+        use axum::{Router, routing::get};
+
+        let http = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let url = format!("http://{}/", http.local_addr().unwrap());
+        let http_server = tokio::spawn(async move {
+            axum::serve(
+                http,
+                Router::new().route("/", get(|| async { "fresh response" })),
+            )
+            .await
+            .unwrap();
+        });
+        let network = Network::from_settings(&crate::settings::Settings::defaults()).unwrap();
+        let mut outcomes = Vec::new();
+        for stall_write in [false, true] {
+            let redis = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+            let cache = Cache::valkey(
+                &format!("redis://{}", redis.local_addr().unwrap()),
+                Duration::from_secs(60),
+            );
+            let server = tokio::spawn(async move {
+                let (stream, _) = redis.accept().await.unwrap();
+                let mut stream = tokio::io::BufReader::new(stream);
+                assert_eq!(read_command(&mut stream).await[0], "GET");
+                if stall_write {
+                    stream.get_mut().write_all(b"$-1\r\n").await.unwrap();
+                    assert_eq!(read_command(&mut stream).await[0], "SET");
+                }
+                std::future::pending::<()>().await;
+            });
+            let response = tokio::time::timeout(
+                Duration::from_secs(2),
+                network.fetch(
+                    EngineRequest::get(&url),
+                    Duration::from_millis(100),
+                    Some(&cache),
+                    None,
+                ),
+            )
+            .await;
+            outcomes.push((stall_write, response));
+            server.abort();
+        }
+        http_server.abort();
+        assert!(
+            outcomes.iter().all(|(_, response)| response.is_ok()),
+            "cache exceeded request budget: {outcomes:?}"
+        );
+        for (stall_write, response) in outcomes {
+            if stall_write {
+                assert_eq!(response.unwrap().unwrap().text(), "fresh response");
+            } else {
+                assert!(matches!(response.unwrap(), Err(NetworkError::Timeout)));
+            }
+        }
+    }
 
     #[test]
     fn responses_round_trip_through_the_valkey_payload() {

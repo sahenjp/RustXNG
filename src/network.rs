@@ -221,6 +221,7 @@ impl Network {
         cache: Option<&Cache>,
         proxy: Option<&str>,
     ) -> Result<EngineResponse, NetworkError> {
+        let deadline = tokio::time::Instant::now() + timeout;
         let client = self.client_for(proxy);
         let mut headers: Vec<_> = request
             .headers
@@ -240,7 +241,10 @@ impl Network {
         .map_err(|error| NetworkError::Build(error.to_string()))?;
         let cache_key = format!("{:x}", Sha256::digest(identity));
         if let Some(cache) = cache {
-            if let Some(cached) = cache.get(&cache_key).await {
+            if let Some(cached) = tokio::time::timeout_at(deadline, cache.get(&cache_key))
+                .await
+                .map_err(|_| NetworkError::Timeout)?
+            {
                 debug!(url = %request.url, "cache hit");
                 return Ok(EngineResponse {
                     status: cached.status,
@@ -251,7 +255,6 @@ impl Network {
             }
         }
 
-        let deadline = tokio::time::Instant::now() + timeout;
         let mut attempt = 0;
         loop {
             attempt += 1;
@@ -263,9 +266,11 @@ impl Network {
             match outcome {
                 Ok(response) => {
                     if let Some(cache) = cache {
-                        if response.status == 200 && !response.body.is_empty() {
-                            cache
-                                .set(
+                        if response.status == 200
+                            && !response.body.is_empty()
+                            && tokio::time::timeout_at(
+                                deadline,
+                                cache.set(
                                     &cache_key,
                                     CachedResponse {
                                         status: response.status,
@@ -273,8 +278,12 @@ impl Network {
                                         headers: response.headers.clone(),
                                         body: std::sync::Arc::new(response.body.clone()),
                                     },
-                                )
-                                .await;
+                                ),
+                            )
+                            .await
+                            .is_err()
+                        {
+                            debug!(url = %request.url, "cache write timed out");
                         }
                     }
                     // A 429 usually clears within a second. Retrying once keeps
