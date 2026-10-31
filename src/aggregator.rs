@@ -683,8 +683,7 @@ impl Searcher {
 
         let scoped = format!("site:{host} {text}");
         let mut second = request.clone();
-        second.query =
-            crate::query::Query::parse(&scoped, &self.registry, &request.disabled_engines);
+        second.query = request.query.with_query(&scoped);
         second.site_retry_done = true;
         second.timeout_limit = Some(
             request
@@ -1009,15 +1008,11 @@ mod orchestration_tests {
         meta: EngineMeta,
         results: usize,
         build_error: bool,
+        queries: std::sync::Mutex<Vec<Query>>,
     }
 
     impl FakeEngine {
-        fn build(
-            name: &str,
-            categories: &[&str],
-            results: usize,
-            build_error: bool,
-        ) -> EngineHandle {
+        fn build(name: &str, categories: &[&str], results: usize, build_error: bool) -> Arc<Self> {
             let config = crate::settings::EngineConfig::new(name, "fake", name, categories);
             let mut meta = EngineMeta::from_config(
                 &config,
@@ -1032,6 +1027,7 @@ mod orchestration_tests {
                 meta,
                 results,
                 build_error,
+                queries: std::sync::Mutex::new(Vec::new()),
             })
         }
     }
@@ -1041,6 +1037,7 @@ mod orchestration_tests {
             &self.meta
         }
         fn build_request(&self, query: &Query, _pageno: u32) -> Result<EngineRequest, EngineError> {
+            self.queries.lock().unwrap().push(query.clone());
             if self.build_error {
                 return Err(EngineError::Message("boom".into()));
             }
@@ -1086,6 +1083,34 @@ mod orchestration_tests {
 
     fn query(text: &str, registry: &EngineRegistry) -> Query {
         Query::parse(text, registry, &[])
+    }
+
+    #[tokio::test]
+    async fn site_retry_preserves_query_options_and_engine_selection() {
+        let selected = FakeEngine::build("selected", &["general"], 0, true);
+        let other = FakeEngine::build("other", &["general"], 0, true);
+        let mut searcher = searcher(vec![selected.clone(), other.clone()]);
+        Arc::make_mut(&mut searcher.settings)
+            .search
+            .site_scoped_retry = true;
+        let mut original = query("!selected :ja rust traits", &searcher.registry);
+        original.safesearch = 2;
+        original.time_range = Some(TimeRange::Week);
+        original.locale = "ja-JP".into();
+        let request = SearchRequest::new(original.clone());
+
+        searcher.site_scoped_retry(&request, Vec::new()).await;
+
+        let queries = selected.queries.lock().unwrap();
+        assert_eq!(queries.len(), 1);
+        let retried = &queries[0];
+        assert_eq!(retried.query_text(), "site:doc.rust-lang.org rust traits");
+        assert_eq!(retried.safesearch, original.safesearch);
+        assert_eq!(retried.time_range, original.time_range);
+        assert_eq!(retried.locale, original.locale);
+        assert_eq!(retried.languages, original.languages);
+        assert_eq!(retried.engine_refs, original.engine_refs);
+        assert!(other.queries.lock().unwrap().is_empty());
     }
 
     #[test]
