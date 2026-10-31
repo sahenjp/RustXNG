@@ -350,6 +350,9 @@ pub struct Search {
     /// Answer straight from the local index when it returns at least this many
     /// hits. 0 disables the fast path (the index is then only an extra source).
     pub local_index_min_hits: usize,
+    /// How the local index is used: "off", "fast" (answer without upstream),
+    /// "merge" (add its hits to the upstream results) or "both".
+    pub local_index_mode: String,
     /// Minimum BM25 score for the top local hit before the fast path answers.
     pub local_index_min_score: f64,
     /// Minimum relevance of the top local hit before the fast path answers.
@@ -414,6 +417,7 @@ impl Default for Search {
             embedding_url: String::new(),
             embedding_model: "BAAI/bge-small-en-v1.5".into(),
             local_index_path: String::new(),
+            local_index_mode: "off".to_string(),
             local_index_min_hits: 3,
             local_index_min_score: 6.0,
             local_index_min_relevance: 0.75,

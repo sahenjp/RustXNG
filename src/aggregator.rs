@@ -388,6 +388,29 @@ impl Searcher {
         } else {
             self.settings.search.authority_weight
         };
+        // Merge mode: the local index is just another source of pages.
+        if matches!(
+            self.settings.search.local_index_mode.as_str(),
+            "merge" | "both"
+        ) {
+            if let Some(index) = self.local_index.as_ref() {
+                if request.engines.len() != 1 {
+                    let text = request.query.query_text();
+                    if let Ok(hits) = index.search(&text, 20) {
+                        let items: Vec<EngineItem> = hits
+                            .into_iter()
+                            .map(|hit| {
+                                let mut result = SearchResult::new(hit.url, hit.title);
+                                result.score = f64::from(hit.score);
+                                EngineItem::Result(result)
+                            })
+                            .collect();
+                        container.extend("local_index", 1.0, items);
+                    }
+                }
+            }
+        }
+
         container.close(
             |engine| self.registry.weight_of(engine),
             &query_terms,
@@ -742,6 +765,10 @@ impl Searcher {
     /// the index has too few matches: the caller then runs the normal fan-out.
     fn local_fast_path(&self, request: &SearchRequest) -> Option<SearchResponse> {
         let index = self.local_index.as_ref()?;
+        let mode = self.settings.search.local_index_mode.as_str();
+        if !matches!(mode, "fast" | "both") {
+            return None;
+        }
         let minimum = self.settings.search.local_index_min_hits;
         if minimum == 0
             || !request.engines.is_empty()
@@ -1234,6 +1261,7 @@ mod orchestration_tests {
         index.commit().unwrap();
 
         let mut settings = Settings::defaults();
+        settings.search.local_index_mode = "fast".to_string();
         settings.search.local_index_min_hits = 2;
         settings.search.local_index_min_score = 0.0;
         settings.search.local_index_min_relevance = 0.0;

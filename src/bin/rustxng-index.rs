@@ -4,9 +4,11 @@
 //!   rustxng-index search --index ./index-data "tokio runtime"
 //!   rustxng-index stats --index ./index-data
 
-use std::collections::{HashSet, VecDeque};
+use std::collections::{HashMap, HashSet, VecDeque};
 use std::path::PathBuf;
-use std::time::Duration;
+use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::{Arc, Mutex};
+use std::time::{Duration, Instant};
 
 use rustxng::localindex::{LocalIndex, Page, has_cjk};
 use scraper::{Html, Selector};
@@ -46,6 +48,7 @@ struct Options {
     max_pages: usize,
     max_depth: usize,
     delay_ms: u64,
+    workers: usize,
     limit: usize,
     query: Vec<String>,
 }
@@ -58,6 +61,7 @@ impl Options {
             max_pages: 500,
             max_depth: 2,
             delay_ms: 500,
+            workers: 4,
             limit: 10,
             query: Vec::new(),
         };
@@ -76,22 +80,27 @@ impl Options {
                     }
                 }
                 "--max-pages" => {
-                    if let Some(value) = next().and_then(|v| v.parse().ok()) {
+                    if let Some(value) = next().and_then(|v| v.parse::<usize>().ok()) {
                         options.max_pages = value;
                     }
                 }
                 "--max-depth" => {
-                    if let Some(value) = next().and_then(|v| v.parse().ok()) {
+                    if let Some(value) = next().and_then(|v| v.parse::<usize>().ok()) {
                         options.max_depth = value;
                     }
                 }
                 "--delay-ms" => {
-                    if let Some(value) = next().and_then(|v| v.parse().ok()) {
+                    if let Some(value) = next().and_then(|v| v.parse::<u64>().ok()) {
                         options.delay_ms = value;
                     }
                 }
+                "--workers" => {
+                    if let Some(value) = next().and_then(|v| v.parse::<usize>().ok()) {
+                        options.workers = value.clamp(1, 32);
+                    }
+                }
                 "--limit" => {
-                    if let Some(value) = next().and_then(|v| v.parse().ok()) {
+                    if let Some(value) = next().and_then(|v| v.parse::<usize>().ok()) {
                         options.limit = value;
                     }
                 }
@@ -110,7 +119,7 @@ fn search(options: &Options) -> Result<(), String> {
     if query.is_empty() {
         return Err("no query given".to_string());
     }
-    let started = std::time::Instant::now();
+    let started = Instant::now();
     let hits = index.search(&query, options.limit)?;
     let elapsed = started.elapsed();
     println!(
@@ -201,6 +210,62 @@ fn disallowed_paths(robots: &str) -> Vec<String> {
     rules
 }
 
+/// What a worker hands back to the writer.
+struct Fetched {
+    url: String,
+    title: String,
+    body: String,
+    links: Vec<String>,
+    depth: usize,
+}
+
+/// Shared crawl state. Workers pull URLs, the main thread writes documents.
+struct Crawl {
+    queue: Mutex<VecDeque<(String, usize)>>,
+    seen: Mutex<HashSet<String>>,
+    robots: Mutex<HashMap<String, Vec<String>>>,
+    /// Earliest time the next request to a host may start.
+    next_slot: Mutex<HashMap<String, Instant>>,
+    in_flight: AtomicUsize,
+}
+
+impl Crawl {
+    fn claim(&self) -> Option<(String, usize)> {
+        let mut queue = self.queue.lock().ok()?;
+        while let Some((url, depth)) = queue.pop_front() {
+            let fresh = self
+                .seen
+                .lock()
+                .map(|mut seen| seen.insert(url.clone()))
+                .unwrap_or(false);
+            if fresh {
+                return Some((url, depth));
+            }
+        }
+        None
+    }
+
+    /// Wait until this host may be asked again, so several workers still keep
+    /// one request per delay per host.
+    fn wait_for_host(&self, host: &str, delay: Duration) {
+        loop {
+            let slot = {
+                let Ok(mut slots) = self.next_slot.lock() else {
+                    return;
+                };
+                let now = Instant::now();
+                let slot = slots.entry(host.to_string()).or_insert(now);
+                if *slot <= now {
+                    *slot = now + delay;
+                    return;
+                }
+                *slot
+            };
+            std::thread::sleep(slot.saturating_duration_since(Instant::now()));
+        }
+    }
+}
+
 fn crawl(options: &Options) -> Result<(), String> {
     let seeds_path = options.seeds.as_ref().ok_or("crawl needs --seeds <file>")?;
     let seeds = std::fs::read_to_string(seeds_path)
@@ -218,109 +283,117 @@ fn crawl(options: &Options) -> Result<(), String> {
     }
 
     let index = LocalIndex::open_for_write(&options.index)?;
-    let client = reqwest::blocking::Client::builder()
-        .user_agent("rustxng-index/0.1 (+https://github.com/sahenjp/RustXNG)")
-        .timeout(Duration::from_secs(20))
-        .build()
-        .map_err(|error| format!("client: {error}"))?;
+    let crawl = Arc::new(Crawl {
+        queue: Mutex::new(queue),
+        seen: Mutex::new(HashSet::new()),
+        robots: Mutex::new(HashMap::new()),
+        next_slot: Mutex::new(HashMap::new()),
+        in_flight: AtomicUsize::new(0),
+    });
+    let (sender, receiver) = std::sync::mpsc::channel::<Fetched>();
+    let delay = Duration::from_millis(options.delay_ms);
+    let max_depth = options.max_depth;
 
-    let mut seen: HashSet<String> = HashSet::new();
-    let mut robots: std::collections::HashMap<String, Vec<String>> =
-        std::collections::HashMap::new();
+    for _ in 0..options.workers {
+        let crawl = Arc::clone(&crawl);
+        let sender = sender.clone();
+        std::thread::spawn(move || {
+            let client = match reqwest::blocking::Client::builder()
+                .user_agent("rustxng-index/0.1 (+https://github.com/sahenjp/RustXNG)")
+                .timeout(Duration::from_secs(20))
+                .build()
+            {
+                Ok(client) => client,
+                Err(_) => return,
+            };
+            loop {
+                let Some((url, depth)) = crawl.claim() else {
+                    if crawl.in_flight.load(Ordering::SeqCst) == 0 {
+                        return;
+                    }
+                    std::thread::sleep(Duration::from_millis(100));
+                    continue;
+                };
+                let Ok(parsed) = url::Url::parse(&url) else {
+                    continue;
+                };
+                let Some(host) = parsed.host_str().map(str::to_string) else {
+                    continue;
+                };
+                let rules = {
+                    let cached = crawl
+                        .robots
+                        .lock()
+                        .ok()
+                        .and_then(|robots| robots.get(&host).cloned());
+                    match cached {
+                        Some(rules) => rules,
+                        None => {
+                            let robots_url = format!("{}://{host}/robots.txt", parsed.scheme());
+                            let rules = client
+                                .get(&robots_url)
+                                .send()
+                                .ok()
+                                .and_then(|response| response.text().ok())
+                                .map(|body| disallowed_paths(&body))
+                                .unwrap_or_default();
+                            if let Ok(mut robots) = crawl.robots.lock() {
+                                robots.insert(host.clone(), rules.clone());
+                            }
+                            rules
+                        }
+                    }
+                };
+                if rules
+                    .iter()
+                    .any(|rule| parsed.path().starts_with(rule.trim_end_matches('*')))
+                {
+                    continue;
+                }
+
+                crawl.wait_for_host(&host, delay);
+                crawl.in_flight.fetch_add(1, Ordering::SeqCst);
+                let fetched = fetch(&client, &url, depth, max_depth);
+                crawl.in_flight.fetch_sub(1, Ordering::SeqCst);
+                if let Some(page) = fetched {
+                    if sender.send(page).is_err() {
+                        return;
+                    }
+                }
+            }
+        });
+    }
+    drop(sender);
+
     let mut indexed = 0usize;
-
-    while let Some((url, depth)) = queue.pop_front() {
+    for page in receiver {
         if indexed >= options.max_pages {
             break;
         }
-        if !seen.insert(url.clone()) {
-            continue;
-        }
-        let Ok(parsed) = url::Url::parse(&url) else {
-            continue;
-        };
-        let Some(host) = parsed.host_str().map(str::to_string) else {
-            continue;
-        };
-
-        // Respect robots.txt once per host.
-        let rules = robots.entry(host.clone()).or_insert_with(|| {
-            let robots_url = format!("{}://{host}/robots.txt", parsed.scheme());
-            client
-                .get(&robots_url)
-                .send()
-                .ok()
-                .and_then(|response| response.text().ok())
-                .map(|body| disallowed_paths(&body))
-                .unwrap_or_default()
-        });
-        if rules
-            .iter()
-            .any(|rule| parsed.path().starts_with(rule.trim_end_matches('*')))
-        {
-            continue;
-        }
-
-        let response = match client.get(&url).send() {
-            Ok(response) => response,
-            Err(_) => continue,
-        };
-        if !response.status().is_success() {
-            continue;
-        }
-        let content_type = response
-            .headers()
-            .get(reqwest::header::CONTENT_TYPE)
-            .and_then(|value| value.to_str().ok())
-            .unwrap_or("")
-            .to_string();
-        if !content_type.contains("text/html") {
-            continue;
-        }
-        let body = match response.text() {
-            Ok(body) => body,
-            Err(_) => continue,
-        };
-        let html = Html::parse_document(&body);
-        let title = page_title(&html);
-        let text = rustxng::content::main_text_limited(&html, 20_000);
-        if title.is_empty() && text.is_empty() {
-            continue;
-        }
-        let lang = if has_cjk(&title) || has_cjk(&text) {
+        let lang = if has_cjk(&page.title) || has_cjk(&page.body) {
             "ja"
         } else {
             "en"
         };
         index.add(&Page {
-            url: &url,
-            title: &title,
-            body: &text,
+            url: &page.url,
+            title: &page.title,
+            body: &page.body,
             lang,
         })?;
         indexed += 1;
-        // Commit periodically: a long crawl that dies halfway should keep what
-        // it already fetched.
-        if indexed % 50 == 0 {
-            index.commit()?;
-            println!("indexed {indexed} pages (queue {})", queue.len());
-        }
-
-        if depth < options.max_depth {
-            for link in links(&html, &parsed) {
-                if seen.contains(&link) {
-                    continue;
+        if page.depth < max_depth {
+            if let Ok(mut queue) = crawl.queue.lock() {
+                for link in page.links {
+                    queue.push_back((link, page.depth + 1));
                 }
-                let Ok(link_url) = url::Url::parse(&link) else {
-                    continue;
-                };
-                if link_url.host_str() != Some(host.as_str()) {
-                    continue;
-                }
-                queue.push_back((link, depth + 1));
             }
         }
-        std::thread::sleep(Duration::from_millis(options.delay_ms));
+        if indexed % 200 == 0 {
+            index.commit()?;
+            let queued = crawl.queue.lock().map(|q| q.len()).unwrap_or(0);
+            println!("indexed {indexed} pages (queue {queued})");
+        }
     }
 
     index.commit()?;
@@ -329,4 +402,54 @@ fn crawl(options: &Options) -> Result<(), String> {
         index.document_count()
     );
     Ok(())
+}
+
+/// Fetch one page and extract what the index needs.
+fn fetch(
+    client: &reqwest::blocking::Client,
+    url: &str,
+    depth: usize,
+    max_depth: usize,
+) -> Option<Fetched> {
+    let response = client.get(url).send().ok()?;
+    if !response.status().is_success() {
+        return None;
+    }
+    let content_type = response
+        .headers()
+        .get(reqwest::header::CONTENT_TYPE)
+        .and_then(|value| value.to_str().ok())
+        .unwrap_or("")
+        .to_string();
+    if !content_type.contains("text/html") {
+        return None;
+    }
+    let body = response.text().ok()?;
+    let html = Html::parse_document(&body);
+    let title = page_title(&html);
+    let text = rustxng::content::main_text_limited(&html, 20_000);
+    if title.is_empty() && text.is_empty() {
+        return None;
+    }
+    let base = url::Url::parse(url).ok()?;
+    let host = base.host_str()?.to_string();
+    let links = if depth < max_depth {
+        links(&html, &base)
+            .into_iter()
+            .filter(|link| {
+                url::Url::parse(link)
+                    .map(|parsed| parsed.host_str() == Some(host.as_str()))
+                    .unwrap_or(false)
+            })
+            .collect()
+    } else {
+        Vec::new()
+    };
+    Some(Fetched {
+        url: url.to_string(),
+        title,
+        body: text,
+        links,
+        depth,
+    })
 }
