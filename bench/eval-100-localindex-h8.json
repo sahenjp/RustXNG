@@ -1,0 +1,2534 @@
+{
+  "base": "http://127.0.0.1:9055",
+  "params": {},
+  "questions": 100,
+  "hit@1": 78,
+  "hit@5": 86,
+  "mrr@10": 0.824,
+  "median_ms": 710.9,
+  "median_bytes": 7829,
+  "errors": 0,
+  "rows": [
+    {
+      "id": "en-py-list",
+      "lang": "en",
+      "query": "python list methods documentation",
+      "gold": [
+        "https://docs.python.org/3/tutorial/datastructures",
+        "https://docs.python.org/3/library/stdtypes"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 2006.8552709999494,
+      "urls": [
+        "https://docs.python.org/3/tutorial/datastructures.html",
+        "https://docs.python.org/3/c-api/list.html",
+        "https://docs.python.org/3/builtins/functions.html",
+        "https://www.w3schools.com/python/python_lists_methods.asp",
+        "https://mindmajix.com/python-sort",
+        "https://www.w3schools.com/python/python_ref_list.asp",
+        "https://mafigo.neocities.org/python-3.5.6-docs-html/contents",
+        "http://python.org/sf/1215887",
+        "https://docs.python.org/ja/3/tutorial/datastructures.html",
+        "https://www.programiz.com/python-programming/methods/list"
+      ],
+      "bytes": 9870,
+      "unresponsive": 25
+    },
+    {
+      "id": "en-py-dict",
+      "lang": "en",
+      "query": "python dict get method",
+      "gold": [
+        "https://docs.python.org/3/library/stdtypes"
+      ],
+      "category": "doc",
+      "rank": null,
+      "millis": 2003.99966200348,
+      "urls": [
+        "https://www.w3schools.com/python/ref_dictionary_get.asp",
+        "https://www.tutorialspoint.com/python/dictionary_get.htm",
+        "https://www.reddit.com/r/learnpython/comments/1jd9n3w/what_does_get_mean_and_do_in_python/",
+        "https://stackoverflow.com/questions/61141025/not-understanding-a-trick-on-get-method-in-python",
+        "https://ipcisco.com/lesson/python-dictionary-methods/",
+        "https://www.learnbyexample.org/python-dictionary-get-method/",
+        "https://www.freecodecamp.org/news/create-a-dictionary-in-python-python-dict-methods/",
+        "https://labex.io/tutorials/python-how-to-use-dict-get-method-correctly-421297",
+        "https://www.geeksforgeeks.org/python/python-dictionary-get-method/",
+        "https://www.programiz.com/python-programming/methods/dictionary/get"
+      ],
+      "bytes": 8553,
+      "unresponsive": 31
+    },
+    {
+      "id": "en-py-asyncio",
+      "lang": "en",
+      "query": "python asyncio documentation",
+      "gold": [
+        "https://docs.python.org/3/library/asyncio"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 3.6603049957193434,
+      "urls": [
+        "https://docs.python.org/3/library/asyncio.html",
+        "https://docs.python.org/3/whatsnew/changelog.html",
+        "https://docs.python.org/3/library/devmode.html",
+        "https://docs.python.org/3/glossary.html",
+        "https://docs.python.org/3/library/__main__.html",
+        "https://docs.python.org/3/library/cmdline.html",
+        "https://docs.python.org/3/library/",
+        "https://docs.python.org/3/library/index.html",
+        "https://docs.python.org/3/library/concurrent.futures.html",
+        "https://docs.python.org/3/library/contextvars.html"
+      ],
+      "bytes": 3737,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-py-re",
+      "lang": "en",
+      "query": "python re module regular expressions",
+      "gold": [
+        "https://docs.python.org/3/library/re"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1663.2415860076435,
+      "urls": [
+        "https://docs.python.org/3/library/re.html",
+        "https://docs.python.org/3/howto/regex.html",
+        "https://realpython.com/regex-python/",
+        "https://blog.appsignal.com/2025/01/15/how-to-use-regular-expressions-in-python.html",
+        "https://mimo.org/glossary/python/regex-regular-expressions",
+        "https://www.simplilearn.com/tutorials/python-tutorial/python-regular-expressions",
+        "https://www.w3schools.com/python/python_regex.asp",
+        "https://www.datanovia.com/learn/programming/python/additional-tutorials/regex.html",
+        "https://docs.python.org/fr/2/howto/regex.html",
+        "https://docs.python.org/library/re"
+      ],
+      "bytes": 36806,
+      "unresponsive": 33
+    },
+    {
+      "id": "en-py-typing",
+      "lang": "en",
+      "query": "python typing generics",
+      "gold": [
+        "https://docs.python.org/3/library/typing"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 0.8490500040352345,
+      "urls": [
+        "https://docs.python.org/3/library/typing.html",
+        "https://docs.python.org/3/library/development.html",
+        "https://docs.python.org/3/library/types.html",
+        "https://docs.python.org/3/tutorial/interpreter.html",
+        "https://docs.python.org/3/library/annotationlib.html",
+        "https://docs.python.org/3/tutorial/appendix.html",
+        "https://docs.python.org/3/index.html",
+        "https://docs.python.org/3/glossary.html",
+        "https://docs.python.org/3/library/allos.html",
+        "https://docs.python.org/3/library/idle.html"
+      ],
+      "bytes": 3731,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-rs-book",
+      "lang": "en",
+      "query": "rust programming language book",
+      "gold": [
+        "https://doc.rust-lang.org/book"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 0.9460319997742772,
+      "urls": [
+        "https://doc.rust-lang.org/book/print.html",
+        "https://doc.rust-lang.org/book/",
+        "https://doc.rust-lang.org/stable/book/",
+        "https://doc.rust-lang.org/book/foreword.html",
+        "https://doc.rust-lang.org/book/appendix-05-editions.html",
+        "https://en.wikipedia.org/wiki/Rust_(programming_language)",
+        "https://doc.rust-lang.org/book/ch01-01-installation.html",
+        "https://doc.rust-lang.org/book/appendix-06-translation.html",
+        "https://doc.rust-lang.org/book/ch03-02-data-types.html",
+        "https://doc.rust-lang.org/book/ch03-05-control-flow.html"
+      ],
+      "bytes": 3644,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-rs-vec",
+      "lang": "en",
+      "query": "rust vector documentation",
+      "gold": [
+        "https://doc.rust-lang.org/std/vec"
+      ],
+      "category": "doc",
+      "rank": 2,
+      "millis": 1160.3502369835041,
+      "urls": [
+        "https://doc.rust-lang.org/beta/std/vec/struct.Vec.html",
+        "https://doc.rust-lang.org/std/vec/struct.Vec.html",
+        "https://doc.rust-lang.org/book/ch08-01-vectors.html",
+        "https://doc.rust-lang.org/stable/book/second-edition/ch08-01-vectors.html",
+        "https://doc.rust-lang.org/rust-by-example/std/vec.html",
+        "https://doc.rust-lang.org/stable/",
+        "https://doc.rust-lang.org/1.13.0/book/vectors.html",
+        "https://doc.rust-lang.org/1.5.0/book/vectors.html",
+        "https://doc.rust-lang.org/1.30.0/book/second-edition/ch08-01-vectors.html",
+        "https://doc.rust-lang.org"
+      ],
+      "bytes": 24619,
+      "unresponsive": 33
+    },
+    {
+      "id": "en-rs-trait",
+      "lang": "en",
+      "query": "rust traits documentation",
+      "gold": [
+        "https://doc.rust-lang.org/book/ch10-02-traits.html"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1057.1990110038314,
+      "urls": [
+        "https://doc.rust-lang.org/book/ch10-02-traits.html",
+        "https://doc.rust-lang.org/book/ch20-02-advanced-traits.html",
+        "https://doc.rust-lang.org/rust-by-example/trait.html",
+        "https://doc.rust-lang.org/stable/reference/items/traits.html",
+        "https://doc.rust-lang.org/1.8.0/book/traits.html",
+        "https://doc.rust-lang.org/reference/special-types-and-traits.html",
+        "https://doc.rust-lang.org/std/keyword.trait.html",
+        "https://doc.rust-lang.org",
+        "https://doc.rust-lang.org/reference/items/traits.html",
+        "https://doc.rust-lang.org/stable/std/"
+      ],
+      "bytes": 26681,
+      "unresponsive": 33
+    },
+    {
+      "id": "en-rs-result",
+      "lang": "en",
+      "query": "rust result enum documentation",
+      "gold": [
+        "https://doc.rust-lang.org/std/result"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 717.4335159943439,
+      "urls": [
+        "https://doc.rust-lang.org/std/result/enum.Result.html",
+        "https://doc.rust-lang.org/std/result/",
+        "https://doc.rust-lang.org/1.3.0/core/result/enum.Result.html",
+        "https://doc.rust-lang.org/1.23.0/std/result/enum.Result.html",
+        "https://doc.rust-lang.org/1.30.0/std/result/enum.Result.html",
+        "https://doc.rust-lang.org/std/io/type.Result.html",
+        "https://doc.rust-lang.org/1.26.1/core/result/enum.Result.html",
+        "https://doc.rust-lang.org/1.3.0/std/result/enum.Result.html",
+        "https://doc.rust-lang.org/1.88.0/core/result/enum.Result.html",
+        "https://doc.rust-lang.org/rust-by-example/std/result.html"
+      ],
+      "bytes": 9921,
+      "unresponsive": 33
+    },
+    {
+      "id": "en-rs-cargo",
+      "lang": "en",
+      "query": "cargo book manifest format",
+      "gold": [
+        "https://doc.rust-lang.org/cargo/reference/manifest"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1453.0280740000308,
+      "urls": [
+        "https://doc.rust-lang.org/cargo/reference/manifest.html",
+        "https://web.mit.edu/rust-lang_v1.25/arch/amd64_ubuntu1404/share/doc/rust/html/cargo/reference/manifest.html",
+        "https://github.com/rust-lang/cargo/issues/7055",
+        "https://doc.bccnsoft.com/docs/rust-1.36.0-docs-html/cargo/reference/manifest.html",
+        "https://dokk.org/documentation/rust-cargo/0.39.0/reference/manifest.html",
+        "https://github.com/rust-lang/style-team/issues/188",
+        "https://doc.rust-lang.org/cargo/reference/index.html",
+        "https://rurust.github.io/cargo-docs-ru/manifest.html",
+        "http://doc.rust-lang.org/cargo/commands/cargo-build.html",
+        "https://www.scribd.com/document/509086440/Sea-Cargo-Manifest-Format"
+      ],
+      "bytes": 7288,
+      "unresponsive": 34
+    },
+    {
+      "id": "en-docker-compose",
+      "lang": "en",
+      "query": "docker compose file reference",
+      "gold": [
+        "https://docs.docker.com/reference/compose-file",
+        "https://docs.docker.com/compose/compose-file"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 2003.791369003011,
+      "urls": [
+        "http://docs.docker.com/reference/compose-file/",
+        "https://docs.docker.com/reference/compose-file/extension/",
+        "https://docs.docker.com/reference/cli/docker/compose",
+        "https://docs.docker.com/compose/extends/",
+        "https://docs.docker.com/compose",
+        "https://www.docker.com/blog/compose-1-6/",
+        "https://docs.docker.com/desktop/setup/install/windows-install/",
+        "https://docs.docker.com/engine/install/",
+        "https://www.docker.com/products/docker-desktop/",
+        "https://www.docker.com/blog/how-to-dockerize-wordpress/"
+      ],
+      "bytes": 6833,
+      "unresponsive": 33
+    },
+    {
+      "id": "en-docker-build",
+      "lang": "en",
+      "query": "dockerfile reference build",
+      "gold": [
+        "https://docs.docker.com/reference/dockerfile"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 704.4148989953101,
+      "urls": [
+        "https://docs.docker.com/reference/dockerfile",
+        "https://docs.docker.com/reference/dockerfile.md",
+        "https://docs.docker.com/build/concepts/dockerfile",
+        "https://docs.docker.com/engine/reference/builder/",
+        "https://docs.docker.com/",
+        "https://docs.docker.com/engine/reference/build/",
+        "https://docs.docker.com/compose/reference/build/",
+        "https://docs.digitalocean.com/products/app-platform/reference/dockerfile/",
+        "https://docs.docker.jp/engine/reference/builder.html",
+        "https://www.docker.com/blog/dockerfiles-now-support-multiple-build-contexts/"
+      ],
+      "bytes": 15253,
+      "unresponsive": 33
+    },
+    {
+      "id": "en-docker-run",
+      "lang": "en",
+      "query": "docker run command reference",
+      "gold": [
+        "https://docs.docker.com/reference/cli/docker/container/run"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 988.941960997181,
+      "urls": [
+        "https://docs.docker.com/reference/cli/docker/container/run/",
+        "https://docs.docker.com/engine/reference/commandline/run?:~:text=Set%20environment%20variables%20(-eREMOVEDenvREMOVED%20--env-file)&text=Use%20the%20-e%20REMOVED%20--envREMOVEDthe%20image%20you're%20running.",
+        "https://docs.docker.com/reference/cli/docker/container/run.md",
+        "https://docs.docker.com/edge/engine/reference/run",
+        "https://docs.docker.com/engine/containers/run/",
+        "https://docs.docker.com/engine/reference/run?:~:text=Container%20identification_-You%20can%20identify&text=The%20daemon%20generates%20a%20random_in%20a%20user-defined%20network.",
+        "https://docs.docker.com/reference/cli/docker/",
+        "https://docs.docker.com/reference/cli/docker/container/",
+        "https://docs.docker.com/reference/dockerfile",
+        "https://www.docker.com/blog/docker-best-practices-choosing-between-run-cmd-and-entrypoint/"
+      ],
+      "bytes": 18223,
+      "unresponsive": 33
+    },
+    {
+      "id": "en-pg-json",
+      "lang": "en",
+      "query": "postgresql json functions",
+      "gold": [
+        "https://www.postgresql.org/docs/current/functions-json",
+        "https://www.postgresql.org/docs/current/datatype-json"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 821.8133570044301,
+      "urls": [
+        "http://www.postgresql.org/docs/9.5/functions-json.html",
+        "http://www.postgresql.org/docs/9.3/functions-json.html",
+        "http://www.postgresql.org/docs/current/functions-json.html",
+        "http://www.postgresql.org/docs/9.4/functions-json.html",
+        "http://www.postgresql.org/docs/12/functions-json.html",
+        "http://www.postgresql.org/docs/10/functions-json.html",
+        "http://www.postgresql.org/docs/9.6/functions-json.html",
+        "http://www.postgresql.org/docs/11/functions-json.html",
+        "https://www.red-gate.com/simple-talk/databases/mysql-vs-postgresql-json-data-type/",
+        "https://postgresql.org/docs/9.5/functions-json.html"
+      ],
+      "bytes": 12959,
+      "unresponsive": 33
+    },
+    {
+      "id": "en-pg-index",
+      "lang": "en",
+      "query": "postgresql create index documentation",
+      "gold": [
+        "https://www.postgresql.org/docs/current/sql-createindex"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1004.5543229789473,
+      "urls": [
+        "https://www.postgresql.org/docs/current/sql-createindex.html",
+        "https://www.postgresql.org/docs/8.1/sql-createindex.html",
+        "https://www.postgresql.org/docs/9.1/sql-createindex.html",
+        "https://www.postgresql.org/docs/current/indexes.html",
+        "https://www.postgresql.org/docs/devel/sql-createindex.html",
+        "https://www.postgresql.org/docs/13/sql-createindex.html",
+        "https://www.postgresql.org/docs/15/sql-createindex.html",
+        "https://www.postgresql.org/docs/10/sql-createindex.html",
+        "https://www.postgresql.org/docs/9.0/sql-createindex.html",
+        "https://postgresql.org/docs/current/sql-createindex.html?trk=article-ssr-frontend-pulse_little-text-block"
+      ],
+      "bytes": 12979,
+      "unresponsive": 33
+    },
+    {
+      "id": "en-pg-window",
+      "lang": "en",
+      "query": "postgresql window functions",
+      "gold": [
+        "https://www.postgresql.org/docs/current/tutorial-window",
+        "https://www.postgresql.org/docs/current/functions-window"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 818.6552379920613,
+      "urls": [
+        "https://www.postgresql.org/docs/current/tutorial-window.html",
+        "http://www.postgresql.org/docs/13/functions-window.html",
+        "http://www.postgresql.org/docs/17/functions-window.html",
+        "http://www.postgresql.org/docs/15/tutorial-window.html",
+        "https://www.postgresql.org/docs/15/functions-window.html",
+        "https://www.postgresql.org/docs/16/functions-window.html",
+        "https://www.postgresql.org/docs/current/functions-window.html",
+        "http://www.postgresql.org/docs/9.3/functions-window.html",
+        "https://www.postgresql.org/docs/16/tutorial-window.html",
+        "https://www.postgresql.org/"
+      ],
+      "bytes": 7892,
+      "unresponsive": 33
+    },
+    {
+      "id": "en-numpy-index",
+      "lang": "en",
+      "query": "numpy indexing arrays",
+      "gold": [
+        "https://numpy.org/doc/stable/user/basics.indexing"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 855.5894579913002,
+      "urls": [
+        "https://numpy.org/doc/stable/user/basics.indexing.html",
+        "https://numpy.org/doc/2.5/user/basics.indexing.html",
+        "https://numpy.org/doc/1.16/reference/arrays.indexing.html",
+        "https://numpy.org/doc/1.18/user/basics.indexing.html",
+        "https://numpy.org/doc/1.21/reference/arrays.indexing.html",
+        "https://numpy.org/doc/stable/reference/arrays.indexing.html",
+        "https://numpy.org/",
+        "https://numpy.org/devdocs/user/basics.indexing.html",
+        "https://numpy.org/doc/1.20/reference/arrays.indexing.html",
+        "https://www.w3schools.com/python/numpy/numpy_array_indexing.asp"
+      ],
+      "bytes": 25634,
+      "unresponsive": 33
+    },
+    {
+      "id": "en-numpy-broadcast",
+      "lang": "en",
+      "query": "numpy broadcasting rules",
+      "gold": [
+        "https://numpy.org/doc/stable/user/basics.broadcasting"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1447.0027729985304,
+      "urls": [
+        "https://numpy.org/doc/stable/user/basics.broadcasting.html",
+        "https://numpy.org/doc/1.13/reference/generated/numpy.linalg.solve.html",
+        "https://numpy.org/doc/1.22/user/basics.broadcasting.html",
+        "https://numpy.org/doc/1.18/user/basics.broadcasting.html",
+        "https://numpy.org/doc/1.17/user/basics.broadcasting.html",
+        "https://numpy.org/doc/1.24/reference/generated/numpy.linalg.solve.html",
+        "https://numpy.org/doc/1.25/reference/generated/numpy.linalg.solve.html",
+        "https://numpy.org/doc/1.16/reference/generated/numpy.linalg.solve.html",
+        "https://numpy.org/devdocs/reference/generated/numpy.linalg.solve.html",
+        "https://numpy.org/doc/2.0/reference/generated/numpy.linalg.solve.html"
+      ],
+      "bytes": 13700,
+      "unresponsive": 33
+    },
+    {
+      "id": "en-react-hooks",
+      "lang": "en",
+      "query": "react hooks reference",
+      "gold": [
+        "https://react.dev/reference/react"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 988.9552560052834,
+      "urls": [
+        "https://react.dev/reference/react/hooks",
+        "https://react.dev/reference/react",
+        "https://react.dev/reference/rules/rules-of-hooks",
+        "https://react.dev/reference/react-dom/hooks",
+        "https://legacy.reactjs.org/docs/hooks-reference.html",
+        "https://blog.logrocket.com/react-reference-guide-hooks-api/",
+        "https://ru.react.js.org/docs/hooks-reference.html",
+        "https://ja.react.dev/reference/react/hooks",
+        "https://ja.react.dev/reference/react",
+        "https://reactjs.org/hooks"
+      ],
+      "bytes": 10781,
+      "unresponsive": 33
+    },
+    {
+      "id": "en-react-usestate",
+      "lang": "en",
+      "query": "react usestate hook",
+      "gold": [
+        "https://react.dev/reference/react/useState"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1412.1790989884175,
+      "urls": [
+        "http://react.dev/reference/react/useState",
+        "https://www.w3schools.com/react/react_usestate.asp",
+        "https://legacy.reactjs.org/docs/hooks-state.html",
+        "https://blog.logrocket.com/guide-usestate-react",
+        "https://reactviva.neocities.org/react_useStateHook",
+        "https://www.telerik.com/blogs/react-usestate-hook",
+        "https://velog.io/",
+        "http://daveceddia.com/usestate-hook-examples/",
+        "https://www.contentful.com/blog/react-usestate-hook/",
+        "https://ja.react.dev/reference/react/useState"
+      ],
+      "bytes": 10183,
+      "unresponsive": 33
+    },
+    {
+      "id": "en-mdn-array",
+      "lang": "en",
+      "query": "mdn javascript array",
+      "gold": [
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array"
+      ],
+      "category": "doc",
+      "rank": null,
+      "millis": 0.7441019988618791,
+      "urls": [
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+        "https://react.dev/learn",
+        "https://developer.mozilla.org/en-US/",
+        "https://developer.mozilla.org/en-US/docs/Web/HTML",
+        "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes",
+        "https://developer.mozilla.org/en-US/docs/Web/HTML/Guides/Responsive_images",
+        "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes",
+        "https://doc.rust-lang.org/std/primitive.array.html",
+        "https://doc.rust-lang.org/std/array/index.html",
+        "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference"
+      ],
+      "bytes": 3471,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-mdn-fetch",
+      "lang": "en",
+      "query": "mdn fetch api",
+      "gold": [
+        "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 729.5505329966545,
+      "urls": [
+        "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API",
+        "https://developer.mozilla.org/en-US/docs/Web/API/Window/fetch",
+        "https://developer.mozilla.org/de/docs/Web/API/Fetch_API/Using_Fetch",
+        "https://developer.mozilla.org/zh-TW/docs/Web/API/Fetch_API",
+        "https://developer.mozilla.org/ja/docs/Web/API/Fetch_API",
+        "https://developer.mozilla.org/ja/docs/Web/API/Window/fetch",
+        "https://developer.mozilla.org/ko/docs/Web/API/Fetch_API",
+        "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch",
+        "https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch",
+        "https://developer.mozilla.org/ja/docs/Web/API/FetchEvent"
+      ],
+      "bytes": 12042,
+      "unresponsive": 33
+    },
+    {
+      "id": "en-mdn-promise",
+      "lang": "en",
+      "query": "mdn promise javascript",
+      "gold": [
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
+      ],
+      "category": "doc",
+      "rank": null,
+      "millis": 0.7261680148076266,
+      "urls": [
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+        "https://developer.mozilla.org/en-US/",
+        "https://developer.mozilla.org/en-US/docs/Web/HTML",
+        "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes",
+        "https://developer.mozilla.org/en-US/docs/Web/HTML/Guides/Responsive_images",
+        "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes",
+        "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference",
+        "https://react.dev/learn",
+        "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements",
+        "https://doc.rust-lang.org/std/hint/index.html"
+      ],
+      "bytes": 3511,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-k8s-pod",
+      "lang": "en",
+      "query": "kubernetes pod documentation",
+      "gold": [
+        "https://kubernetes.io/docs/concepts/workloads/pods"
+      ],
+      "category": "doc",
+      "rank": null,
+      "millis": 1.2067130010109395,
+      "urls": [
+        "https://kubernetes.io/docs/home/",
+        "https://docs.kernel.org/",
+        "https://www.postgresql.org/docs/current/",
+        "https://docs.djangoproject.com/en/stable/",
+        "https://docs.python.org/3/improve-page-nojs.html",
+        "https://docs.python.org/3/library/pydoc.html",
+        "https://docs.python.org/3/index.html",
+        "https://docs.python.org/3/bugs.html",
+        "https://docs.python.org/bugs.html",
+        "https://numpy.org/doc/stable/"
+      ],
+      "bytes": 3577,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-k8s-deploy",
+      "lang": "en",
+      "query": "kubernetes deployment documentation",
+      "gold": [
+        "https://kubernetes.io/docs/concepts/workloads/controllers/deployment"
+      ],
+      "category": "doc",
+      "rank": null,
+      "millis": 0.7899880001787096,
+      "urls": [
+        "https://kubernetes.io/docs/home/",
+        "https://docs.djangoproject.com/en/stable/",
+        "https://docs.python.org/3/library/os.html",
+        "https://fastapi.tiangolo.com/",
+        "https://docs.python.org/3/library/zoneinfo.html",
+        "https://www.rfc-editor.org/rfc/rfc6749.html",
+        "https://docs.kernel.org/",
+        "https://www.postgresql.org/docs/current/",
+        "https://docs.python.org/3/improve-page-nojs.html",
+        "https://docs.python.org/3/library/pydoc.html"
+      ],
+      "bytes": 3606,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-git-rebase",
+      "lang": "en",
+      "query": "git rebase documentation",
+      "gold": [
+        "https://git-scm.com/docs/git-rebase"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 2003.6613940028474,
+      "urls": [
+        "https://git-scm.com/docs/git-rebase",
+        "https://git-scm.com/",
+        "https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History",
+        "https://git-scm.com/book/en/v2/Git-Branching-Rebasing",
+        "https://git-scm.com/install/",
+        "https://www.kernel.org/pub/software/scm/git/docs/git-rebase.html",
+        "https://docs.github.com/ko",
+        "https://mirrors.kernel.org/pub/software/scm/git/docs/git-rebase.html",
+        "https://www.atlassian.com/git/tutorials/rewriting-history/git-rebase",
+        "https://docs.github.com/en/get-started/using-git/about-git-rebase"
+      ],
+      "bytes": 14801,
+      "unresponsive": 33
+    },
+    {
+      "id": "en-git-merge",
+      "lang": "en",
+      "query": "git merge documentation",
+      "gold": [
+        "https://git-scm.com/docs/git-merge"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 828.6958929966204,
+      "urls": [
+        "https://git-scm.com/docs/git-merge",
+        "https://git-scm.com/docs/git-mergetool/2.20.0",
+        "https://git-scm.com/docs/git-mergetool",
+        "https://git-scm.com/docs/merge-options",
+        "http://git-scm.com/docs/git-merge/en",
+        "https://git-scm.com/docs/merge-config",
+        "https://git-scm.com/docs/git-merge-file",
+        "https://git-scm.com/docs/merge-strategies",
+        "https://git-scm.com/docs/git-merge-tree",
+        "https://git-scm.com/"
+      ],
+      "bytes": 14708,
+      "unresponsive": 33
+    },
+    {
+      "id": "en-nginx-conf",
+      "lang": "en",
+      "query": "nginx configuration file reference",
+      "gold": [
+        "https://nginx.org/en/docs",
+        "https://docs.nginx.com/nginx/admin-guide"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1929.116650018841,
+      "urls": [
+        "https://docs.nginx.com/nginx/admin-guide/basic-functionality/managing-configuration-files/",
+        "https://zenn.dev/tanbokaeru/articles/a770820b1358f1?locale=en",
+        "https://github.com/nginx/documentation/blob/main/content/nginx/admin-guide/basic-functionality/managing-configuration-files.md",
+        "https://nginx.org/en/docs/beginners_guide.html",
+        "https://docs.nginx.com/nginx/admin-guide/basic-functionality/managing-configuration-files/index.md",
+        "https://docs.nginx.com/app-delivery/platform/nginx-configuration/",
+        "https://docs.nginx.com/app-delivery/aws/deploy/nginx-configuration/",
+        "http://nginx.org/docs/syntax.html",
+        "https://docs.nginx.com/waf/configure/",
+        "https://docs.nginx.com/nginx/deployment-guides/"
+      ],
+      "bytes": 13379,
+      "unresponsive": 33
+    },
+    {
+      "id": "en-linux-sched",
+      "lang": "en",
+      "query": "linux kernel documentation scheduler",
+      "gold": [
+        "https://docs.kernel.org/scheduler"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1080.1030999864452,
+      "urls": [
+        "https://docs.kernel.org/scheduler/index.html",
+        "https://docs.kernel.org/scheduler/sched-ext.html",
+        "https://docs.kernel.org/scheduler/sched-eevdf.html",
+        "https://docs.kernel.org/block/switching-sched.html",
+        "https://docs.kernel.org/6.8/scheduler/schedutil.html",
+        "https://docs.kernel.org/scheduler/sched-domains.html",
+        "https://www.kernel.org/doc/html/v6.5/scheduler/index.html",
+        "https://www.kernel.org/doc/html/next",
+        "https://www.kernel.org/doc/html/next/scheduler/sched-ext.html",
+        "https://ubuntu.com/real-time/docs/explanation/schedulers/"
+      ],
+      "bytes": 22300,
+      "unresponsive": 33
+    },
+    {
+      "id": "en-linux-sysctl",
+      "lang": "en",
+      "query": "linux kernel sysctl documentation",
+      "gold": [
+        "https://docs.kernel.org/admin-guide/sysctl"
+      ],
+      "category": "doc",
+      "rank": 2,
+      "millis": 902.8480379784014,
+      "urls": [
+        "https://docs.kernel.org/networking/ip-sysctl.html",
+        "https://docs.kernel.org/admin-guide/sysctl/kernel.html",
+        "https://docs.kernel.org/admin-guide/sysctl/index.html",
+        "https://docs.kernel.org/admin-guide/sysctl/",
+        "https://www.kernel.org/doc/Documentation/sysctl/",
+        "https://www.kernel.org/doc/html/next/networking/ip-sysctl.html",
+        "https://www.kernel.org/doc/Documentation/sysctl/kernel.txt",
+        "https://www.kernel.org/doc/html/latest/admin-guide/sysctl/fs.html",
+        "https://kernel.org/doc/Documentation/sysctl/kernel.txt",
+        "https://www.kernel.org/doc/Documentation/sysctl/README"
+      ],
+      "bytes": 21196,
+      "unresponsive": 33
+    },
+    {
+      "id": "en-sql-join",
+      "lang": "en",
+      "query": "sql join types tutorial",
+      "gold": [
+        "https://www.postgresql.org/docs/current/queries-table-expressions"
+      ],
+      "category": "doc",
+      "rank": null,
+      "millis": 875.0245310075115,
+      "urls": [
+        "https://www.w3schools.com/sql/sql_join.asp",
+        "http://www.sqlshack.com/sql-join-overview-and-tutorial/",
+        "https://www.sqlnoir.com/blog/sql-join-types-explained",
+        "https://www.dbvis.com/thetable/sql-cheat-sheet-every-join-explained/",
+        "https://datalemur.com/sql-tutorial/sql-joins-inner-outer-left-right",
+        "https://mora.com/blog/sql-join-types-explained",
+        "https://simmanchith.neocities.org/post-4",
+        "https://way2tutorial.com/sql/sql-join.php",
+        "https://learnsql.com/blog/sql-joins-types-explained",
+        "https://www.freecodecamp.org/news/sql-join-types-inner-join-vs-outer-join-example/"
+      ],
+      "bytes": 7867,
+      "unresponsive": 33
+    },
+    {
+      "id": "en-tokio",
+      "lang": "en",
+      "query": "tokio rust async runtime",
+      "gold": [
+        "https://tokio.rs"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 0.7469080155715346,
+      "urls": [
+        "https://tokio.rs/tokio/tutorial",
+        "https://doc.rust-lang.org/std/keyword.async.html",
+        "https://doc.rust-lang.org/std/async_iter/index.html",
+        "https://doc.rust-lang.org/std/future/trait.Future.html",
+        "https://doc.rust-lang.org/std/",
+        "https://doc.rust-lang.org/std/index.html",
+        "https://doc.rust-lang.org/std/keyword.move.html",
+        "https://doc.rust-lang.org/std/future/index.html",
+        "https://doc.rust-lang.org/std/keyword.await.html",
+        "https://doc.rust-lang.org/std/ops/index.html"
+      ],
+      "bytes": 3306,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-serde",
+      "lang": "en",
+      "query": "serde rust crate serialization",
+      "gold": [
+        "https://serde.rs",
+        "https://crates.io/crates/serde"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 752.2876469884068,
+      "urls": [
+        "https://crates.io/crates/serde",
+        "https://crates.io/crates/serde_with",
+        "https://crates.io/crates/serde_json",
+        "https://crates.io/crates/serde_derive",
+        "https://github.com/serde-rs/serde",
+        "https://www.shuttle.dev/blog/2024/01/23/using-serde-rust",
+        "https://codeberg.org/swatters/serde_html_form",
+        "https://docs.rs/crate/serde/1.0.180/source/README.md",
+        "https://docs.rs/serde/latest/serde/trait.Serialize.html",
+        "https://docs.rs/crate/serde/1.0.170/source/README.md"
+      ],
+      "bytes": 9383,
+      "unresponsive": 33
+    },
+    {
+      "id": "en-fastapi",
+      "lang": "en",
+      "query": "fastapi documentation tutorial",
+      "gold": [
+        "https://fastapi.tiangolo.com"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 678.3257100032642,
+      "urls": [
+        "https://fastapi.tiangolo.com/tutorial/",
+        "https://fastapi.tiangolo.com/tutorial/first-steps/",
+        "https://fastapi.tiangolo.com/tutorial?trk=article-ssr-frontend-pulse_little-text-block",
+        "https://fastapi.tiangolo.com/",
+        "https://fastapi.tiangolo.com/ja/tutorial/",
+        "https://fastapi.tiangolo.com/ja/tutorial/first-steps/",
+        "https://code.visualstudio.com/docs/python/tutorial-fastapi",
+        "https://github.com/fastapi/fastapi/blob/master/docs/en/docs/tutorial/index.md",
+        "https://github.com/direction/fastapi_tutorial",
+        "https://www.datacamp.com/tutorial/introduction-fastapi-tutorial"
+      ],
+      "bytes": 22260,
+      "unresponsive": 33
+    },
+    {
+      "id": "en-django-orm",
+      "lang": "en",
+      "query": "django queryset documentation",
+      "gold": [
+        "https://docs.djangoproject.com/en/stable/topics/db/queries"
+      ],
+      "category": "doc",
+      "rank": null,
+      "millis": 0.7317780109588057,
+      "urls": [
+        "https://docs.djangoproject.com/en/stable/",
+        "https://docs.python.org/3/library/pkgutil.html",
+        "https://docs.python.org/3/library/pdb.html",
+        "https://docs.python.org/3/library/collections.html",
+        "https://docs.kernel.org/",
+        "https://www.postgresql.org/docs/current/",
+        "https://kubernetes.io/docs/home/",
+        "https://docs.python.org/3/improve-page-nojs.html",
+        "https://docs.python.org/3/library/pydoc.html",
+        "https://docs.python.org/3/index.html"
+      ],
+      "bytes": 3674,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-flask",
+      "lang": "en",
+      "query": "flask quickstart documentation",
+      "gold": [
+        "https://flask.palletsprojects.com/en/stable/quickstart"
+      ],
+      "category": "doc",
+      "rank": null,
+      "millis": 0.7608140003867447,
+      "urls": [
+        "https://flask.palletsprojects.com/en/stable/",
+        "https://docs.kernel.org/",
+        "https://www.postgresql.org/docs/current/",
+        "https://kubernetes.io/docs/home/",
+        "https://docs.djangoproject.com/en/stable/",
+        "https://docs.python.org/3/improve-page-nojs.html",
+        "https://docs.python.org/3/library/pydoc.html",
+        "https://docs.python.org/3/index.html",
+        "https://docs.python.org/3/bugs.html",
+        "https://docs.python.org/bugs.html"
+      ],
+      "bytes": 3603,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-rfc-http",
+      "lang": "en",
+      "query": "http semantics rfc 9110",
+      "gold": [
+        "https://www.rfc-editor.org/rfc/rfc9110"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 0.7696299871895462,
+      "urls": [
+        "https://www.rfc-editor.org/rfc/rfc9110.html",
+        "https://docs.python.org/3/library/http.html",
+        "https://docs.python.org/3/library/http.cookies.html",
+        "https://docs.python.org/3/library/http.cookiejar.html",
+        "https://docs.python.org/3/library/http.client.html",
+        "https://docs.python.org/3/library/http.server.html",
+        "https://docs.python.org/3/library/urllib.parse.html",
+        "https://docs.python.org/3/library/",
+        "https://docs.python.org/3/library/index.html",
+        "https://docs.python.org/3/library/uuid.html"
+      ],
+      "bytes": 3768,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-json-schema",
+      "lang": "en",
+      "query": "json schema specification",
+      "gold": [
+        "https://json-schema.org/specification"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1564.3048890051432,
+      "urls": [
+        "https://json-schema.org/specification",
+        "https://json-schema.org/",
+        "https://json-schema.org/understanding-json-schema/basics",
+        "https://json-schema.org/learn/getting-started-step-by-step.html",
+        "https://json-schema.org/draft/2020-12",
+        "https://json-schema.org/understanding-json-schema/reference/object",
+        "https://json-schema.org/understanding-json-schema/reference/schema",
+        "https://json-schema.org/understanding-json-schema/structuring",
+        "http://www.openldap.org/doc/admin23/schema.html",
+        "https://github.com/json-schema-org/json-schema-spec/blob/main/specs/jsonschema-core.md"
+      ],
+      "bytes": 23364,
+      "unresponsive": 33
+    },
+    {
+      "id": "en-oauth",
+      "lang": "en",
+      "query": "oauth 2.0 rfc 6749",
+      "gold": [
+        "https://www.rfc-editor.org/rfc/rfc6749"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 0.8061080006882548,
+      "urls": [
+        "https://www.rfc-editor.org/rfc/rfc6749.html",
+        "https://www.rfc-editor.org/rfc/rfc9110.html",
+        "https://docs.python.org/3/library/uuid.html",
+        "https://www.postgresql.org/docs/current/",
+        "https://docs.python.org/3/library/ipaddress.html",
+        "https://docs.python.org/3/library/base64.html",
+        "https://docs.python.org/3/library/sqlite3.html",
+        "https://docs.python.org/3/library/json.html",
+        "https://docs.python.org/3/library/http.html",
+        "https://docs.python.org/3/library/http.cookiejar.html"
+      ],
+      "bytes": 3725,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-unix-man",
+      "lang": "en",
+      "query": "unix find command manual",
+      "gold": [
+        "https://man7.org/linux/man-pages/man1/find.1"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1123.5066180233844,
+      "urls": [
+        "https://man7.org/linux/man-pages/man1/find.1.html",
+        "https://en.wikipedia.org/wiki/Find_(Unix)",
+        "https://linux.die.net/man/1/find",
+        "https://serverfault.com/questions/29489/how-do-i-master-the-unix-find-command",
+        "https://grokipedia.com/page/Find_(Unix)",
+        "https://unix.com/man_page/linux/1/find",
+        "https://www.adminschoice.com/tag/find-command-unix",
+        "https://kb.iu.edu/d/admm",
+        "http://xed.ch/h/find",
+        "https://shapeshed.com/unix-find/"
+      ],
+      "bytes": 12887,
+      "unresponsive": 33
+    },
+    {
+      "id": "en-turing",
+      "lang": "en",
+      "query": "alan turing wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Alan_Turing"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 0.7033750007394701,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Alan_Turing",
+        "https://en.wikipedia.org/wiki/Machine_learning",
+        "https://ja.wikipedia.org/wiki/着物",
+        "https://ja.wikipedia.org/wiki/松尾芭蕉",
+        "https://en.wikipedia.org/wiki/Roman_Empire",
+        "https://en.wikipedia.org/wiki/Photosynthesis",
+        "https://en.wikipedia.org/wiki/Tokyo",
+        "https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)",
+        "https://en.wikipedia.org/wiki/Transformer_(machine_learning_model)",
+        "https://en.wikipedia.org/wiki/Albert_Einstein"
+      ],
+      "bytes": 3406,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-shakespeare",
+      "lang": "en",
+      "query": "william shakespeare wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/William_Shakespeare"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 0.7499619969166815,
+      "urls": [
+        "https://en.wikipedia.org/wiki/William_Shakespeare",
+        "https://ja.wikipedia.org/wiki/夏目漱石",
+        "https://ja.wikipedia.org/wiki/着物",
+        "https://ja.wikipedia.org/wiki/松尾芭蕉",
+        "https://en.wikipedia.org/wiki/Roman_Empire",
+        "https://en.wikipedia.org/wiki/Photosynthesis",
+        "https://en.wikipedia.org/wiki/Tokyo",
+        "https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)",
+        "https://en.wikipedia.org/wiki/Transformer_(machine_learning_model)",
+        "https://en.wikipedia.org/wiki/Albert_Einstein"
+      ],
+      "bytes": 3422,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-einstein",
+      "lang": "en",
+      "query": "albert einstein wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Albert_Einstein"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 0.7254670199472457,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Albert_Einstein",
+        "https://en.wikipedia.org/wiki/Theory_of_relativity",
+        "https://en.wikipedia.org/wiki/Black_hole",
+        "https://en.wikipedia.org/wiki/Alan_Turing",
+        "https://ja.wikipedia.org/wiki/着物",
+        "https://ja.wikipedia.org/wiki/松尾芭蕉",
+        "https://en.wikipedia.org/wiki/Roman_Empire",
+        "https://en.wikipedia.org/wiki/Photosynthesis",
+        "https://en.wikipedia.org/wiki/Tokyo",
+        "https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)"
+      ],
+      "bytes": 3377,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-rust-topic",
+      "lang": "en",
+      "query": "rust programming language wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Rust_(programming_language)"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 0.7614549831487238,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Rust_(programming_language)",
+        "https://doc.rust-lang.org/book/print.html",
+        "https://doc.rust-lang.org/book/foreword.html",
+        "https://doc.rust-lang.org/book/",
+        "https://doc.rust-lang.org/stable/book/",
+        "https://doc.rust-lang.org/book/appendix-05-editions.html",
+        "https://doc.rust-lang.org/book/ch03-02-data-types.html",
+        "https://doc.rust-lang.org/book/ch03-05-control-flow.html",
+        "https://doc.rust-lang.org/book/ch01-01-installation.html",
+        "https://tokio.rs/tokio/tutorial"
+      ],
+      "bytes": 3609,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-transformer",
+      "lang": "en",
+      "query": "transformer deep learning wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)",
+        "https://en.wikipedia.org/wiki/Transformer_(machine_learning_model)"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 0.7834360003471375,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)",
+        "https://en.wikipedia.org/wiki/Transformer_(machine_learning_model)",
+        "https://en.wikipedia.org/wiki/Machine_learning",
+        "https://docs.python.org/3/library/copy.html",
+        "https://ja.wikipedia.org/wiki/着物",
+        "https://ja.wikipedia.org/wiki/松尾芭蕉",
+        "https://en.wikipedia.org/wiki/Roman_Empire",
+        "https://en.wikipedia.org/wiki/Photosynthesis",
+        "https://en.wikipedia.org/wiki/Tokyo",
+        "https://en.wikipedia.org/wiki/Albert_Einstein"
+      ],
+      "bytes": 3471,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-mt-fuji",
+      "lang": "en",
+      "query": "mount fuji wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Mount_Fuji"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 0.6770350155420601,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Mount_Fuji",
+        "https://en.wikipedia.org/wiki/Tokyo",
+        "https://ja.wikipedia.org/wiki/着物",
+        "https://ja.wikipedia.org/wiki/松尾芭蕉",
+        "https://en.wikipedia.org/wiki/Roman_Empire",
+        "https://docs.python.org/3/library/os.path.html",
+        "https://en.wikipedia.org/wiki/Photosynthesis",
+        "https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)",
+        "https://en.wikipedia.org/wiki/Transformer_(machine_learning_model)",
+        "https://en.wikipedia.org/wiki/Albert_Einstein"
+      ],
+      "bytes": 3449,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-amazon-river",
+      "lang": "en",
+      "query": "amazon river wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Amazon_River"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 0.6999280012678355,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Amazon_River",
+        "https://en.wikipedia.org/wiki/Rust_(programming_language)",
+        "https://en.wikipedia.org/wiki/Tokyo",
+        "https://en.wikipedia.org/wiki/William_Shakespeare",
+        "https://ja.wikipedia.org/wiki/着物",
+        "https://ja.wikipedia.org/wiki/松尾芭蕉",
+        "https://en.wikipedia.org/wiki/Roman_Empire",
+        "https://en.wikipedia.org/wiki/Photosynthesis",
+        "https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)",
+        "https://en.wikipedia.org/wiki/Transformer_(machine_learning_model)"
+      ],
+      "bytes": 3442,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-tokyo",
+      "lang": "en",
+      "query": "tokyo wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Tokyo"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 0.6592620047740638,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Tokyo",
+        "https://en.wikipedia.org/wiki/Mount_Fuji",
+        "https://ja.wikipedia.org/wiki/東京駅",
+        "https://ja.wikipedia.org/wiki/着物",
+        "https://ja.wikipedia.org/wiki/松尾芭蕉",
+        "https://en.wikipedia.org/wiki/Roman_Empire",
+        "https://en.wikipedia.org/wiki/Photosynthesis",
+        "https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)",
+        "https://en.wikipedia.org/wiki/Transformer_(machine_learning_model)",
+        "https://en.wikipedia.org/wiki/Albert_Einstein"
+      ],
+      "bytes": 3386,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-black-hole",
+      "lang": "en",
+      "query": "black hole wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Black_hole"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 0.6431409856304526,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Black_hole",
+        "https://en.wikipedia.org/wiki/Theory_of_relativity",
+        "https://en.wikipedia.org/wiki/Roman_Empire",
+        "https://ja.wikipedia.org/wiki/着物",
+        "https://en.wikipedia.org/wiki/Tokyo",
+        "https://ja.wikipedia.org/wiki/松尾芭蕉",
+        "https://en.wikipedia.org/wiki/Machine_learning",
+        "https://en.wikipedia.org/wiki/Photosynthesis",
+        "https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)",
+        "https://en.wikipedia.org/wiki/Transformer_(machine_learning_model)"
+      ],
+      "bytes": 3416,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-internet",
+      "lang": "en",
+      "query": "internet wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Internet"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 0.7687280012760311,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Internet",
+        "https://en.wikipedia.org/wiki/Internet_protocol_suite",
+        "https://ja.wikipedia.org/wiki/着物",
+        "https://docs.python.org/3/library/netdata.html",
+        "https://docs.python.org/3/library/stringprep.html",
+        "https://ja.wikipedia.org/wiki/松尾芭蕉",
+        "https://docs.python.org/3/library/internet.html",
+        "https://en.wikipedia.org/wiki/Roman_Empire",
+        "https://en.wikipedia.org/wiki/Photosynthesis",
+        "https://en.wikipedia.org/wiki/Tokyo"
+      ],
+      "bytes": 3456,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-photosynthesis",
+      "lang": "en",
+      "query": "photosynthesis wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Photosynthesis"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 0.684680009726435,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Photosynthesis",
+        "https://ja.wikipedia.org/wiki/着物",
+        "https://ja.wikipedia.org/wiki/松尾芭蕉",
+        "https://en.wikipedia.org/wiki/Roman_Empire",
+        "https://en.wikipedia.org/wiki/Tokyo",
+        "https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)",
+        "https://en.wikipedia.org/wiki/Transformer_(machine_learning_model)",
+        "https://en.wikipedia.org/wiki/Albert_Einstein",
+        "https://en.wikipedia.org/wiki/William_Shakespeare",
+        "https://en.wikipedia.org/wiki/Alan_Turing"
+      ],
+      "bytes": 3412,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-roman-empire",
+      "lang": "en",
+      "query": "roman empire wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Roman_Empire"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 0.6520180031657219,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Roman_Empire",
+        "https://en.wikipedia.org/wiki/Albert_Einstein",
+        "https://ja.wikipedia.org/wiki/源氏物語",
+        "https://en.wikipedia.org/wiki/William_Shakespeare",
+        "https://ja.wikipedia.org/wiki/着物",
+        "https://ja.wikipedia.org/wiki/松尾芭蕉",
+        "https://docs.python.org/3/library/tkinter.font.html",
+        "https://en.wikipedia.org/wiki/Photosynthesis",
+        "https://en.wikipedia.org/wiki/Tokyo",
+        "https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)"
+      ],
+      "bytes": 3433,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-tcp-ip",
+      "lang": "en",
+      "query": "tcp ip wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Internet_protocol_suite"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 2003.873965004459,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Internet_protocol_suite",
+        "http://en.wikipedia.org/wiki/TCP/IP",
+        "http://wikipedia.org/wiki/TCP/IP",
+        "https://en.wikipedia.org/wiki/Transmission_Control_Protocol",
+        "http://en.wikipedia.org/wiki/TCP",
+        "https://simple.wikipedia.org/wiki/TCP/IP_model",
+        "https://en.wikipedia.org/wiki/NetBIOS_over_TCP/IP",
+        "https://en.wikipedia.org/wiki/Category:TCP/IP",
+        "https://en.wikipedia.org/wiki/Internet_Protocol",
+        "https://en.wikipedia.org/wiki/transmission_control_protocol"
+      ],
+      "bytes": 16783,
+      "unresponsive": 33
+    },
+    {
+      "id": "en-ml",
+      "lang": "en",
+      "query": "machine learning wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Machine_learning"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 0.7767740171402693,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Machine_learning",
+        "https://en.wikipedia.org/wiki/Transformer_(machine_learning_model)",
+        "https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)",
+        "https://en.wikipedia.org/wiki/Alan_Turing",
+        "https://ja.wikipedia.org/wiki/着物",
+        "https://ja.wikipedia.org/wiki/松尾芭蕉",
+        "https://en.wikipedia.org/wiki/Roman_Empire",
+        "https://en.wikipedia.org/wiki/Photosynthesis",
+        "https://doc.rust-lang.org/book/print.html",
+        "https://en.wikipedia.org/wiki/Tokyo"
+      ],
+      "bytes": 3411,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-relativity",
+      "lang": "en",
+      "query": "theory of relativity wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Theory_of_relativity"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 0.7968609861563891,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Theory_of_relativity",
+        "https://en.wikipedia.org/wiki/Albert_Einstein",
+        "https://en.wikipedia.org/wiki/Black_hole",
+        "https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)",
+        "https://en.wikipedia.org/wiki/Transformer_(machine_learning_model)",
+        "https://en.wikipedia.org/wiki/Machine_learning",
+        "https://ja.wikipedia.org/wiki/着物",
+        "https://ja.wikipedia.org/wiki/松尾芭蕉",
+        "https://en.wikipedia.org/wiki/Roman_Empire",
+        "https://en.wikipedia.org/wiki/Photosynthesis"
+      ],
+      "bytes": 3448,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-attention",
+      "lang": "en",
+      "query": "attention is all you need arxiv",
+      "gold": [
+        "https://arxiv.org/abs/1706.03762"
+      ],
+      "category": "paper",
+      "rank": 1,
+      "millis": 1360.8559900021646,
+      "urls": [
+        "https://arxiv.org/abs/1706.03762",
+        "https://en.wikipedia.org/wiki/Attention_Is_All_You_Need",
+        "http://arxiv.org/abs/1706.03762v2",
+        "https://arxiv.org/abs/2501.09166",
+        "https://arxiv.org/abs/2501.05730",
+        "https://arxiv.org/abs/2501.06425",
+        "https://arxiv.org/abs/2512.19428",
+        "https://arxiv.org/",
+        "https://arxiv.org/html/1706.03762v7",
+        "https://arxiv.org/abs/2103.03404"
+      ],
+      "bytes": 7530,
+      "unresponsive": 34
+    },
+    {
+      "id": "en-bert",
+      "lang": "en",
+      "query": "bert pre-training arxiv",
+      "gold": [
+        "https://arxiv.org/abs/1810.04805"
+      ],
+      "category": "paper",
+      "rank": 6,
+      "millis": 1430.4631130071357,
+      "urls": [
+        "https://arxiv.org/pdf/1810.04805",
+        "https://arxiv.org/html/1810.04805v2",
+        "https://arxiv.org/abs/2111.07832v3",
+        "https://arxiv.org/abs/2111.07832v1",
+        "https://arxiv.org/abs/2111.04198v2",
+        "https://arxiv.org/abs/2111.12710",
+        "https://arxiv.org/abs/2111.07832v2",
+        "https://arxiv.org/abs/1906.08101",
+        "http://arxiv.org/abs/2004.07159",
+        "https://arxiv.org/abs/1810.04805"
+      ],
+      "bytes": 6904,
+      "unresponsive": 34
+    },
+    {
+      "id": "en-gpt3",
+      "lang": "en",
+      "query": "language models are few shot learners arxiv",
+      "gold": [
+        "https://arxiv.org/abs/2005.14165"
+      ],
+      "category": "paper",
+      "rank": 1,
+      "millis": 676.1620840115938,
+      "urls": [
+        "https://arxiv.org/abs/2005.14165",
+        "https://arxiv.org/abs/2109.07684",
+        "https://arxiv.org/abs/2005.14165v2",
+        "https://arxiv.org/abs/2005.14165v1",
+        "https://www.arxiv.org/pdf/2210.07128",
+        "https://arxiv.org/abs/2005.14165v4",
+        "https://arxiv.org/abs/2305.15525",
+        "https://arxiv.org/abs/2302.12692",
+        "https://arxiv.org/abs/2009.07118",
+        "https://arxiv.org/pdf/2005.14165"
+      ],
+      "bytes": 8663,
+      "unresponsive": 34
+    },
+    {
+      "id": "en-resnet",
+      "lang": "en",
+      "query": "deep residual learning arxiv",
+      "gold": [
+        "https://arxiv.org/abs/1512.03385"
+      ],
+      "category": "paper",
+      "rank": 1,
+      "millis": 815.8034649968613,
+      "urls": [
+        "http://arxiv.org/abs/1512.03385",
+        "https://arxiv.org/abs/2509.24732",
+        "https://arxiv.org/abs/2102.04159",
+        "http://arxiv.org/abs/1512.03385v1",
+        "https://arxiv.org/abs/1905.01072",
+        "https://arxiv.org/abs/1812.11690",
+        "https://arxiv.org/abs/2505.04397",
+        "https://arxiv.org/abs/1710.10361",
+        "https://arxiv.org/abs/2510.24036",
+        "https://arxiv.org/pdf/1512.03385"
+      ],
+      "bytes": 7843,
+      "unresponsive": 35
+    },
+    {
+      "id": "en-adam",
+      "lang": "en",
+      "query": "adam optimizer arxiv",
+      "gold": [
+        "https://arxiv.org/abs/1412.6980"
+      ],
+      "category": "paper",
+      "rank": 1,
+      "millis": 765.9397259994876,
+      "urls": [
+        "https://arxiv.org/abs/1412.6980",
+        "https://arxiv.org/abs/2409.03137",
+        "https://arxiv.org/abs/2402.01567",
+        "https://arxiv.org/abs/2407.21078",
+        "https://arxiv.org/abs/2405.12807",
+        "https://arxiv.org/abs/1804.10587",
+        "https://arxiv.org/abs/2111.08162",
+        "https://arxiv.org/abs/2210.11693",
+        "https://arxiv.org/abs/2403.13704",
+        "https://arxiv.org/pdf/1412.6980"
+      ],
+      "bytes": 7573,
+      "unresponsive": 34
+    },
+    {
+      "id": "en-rust-repo",
+      "lang": "en",
+      "query": "rust-lang rust github",
+      "gold": [
+        "https://github.com/rust-lang/rust"
+      ],
+      "category": "repo",
+      "rank": 1,
+      "millis": 915.7984360062983,
+      "urls": [
+        "http://github.com/rust-lang/rust",
+        "https://github.com/topics/rust",
+        "https://github.com/rust-lang/reference",
+        "https://github.com/rust-lang/book",
+        "https://github.com/",
+        "https://github.com/rust-lang",
+        "https://github.com/rust-lang/www.rust-lang.org",
+        "https://github.com/rust-lang/rustlings",
+        "https://github.com/rust-lang/rust-by-example",
+        "https://rust-lang.org/tools/install/"
+      ],
+      "bytes": 7893,
+      "unresponsive": 34
+    },
+    {
+      "id": "en-tokio-repo",
+      "lang": "en",
+      "query": "tokio-rs tokio github",
+      "gold": [
+        "https://github.com/tokio-rs/tokio"
+      ],
+      "category": "repo",
+      "rank": 1,
+      "millis": 664.7661649913061,
+      "urls": [
+        "http://github.com/tokio-rs/tokio",
+        "https://github.com/tokio-rs/tokio/releases",
+        "http://github.com/tokio-rs",
+        "http://github.com/topics/tokio-rs",
+        "https://github.com/tokio-rs/tokio-core",
+        "https://daily.dev/posts/github---tokio-rs-topcoat-a-batteries-included-framework-for-building-web-apps-vvuisd732",
+        "https://github.com/hghpublic/tokio-rs-tokio",
+        "https://slothies.neocities.org/feed/github.feed",
+        "https://github.com/tokio-rs/tokio-io",
+        "https://tokio.rs/"
+      ],
+      "bytes": 8653,
+      "unresponsive": 34
+    },
+    {
+      "id": "en-ripgrep",
+      "lang": "en",
+      "query": "burntsushi ripgrep github",
+      "gold": [
+        "https://github.com/BurntSushi/ripgrep"
+      ],
+      "category": "repo",
+      "rank": 1,
+      "millis": 623.9500709925778,
+      "urls": [
+        "https://github.com/BurntSushi/ripgrep",
+        "https://github.com/BurntSushi/ripgrep/releases",
+        "https://github.com/BurntSushi/ripgrep/discussions",
+        "https://burntsushi.net/ripgrep/",
+        "https://github.com/",
+        "https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md",
+        "https://github.com/BurntSushi/ripgrep/releases/tag/15.2.0",
+        "https://github.com/BurntSushi/ripgrep/blob/master/FAQ.md",
+        "https://github.com/behnam/rust-ripgrep",
+        "https://github.com/burntsushi/ripgrep"
+      ],
+      "bytes": 8389,
+      "unresponsive": 34
+    },
+    {
+      "id": "en-crates-serde",
+      "lang": "en",
+      "query": "crates.io serde crate",
+      "gold": [
+        "https://crates.io/crates/serde"
+      ],
+      "category": "repo",
+      "rank": 1,
+      "millis": 633.0567179829814,
+      "urls": [
+        "https://crates.io/crates/serde",
+        "https://crates.io/keywords/serde",
+        "https://crates.io/crates/serde_json",
+        "https://crates.io/crates/serde_with",
+        "https://crates.io/crates/serde-aux",
+        "https://crates.io/crates/serde_derive",
+        "https://crates.io/crates/serdeio",
+        "https://crates.io/crates/serde-generate",
+        "https://crates.io/crates/serde_core",
+        "https://crates.io/crates/Serde"
+      ],
+      "bytes": 7493,
+      "unresponsive": 35
+    },
+    {
+      "id": "en-npm-react",
+      "lang": "en",
+      "query": "npm react package",
+      "gold": [
+        "https://www.npmjs.com/package/react"
+      ],
+      "category": "repo",
+      "rank": 1,
+      "millis": 989.2943240120076,
+      "urls": [
+        "https://www.npmjs.com/package/react",
+        "https://blog.logrocket.com/the-complete-guide-to-publishing-a-react-package-to-npm/",
+        "https://wrappixel.com/blog/best-react-npm-packages",
+        "https://socket.dev/blog/npm-package-for-reext-react-components-library-exfiltrates-git-credentials",
+        "https://namastedev.com/blog/creating-your-first-npm-package-with-react-6/",
+        "https://daily.dev/posts/how-to-publish-a-react-component-as-a-package-to-npm-c7hgyqjld",
+        "https://stackoverflow.com/questions/52174779/how-can-i-simply-make-a-react-component-npm-package",
+        "https://www.npmjs.com/search?q=react",
+        "https://www.securityweek.com/critical-flaw-in-popular-react-native-npm-package-exposes-developers-to-attacks/",
+        "http://reactjs.org/concurrent"
+      ],
+      "bytes": 8406,
+      "unresponsive": 33
+    },
+    {
+      "id": "ja-fuji",
+      "lang": "ja",
+      "query": "富士山 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/富士山"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 0.96301399753429,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/富士山",
+        "https://en.wikipedia.org/wiki/Mount_Fuji",
+        "https://ja.wikipedia.org/wiki/東海道新幹線",
+        "https://ja.wikipedia.org/wiki/松尾芭蕉",
+        "https://ja.wikipedia.org/wiki/夏目漱石",
+        "https://ja.wikipedia.org/wiki/桃太郎",
+        "https://ja.wikipedia.org/wiki/着物",
+        "https://ja.wikipedia.org/wiki/東京駅",
+        "https://en.wikipedia.org/wiki/Roman_Empire",
+        "https://en.wikipedia.org/wiki/Photosynthesis"
+      ],
+      "bytes": 3316,
+      "unresponsive": 0
+    },
+    {
+      "id": "ja-genji",
+      "lang": "ja",
+      "query": "源氏物語 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/源氏物語"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 0.7835269789211452,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/源氏物語",
+        "https://ja.wikipedia.org/wiki/桃太郎",
+        "https://ja.wikipedia.org/wiki/夏目漱石",
+        "https://ja.wikipedia.org/wiki/富士山",
+        "https://ja.wikipedia.org/wiki/寿司",
+        "https://ja.wikipedia.org/wiki/着物",
+        "https://en.wikipedia.org/wiki/Roman_Empire",
+        "https://ja.wikipedia.org/wiki/松尾芭蕉",
+        "https://en.wikipedia.org/wiki/Tokyo",
+        "https://en.wikipedia.org/wiki/Albert_Einstein"
+      ],
+      "bytes": 3298,
+      "unresponsive": 0
+    },
+    {
+      "id": "ja-tokyo-station",
+      "lang": "ja",
+      "query": "東京駅 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/東京駅"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 0.7967000128701329,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/東京駅",
+        "https://ja.wikipedia.org/wiki/東海道新幹線",
+        "https://ja.wikipedia.org/wiki/夏目漱石",
+        "https://ja.wikipedia.org/wiki/松尾芭蕉",
+        "https://ja.wikipedia.org/wiki/寿司",
+        "https://en.wikipedia.org/wiki/Tokyo",
+        "https://ja.wikipedia.org/wiki/富士山",
+        "https://ja.wikipedia.org/wiki/桃太郎",
+        "https://ja.wikipedia.org/wiki/着物",
+        "https://en.wikipedia.org/wiki/Roman_Empire"
+      ],
+      "bytes": 3294,
+      "unresponsive": 0
+    },
+    {
+      "id": "ja-momotaro",
+      "lang": "ja",
+      "query": "桃太郎 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/桃太郎"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 0.8318769978359342,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/桃太郎",
+        "https://ja.wikipedia.org/wiki/夏目漱石",
+        "https://ja.wikipedia.org/wiki/松尾芭蕉",
+        "https://ja.wikipedia.org/wiki/源氏物語",
+        "https://ja.wikipedia.org/wiki/寿司",
+        "https://ja.wikipedia.org/wiki/富士山",
+        "https://ja.wikipedia.org/wiki/着物",
+        "https://en.wikipedia.org/wiki/Roman_Empire",
+        "https://en.wikipedia.org/wiki/Photosynthesis",
+        "https://en.wikipedia.org/wiki/Tokyo"
+      ],
+      "bytes": 3290,
+      "unresponsive": 0
+    },
+    {
+      "id": "ja-basho",
+      "lang": "ja",
+      "query": "松尾芭蕉 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/松尾芭蕉"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 0.764119002269581,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/松尾芭蕉",
+        "https://ja.wikipedia.org/wiki/着物",
+        "https://en.wikipedia.org/wiki/Roman_Empire",
+        "https://en.wikipedia.org/wiki/Photosynthesis",
+        "https://en.wikipedia.org/wiki/Tokyo",
+        "https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)",
+        "https://en.wikipedia.org/wiki/Transformer_(machine_learning_model)",
+        "https://en.wikipedia.org/wiki/Albert_Einstein",
+        "https://en.wikipedia.org/wiki/William_Shakespeare",
+        "https://en.wikipedia.org/wiki/Alan_Turing"
+      ],
+      "bytes": 3411,
+      "unresponsive": 0
+    },
+    {
+      "id": "ja-soseki",
+      "lang": "ja",
+      "query": "夏目漱石 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/夏目漱石"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 0.6788690225221217,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/夏目漱石",
+        "https://ja.wikipedia.org/wiki/源氏物語",
+        "https://ja.wikipedia.org/wiki/松尾芭蕉",
+        "https://ja.wikipedia.org/wiki/着物",
+        "https://ja.wikipedia.org/wiki/富士山",
+        "https://en.wikipedia.org/wiki/Roman_Empire",
+        "https://en.wikipedia.org/wiki/Photosynthesis",
+        "https://en.wikipedia.org/wiki/Tokyo",
+        "https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)",
+        "https://en.wikipedia.org/wiki/Transformer_(machine_learning_model)"
+      ],
+      "bytes": 3390,
+      "unresponsive": 0
+    },
+    {
+      "id": "ja-fuji-san",
+      "lang": "ja",
+      "query": "富士山 標高",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/富士山"
+      ],
+      "category": "wiki",
+      "rank": 2,
+      "millis": 1166.7255779902916,
+      "urls": [
+        "https://www.fujisan-net.jp/post_detail/2001073",
+        "https://ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E5%B1%B1",
+        "https://www.cbr.mlit.go.jp/fujisabo/oshirase/fujiazami/fujiazami_36/fujiazami_02.html",
+        "https://mtfuji-whc.jp/%E5%AF%8C%E5%A3%AB%E5%B1%B1%E4%B8%96%E7%95%8C%E9%81%BA%E7%94%A3%E3%82%B3%E3%83%A9%E3%83%A0%EF%BC%8847%E5%8F%B7%EF%BC%89/",
+        "https://outdoor50life.com/hiking/guide/fujisan-height-3776m-50s/",
+        "https://tenkura.n-kishou.co.jp/tk/kanko/kad.html?code=19150004&type=15",
+        "https://www.gsi.go.jp/WNEW/PRESS-RELEASE/keikaku61003.html",
+        "https://u2elab.com/2025/12/10/%E6%97%A5%E6%9C%AC%E4%B8%80%E9%AB%98%E3%81%84%E5%B1%B1%E3%80%81%E3%80%8E%E5%AF%8C%E5%A3%AB%E5%B1%B1%E3%80%8F%E3%81%AF%E4%B8%96%E7%95%8C%E3%81%A7%E8%A6%8B%E3%81%9F%E3%82%89%E4%BD%95%E4%BD%8D%EF%BC%9F/",
+        "https://ja-jp.topographic-map.com/map-tbqddn/%E5%AF%8C%E5%A3%AB%E5%B1%B1/",
+        "https://www.mitsubishielectric.co.jp/business/biz-t/contents/3min-column/column063.html"
+      ],
+      "bytes": 9839,
+      "unresponsive": 33
+    },
+    {
+      "id": "ja-tokaido",
+      "lang": "ja",
+      "query": "東海道新幹線 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/東海道新幹線"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 0.8120900020003319,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/東海道新幹線",
+        "https://ja.wikipedia.org/wiki/東京駅",
+        "https://ja.wikipedia.org/wiki/松尾芭蕉",
+        "https://ja.wikipedia.org/wiki/富士山",
+        "https://ja.wikipedia.org/wiki/寿司",
+        "https://ja.wikipedia.org/wiki/夏目漱石",
+        "https://ja.wikipedia.org/wiki/着物",
+        "https://en.wikipedia.org/wiki/Roman_Empire",
+        "https://en.wikipedia.org/wiki/Photosynthesis",
+        "https://en.wikipedia.org/wiki/Tokyo"
+      ],
+      "bytes": 3311,
+      "unresponsive": 0
+    },
+    {
+      "id": "ja-kimono",
+      "lang": "ja",
+      "query": "着物 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/着物"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 0.7341330056078732,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/着物",
+        "https://ja.wikipedia.org/wiki/源氏物語",
+        "https://ja.wikipedia.org/wiki/松尾芭蕉",
+        "https://ja.wikipedia.org/wiki/富士山",
+        "https://ja.wikipedia.org/wiki/寿司",
+        "https://en.wikipedia.org/wiki/Roman_Empire",
+        "https://en.wikipedia.org/wiki/Photosynthesis",
+        "https://en.wikipedia.org/wiki/Tokyo",
+        "https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)",
+        "https://en.wikipedia.org/wiki/Transformer_(machine_learning_model)"
+      ],
+      "bytes": 3374,
+      "unresponsive": 0
+    },
+    {
+      "id": "ja-sushi",
+      "lang": "ja",
+      "query": "寿司 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/寿司"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 0.7456849853042513,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/寿司",
+        "https://ja.wikipedia.org/wiki/東京駅",
+        "https://ja.wikipedia.org/wiki/着物",
+        "https://ja.wikipedia.org/wiki/松尾芭蕉",
+        "https://en.wikipedia.org/wiki/Roman_Empire",
+        "https://en.wikipedia.org/wiki/Photosynthesis",
+        "https://en.wikipedia.org/wiki/Tokyo",
+        "https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)",
+        "https://en.wikipedia.org/wiki/Transformer_(machine_learning_model)",
+        "https://en.wikipedia.org/wiki/Albert_Einstein"
+      ],
+      "bytes": 3377,
+      "unresponsive": 0
+    },
+    {
+      "id": "ja-py-doc",
+      "lang": "ja",
+      "query": "python 入門 公式",
+      "gold": [
+        "https://docs.python.org/ja/3/tutorial"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1454.5813200238626,
+      "urls": [
+        "https://docs.python.org/ja/3/tutorial/",
+        "https://www.python.jp/train/index.html",
+        "https://docs.python.org/ja/3/tutorial/index.html",
+        "https://labmemo.com/python-beginner-introduction-guide/",
+        "https://programming-mondai.com/top/python_top/",
+        "https://www.jikkyo.co.jp/book/detail/22510044/",
+        "https://paiza.jp/works/python3/primer/beginner-python1",
+        "https://www.kikagaku.co.jp/personal/blog/python-roadmap",
+        "https://udemy.benesse.co.jp/development/python-basic.html",
+        "https://docs.python.org/zh-cn/3/tutorial"
+      ],
+      "bytes": 10431,
+      "unresponsive": 34
+    },
+    {
+      "id": "ja-py-lib",
+      "lang": "ja",
+      "query": "python 標準ライブラリ 日本語",
+      "gold": [
+        "https://docs.python.org/ja/3/library"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 753.633041982539,
+      "urls": [
+        "https://docs.python.org/ja/3/library/index.html",
+        "https://docs.python.org/ja/3.13/library/index.html",
+        "https://docs.python.org/ja/3/library/",
+        "https://docs.python.org/ja/3.14/library/index.html",
+        "https://docs.python.org/ja/3.15/library/index.html",
+        "https://docs.python.org/ja/3.11/library/index.html",
+        "https://docs.python.org/ja/3.12/library/index.html",
+        "https://docs.python.org/ja/dev/library/index.html",
+        "https://qiita.com/e10persona/items/fddc795e70a05f3bc907",
+        "https://docs.python.org/ja/3.10/library/index.html"
+      ],
+      "bytes": 15450,
+      "unresponsive": 33
+    },
+    {
+      "id": "ja-rs-doc",
+      "lang": "ja",
+      "query": "rust プログラミング言語 公式",
+      "gold": [
+        "https://rust-lang.org/ja",
+        "https://www.rust-lang.org/ja",
+        "https://doc.rust-lang.org/ja",
+        "https://rust-jp.rs",
+        "https://doc.rust-lang.org/book/"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 0.8268379897344857,
+      "urls": [
+        "https://www.rust-lang.org/ja/",
+        "https://rust-jp.rs/",
+        "https://ja.wikipedia.org/wiki/富士山",
+        "https://ja.wikipedia.org/wiki/桃太郎",
+        "https://ja.wikipedia.org/wiki/東京駅",
+        "https://ja.wikipedia.org/wiki/東海道新幹線",
+        "https://ja.wikipedia.org/wiki/源氏物語",
+        "https://ja.wikipedia.org/wiki/着物",
+        "https://ja.wikipedia.org/wiki/夏目漱石",
+        "https://ja.wikipedia.org/wiki/寿司"
+      ],
+      "bytes": 3290,
+      "unresponsive": 0
+    },
+    {
+      "id": "ja-rs-book",
+      "lang": "ja",
+      "query": "rust 日本語 ドキュメント",
+      "gold": [
+        "https://doc.rust-lang.org/book/",
+        "https://rust-lang.org/ja",
+        "https://www.rust-lang.org/ja",
+        "https://rust-jp.rs"
+      ],
+      "category": "doc",
+      "rank": 10,
+      "millis": 2003.117429005215,
+      "urls": [
+        "https://doc.rust-jp.rs/",
+        "https://doc.rust-lang.org/rust-by-example/ja/index.html",
+        "https://zenn.dev/dalance/articles/ddf8b8309629e9",
+        "https://doc.rust-lang.org/",
+        "https://rust-lang.org/en-US/",
+        "https://products.aspose.ai/total/ja/ai-code-analysis/rust",
+        "https://rustdesk.com/ko/",
+        "https://memo.koralle-mgmg.com/rust/reference-docs/",
+        "https://grokipedia.com/page/_nihongo_bungei_jiten_(book)",
+        "https://rust-lang.org/ja/learn/"
+      ],
+      "bytes": 13592,
+      "unresponsive": 34
+    },
+    {
+      "id": "ja-mdn",
+      "lang": "ja",
+      "query": "mdn javascript 配列",
+      "gold": [
+        "https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Array"
+      ],
+      "category": "doc",
+      "rank": null,
+      "millis": 0.7028139953035861,
+      "urls": [
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+        "https://developer.mozilla.org/en-US/",
+        "https://developer.mozilla.org/en-US/docs/Web/HTML",
+        "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes",
+        "https://developer.mozilla.org/en-US/docs/Web/HTML/Guides/Responsive_images",
+        "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes",
+        "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference",
+        "https://react.dev/learn",
+        "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements",
+        "https://docs.python.org/3/library/http.cookies.html"
+      ],
+      "bytes": 3571,
+      "unresponsive": 0
+    },
+    {
+      "id": "ja-nginx",
+      "lang": "ja",
+      "query": "nginx 設定 ドキュメント",
+      "gold": [
+        "https://nginx.org/en/docs"
+      ],
+      "category": "doc",
+      "rank": 2,
+      "millis": 982.9556030163076,
+      "urls": [
+        "https://nginx.org/en/",
+        "https://nginx.org/en/docs/http/request_processing.html",
+        "https://nginx.org/",
+        "https://nginx.org/en/download.html",
+        "https://qiita.com/panda-chibi/items/628c46e4fed414cc61ed",
+        "https://10-5.jp/blog-tenfive/3947/",
+        "https://shibuya24.info/entry/nginx/documentroot",
+        "https://blog.cloudsmith.co.jp/2022/02/546/",
+        "https://qiita.com/ponponnsan/items/23e1aa6f7dd4eadde5df",
+        "https://engineering.mercari.com/blog/entry/2017-09-11-150000/"
+      ],
+      "bytes": 9487,
+      "unresponsive": 33
+    },
+    {
+      "id": "ja-docker",
+      "lang": "ja",
+      "query": "docker compose ファイル リファレンス",
+      "gold": [
+        "https://docs.docker.com/reference/compose-file"
+      ],
+      "category": "doc",
+      "rank": 3,
+      "millis": 625.1136640203185,
+      "urls": [
+        "https://docs.docker.com/compose",
+        "https://docs.docker.com/compose/intro/compose-application-model",
+        "https://docs.docker.com/reference/compose-file/",
+        "https://docs.docker.jp/compose/compose-file/compose-file-v3.html",
+        "https://docs.docker.com/desktop/setup/install/windows-install/",
+        "https://docs.docker.com/engine/install/",
+        "https://www.docker.com/products/docker-desktop/",
+        "https://docs.docker.jp/v1.12/compose/compose-file.html",
+        "https://www.docker.com/",
+        "https://matsuand.github.io/docs.docker.jp.onthefly/compose/compose-file/compose-file-v3/"
+      ],
+      "bytes": 8138,
+      "unresponsive": 33
+    },
+    {
+      "id": "ja-jma",
+      "lang": "ja",
+      "query": "気象庁 天気予報",
+      "gold": [
+        "https://www.jma.go.jp"
+      ],
+      "category": "official",
+      "rank": 1,
+      "millis": 1146.7006230086554,
+      "urls": [
+        "https://www.jma.go.jp/bosai/forecast/",
+        "https://www.jma.go.jp/jma/index.html",
+        "https://www.jma.go.jp/bosai/map.html#9/34.726/135.455/&contents=forecast",
+        "https://www.jma.go.jp/jma/kishou/know/kurashi/shukan.html",
+        "https://www.jma.go.jp/jma/kishou/know/kurashi/yoho.html",
+        "https://www.jma.go.jp/bosai/weather_map/",
+        "https://www.jma.go.jp/bosai/kaikotan/",
+        "https://www.jma.go.jp/bosai/wdist/timeseries.html",
+        "https://www.jma.go.jp/jma/menu/bunyatenki.html",
+        "https://www.jma.go.jp/bosai/numericmap/"
+      ],
+      "bytes": 7473,
+      "unresponsive": 33
+    },
+    {
+      "id": "ja-ndl",
+      "lang": "ja",
+      "query": "国立国会図書館 サーチ",
+      "gold": [
+        "https://ndlsearch.ndl.go.jp"
+      ],
+      "category": "official",
+      "rank": 1,
+      "millis": 809.2930300044827,
+      "urls": [
+        "https://ndlsearch.ndl.go.jp/",
+        "https://ndlsearch.ndl.go.jp/help/api/oai_pmh",
+        "https://ndlsearch.ndl.go.jp/help/contact",
+        "https://ndlsearch.ndl.go.jp/help/about",
+        "http://ndlsearch.ndl.go.jp/renkei",
+        "https://ndlsearch.ndl.go.jp/bib/ndlcat",
+        "http://ndlsearch.ndl.go.jp/renkei/info",
+        "https://www.ndl.go.jp/jp/use/service/index.html",
+        "https://www.ndl.go.jp/use/service",
+        "https://dl.ndl.go.jp/"
+      ],
+      "bytes": 8848,
+      "unresponsive": 34
+    },
+    {
+      "id": "ja-tokyo-tourism",
+      "lang": "ja",
+      "query": "東京 観光 公式",
+      "gold": [
+        "https://www.gotokyo.org"
+      ],
+      "category": "official",
+      "rank": 1,
+      "millis": 1609.0695410093758,
+      "urls": [
+        "https://www.gotokyo.org/jp/index.html",
+        "https://www.tcvb.or.jp/jp/project/hasshin/welcome/",
+        "https://www.metro.tokyo.lg.jp/kyoiku/kanko/kanko",
+        "https://www.gotokyo.org/en/index.html",
+        "https://x.com/tokyo_kankou",
+        "https://www.gotokyo.org/jp/plan/tourist-info-center/index.html",
+        "https://www.gotokyo.org/jp/destinations/index.html",
+        "https://www.gotokyo.org/jp/see-and-do/attractions/index.html",
+        "https://www.tickets.gotokyo.org/jp/",
+        "https://www.metro.tokyo.lg.jp/information/press/2025/03/2025031102"
+      ],
+      "bytes": 9484,
+      "unresponsive": 33
+    },
+    {
+      "id": "ja-jr",
+      "lang": "ja",
+      "query": "JR東日本 時刻表",
+      "gold": [
+        "https://www.jreast.co.jp"
+      ],
+      "category": "official",
+      "rank": 2,
+      "millis": 1019.3074769922532,
+      "urls": [
+        "https://timetables.jreast.co.jp/",
+        "https://www.jreast.co.jp/en/railway/",
+        "https://www.jreast.co.jp/en/",
+        "https://ekitan.com/transit/railway/company/2",
+        "https://timetables.jreast.co.jp/timetable/list1039.html",
+        "https://timetables.jreast.co.jp/timetable/list0204.html",
+        "https://timetables.jreast.co.jp/2611/timetable-v/003d1.html",
+        "https://timetables.jreast.co.jp/2610/timetable/tt1039/1039020.html",
+        "https://timetables.jreast.co.jp/2611/timetable-v/001d1.html",
+        "https://www.jreast.co.jp/"
+      ],
+      "bytes": 7353,
+      "unresponsive": 33
+    },
+    {
+      "id": "ja-gsi",
+      "lang": "ja",
+      "query": "国土地理院 地図",
+      "gold": [
+        "https://www.gsi.go.jp",
+        "https://maps.gsi.go.jp"
+      ],
+      "category": "official",
+      "rank": 1,
+      "millis": 1143.404824018944,
+      "urls": [
+        "https://maps.gsi.go.jp/",
+        "https://www.gsi.go.jp/tizu-kutyu.html",
+        "https://gsi-cyberjapan.github.io/gsimaps_180308/",
+        "https://www.gsi.go.jp/kibanjoho/mapinfo_what.html",
+        "http://www.gsi.go.jp/kiban/",
+        "https://www.gsi.go.jp/",
+        "https://maps.gsi.go.jp/help/intro/municipality/renkei.html",
+        "https://www.gsi.go.jp/riyousya01.html",
+        "https://www.gsi.go.jp/MAP/maps_photo.html",
+        "https://www.youtube.com/"
+      ],
+      "bytes": 7818,
+      "unresponsive": 33
+    },
+    {
+      "id": "ja-e-gov",
+      "lang": "ja",
+      "query": "e-Gov 法令検索",
+      "gold": [
+        "https://elaws.e-gov.go.jp"
+      ],
+      "category": "official",
+      "rank": 2,
+      "millis": 764.4151140120812,
+      "urls": [
+        "https://laws.e-gov.go.jp/",
+        "http://elaws.e-gov.go.jp/",
+        "https://www.e-gov.go.jp/",
+        "https://elaws.e-gov.go.jp/document?lawid=322AC0000000067_20230301_504AC1000000101",
+        "https://www.e-gov.go.jp/laws-and-secure-life",
+        "https://e-gov.go.jp",
+        "https://e-gov.go.jp/en",
+        "https://e-gov.go.jp/en/666.html",
+        "https://www.e-gov.go.jp/en",
+        "https://ja.wikipedia.org/wiki/E-Gov%E6%B3%95%E4%BB%A4%E6%A4%9C%E7%B4%A2"
+      ],
+      "bytes": 7432,
+      "unresponsive": 34
+    },
+    {
+      "id": "ja-python-org",
+      "lang": "ja",
+      "query": "python japan ユーザー会",
+      "gold": [
+        "https://www.python.jp"
+      ],
+      "category": "official",
+      "rank": 1,
+      "millis": 604.8324659932405,
+      "urls": [
+        "https://www.python.jp/pages/community.html",
+        "https://www.python.org/events/python-events/1888/",
+        "https://ascii.jp/elem/000/000/326/326493/",
+        "https://www.pycon.jp/committee/",
+        "https://news.mynavi.jp/techplus/article/20221007-2475021/",
+        "https://laurus.neocities.org/bookmark20131211",
+        "https://x.com/python_japan",
+        "https://www.python.jp/index.html",
+        "https://www.python.jp/",
+        "https://pentan.info/else/user_group.html"
+      ],
+      "bytes": 7804,
+      "unresponsive": 33
+    },
+    {
+      "id": "ja-rust-jp",
+      "lang": "ja",
+      "query": "rust japan ユーザー会",
+      "gold": [
+        "https://rust-jp.rs",
+        "https://www.rust-lang.org/ja"
+      ],
+      "category": "official",
+      "rank": 7,
+      "millis": 633.0519289767835,
+      "urls": [
+        "https://rust-lang.org/ja/community/",
+        "https://steamcommunity.com/groups/RUST-JAPAN",
+        "https://x.com/rustjapanwiki",
+        "https://steamcommunity.com/groups/RustJapanCommunity",
+        "https://steamcommunity.com/groups/rust_jp",
+        "https://rust-lang.org/ja/",
+        "https://rust-jp.rs/",
+        "https://tokyorust.org/",
+        "https://allegro.cz/produkt/barva-ve-spreji-na-rez-4v1-deco-color-rust-blocker-bila-ral-9010-400-ml-ff21740b-1e69-4aaa-a909-7f703edc505d",
+        "https://grokipedia.com/page/Rust"
+      ],
+      "bytes": 9338,
+      "unresponsive": 33
+    },
+    {
+      "id": "ja-rust-crate",
+      "lang": "ja",
+      "query": "rust crates.io 使い方",
+      "gold": [
+        "https://crates.io",
+        "https://lib.rs",
+        "https://doc.rust-lang.org/cargo/"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 658.1455520063173,
+      "urls": [
+        "https://crates.io/crates/creo-ui",
+        "https://crates.io/crates/sakura-ai-rs/0.1.2",
+        "https://docs.rs/crates_io_api",
+        "https://crates.io/crates/NAME",
+        "https://crates.io/me",
+        "https://qiita.com/nemutas/items/27aed12959fc1035029d",
+        "https://doc.rust-jp.rs/book-ja/ch14-00-more-about-cargo.html",
+        "https://blog.rust-lang.org/inside-rust/2020/02/26/crates-io-incident-report/",
+        "https://blog.rust-lang.org/2025/02/05/crates-io-development-update/",
+        "https://crates.io/"
+      ],
+      "bytes": 12085,
+      "unresponsive": 34
+    },
+    {
+      "id": "ja-git-doc",
+      "lang": "ja",
+      "query": "git rebase 使い方 公式",
+      "gold": [
+        "https://git-scm.com/docs/git-rebase"
+      ],
+      "category": "doc",
+      "rank": 2,
+      "millis": 1415.983345999848,
+      "urls": [
+        "https://git-scm.com/book/ja/v2/Git-%E3%81%AE%E3%83%96%E3%83%A9%E3%83%B3%E3%83%81%E6%A9%9F%E8%83%BD-%E3%83%AA%E3%83%99%E3%83%BC%E3%82%B9",
+        "https://git-scm.com/docs/git-rebase/fr",
+        "https://git-scm.com/docs/git-rebase",
+        "https://git-scm.com/",
+        "https://git-scm.com/book/en/v2/Git-Branching-Rebasing",
+        "https://git-scm.com/install/",
+        "https://transitive.info/article/git/command/rebase/",
+        "https://zenn.dev/divsawa/articles/20261017_teaching-github-rebase",
+        "https://qiita.com/softbase/items/42b364a49f4499fb15aa",
+        "https://envader.plus/article/549"
+      ],
+      "bytes": 15079,
+      "unresponsive": 33
+    },
+    {
+      "id": "ja-sql",
+      "lang": "ja",
+      "query": "postgresql 日本語 ドキュメント",
+      "gold": [
+        "https://www.postgresql.jp/document",
+        "https://www.postgresql.org/docs"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1106.8324349762406,
+      "urls": [
+        "https://www.postgresql.jp/document/",
+        "https://www.postgresql.org/",
+        "https://www.postgresql.org/docs/",
+        "https://www.postgresql.org/download/",
+        "https://postgresql.org/docs/current/tutorial.html",
+        "https://postgresql.org/docs/current/sql-syntax.html",
+        "https://postgresql.org/docs/current/indexes.html",
+        "https://postgresql.org/docs/16/textsearch.html",
+        "https://www.postgresql.jp/docupage",
+        "https://pgsql-jp.github.io/current/html/"
+      ],
+      "bytes": 8898,
+      "unresponsive": 33
+    },
+    {
+      "id": "ja-linux",
+      "lang": "ja",
+      "query": "linux kernel ドキュメント",
+      "gold": [
+        "https://docs.kernel.org"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 782.8064810018986,
+      "urls": [
+        "https://docs.kernel.org/",
+        "https://www.kernel.org/",
+        "https://docs.kernel.org/translations/ja_JP/index.html",
+        "https://www.kernel.org/doc/html/v4.13/translations/ja_JP/howto.html",
+        "https://www.kernel.org/doc/",
+        "https://kernel.org/pub/linux/kernel/v6.x",
+        "https://www.kernel.org/doc/Documentation/",
+        "http://openwrt.org/ja/docs/start",
+        "https://lipoyang.hatenablog.com/entry/2024/05/22/130708",
+        "https://github.com/torvalds/linux"
+      ],
+      "bytes": 8134,
+      "unresponsive": 33
+    },
+    {
+      "id": "ja-aws",
+      "lang": "ja",
+      "query": "aws ec2 ドキュメント",
+      "gold": [
+        "https://docs.aws.amazon.com",
+        "https://aws.amazon.com/jp/documentation"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 612.6525680010673,
+      "urls": [
+        "https://docs.aws.amazon.com/ja_jp/ec2/?icmpid=docs_homepage_compute",
+        "https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/instance-identity-documents.html",
+        "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html",
+        "http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-ug.pdf",
+        "https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/DocumentHistory.html",
+        "https://docs.aws.amazon.com/ja_jp/",
+        "https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/concepts.html",
+        "https://docs.aws.amazon.com/de_de/AWSEC2/latest/UserGuide/ec2-ug.pdf",
+        "https://docs.aws.amazon.com/fr_fr/ec2/latest/devguide/ec2-dg.pdf",
+        "https://docs.aws.amazon.com/pdfs/ec2/latest/devguide/ec2-dg.pdf"
+      ],
+      "bytes": 12815,
+      "unresponsive": 33
+    },
+    {
+      "id": "ja-gcp",
+      "lang": "ja",
+      "query": "google cloud ドキュメント",
+      "gold": [
+        "https://cloud.google.com/docs"
+      ],
+      "category": "doc",
+      "rank": 8,
+      "millis": 606.1910550051834,
+      "urls": [
+        "http://cloud.google.com",
+        "https://cloud.google.com/blog/ja/topics/developers-practitioners/tips-get-most-out-google-cloud-documentation?hl=ja",
+        "https://cloud.google.com/vision/on-prem?hl=ja",
+        "https://cloud.google.com/dataproc/docs?hl=ja",
+        "https://cloud.google.com/appengine/docs?hl=ja",
+        "https://cloud.google.com/sql/docs?hl=ja",
+        "https://cloud.google.com/pubsub/docs?hl=ja",
+        "https://cloud.google.com/docs/buildpacks?hl=ja",
+        "https://cloud.google.com/docs?hl=ja",
+        "https://cloud.google.com/speech/docs/?hl=ja"
+      ],
+      "bytes": 6614,
+      "unresponsive": 33
+    },
+    {
+      "id": "ja-mdn-js",
+      "lang": "ja",
+      "query": "mdn javascript 入門",
+      "gold": [
+        "https://developer.mozilla.org/ja/docs/Web/JavaScript"
+      ],
+      "category": "doc",
+      "rank": null,
+      "millis": 0.7783359906170517,
+      "urls": [
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+        "https://developer.mozilla.org/en-US/",
+        "https://developer.mozilla.org/en-US/docs/Web/HTML",
+        "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes",
+        "https://developer.mozilla.org/en-US/docs/Web/HTML/Guides/Responsive_images",
+        "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes",
+        "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference",
+        "https://react.dev/learn",
+        "https://www.rust-lang.org/ja/",
+        "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements"
+      ],
+      "bytes": 3509,
+      "unresponsive": 0
+    },
+    {
+      "id": "ja-react",
+      "lang": "ja",
+      "query": "react 公式 ドキュメント",
+      "gold": [
+        "https://ja.react.dev",
+        "https://react.dev"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1475.7831329770852,
+      "urls": [
+        "https://react.dev/",
+        "https://ja.react.dev/reference/react",
+        "https://react.dev/learn",
+        "https://zenn.dev/zozotech/articles/fb431de6c8e0c8",
+        "https://note.com/pansansui/n/na51f8fd00ec4",
+        "https://dackdive.hateblo.jp/entry/2022/10/04/114019",
+        "https://zenn.dev/nakaakist/scraps/580ed1b8e1c8ac",
+        "https://www.ey-office.com/blog_archive/2023/03/28/reacts-new-documentation-react-dev-is-highly-anticipated/",
+        "https://note.com/ntom_tech/n/n75fda2ab1b3a",
+        "https://ja.react.dev/learn"
+      ],
+      "bytes": 13607,
+      "unresponsive": 33
+    },
+    {
+      "id": "ja-docker-hub",
+      "lang": "ja",
+      "query": "docker hub 公式",
+      "gold": [
+        "https://hub.docker.com"
+      ],
+      "category": "official",
+      "rank": 1,
+      "millis": 975.5458949948661,
+      "urls": [
+        "https://hub.docker.com/",
+        "https://matsuand.github.io/docs.docker.jp.onthefly/docker-hub/official_images/",
+        "https://matsuand.github.io/docs.docker.jp.onthefly/docker-hub/",
+        "https://hub.docker.com/search?type=image&q=",
+        "https://www.docker.com/",
+        "https://www.docker.com/ja-jp/products/docker-hub/",
+        "https://grokipedia.com/page/Docker_Hub",
+        "https://grokipedia.com/page/Alibaba_Cloud_Docker_Hub_Mirror_Tokyo",
+        "https://www.kagoya.jp/howto/cloud/container/dockerhub/",
+        "https://docs.docker.com/docker-hub/quickstart"
+      ],
+      "bytes": 7841,
+      "unresponsive": 34
+    },
+    {
+      "id": "ja-npm",
+      "lang": "ja",
+      "query": "npm 公式 パッケージ",
+      "gold": [
+        "https://www.npmjs.com"
+      ],
+      "category": "official",
+      "rank": 1,
+      "millis": 1099.1644489986356,
+      "urls": [
+        "https://www.npmjs.com/",
+        "https://npmjs.com/package/npm",
+        "https://npmjs.com/package/express",
+        "https://www.npmjs.com/package/npm",
+        "https://npmjs.com/package/zod",
+        "https://npmjs.com/package/latest-version",
+        "https://techmania.jp/blog/nodejs-npm/",
+        "https://www.uxpin.com/studio/jp/blog-jp/what-is-npm-ja/",
+        "https://zenn.dev/yuichi_ai/books/package-manager-from-scratch/viewer/02-npm-registry-protocol",
+        "https://ja.wikipedia.org/wiki/Npm_(%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8%E7%AE%A1%E7%90%86%E3%83%84%E3%83%BC%E3%83%AB)"
+      ],
+      "bytes": 9395,
+      "unresponsive": 33
+    }
+  ]
+}

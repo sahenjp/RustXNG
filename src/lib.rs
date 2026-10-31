@@ -34,6 +34,7 @@ pub mod engines;
 pub mod external_bangs;
 pub mod i18n;
 pub mod locales;
+pub mod localindex;
 pub mod metrics;
 pub mod network;
 pub mod plugins;

@@ -345,6 +345,15 @@ pub struct Search {
     /// Empty disables semantic re-ranking.
     pub embedding_url: String,
     pub embedding_model: String,
+    /// Directory of the local BM25 index. Empty disables it.
+    pub local_index_path: String,
+    /// Answer straight from the local index when it returns at least this many
+    /// hits. 0 disables the fast path (the index is then only an extra source).
+    pub local_index_min_hits: usize,
+    /// Minimum BM25 score for the top local hit before the fast path answers.
+    pub local_index_min_score: f64,
+    /// Minimum relevance of the top local hit before the fast path answers.
+    pub local_index_min_relevance: f64,
     /// Longest page text returned per result by include_raw_content.
     pub raw_content_chars: usize,
     /// How many extra result pages of the paging engines to merge into the
@@ -404,6 +413,10 @@ impl Default for Search {
             relevance_weight: 4.0,
             embedding_url: String::new(),
             embedding_model: "BAAI/bge-small-en-v1.5".into(),
+            local_index_path: String::new(),
+            local_index_min_hits: 3,
+            local_index_min_score: 6.0,
+            local_index_min_relevance: 0.75,
             raw_content_chars: 8_000,
             deep_pages: 0,
             site_scoped_retry: false,

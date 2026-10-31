@@ -25,6 +25,10 @@ safe_search = 0
 autocomplete = "duckduckgo"
 autocomplete_min = 4
 default_lang = "auto"
+# 自前の BM25 インデックス（tools: rustxng-index で構築）。空なら無効。
+local_index_path = ""
+# ローカルインデックスがこの件数以上返したら、上流へ投げずに即答する（0 で無効）
+local_index_min_hits = 3
 ban_time_on_fail = 5
 max_ban_time_on_fail = 120
 max_page = 0
