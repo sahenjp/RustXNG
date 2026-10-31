@@ -41,3 +41,24 @@ Third party crates
 The Rust dependencies (axum, tokio, reqwest, serde, scraper, askama, ...) keep
 their own licences (MIT / Apache-2.0 or similar); see \`Cargo.lock\` and the
 respective crate repositories.
+
+Third-party crates
+------------------
+  Dependencies are permissive (MIT / Apache-2.0 / BSD / ISC / Zlib / Unicode).
+  Four transitive crates from the HTML/CSS stack are MPL-2.0 (file-level
+  copyleft, compatible with AGPL-3.0-or-later):
+
+    cssparser 0.31.2, cssparser-macros 0.6.1, dtoa-short 0.3.5, selectors 0.25.0
+
+  They are used unmodified through scraper; no files of these crates are
+  changed here, so no additional source-offer obligation arises from them.
+
+Using RustXNG from an MIT/Apache project
+----------------------------------------
+  RustXNG is AGPL-3.0-or-later, so code that links it inherits AGPL.
+  Running it as a separate program (spawning the binary, or talking to its
+  HTTP API on 127.0.0.1) keeps the caller under its own licence; this is how
+  rustdsh (MIT) integrates it.
+
+  AGPL section 13: if you run a modified RustXNG as a network service, users
+  interacting with it must be offered the corresponding source.
