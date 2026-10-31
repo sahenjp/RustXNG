@@ -162,6 +162,21 @@ impl LocalIndex {
         self.reader.searcher().num_docs()
     }
 
+    /// Whether this URL is already indexed (committed documents only).
+    /// Lets a later crawl continue where the previous one stopped instead of
+    /// indexing the same pages twice.
+    pub fn has_url(&self, url: &str) -> bool {
+        let searcher = self.reader.searcher();
+        let query = TermQuery::new(
+            Term::from_field_text(self.fields.url, url),
+            IndexRecordOption::Basic,
+        );
+        searcher
+            .search(&query, &TopDocs::with_limit(1).order_by_score())
+            .map(|hits| !hits.is_empty())
+            .unwrap_or(false)
+    }
+
     /// Add one page. The caller decides when to commit.
     pub fn add(&self, page: &Page<'_>) -> Result<(), String> {
         let writer = self.writer.as_ref().ok_or("index opened read-only")?;

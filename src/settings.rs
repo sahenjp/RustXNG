@@ -354,7 +354,8 @@ pub struct Search {
     /// Empty disables semantic re-ranking.
     pub embedding_url: String,
     pub embedding_model: String,
-    /// Directory of the local BM25 index. When it exists its hits are merged
+    /// EXPERIMENTAL: directory of the local BM25 index. Empty (the default)
+    /// keeps the feature off. When a directory is set its hits are merged
     /// into the upstream results.
     pub local_index_path: String,
     /// Set false to keep the index on disk but out of the ranking.
@@ -420,7 +421,7 @@ impl Default for Search {
             relevance_weight: 4.0,
             embedding_url: String::new(),
             embedding_model: "BAAI/bge-small-en-v1.5".into(),
-            local_index_path: "index-data".to_string(),
+            local_index_path: String::new(),
             local_index_merge: true,
             raw_content_chars: 8_000,
             deep_pages: 0,

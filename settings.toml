@@ -29,9 +29,11 @@ safe_search = 0
 autocomplete = "duckduckgo"
 autocomplete_min = 4
 default_lang = "auto"
-# 自前の BM25 インデックス（rustxng-index で構築）。ディレクトリが無ければ無効。
-# 既定の index-data/ に置けば、追加設定なしで併用される。
-local_index_path = "index-data"
+# --- 実験機能（既定オフ）---
+# 自前の BM25 インデックス（rustxng-index で構築）。空なら無効。
+# 有効にするとローカルのヒットが上流の結果に足され、精度が上がる代わりに
+# クロールとインデックス管理が必要になる。
+local_index_path = ""
 # インデックスのヒットを上流の結果に足す（精度が上がる）
 local_index_merge = true
 

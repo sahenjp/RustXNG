@@ -17,7 +17,7 @@ Google・Bing・Wikipedia・GitHub など **200 以上の検索サイトをま�
 - **プライバシー** — 画像や favicon はプロキシ経由で表示し、利用者の IP を相手サイトに見せない
 - **運用向けの機能** — 検索候補、設定画面、統計画面、ヘルスチェック、メトリクス出力、Valkey / Redis 共有キャッシュ、bot 対策のレート制限
 - **自分のデータも検索** — PostgreSQL / MySQL / MariaDB / MongoDB / SQLite / Valkey / Elasticsearch / Solr / Meilisearch を検索対象にできる
-- **自前インデックス** — 自分でクロールしたページを BM25 で索引し、上流の結果に併合できる（既定で有効、`index-data/` を置くだけ）
+- **自前インデックス（実験機能・既定オフ）** — 自分でクロールしたページを BM25 で索引し、上流の結果に併合できる。`local_index_path` を設定したときだけ動く
 - **rdsh から直接使える** — 既定ポート 8888 が rdsh の探索先と一致。`rdsh search-web --engine rustxng` でそのまま動く
 
 ## 使い方
@@ -229,7 +229,7 @@ cargo test          # 735 件、外部ネットワーク不要
 | [docs/COVERAGE.md](docs/COVERAGE.md) | 対応している検索サイトの一覧 |
 | [docs/PORTING.md](docs/PORTING.md) | 内部構造と設定の詳細 |
 | [docs/BENCHMARK.md](docs/BENCHMARK.md) | 速度の測り方と実測値 |
-| [docs/LOCAL-INDEX.md](docs/LOCAL-INDEX.md) | 自前インデックス（クロールと BM25 併合） |
+| [docs/LOCAL-INDEX.md](docs/LOCAL-INDEX.md) | 自前インデックス（実験機能・クロールと BM25 併合） |
 | [docs/RDSH.md](docs/RDSH.md) | rdsh からの使い方 |
 | [SECURITY.md](SECURITY.md) | 脆弱性スキャンの結果と既知の注意点 |
 

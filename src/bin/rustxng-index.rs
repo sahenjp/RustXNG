@@ -5,6 +5,7 @@
 //!   rustxng-index stats --index ./index-data
 
 use std::collections::{HashMap, HashSet, VecDeque};
+use std::io::Write;
 use std::path::PathBuf;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::{Arc, Mutex};
@@ -198,9 +199,11 @@ fn disallowed_paths(robots: &str) -> Vec<String> {
     let mut applies = false;
     for line in robots.lines() {
         let line = line.split('#').next().unwrap_or("").trim();
-        if line.len() > 12 && line[..12].eq_ignore_ascii_case("user-agent: ") {
-            let agent = line[12..].trim();
-            applies = agent == "*";
+        // Slice by chars, not bytes: robots.txt can hold Japanese comments and
+        // a byte offset would panic in the middle of a character.
+        let lowered = line.to_ascii_lowercase();
+        if let Some(agent) = lowered.strip_prefix("user-agent:") {
+            applies = agent.trim() == "*";
         } else if applies {
             if let Some(rest) = line.strip_prefix("Disallow:") {
                 let path = rest.trim();
@@ -373,6 +376,7 @@ fn crawl(options: &Options) -> Result<(), String> {
         }
         if !expanded.is_empty() {
             println!("sitemaps added {} urls", expanded.len());
+            let _ = std::io::stdout().flush();
             for url in expanded {
                 queue.push_back((url, 0));
             }
@@ -467,6 +471,9 @@ fn crawl(options: &Options) -> Result<(), String> {
         if indexed >= options.max_pages {
             break;
         }
+        if index.has_url(&page.url) {
+            continue;
+        }
         let lang = if has_cjk(&page.title) || has_cjk(&page.body) {
             "ja"
         } else {
@@ -486,10 +493,11 @@ fn crawl(options: &Options) -> Result<(), String> {
                 }
             }
         }
-        if indexed % 200 == 0 {
+        if indexed % 50 == 0 {
             index.commit()?;
             let queued = crawl.queue.lock().map(|q| q.len()).unwrap_or(0);
             println!("indexed {indexed} pages (queue {queued})");
+            let _ = std::io::stdout().flush();
         }
     }
 
