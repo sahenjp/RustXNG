@@ -196,7 +196,10 @@ pub async fn infobox_for(network: &Network, entity_id: &str) -> Option<Infobox> 
     let id = normalize_entity_id(entity_id)?;
     let url = entity_data_url(&id)?;
     let request = EngineRequest::get(url).header("Accept", "application/json");
-    let response = network.fetch(request, REQUEST_TIMEOUT, None).await.ok()?;
+    let response = network
+        .fetch(request, REQUEST_TIMEOUT, None, None)
+        .await
+        .ok()?;
     let document = response.json().ok()?;
     infobox_from_entity_json(&id, &document)
 }

@@ -573,7 +573,7 @@ impl Searcher {
             .map_err(|error| FailureKind::from(&error))?;
         let response = self
             .network
-            .fetch(engine_request, timeout, Some(&self.cache))
+            .fetch(engine_request, timeout, Some(&self.cache), engine.proxy())
             .await
             .map_err(|error| error.failure_kind())?;
         let items = engine
@@ -866,7 +866,7 @@ impl Searcher {
             .header("Accept", "text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
         let response = self
             .network
-            .fetch(request, Duration::from_secs(4), Some(&self.cache))
+            .fetch(request, Duration::from_secs(4), Some(&self.cache), None)
             .await
             .ok()?;
         let html = response.html().ok()?;

@@ -135,7 +135,7 @@ async fn fetch_favicon(state: &AppState, url: &str) -> Option<(String, Vec<u8>)>
     let response = state
         .searcher
         .network
-        .fetch(request, timeout, None)
+        .fetch(request, timeout, None, None)
         .await
         .ok()?;
     if response.body.is_empty() || response.body.len() > MAX_SIZE {

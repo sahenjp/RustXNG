@@ -138,7 +138,10 @@ pub async fn weather_for(network: &Network, place: &str, locale: &str) -> Option
 
 async fn fetch_json(network: &Network, url: &str) -> Option<Value> {
     let request = EngineRequest::get(url).header("Accept", "application/json");
-    let response = network.fetch(request, REQUEST_TIMEOUT, None).await.ok()?;
+    let response = network
+        .fetch(request, REQUEST_TIMEOUT, None, None)
+        .await
+        .ok()?;
     response.json().ok()
 }
 

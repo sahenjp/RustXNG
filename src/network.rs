@@ -72,12 +72,48 @@ pub fn classify_status(status: u16, body: &str) -> FailureKind {
 /// The HTTP client used by every engine.
 pub struct Network {
     client: reqwest::Client,
+    /// Clients for engines that need their own proxy, keyed by proxy URL.
+    proxied: std::sync::Mutex<std::collections::HashMap<String, reqwest::Client>>,
+    /// Settings kept so a proxied client can be rebuilt on demand.
+    outgoing: crate::settings::Outgoing,
     user_agents: Vec<String>,
     suffix: String,
     retries: u32,
     counter: AtomicUsize,
 }
 
+/// Build a client from the outgoing settings, optionally through another proxy.
+fn build_client(
+    outgoing: &crate::settings::Outgoing,
+    extra_proxy: Option<reqwest::Proxy>,
+) -> Result<reqwest::Client, NetworkError> {
+    let mut builder = reqwest::Client::builder()
+        .redirect(reqwest::redirect::Policy::limited(outgoing.max_redirects))
+        .timeout(Duration::from_secs_f64(
+            outgoing.max_request_timeout.max(1.0),
+        ))
+        .connect_timeout(Duration::from_secs_f64(
+            (outgoing.request_timeout / 2.0).clamp(1.0, 5.0),
+        ))
+        .pool_max_idle_per_host(outgoing.pool_maxsize)
+        .danger_accept_invalid_certs(!outgoing.verify)
+        .user_agent(default_user_agent());
+    if !outgoing.enable_http2 {
+        builder = builder.http1_only();
+    }
+    for (scheme, proxy) in &outgoing.proxies {
+        let proxy =
+            reqwest::Proxy::all(proxy).map_err(|error| NetworkError::Build(error.to_string()))?;
+        tracing::debug!(scheme, "configured proxy");
+        builder = builder.proxy(proxy);
+    }
+    if let Some(proxy) = extra_proxy {
+        builder = builder.proxy(proxy);
+    }
+    builder
+        .build()
+        .map_err(|error| NetworkError::Build(error.to_string()))
+}
 impl Network {
     pub fn from_settings(settings: &Settings) -> Result<Self, NetworkError> {
         let outgoing = &settings.outgoing;
@@ -108,11 +144,39 @@ impl Network {
             .map_err(|error| NetworkError::Build(error.to_string()))?;
         Ok(Self {
             client,
+            proxied: std::sync::Mutex::new(std::collections::HashMap::new()),
+            outgoing: outgoing.clone(),
             user_agents: build_user_agents(),
             suffix: outgoing.useragent_suffix.clone(),
             retries: outgoing.retries,
             counter: AtomicUsize::new(0),
         })
+    }
+
+    /// The client for one request, honouring a per-engine proxy.
+    ///
+    /// Engines share the default client; a per-engine proxy gets its own so a
+    /// blocked engine can be routed elsewhere without moving the rest.
+    fn client_for(&self, proxy: Option<&str>) -> reqwest::Client {
+        let Some(proxy) = proxy.map(str::trim).filter(|value| !value.is_empty()) else {
+            return self.client.clone();
+        };
+        tracing::debug!(proxy, "using a per-engine proxy");
+        if let Ok(cache) = self.proxied.lock() {
+            if let Some(client) = cache.get(proxy) {
+                return client.clone();
+            }
+        }
+        let Ok(configured) = reqwest::Proxy::all(proxy) else {
+            return self.client.clone();
+        };
+        let Ok(client) = build_client(&self.outgoing, Some(configured)) else {
+            return self.client.clone();
+        };
+        if let Ok(mut cache) = self.proxied.lock() {
+            cache.insert(proxy.to_string(), client.clone());
+        }
+        client
     }
 
     /// A different user agent on every call, like upstream's rotation.
@@ -154,7 +218,9 @@ impl Network {
         request: EngineRequest,
         timeout: Duration,
         cache: Option<&Cache>,
+        proxy: Option<&str>,
     ) -> Result<EngineResponse, NetworkError> {
+        let client = self.client_for(proxy);
         let body_repr = if let Some(json) = &request.json {
             json.to_string()
         } else {
@@ -190,7 +256,7 @@ impl Network {
             if remaining.is_zero() {
                 return Err(NetworkError::Timeout);
             }
-            let outcome = self.send(&request, remaining).await;
+            let outcome = self.send(client.clone(), &request, remaining).await;
             match outcome {
                 Ok(response) => {
                     if let Some(cache) = cache {
@@ -250,6 +316,7 @@ impl Network {
 
     async fn send(
         &self,
+        client: reqwest::Client,
         request: &EngineRequest,
         timeout: Duration,
     ) -> Result<EngineResponse, NetworkError> {
@@ -273,7 +340,7 @@ impl Network {
             }
         }
 
-        let mut builder = self.client.request(method, &request.url).headers(headers);
+        let mut builder = client.request(method, &request.url).headers(headers);
         if let Some(json) = &request.json {
             builder = builder.json(json);
         } else if request.method == Method::Post {
@@ -357,6 +424,8 @@ mod tests {
     fn user_agents_are_diverse_and_plausible() {
         let network = Network {
             client: reqwest::Client::new(),
+            proxied: std::sync::Mutex::new(std::collections::HashMap::new()),
+            outgoing: crate::settings::Outgoing::default(),
             user_agents: build_user_agents(),
             suffix: String::new(),
             retries: 0,

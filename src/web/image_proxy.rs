@@ -151,6 +151,7 @@ pub async fn handler(
             request,
             std::time::Duration::from_secs_f64(settings.outgoing.request_timeout.max(1.0)),
             None,
+            None,
         )
         .await
     {

@@ -60,7 +60,7 @@ pub async fn suggest(
     let _ = is_json;
     let request = EngineRequest::get(url).header("Accept", "application/json");
     let timeout = std::time::Duration::from_secs_f64(settings.search.timeout_limit.clamp(1.0, 3.0));
-    match network.fetch(request, timeout, None).await {
+    match network.fetch(request, timeout, None, None).await {
         Ok(response) => parse_suggestions(backend, &response),
         Err(error) => {
             tracing::debug!(backend, %error, "autocomplete backend failed");

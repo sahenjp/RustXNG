@@ -71,7 +71,12 @@ pub fn is_exit_node(addresses: &[String], address: &str) -> bool {
 /// Fetch the Tor exit node list; 'None' when it cannot be downloaded.
 pub async fn exit_nodes(network: &Network) -> Option<Vec<String>> {
     let response = network
-        .fetch(EngineRequest::get(URL_EXIT_LIST), REQUEST_TIMEOUT, None)
+        .fetch(
+            EngineRequest::get(URL_EXIT_LIST),
+            REQUEST_TIMEOUT,
+            None,
+            None,
+        )
         .await
         .ok()?;
     Some(parse_exit_addresses(&response.text()))

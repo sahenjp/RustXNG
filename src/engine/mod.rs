@@ -272,6 +272,8 @@ pub struct EngineMeta {
     pub weight: f64,
     pub timeout: Duration,
     pub base_url: Option<String>,
+    /// Per-engine proxy URL, when the settings ask for one.
+    pub proxy: Option<String>,
     pub search_url: Option<String>,
     pub api_key: Option<String>,
     pub extra: toml::Table,
@@ -309,6 +311,7 @@ impl EngineMeta {
                 .base_url
                 .clone()
                 .or_else(|| config.opt_str("base_url").map(str::to_string)),
+            proxy: config.proxy.clone(),
             search_url: config.search_url.clone(),
             api_key: config.api_key.clone(),
             extra: config.extra.clone(),
@@ -401,6 +404,10 @@ pub trait Engine: Send + Sync {
     /// Per engine timeout.
     fn timeout(&self) -> Duration {
         self.meta().timeout
+    }
+    /// Per engine proxy URL, when the settings give this engine one.
+    fn proxy(&self) -> Option<&str> {
+        self.meta().proxy.as_deref()
     }
     /// Build the HTTP request for the query.
     fn build_request(&self, query: &Query, pageno: u32) -> Result<EngineRequest, EngineError>;

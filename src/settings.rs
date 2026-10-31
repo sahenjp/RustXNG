@@ -562,6 +562,9 @@ pub struct EngineConfig {
     pub base_url: Option<String>,
     #[serde(default)]
     pub search_url: Option<String>,
+    /// Route this engine through its own proxy (upstream per-engine proxies).
+    #[serde(default)]
+    pub proxy: Option<String>,
     #[serde(default)]
     pub api_key: Option<String>,
     /// Free-form, engine specific options (kept for SearXNG compatibility).
@@ -578,6 +581,7 @@ impl EngineConfig {
             engine: engine.into(),
             shortcut: Some(shortcut.into()),
             categories: categories.iter().map(|c| (*c).to_string()).collect(),
+            proxy: None,
             disabled: None,
             inactive: false,
             weight: None,
@@ -996,6 +1000,9 @@ fn merge_engines_by_name(
                 if engine.search_url.is_some() {
                     existing.search_url = engine.search_url.clone();
                 }
+                if engine.proxy.is_some() {
+                    existing.proxy = engine.proxy.clone();
+                }
                 if engine.api_key.is_some() {
                     existing.api_key = engine.api_key.clone();
                 }
@@ -1012,6 +1019,26 @@ fn merge_engines_by_name(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn a_user_engine_entry_can_set_its_own_proxy() {
+        let defaults = Settings::defaults();
+        let user: Settings = toml::from_str(
+            r#"
+[[engines]]
+name = "mwmbl"
+engine = "mwmbl"
+proxy = "http://127.0.0.1:18888"
+"#,
+        )
+        .expect("user settings parse");
+        let merged = Settings::merge(defaults, user).expect("merge");
+        let engine = merged.engine("mwmbl").expect("mwmbl kept");
+        assert_eq!(engine.proxy.as_deref(), Some("http://127.0.0.1:18888"));
+        // engines without the key stay direct
+        let other = merged.engine("swisscows").expect("swisscows kept");
+        assert!(other.proxy.is_none());
+    }
 
     #[test]
     fn a_user_can_enable_an_engine_that_ships_disabled() {
