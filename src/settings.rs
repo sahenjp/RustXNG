@@ -379,7 +379,9 @@ impl Default for Search {
         let mut suspended_times = BTreeMap::new();
         suspended_times.insert("SearxEngineAccessDenied".into(), 86_400);
         suspended_times.insert("SearxEngineCaptcha".into(), 86_400);
-        suspended_times.insert("SearxEngineTooManyRequests".into(), 3_600);
+        // A 429 usually clears in minutes; an hour is far too punishing for
+        // a good engine such as Yahoo! JAPAN (upstream defaults to 3600).
+        suspended_times.insert("SearxEngineTooManyRequests".into(), 300);
         suspended_times.insert("cf_SearxEngineCaptcha".into(), 1_296_000);
         suspended_times.insert("cf_SearxEngineAccessDenied".into(), 86_400);
         suspended_times.insert("recaptcha_SearxEngineCaptcha".into(), 604_800);

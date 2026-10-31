@@ -208,6 +208,17 @@ impl Network {
                                 .await;
                         }
                     }
+                    // A 429 usually clears within a second. Retrying once keeps
+                    // a good engine (Yahoo! JAPAN, Bing) alive instead of
+                    // suspending it for minutes.
+                    if response.status == 429 && attempt <= self.retries {
+                        let backoff = Duration::from_millis(700);
+                        if tokio::time::Instant::now() + backoff < deadline {
+                            debug!(url = %request.url, "rate limited, retrying after a pause");
+                            tokio::time::sleep(backoff).await;
+                            continue;
+                        }
+                    }
                     if response.status >= 400 {
                         return Err(NetworkError::Status {
                             status: response.status,
