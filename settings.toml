@@ -252,6 +252,12 @@ shortcut = "cr"
 categories = ["science", "scientific publications"]
 
 [[engines]]
+name = "cinii"
+engine = "cinii"
+shortcut = "ci"
+categories = ["science", "scientific publications"]
+
+[[engines]]
 name = "semantic scholar"
 engine = "semantic_scholar"
 shortcut = "se"

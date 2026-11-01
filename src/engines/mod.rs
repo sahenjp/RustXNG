@@ -7,6 +7,7 @@
 //! | `brave`               | `brave.py`                   |
 //! | `crates`              | `crates.py`                  |
 //! | `crossref`            | `crossref.py`                |
+//! | `cinii`               | — (CiNii OpenSearch API)     |
 //! | `docker_hub`          | `docker_hub.py`              |
 //! | `duckduckgo`          | `duckduckgo.py`              |
 //! | `github`              | `github.py`                  |
@@ -59,6 +60,7 @@ pub mod ccc_media;
 pub mod chatnoir;
 pub mod chefkoch;
 pub mod chinaso;
+pub mod cinii;
 pub mod cloudflareai;
 pub mod core;
 pub mod crates;
@@ -369,6 +371,7 @@ pub fn build(config: &EngineConfig) -> Result<EngineHandle, String> {
         "cachy_os" => cachy_os::CachyOs::from_config(config)?,
         "ccc_media" => ccc_media::CccMedia::from_config(config)?,
         "chinaso" => chinaso::ChinaSo::from_config(config)?,
+        "cinii" => cinii::Cinii::from_config(config)?,
         "cloudflareai" => cloudflareai::CloudflareAi::from_config(config)?,
         "core" => core::Core::from_config(config)?,
         "360search_videos" => r360search_videos::Videoscarch360::from_config(config)?,
