@@ -419,11 +419,9 @@ pub fn parse_number(number: &str) -> Option<f64> {
     if number.is_empty() {
         return None;
     }
-    let sign = if number.starts_with('-') { "-" } else { "" };
-    let magnitude = number.trim_start_matches(['+', '-']);
-    let (mantissa, exponent) = match magnitude.find(['e', 'E']) {
-        Some(index) => (&magnitude[..index], &magnitude[index + 1..]),
-        None => (magnitude, ""),
+    let (mantissa, exponent) = match number.split_once(['e', 'E']) {
+        Some((mantissa, exponent)) => (mantissa, Some(exponent)),
+        None => (number, None),
     };
     let digits = match (mantissa.rfind('.'), mantissa.rfind(',')) {
         // "1.000,5": the comma is the decimal separator.
@@ -433,7 +431,7 @@ pub fn parse_number(number: &str) -> Option<f64> {
         (Some(_), None) => mantissa.to_string(),
         (None, Some(comma)) => {
             let fraction = &mantissa[comma + 1..];
-            if fraction.len() == 3 && mantissa.len() > 4 {
+            if fraction.len() == 3 && mantissa.trim_start_matches(['+', '-']).len() > 4 {
                 // "1,000" is a thousands separator.
                 mantissa.replace(',', "")
             } else {
@@ -442,15 +440,11 @@ pub fn parse_number(number: &str) -> Option<f64> {
         }
         (None, None) => mantissa.to_string(),
     };
-    let digits = if digits.is_empty() {
-        "0"
-    } else {
-        digits.as_str()
-    };
-    let text = if exponent.is_empty() {
-        format!("{sign}{digits}")
-    } else {
-        format!("{sign}{digits}e{exponent}")
+    // Preserve signs and incomplete exponents so the float parser can reject
+    // malformed numbers instead of silently repairing them.
+    let text = match exponent {
+        Some(exponent) => format!("{digits}e{exponent}"),
+        None => digits,
     };
     text.parse::<f64>().ok().filter(|value| value.is_finite())
 }
@@ -610,6 +604,46 @@ mod tests {
         assert_eq!(parse_number("-2"), Some(-2.0));
         assert_eq!(parse_number("1e3"), Some(1000.0));
         assert!(parse_number("km").is_none());
+    }
+
+    #[test]
+    fn numbers_with_missing_digits_or_repeated_signs_are_rejected() {
+        for number in ["+", "-", "--1", "++1", "+-1", "-+1"] {
+            assert_eq!(parse_number(number), None, "accepted {number:?}");
+            assert!(
+                answer(&format!("{number} km in m"), "en").is_none(),
+                "produced an answer for {number:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn scientific_notation_requires_a_mantissa_and_exponent() {
+        for number in ["e3", "-e3", "1e", "1E", "1e+", "1e-"] {
+            assert_eq!(parse_number(number), None, "accepted {number:?}");
+            assert!(
+                answer(&format!("{number} km in m"), "en").is_none(),
+                "produced an answer for {number:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn signed_and_scientific_numbers_are_understood() {
+        for (number, expected) in [
+            ("+2", 2.0),
+            ("-0", -0.0),
+            (".5", 0.5),
+            ("-,5", -0.5),
+            ("-0,25", -0.25),
+            ("+1,000", 1000.0),
+            ("-1.000,5", -1000.5),
+            ("1,5e3", 1500.0),
+            ("-1.5E+3", -1500.0),
+            ("+1.5e-3", 0.0015),
+        ] {
+            assert_eq!(parse_number(number), Some(expected), "{number:?}");
+        }
     }
 
     #[test]
