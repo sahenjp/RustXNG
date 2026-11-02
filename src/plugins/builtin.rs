@@ -279,10 +279,12 @@ const MAX_EXPRESSION_CHARS: usize = 4_096;
 /// Maximum lexical tokens accepted in one calculator expression.
 const MAX_TOKENS: usize = 512;
 
-/// Maximum recursion depth of the expression parser.
+/// Maximum recursive parser entries. One parenthesis nesting costs three
+/// entries (expression, power, unary).
 const MAX_PARSE_DEPTH: usize = 128;
 
-/// Counts the lexical tokens of an expression without whitespace.
+/// Counts the lexical tokens of an expression without whitespace. The lexer
+/// must match the one in `Parser::atom`.
 fn count_tokens(input: &[char]) -> usize {
     let mut tokens = 0;
     let mut index = 0;
@@ -574,14 +576,20 @@ mod tests {
     }
 
     #[test]
-    fn calculator_rejects_expressions_over_the_depth_budget() {
-        let expression = format!("{}1{}", "(".repeat(100), ")".repeat(100));
+    fn calculator_accepts_nesting_within_the_depth_budget() {
+        let expression = format!("{}1{}", "(".repeat(41), ")".repeat(41));
+        assert_eq!(evaluate(&expression), Some(1.0));
+    }
+
+    #[test]
+    fn calculator_rejects_nesting_over_the_depth_budget() {
+        let expression = format!("{}1{}", "(".repeat(42), ")".repeat(42));
         assert!(evaluate(&expression).is_none());
     }
 
     #[test]
     fn calculator_rejects_overlong_expressions() {
-        let expression = format!("{}1", "1+".repeat(2500));
+        let expression = format!("{}1", "0".repeat(4_096));
         assert!(evaluate(&expression).is_none());
     }
 
