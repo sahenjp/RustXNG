@@ -9,7 +9,9 @@
 //!
 //! Like the image proxy, the request is signed with HMAC-SHA256 over
 //! 'server.secret_key' and private hosts are refused, so the proxy cannot be
-//! used to reach the local network.
+//! used to reach the local network.  The route is gated by
+//! 'server.image_proxy' as well, so an instance with the image proxy off does
+//! not fetch favicons either.
 //!
 //! The Lead declares 'pub mod favicons;' in 'src/web/mod.rs' and adds the route
 //! '.route("/favicon_proxy", get(favicons::handler))' to 'web::router()'.
@@ -93,7 +95,15 @@ pub async fn handler(
     Query(params): Query<FaviconParams>,
     _headers: HeaderMap,
 ) -> Response {
-    let secret = state.settings().server.secret_key.clone();
+    let settings = state.settings();
+    if !settings.server.image_proxy {
+        return (
+            StatusCode::FORBIDDEN,
+            "the image proxy is disabled on this instance",
+        )
+            .into_response();
+    }
+    let secret = settings.server.secret_key.clone();
     let Some(origin) = origin_of(&params.url) else {
         return (
             StatusCode::FORBIDDEN,

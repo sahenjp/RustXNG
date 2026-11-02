@@ -79,38 +79,11 @@ pub fn proxied_url(base_url: &str, secret: &str, url: &str) -> String {
 }
 
 /// Whether a URL may be fetched by the proxy (public http/https host only).
+///
+/// The host string and the address are both checked by [`crate::network`]; a
+/// name that resolves to a private address is refused when the request is made.
 pub fn is_public_url(url: &str) -> bool {
-    let Ok(parsed) = url::Url::parse(url) else {
-        return false;
-    };
-    if !matches!(parsed.scheme(), "http" | "https") {
-        return false;
-    }
-    let Some(host) = parsed.host_str() else {
-        return false;
-    };
-    let host = host.trim_matches(['[', ']']).to_lowercase();
-    if host == "localhost" || host.ends_with(".local") || host == "::1" || host == "0.0.0.0" {
-        return false;
-    }
-    match host.parse::<std::net::IpAddr>() {
-        Ok(address) => is_public_address(address),
-        Err(_) => true,
-    }
-}
-
-fn is_public_address(address: std::net::IpAddr) -> bool {
-    match address {
-        std::net::IpAddr::V4(address) => {
-            !(address.is_private()
-                || address.is_loopback()
-                || address.is_link_local()
-                || address.is_broadcast()
-                || address.is_documentation()
-                || address.is_unspecified())
-        }
-        std::net::IpAddr::V6(address) => !(address.is_loopback() || address.is_unspecified()),
-    }
+    url::Url::parse(url).is_ok_and(|parsed| crate::network::is_public_url(&parsed))
 }
 
 /// `GET /image_proxy`.

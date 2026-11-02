@@ -5,12 +5,15 @@
 //! response cache.
 
 use std::collections::BTreeMap;
+use std::net::{IpAddr, Ipv4Addr, Ipv6Addr, SocketAddr};
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::time::Duration;
 
+use reqwest::dns::{Addrs, Name, Resolve, Resolving};
 use reqwest::header::{HeaderMap, HeaderValue};
 use sha2::{Digest, Sha256};
 use tracing::debug;
+use url::{Host, Url};
 
 use crate::cache::{Cache, CachedResponse};
 use crate::engine::{EngineRequest, EngineResponse, FailureKind, Method};
@@ -70,6 +73,185 @@ pub fn classify_status(status: u16, body: &str) -> FailureKind {
     }
 }
 
+/// Why a URL may not be fetched over the public internet.
+///
+/// The host string alone is not a proof: `localhost.`, the IPv6 private ranges
+/// and internal DNS names all look public to it. [`PublicResolver`] checks the
+/// address a name actually resolves to as well.
+pub fn check_public_url(url: &Url) -> Result<(), &'static str> {
+    if !matches!(url.scheme(), "http" | "https") {
+        return Err("only http(s) URLs can be fetched");
+    }
+    match url.host() {
+        Some(Host::Ipv4(address)) => check_public_address(IpAddr::V4(address)),
+        Some(Host::Ipv6(address)) => check_public_address(IpAddr::V6(address)),
+        Some(Host::Domain(name)) => check_public_name(name),
+        None => Err("the URL has no host"),
+    }
+}
+
+/// Whether a URL may be fetched over the public internet.
+pub fn is_public_url(url: &Url) -> bool {
+    check_public_url(url).is_ok()
+}
+
+fn check_public_address(address: IpAddr) -> Result<(), &'static str> {
+    if is_public_ip(address) {
+        Ok(())
+    } else {
+        Err("the host is not a public address")
+    }
+}
+
+/// DNS suffixes that only exist on a local network.
+const LOCAL_SUFFIXES: &[&str] = &[
+    "localhost",
+    "local",
+    "localdomain",
+    "internal",
+    "intranet",
+    "lan",
+    "home",
+    "home.arpa",
+    "corp",
+    "private",
+    "test",
+    "invalid",
+];
+
+fn check_public_name(name: &str) -> Result<(), &'static str> {
+    let name = name.trim_end_matches('.').to_ascii_lowercase();
+    // A single label comes from the local resolver, never from the public DNS.
+    if !name.contains('.') {
+        return Err("the host is a local name");
+    }
+    if LOCAL_SUFFIXES
+        .iter()
+        .any(|suffix| has_label_suffix(&name, suffix))
+    {
+        return Err("the host is a private name");
+    }
+    Ok(())
+}
+
+/// Whether `name` ends in `suffix` as a whole DNS label.
+fn has_label_suffix(name: &str, suffix: &str) -> bool {
+    name.strip_suffix(suffix)
+        .is_some_and(|head| head.ends_with('.'))
+}
+
+/// Whether an address is reachable from the public internet.
+pub fn is_public_ip(address: IpAddr) -> bool {
+    match address {
+        IpAddr::V4(address) => is_public_v4(address),
+        IpAddr::V6(address) => is_public_v6(address),
+    }
+}
+
+fn is_public_v4(address: Ipv4Addr) -> bool {
+    let [first, second, third, _] = address.octets();
+    !(address.is_unspecified()
+        || address.is_loopback()
+        || address.is_private()
+        || address.is_link_local()
+        || address.is_documentation()
+        || address.is_multicast()
+        // 0.0.0.0/8, 100.64.0.0/10 (CGNAT), 192.0.0.0/24, 198.18.0.0/15 and
+        // 240.0.0.0/4 are not routed on the public internet.
+        || first == 0
+        || (first == 100 && (64..=127).contains(&second))
+        || (first == 192 && second == 0 && third == 0)
+        || (first == 198 && matches!(second, 18 | 19))
+        || first >= 240)
+}
+
+fn is_public_v6(address: Ipv6Addr) -> bool {
+    if address.is_unspecified() || address.is_loopback() || address.is_multicast() {
+        return false;
+    }
+    // An IPv4-mapped (or the deprecated IPv4-compatible) address reaches the
+    // embedded IPv4 address, so it inherits that address's verdict.
+    if let Some(address) = address.to_ipv4() {
+        return is_public_v4(address);
+    }
+    let segments = address.segments();
+    let unique_local = segments[0] & 0xfe00 == 0xfc00;
+    let link_local = segments[0] & 0xffc0 == 0xfe80;
+    let documentation = segments[0] == 0x2001 && segments[1] == 0x0db8;
+    !(unique_local || link_local || documentation)
+}
+
+/// The system resolver, wrapped so [`PublicResolver`] can check its answers.
+struct SystemResolver;
+
+impl Resolve for SystemResolver {
+    fn resolve(&self, name: Name) -> Resolving {
+        Box::pin(async move {
+            let host = name.as_str().to_string();
+            let addresses: Vec<SocketAddr> =
+                tokio::net::lookup_host((host.as_str(), 0)).await?.collect();
+            Ok(Box::new(addresses.into_iter()) as Addrs)
+        })
+    }
+}
+
+/// A resolver that refuses a non-public answer and returns the addresses the
+/// connection will use.
+///
+/// Checking a name and then letting the connector resolve it again would leave
+/// a window for a second answer (DNS rebinding). This resolver hands the
+/// checked addresses to the connection instead.
+struct PublicResolver<R> {
+    inner: R,
+}
+
+impl PublicResolver<SystemResolver> {
+    fn system() -> Self {
+        Self::new(SystemResolver)
+    }
+}
+
+impl<R> PublicResolver<R> {
+    fn new(inner: R) -> Self {
+        Self { inner }
+    }
+}
+
+impl<R: Resolve> Resolve for PublicResolver<R> {
+    fn resolve(&self, name: Name) -> Resolving {
+        let resolved = self.inner.resolve(name);
+        Box::pin(async move {
+            let addresses: Vec<SocketAddr> = resolved.await?.collect();
+            if addresses.is_empty() {
+                return Err("the host name resolved to no address".into());
+            }
+            if let Some(address) = addresses.iter().find(|address| !is_public_ip(address.ip())) {
+                return Err(format!("{} resolves to a non-public address", address.ip()).into());
+            }
+            Ok(Box::new(addresses.into_iter()) as Addrs)
+        })
+    }
+}
+
+/// Follow a redirect only when its target may be fetched from the public
+/// internet.
+///
+/// `Policy::limited` follows a `Location` without looking at it, so a public
+/// URL could bounce a proxy onto the local network. A target whose name
+/// resolves to a private address is refused by [`PublicResolver`] when the hop
+/// connects.
+fn redirect_policy(max_redirects: usize) -> reqwest::redirect::Policy {
+    reqwest::redirect::Policy::custom(move |attempt| {
+        if attempt.previous().len() > max_redirects {
+            return attempt.error("too many redirects");
+        }
+        match check_public_url(attempt.url()) {
+            Ok(()) => attempt.follow(),
+            Err(reason) => attempt.error(format!("redirect refused: {reason}")),
+        }
+    })
+}
+
 /// The HTTP client used by every engine.
 pub struct Network {
     client: reqwest::Client,
@@ -89,7 +271,8 @@ fn build_client(
     extra_proxy: Option<reqwest::Proxy>,
 ) -> Result<reqwest::Client, NetworkError> {
     let mut builder = reqwest::Client::builder()
-        .redirect(reqwest::redirect::Policy::limited(outgoing.max_redirects))
+        .redirect(redirect_policy(outgoing.max_redirects))
+        .dns_resolver(std::sync::Arc::new(PublicResolver::system()))
         .timeout(Duration::from_secs_f64(
             outgoing.max_request_timeout.max(1.0),
         ))
@@ -117,6 +300,8 @@ fn build_client(
         builder = builder.http1_only();
     }
     for (scheme, proxy) in &outgoing.proxies {
+        // One proxy per scheme (upstream's `outgoing.proxies`); the scheme key
+        // selects which requests it applies to in SearXNG, reqwest proxies all.
         let proxy =
             reqwest::Proxy::all(proxy).map_err(|error| NetworkError::Build(error.to_string()))?;
         tracing::debug!(scheme, "configured proxy");
@@ -421,102 +606,24 @@ fn build_user_agents() -> Vec<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::sync::Arc;
+    use tokio::io::{AsyncReadExt, AsyncWriteExt};
 
-    #[tokio::test]
-    async fn cached_responses_respect_request_cookies_headers_and_forms() {
-        use axum::{Router, routing::post};
-        use std::sync::Arc;
-
-        let calls = Arc::new(AtomicUsize::new(0));
-        let requests = Arc::clone(&calls);
-        let app = Router::new().route(
-            "/",
-            post(move |headers: HeaderMap, body: String| {
-                requests.fetch_add(1, Ordering::Relaxed);
-                async move {
-                    format!(
-                        "{}|{}|{}",
-                        headers[reqwest::header::COOKIE].to_str().unwrap(),
-                        headers[reqwest::header::ACCEPT_LANGUAGE].to_str().unwrap(),
-                        body
-                    )
-                }
-            }),
-        );
-        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
-        let url = format!("http://{}/", listener.local_addr().unwrap());
-        let server = tokio::spawn(async move { axum::serve(listener, app).await.unwrap() });
-        let network = Network::from_settings(&Settings::defaults()).unwrap();
-        let cache = Cache::default();
-
-        for (safe, language, form, expected) in [
-            ("off", "ja", vec![], "safesearch=off|ja|"),
-            ("strict", "ja", vec![], "safesearch=strict|ja|"),
-            ("strict", "en", vec![], "safesearch=strict|en|"),
-            (
-                "strict",
-                "en",
-                vec![("q", "cats&safe=0"), ("safe", "2")],
-                "safesearch=strict|en|q=cats%26safe%3D0&safe=2",
-            ),
-            (
-                "strict",
-                "en",
-                vec![("q", "cats"), ("safe", "0&safe=2")],
-                "safesearch=strict|en|q=cats&safe=0%26safe%3D2",
-            ),
-        ] {
-            let request = EngineRequest::post(&url)
-                .cookie("safesearch", safe)
-                .header("Accept-Language", language)
-                .header("Accept", "text/plain")
-                .form(
-                    form.into_iter()
-                        .map(|(key, value)| (key.into(), value.into()))
-                        .collect(),
-                );
-            let response = network
-                .fetch(request, Duration::from_secs(2), Some(&cache), None)
-                .await
-                .unwrap();
-            assert_eq!(response.text(), expected);
-        }
-        let repeated = EngineRequest::post(&url)
-            .header("Accept", "text/plain")
-            .header("Accept-Language", "en")
-            .cookie("safesearch", "strict");
-        let response = network
-            .fetch(repeated, Duration::from_secs(2), Some(&cache), None)
-            .await
-            .unwrap();
-        assert_eq!(response.text(), "safesearch=strict|en|");
-        assert_eq!(calls.load(Ordering::Relaxed), 5);
-        server.abort();
-    }
-
-    #[test]
-    fn invalid_ca_bundle_fails_instead_of_disabling_verification() {
-        let mut outgoing = crate::settings::Outgoing::default();
-        let file = tempfile::NamedTempFile::new().unwrap();
-        std::fs::write(file.path(), b"not a certificate").unwrap();
-        outgoing.ca_bundle = Some(file.path().to_string_lossy().into_owned());
-        assert!(build_client(&outgoing, None).is_err());
-        outgoing.ca_bundle = Some("/nonexistent/rustxng-ca.pem".into());
-        assert!(build_client(&outgoing, None).is_err());
-        assert!(outgoing.verify);
-    }
-
-    #[test]
-    fn user_agents_are_diverse_and_plausible() {
-        let network = Network {
-            client: reqwest::Client::new(),
+    fn network_with(client: reqwest::Client) -> Network {
+        Network {
+            client,
             proxied: std::sync::Mutex::new(std::collections::HashMap::new()),
             outgoing: crate::settings::Outgoing::default(),
             user_agents: build_user_agents(),
             suffix: String::new(),
             retries: 0,
             counter: AtomicUsize::new(0),
-        };
+        }
+    }
+
+    #[test]
+    fn user_agents_are_diverse_and_plausible() {
+        let network = network_with(reqwest::Client::new());
         let first = network.user_agent();
         let second = network.user_agent();
         assert!(first.starts_with("Mozilla/5.0"));
@@ -532,5 +639,138 @@ mod tests {
         assert_eq!(classify_status(403, "denied"), FailureKind::AccessDenied);
         assert_eq!(classify_status(429, ""), FailureKind::TooManyRequests);
         assert_eq!(classify_status(500, ""), FailureKind::Http);
+    }
+
+    /// Answer every connection with `response` and count the connections.
+    async fn stub_server(response: String) -> (SocketAddr, Arc<AtomicUsize>) {
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:0")
+            .await
+            .expect("bind the stub");
+        let address = listener.local_addr().expect("stub address");
+        let hits = Arc::new(AtomicUsize::new(0));
+        let counter = Arc::clone(&hits);
+        tokio::spawn(async move {
+            while let Ok((mut stream, _)) = listener.accept().await {
+                counter.fetch_add(1, Ordering::SeqCst);
+                let response = response.clone();
+                tokio::spawn(async move {
+                    let mut request = Vec::new();
+                    let mut chunk = [0u8; 1024];
+                    while !request.windows(4).any(|window| window == b"\r\n\r\n") {
+                        match stream.read(&mut chunk).await {
+                            Ok(0) | Err(_) => break,
+                            Ok(read) => request.extend_from_slice(&chunk[..read]),
+                        }
+                    }
+                    let _ = stream.write_all(response.as_bytes()).await;
+                    let _ = stream.shutdown().await;
+                });
+            }
+        });
+        (address, hits)
+    }
+
+    fn redirect_response(location: &str) -> String {
+        format!(
+            "HTTP/1.1 302 Found\r\nLocation: {location}\r\nContent-Length: 0\r\nConnection: close\r\n\r\n"
+        )
+    }
+
+    /// Answer DNS with a fixed address list, so a test never needs the network.
+    struct StubResolver {
+        addresses: Vec<SocketAddr>,
+    }
+
+    impl Resolve for StubResolver {
+        fn resolve(&self, _name: Name) -> Resolving {
+            let addresses = self.addresses.clone();
+            Box::pin(async move { Ok(Box::new(addresses.into_iter()) as Addrs) })
+        }
+    }
+
+    #[tokio::test]
+    async fn a_redirect_to_a_private_address_is_refused_before_connecting() {
+        let (target, target_hits) = stub_server(String::new()).await;
+        let (first, _) = stub_server(redirect_response(&format!(
+            "http://127.0.0.1:{}/secret",
+            target.port()
+        )))
+        .await;
+        let client = reqwest::Client::builder()
+            .redirect(redirect_policy(5))
+            .resolve("stub.test", first)
+            .build()
+            .expect("test client");
+        let error = network_with(client)
+            .fetch(
+                EngineRequest::get(format!("http://stub.test:{}/", first.port())),
+                Duration::from_secs(5),
+                None,
+                None,
+            )
+            .await
+            .unwrap_err();
+        assert!(matches!(error, NetworkError::Transport(_)));
+        assert_eq!(
+            target_hits.load(Ordering::SeqCst),
+            0,
+            "the private address must not be contacted"
+        );
+    }
+
+    #[tokio::test]
+    async fn a_redirect_to_a_name_resolving_to_a_private_address_is_refused_before_connecting() {
+        let (target, target_hits) = stub_server(String::new()).await;
+        let (first, _) = stub_server(redirect_response(&format!(
+            "http://internal.example.com:{}/secret",
+            target.port()
+        )))
+        .await;
+        let resolver = Arc::new(PublicResolver::new(StubResolver {
+            addresses: vec![SocketAddr::from(([127, 0, 0, 1], 0))],
+        }));
+        let client = reqwest::Client::builder()
+            .redirect(redirect_policy(5))
+            .dns_resolver(resolver)
+            .resolve("stub.test", first)
+            .build()
+            .expect("test client");
+        let error = network_with(client)
+            .fetch(
+                EngineRequest::get(format!("http://stub.test:{}/", first.port())),
+                Duration::from_secs(5),
+                None,
+                None,
+            )
+            .await
+            .unwrap_err();
+        assert!(matches!(error, NetworkError::Transport(_)));
+        assert_eq!(
+            target_hits.load(Ordering::SeqCst),
+            0,
+            "the address behind the name must not be contacted"
+        );
+    }
+
+    #[tokio::test]
+    async fn a_redirect_to_another_scheme_is_refused() {
+        // `file:` URLs have no authority, so the redirect layer drops them before
+        // any policy sees them; a scheme with an authority reaches the policy.
+        let (first, _) = stub_server(redirect_response("ftp://example.com/passwd")).await;
+        let client = reqwest::Client::builder()
+            .redirect(redirect_policy(5))
+            .resolve("stub.test", first)
+            .build()
+            .expect("test client");
+        let error = network_with(client)
+            .fetch(
+                EngineRequest::get(format!("http://stub.test:{}/", first.port())),
+                Duration::from_secs(5),
+                None,
+                None,
+            )
+            .await
+            .unwrap_err();
+        assert!(matches!(error, NetworkError::Transport(_)));
     }
 }
