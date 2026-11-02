@@ -71,4 +71,39 @@ mod tests {
         let text = main_text(&html);
         assert!(text.chars().count() <= MAX_CHARS + 1);
     }
+
+    #[test]
+    fn largest_article_wins_over_a_leading_advertisement() {
+        let article = "本記事".repeat(50);
+        let html = Html::parse_document(&format!(
+            "<html><body><article><p>広告</p></article><article><p>{article}</p></article></body></html>"
+        ));
+        assert_eq!(main_text(&html), article);
+    }
+
+    #[test]
+    fn script_style_template_and_noscript_are_excluded() {
+        let html = Html::parse_document(
+            "<html><body><article><p>本文</p><script>secret=1</script>\
+             <style>.ad{color:red}</style><template><p>雛形</p></template>\
+             <noscript>JSなし</noscript><p>続き</p></article></body></html>",
+        );
+        assert_eq!(main_text(&html), "本文 続き");
+    }
+
+    #[test]
+    fn body_fallback_also_excludes_scripts() {
+        let html =
+            Html::parse_document("<html><body><script>secret=1</script><p>本文</p></body></html>");
+        assert_eq!(main_text(&html), "本文");
+    }
+
+    #[test]
+    fn limit_applies_after_picking_the_largest_article() {
+        let long = "x".repeat(40);
+        let html = Html::parse_document(&format!(
+            "<html><body><article><p>短い</p></article><article><p>{long}</p></article></body></html>"
+        ));
+        assert_eq!(main_text_limited(&html, 10), "xxxxxxxxxx…");
+    }
 }
