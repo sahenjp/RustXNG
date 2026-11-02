@@ -802,15 +802,17 @@ impl Settings {
         let merged = deep_merge(base, user);
         let mut settings: Settings = merged.try_into().map_err(SettingsError::Parse)?;
 
+        if settings.use_default_settings == Some(false) {
+            settings.engines.clear();
+        }
+
         if let Some(engines) = user_engines {
             let engines: Vec<EngineConfig> = engines.try_into().map_err(SettingsError::Parse)?;
-            if !engines.is_empty() {
-                settings.engines = if settings.use_default_settings.unwrap_or(true) {
-                    merge_engines_by_name(settings.engines, engines)
-                } else {
-                    engines
-                };
-            }
+            settings.engines = if settings.use_default_settings.unwrap_or(true) {
+                merge_engines_by_name(settings.engines, engines)
+            } else {
+                engines
+            };
         }
         Ok(settings)
     }
@@ -1315,6 +1317,23 @@ shortcut = "only"
         assert_eq!(settings.engines.len(), 1);
         assert_eq!(settings.engines[0].name, "only");
         assert_eq!(settings.server.port, 29483);
+    }
+
+    #[test]
+    fn disabling_default_engines_never_restores_them_for_empty_lists() {
+        for text in [
+            "use_default_settings = false\nengines = []\n",
+            "use_default_settings = false\n",
+        ] {
+            assert!(merged_toml(text).engines.is_empty());
+        }
+        for text in [
+            "use_default_settings: false\nengines: []\n",
+            "use_default_settings: false\n",
+        ] {
+            assert!(merged_yaml(text).engines.is_empty());
+        }
+        assert!(!merged_toml("engines = []\n").engines.is_empty());
     }
 
     #[test]

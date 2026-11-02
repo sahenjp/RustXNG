@@ -16,6 +16,9 @@
 
 ### Fixed
 
+- `use_default_settings = false` now keeps the engine list empty when the user omits engines or explicitly supplies `engines = []`, in TOML and YAML.
+- Homepage categories select a value in the search form without navigating to an empty search; result-page categories retain their links.
+
 - Image and favicon reads now use the direct-only public-address client shared with page reads. Engine endpoint exceptions and proxies cannot authorize private media destinations; disabling image proxying also disables favicon fetching.
 
 - CLI bind/port overrides now reach generated feed and OpenSearch URLs, while an explicitly configured public base URL is preserved.

@@ -79,6 +79,32 @@ async fn get_uri(app: &Router, uri: &str) -> (StatusCode, String, axum::http::He
 }
 
 #[tokio::test]
+async fn homepage_categories_select_form_values_without_empty_search_links() {
+    let mut settings = settings_for("http://127.0.0.1:1");
+    settings.categories_as_tabs = vec!["general".into(), "it".into()];
+    let app = app(settings);
+    let (status, body, _) = get_uri(&app, "/").await;
+    assert_eq!(status, StatusCode::OK);
+    let html = scraper::Html::parse_document(&body);
+    let tabs = scraper::Selector::parse(".tabs input[type=radio][name=category]").unwrap();
+    let values: Vec<_> = html
+        .select(&tabs)
+        .map(|input| {
+            assert_eq!(input.value().attr("form"), Some("search-form"));
+            input.value().attr("value").unwrap()
+        })
+        .collect();
+    assert_eq!(values, ["general", "it"]);
+    assert_eq!(
+        html.select(&scraper::Selector::parse(".tabs a").unwrap())
+            .count(),
+        0
+    );
+    let (status, _, _) = get_uri(&app, "/search?q=&format=json").await;
+    assert_eq!(status, StatusCode::BAD_REQUEST);
+}
+
+#[tokio::test]
 async fn json_search_returns_merged_results() {
     let base_url = start_fake_engine().await;
     let app = app(settings_for(&base_url));
