@@ -1023,6 +1023,109 @@ fn merge_engines_by_name(
 mod tests {
     use super::*;
 
+    /// Load `text` through the real file path, so the tests exercise the same
+    /// entry point as the server.
+    fn load_file(file_name: &str, text: &str) -> Settings {
+        let directory = tempfile::tempdir().expect("temporary directory");
+        let path = directory.path().join(file_name);
+        std::fs::write(&path, text).expect("write the settings file");
+        Settings::load(Some(&path)).expect("settings load")
+    }
+
+    fn load_toml(text: &str) -> Settings {
+        load_file("settings.toml", text)
+    }
+
+    #[test]
+    fn a_partial_user_file_keeps_the_shipped_defaults() {
+        let defaults = Settings::defaults();
+        let settings = load_toml("[server]\nport = 9999\n");
+
+        assert_eq!(settings.server.port, 9999);
+        assert_eq!(settings.cache.max_bytes, 33_554_432);
+        assert_eq!(settings.search.default_lang, "auto");
+        assert_eq!(settings.ui.default_locale, "en");
+        assert_eq!(settings.general.instance_name, defaults.general.instance_name);
+        assert_eq!(settings.search.languages, defaults.search.languages);
+        assert_eq!(
+            settings.outgoing.request_timeout,
+            defaults.outgoing.request_timeout
+        );
+    }
+
+    #[test]
+    fn a_partial_yaml_file_keeps_the_shipped_defaults() {
+        let settings = load_file("settings.yml", "server:\n  port: 9999\n");
+
+        assert_eq!(settings.server.port, 9999);
+        assert_eq!(settings.ui.default_locale, "en");
+        assert_eq!(settings.search.default_lang, "auto");
+    }
+
+    #[test]
+    fn an_explicit_empty_tab_list_is_kept() {
+        let defaults = Settings::defaults();
+        assert!(!defaults.categories_as_tabs.is_empty());
+
+        let settings = load_toml("categories_as_tabs = []\n");
+        assert!(settings.categories_as_tabs.is_empty());
+    }
+
+    #[test]
+    fn an_explicit_false_is_kept() {
+        assert!(Settings::defaults().general.enable_metrics);
+
+        let settings = load_toml("[general]\nenable_metrics = false\n");
+        assert!(!settings.general.enable_metrics);
+        assert_eq!(settings.ui.default_locale, "en");
+    }
+
+    #[test]
+    fn an_explicit_zero_is_kept() {
+        assert_eq!(Settings::defaults().outgoing.retries, 1);
+
+        let settings = load_toml("[outgoing]\nretries = 0\n");
+        assert_eq!(settings.outgoing.retries, 0);
+        assert_eq!(settings.cache.max_bytes, 33_554_432);
+    }
+
+    #[test]
+    fn a_partial_file_still_merges_engines_by_name() {
+        let settings = load_toml(
+            r#"
+[server]
+port = 9999
+
+[[engines]]
+name = "google"
+engine = "google"
+disabled = true
+"#,
+        );
+
+        assert_eq!(settings.engine("google").expect("google").disabled, Some(true));
+        assert!(settings.engine("wikipedia").is_some(), "shipped engines stay");
+        assert_eq!(settings.ui.default_locale, "en");
+    }
+
+    #[test]
+    fn use_default_settings_false_replaces_the_engine_list() {
+        let settings = load_toml(
+            r#"
+use_default_settings = false
+
+[[engines]]
+name = "only"
+engine = "wikipedia"
+shortcut = "only"
+"#,
+        );
+
+        assert_eq!(settings.engines.len(), 1);
+        assert_eq!(settings.engines[0].name, "only");
+        assert_eq!(settings.server.port, 8888);
+    }
+
     #[test]
     fn a_user_engine_entry_can_set_its_own_proxy() {
         let defaults = Settings::defaults();
