@@ -397,10 +397,18 @@ impl Query {
     /// The language sent to the engines: the first requested language, or the
     /// UI locale when nothing was requested.
     pub fn engine_language(&self) -> String {
-        if let Some(language) = self.languages.first() {
+        let automatic = self
+            .languages
+            .first()
+            .is_some_and(|language| language == "auto");
+        if let Some(language) = self
+            .languages
+            .first()
+            .filter(|language| language.as_str() != "auto")
+        {
             return language.clone();
         }
-        if !self.locale.is_empty() {
+        if !automatic && !self.locale.is_empty() {
             return self.locale.clone();
         }
         // Neither the UI nor the request chose a language: follow the query.
@@ -474,8 +482,12 @@ fn language_code_value(value: &str) -> Option<String> {
     if lowered == "auto" {
         return Some(lowered);
     }
-    if is_language_code(&lowered) {
-        return Some(normalise_locale(&lowered));
+    let normalized = normalise_locale(&lowered);
+    if locales::LOCALES
+        .iter()
+        .any(|locale| locale.id.eq_ignore_ascii_case(&normalized))
+    {
+        return Some(normalized);
     }
     None
 }
@@ -594,6 +606,18 @@ mod tests {
     }
 
     #[test]
+    fn auto_language_keeps_query_detection_and_overrides_preferences() {
+        let mut query = Query::parse("日本語のエラー", &registry(), &[]);
+        query.locale = "en".into();
+        query.apply_language_param("auto").unwrap();
+        query.apply_language_preference("fr");
+        assert_eq!(query.engine_language(), "ja");
+        let mut query = Query::parse(":auto 日本語", &registry(), &[]);
+        query.locale = "en".into();
+        assert_eq!(query.engine_language(), "ja");
+    }
+
+    #[test]
     fn language_bang_wins_over_the_parameter() {
         let mut query = Query::parse(":ja 猫", &registry(), &[]);
         query
@@ -606,6 +630,8 @@ mod tests {
     fn invalid_language_parameter_is_rejected() {
         let mut query = Query::parse("rust", &registry(), &[]);
         assert!(query.apply_language_param("not-a-language").is_err());
+        assert!(query.apply_language_param("xyz").is_err());
+        assert!(query.apply_language_param("zz-ZZ").is_err());
         assert!(query.languages.is_empty());
         // An empty parameter counts as absent.
         query.apply_language_param("").expect("empty is ignored");

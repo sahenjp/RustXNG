@@ -2198,3 +2198,28 @@ name = "valkey_server"
 engine = "valkey_server"
 categories = ["general"]
 disabled = true  # unverified; remove when confirmed working
+
+# Additional Bing markets are opt-in: separate names/shortcuts retain independent entries.
+[[engines]]
+name = "bing UK"
+engine = "bing"
+shortcut = "buk"
+categories = ["general", "web"]
+mkt = "en-GB"
+disabled = true
+
+[[engines]]
+name = "bing Germany"
+engine = "bing"
+shortcut = "bde"
+categories = ["general", "web"]
+mkt = "de-DE"
+disabled = true
+
+[[engines]]
+name = "bing Japan"
+engine = "bing"
+shortcut = "bjp"
+categories = ["general", "web"]
+mkt = "ja-JP"
+disabled = true

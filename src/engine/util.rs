@@ -357,8 +357,10 @@ pub fn locale_region(locale: &str) -> String {
 /// processors (for example `en-de hello` or `english-german hallo`).
 /// Unknown language identifiers and queries without a payload are rejected.
 pub fn online_dictionary_direction(text: &str) -> Option<(String, String, String)> {
-    let pattern = regex::Regex::new(r"(?i)^.*?([a-z]+)-([a-z]+) (.+)$").ok()?;
-    let captures = pattern.captures(text)?;
+    static PATTERN: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+        regex::Regex::new(r"(?i)^.*?([a-z]+)-([a-z]+) (.+)$").expect("dictionary pattern")
+    });
+    let captures = PATTERN.captures(text)?;
     let payload = captures[3].trim();
     if payload.is_empty() {
         return None;

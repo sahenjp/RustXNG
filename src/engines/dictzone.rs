@@ -37,15 +37,6 @@ impl Dictzone {
         let meta = EngineMeta::from_config(config, DEFAULTS);
         Ok(Arc::new(Self { meta }))
     }
-
-    #[test]
-    fn applicability_requires_the_language_pair_prefix() {
-        assert!(engine().is_applicable(&query("en-de hello")));
-        assert!(engine().is_applicable(&query("english-german hallo")));
-        assert!(!engine().is_applicable(&query("hello world")));
-        assert!(!engine().is_applicable(&query("en-de")));
-        assert!(!engine().is_applicable(&query("xx-yy hello")));
-    }
 }
 
 fn direction(query: &Query) -> Option<(String, String, String)> {
@@ -183,5 +174,14 @@ mod tests {
             }
             _ => panic!("expected a result"),
         }
+    }
+
+    #[test]
+    fn applicability_requires_the_language_pair_prefix() {
+        assert!(engine().is_applicable(&query("en-de hello")));
+        assert!(engine().is_applicable(&query("english-german hallo")));
+        assert!(!engine().is_applicable(&query("hello world")));
+        assert!(!engine().is_applicable(&query("en-de")));
+        assert!(!engine().is_applicable(&query("xx-yy hello")));
     }
 }

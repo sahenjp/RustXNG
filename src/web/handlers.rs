@@ -166,6 +166,13 @@ async fn run_search(
     // paging links and never reached the engines.
     if let Some(language) = params.language.as_deref() {
         if let Err(message) = query.apply_language_param(language) {
+            if format == "json" {
+                return (
+                    StatusCode::BAD_REQUEST,
+                    axum::Json(serde_json::json!({"error": message})),
+                )
+                    .into_response();
+            }
             return error_page(&state, StatusCode::BAD_REQUEST, &message);
         }
     }
