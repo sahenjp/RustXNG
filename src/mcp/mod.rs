@@ -133,9 +133,9 @@ pub struct SearchOutput {
     /// Engines that failed or timed out, as "engine: reason".
     pub unresponsive_engines: Vec<String>,
     pub note: String,
-    /// True when this response was shortened to fit its payload budget.
+    /// True when any content was omitted or shortened for a source or payload limit.
     pub truncated: bool,
-    /// True when additional source results remain or source content was shortened.
+    /// True when more source results remain or source snippets were capped.
     pub source_truncated: bool,
     /// Pass as `offset` to continue, when additional results remain.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -501,6 +501,7 @@ fn fit_search_payload(
     max_chars: usize,
     max_bytes: usize,
 ) -> Result<(), String> {
+    let original_results = output.results.len();
     let fits = |output: &SearchOutput| -> Result<bool, String> {
         let json = serde_json::to_string(output).map_err(|e| e.to_string())?;
         Ok(json.len() <= max_bytes && json.chars().count() <= max_chars)
@@ -509,7 +510,6 @@ fn fit_search_payload(
         return Ok(());
     }
     output.truncated = true;
-    output.source_truncated = true;
     // Spend the remaining budget on snippets, preserving all URLs and metadata.
     for index in 0..output.results.len() {
         if fits(output)? {
@@ -519,7 +519,7 @@ fn fit_search_payload(
         let mut low = 0usize;
         let mut high = original.chars().count();
         while low < high {
-            let middle = (low + high + 1) / 2;
+            let middle = (low + high).div_ceil(2);
             output.results[index].snippet = truncate_chars(&original, middle).0;
             if fits(output)? {
                 low = middle;
@@ -531,13 +531,16 @@ fn fit_search_payload(
         output.results[index].snippet_truncated = true;
     }
     while !fits(output)? {
-        let Some(_removed) = output.results.pop() else {
-            return Err(
-                "payload budget is too small for the query, required URLs and metadata".into(),
-            );
-        };
+        if output.results.len() <= 1 {
+            return Err(if original_results > 0 {
+                "payload budget is too small for a required URL and its metadata".into()
+            } else {
+                "payload budget is too small for the query and required metadata".into()
+            });
+        }
+        output.results.pop();
         output.next_offset = Some(output.offset + output.results.len());
-        output.source_truncated = true;
+        output.truncated = true;
     }
     Ok(())
 }
@@ -587,34 +590,59 @@ fn fit_read_page_payload(
     if fits(output)? {
         return Ok(());
     }
-    output.truncated = true;
     let original = output.text.clone();
-    let mut low = 0usize;
-    let mut high = original.chars().count();
-    while low < high {
-        let middle = (low + high + 1) / 2;
-        output.text = truncate_chars(&original, middle).0;
-        if fits(output)? {
-            low = middle;
-        } else {
-            high = middle - 1;
+    let original_len = original.chars().count();
+    let original_next_offset = output.next_offset;
+    let original_passages = output.passages.clone();
+    let omitted_passages = original_passages
+        .as_ref()
+        .is_some_and(|items| !items.is_empty());
+    for passages in [original_passages.clone(), None] {
+        output.passages = passages;
+        let mut low = 0usize;
+        let mut high = original_len;
+        while low < high {
+            let middle = (low + high).div_ceil(2);
+            set_read_page_candidate(
+                output,
+                &original,
+                middle,
+                original_len,
+                original_next_offset,
+            );
+            if fits(output)? {
+                low = middle;
+            } else {
+                high = middle - 1;
+            }
+        }
+        set_read_page_candidate(output, &original, low, original_len, original_next_offset);
+        output.truncated |= omitted_passages && output.passages.is_none();
+        if fits(output)? && (low > 0 || original_len == 0) {
+            return Ok(());
         }
     }
-    output.text = truncate_chars(&original, low).0;
-    if low == 0 && !fits(output)? {
-        output.passages = None;
-        if !fits(output)? {
-            return Err("payload budget is too small for the required URL and metadata".into());
-        }
-    }
-    let resume = output.offset + low;
-    if low < original.chars().count() || output.next_offset.is_some() {
-        output.next_offset = Some(resume);
+    output.passages = None;
+    Err("payload budget is too small for the required URL and metadata".into())
+}
+
+fn set_read_page_candidate(
+    output: &mut ReadPageOutput,
+    original: &str,
+    chars: usize,
+    original_len: usize,
+    original_next_offset: Option<usize>,
+) {
+    output.text = truncate_chars(original, chars).0;
+    let cut_for_budget = chars < original_len;
+    output.next_offset = if chars == 0 {
+        None
+    } else if cut_for_budget {
+        Some(output.offset + chars)
     } else {
-        output.next_offset = None;
-        output.truncated = output.source_truncated;
-    }
-    Ok(())
+        original_next_offset
+    };
+    output.truncated = output.source_truncated || cut_for_budget || original_next_offset.is_some();
 }
 
 /// Take characters `offset..end` of page text that was extracted with a limit
@@ -763,6 +791,38 @@ mod tests {
         let mut too_small = output;
         too_small.query = "q".repeat(300);
         assert!(fit_search_payload(&mut too_small, 256, 512).is_err());
+
+        let mut long_url = too_small;
+        long_url.query = "q".into();
+        long_url.results[0].url = format!("https://example.test/{}", "u".repeat(600));
+        assert!(fit_search_payload(&mut long_url, 256, 512).is_err());
+    }
+
+    #[test]
+    fn read_page_budget_includes_final_pagination_and_escaped_text() {
+        let mut output = ReadPageOutput {
+            url: "https://example.test/page".into(),
+            offset: 30,
+            text: "日本語 \"quoted\" \\".repeat(80),
+            next_offset: Some(190),
+            source_truncated: false,
+            truncated: true,
+            passages: None,
+            note: UNTRUSTED.into(),
+        };
+        fit_read_page_payload(&mut output, 500, 500).unwrap();
+        let serialized = serde_json::to_string(&output).unwrap();
+        assert!(serialized.len() <= 500);
+        assert!(serialized.chars().count() <= 500);
+        let next_offset = output.next_offset.expect("remaining page text");
+        assert!(
+            next_offset > output.offset,
+            "continuation must make progress"
+        );
+
+        let mut impossible = output;
+        impossible.url = format!("https://example.test/{}", "u".repeat(500));
+        assert!(fit_read_page_payload(&mut impossible, 300, 300).is_err());
     }
 
     #[test]
