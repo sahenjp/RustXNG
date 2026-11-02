@@ -65,7 +65,8 @@ Use these existing parameters to narrow the response:
 
 Page text is optional. With default settings it is fetched for up to five results,
 with a limit of 8,000 characters per page; individual fetches can fail.
-Character limits are not token limits. Strict token budgets and server-side field selection are planned.
+Character limits are not token limits. The MCP tools below add serialized character/byte budgets. Token-specific budgets and
+field selection on the HTTP API are planned.
 
 The browser UI is at <http://127.0.0.1:29483/>. JSON, CSV, RSS, and HTML outputs are available.
 
@@ -78,7 +79,7 @@ Search defaults to five results and limits each snippet to 500 characters.
 Its serialized structured response is bounded to 12,000 Unicode characters
 and 24,000 UTF-8 bytes by default; callers can choose smaller or larger limits
 within the advertised bounds. The server shortens snippets first, then omits
-trailing results while preserving their URLs and metadata. `truncated`,
+trailing results while preserving complete URLs and metadata for the returned results. `truncated`,
 `source_truncated`, and `next_offset` report whether to continue. `read_page`
 uses Unicode character offsets and reports the same truncation state. Supplying
 a `query` to `read_page` also returns up to three matching passages.
@@ -86,7 +87,8 @@ a `query` to `read_page` also returns up to three matching passages.
 Page reads require direct connections so DNS answers and redirects can be
 checked against public addresses. They fail closed when configured or
 environment outgoing proxies are present. Search continues to use the normal
-outgoing proxy settings. Character and byte limits bound serialized payloads;
+outgoing proxy settings. Character and byte limits count the serialized structured JSON payload only,
+excluding the JSON-RPC envelope, SDK text rendering, and caller prompts;
 they do not promise a tokenizer-specific token count.
 
 ## Install
@@ -208,8 +210,9 @@ with their own datasets and conditions.
 
 The engine interface supports authenticated HTTP APIs through request headers, form data, and JSON.
 Optional providers require their own credentials and may charge for usage.
-Server-side field selection, relevant passages, and strict token budgets remain future work;
-use `max_results`, domain filters, and client-side projection today.
+For the HTTP API, use `max_results`, domain filters, and client-side projection.
+MCP also offers related passages and serialized character/byte limits. Strict
+tokenizer-specific budgets remain future work.
 
 Engines that keep returning empty results are automatically rested. Configure with `search.empty_result_limit` (default 8, 0 disables) and `search.empty_result_cooldown` (default 300 seconds). Monitor via `/stats` (HTML Resting column), `/stats/errors` (JSON `resting` / `resting_for` fields), or `/metrics` (`searxng_engines_resting` and `searxng_engines_resting_seconds` gauges)
 

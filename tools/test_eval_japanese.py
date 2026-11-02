@@ -2,6 +2,7 @@
 
 import json
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
@@ -30,15 +31,24 @@ class JapaneseBenchmarkTests(unittest.TestCase):
 
     def test_qiita_and_language_are_independent_request_conditions(self):
         from eval_japanese import build_search_url
-        baseline = parse_qs(urlsplit(build_search_url("http://localhost", "query", "default", False, None, False, baseline_engines=["google", "bing"])).query)
-        language = parse_qs(urlsplit(build_search_url("http://localhost", "query", "ja", False, None, False, baseline_engines=["google", "bing"])).query)
-        qiita = parse_qs(urlsplit(build_search_url("http://localhost", "query", "default", True, None, False, baseline_engines=["google", "bing"])).query)
+        baseline = parse_qs(urlsplit(build_search_url("http://localhost", "query", "default", False, None, False, baseline_engines=["duckduckgo", "bing"])).query)
+        language = parse_qs(urlsplit(build_search_url("http://localhost", "query", "ja", False, None, False, baseline_engines=["duckduckgo", "bing"])).query)
+        qiita = parse_qs(urlsplit(build_search_url("http://localhost", "query", "default", True, None, False, baseline_engines=["duckduckgo", "bing"])).query)
         self.assertNotIn("language", baseline)
         self.assertEqual(language["language"], ["ja"])
-        self.assertEqual(baseline["engines"], ["google,bing"])
-        self.assertEqual(language["engines"], ["google,bing"])
-        self.assertEqual(qiita["engines"], ["google,bing,qiita"])
+        self.assertEqual(baseline["engines"], ["duckduckgo,bing"])
+        self.assertEqual(language["engines"], ["duckduckgo,bing"])
+        self.assertEqual(qiita["engines"], ["duckduckgo,bing,qiita"])
         self.assertNotIn("language", qiita)
+
+    def test_upstream_camel_case_publication_date_is_preserved(self):
+        from eval_japanese import search
+        from io import BytesIO
+        response = BytesIO(json.dumps({"results": [{"url": "https://example.org/", "publishedDate": "2026-11-02"}]}).encode())
+        response.status = 200
+        with patch("urllib.request.urlopen", return_value=response):
+            row = search("http://localhost", "test", "ja", False, None, False, 1)
+        self.assertEqual(row["results"][0]["published_date"], "2026-11-02")
 
     def test_canonical_rank_requires_same_page(self):
         self.assertEqual(rank_of(["https://www.example.org/a/#frag"], ["http://example.org/a"]), 1)

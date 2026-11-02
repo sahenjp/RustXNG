@@ -118,7 +118,7 @@ impl Resolve for PublicResolver {
 }
 
 /// Extracted pages as (URL, text), oldest first.
-type Pages = VecDeque<(String, usize, PageContent)>;
+type Pages = VecDeque<(String, usize, std::time::Instant, PageContent)>;
 
 /// Extracted page text and whether the readable source exceeded the limit.
 #[derive(Clone, Debug)]
@@ -134,6 +134,7 @@ pub struct PageReader {
     permits: Arc<tokio::sync::Semaphore>,
     pages: Arc<Mutex<Pages>>,
     proxy_blocked: bool,
+    cache_ttl: Option<Duration>,
 }
 
 impl PageReader {
@@ -187,9 +188,17 @@ impl PageReader {
         Ok(Self {
             client: builder.build().map_err(|error| error.to_string())?,
             proxy_blocked,
+            cache_ttl: None,
             permits: Arc::new(tokio::sync::Semaphore::new(MAX_CONCURRENT)),
             pages: Arc::new(Mutex::new(VecDeque::new())),
         })
+    }
+
+    /// HTTP callers preserve their configured cache expiry; MCP callers keep
+    /// the same text while paging within their session.
+    pub fn with_cache_ttl(mut self, ttl: Duration) -> Self {
+        self.cache_ttl = Some(ttl);
+        self
     }
 
     /// The readable text of a page, up to `max_chars` characters (with a
@@ -283,8 +292,12 @@ impl PageReader {
             .unwrap_or_else(|poisoned| poisoned.into_inner());
         pages
             .iter()
-            .find(|(known, limit, _)| known == url && *limit == max_chars)
-            .map(|(_, _, content)| content.clone())
+            .find(|(known, limit, saved, _)| {
+                known == url
+                    && *limit == max_chars
+                    && self.cache_ttl.is_none_or(|ttl| saved.elapsed() < ttl)
+            })
+            .map(|(_, _, _, content)| content.clone())
     }
 
     fn remember(&self, url: &str, max_chars: usize, content: PageContent) {
@@ -292,8 +305,13 @@ impl PageReader {
             .pages
             .lock()
             .unwrap_or_else(|poisoned| poisoned.into_inner());
-        pages.retain(|(known, limit, _)| known != url || *limit != max_chars);
-        pages.push_back((url.to_string(), max_chars, content));
+        pages.retain(|(known, limit, _, _)| known != url || *limit != max_chars);
+        pages.push_back((
+            url.to_string(),
+            max_chars,
+            std::time::Instant::now(),
+            content,
+        ));
         if pages.len() > REMEMBERED_PAGES {
             pages.pop_front();
         }
@@ -322,6 +340,19 @@ fn environment_proxy_configured() -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn http_page_cache_expires_while_session_paging_stays_stable() {
+        let content = PageContent {
+            text: Arc::from("old page"),
+            source_truncated: false,
+        };
+        let session = PageReader::new(&crate::settings::Outgoing::default(), &[]).unwrap();
+        session.remember("https://example.org/", 100, content.clone());
+        assert!(session.remembered("https://example.org/", 100).is_some());
+        let http = session.with_cache_ttl(Duration::ZERO);
+        assert!(http.remembered("https://example.org/", 100).is_none());
+    }
 
     #[test]
     fn only_global_addresses_are_public() {

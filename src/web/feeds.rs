@@ -46,6 +46,9 @@ pub fn upstream_json(response: &SearchResponse) -> serde_json::Value {
             });
             if let Some(raw) = &result.raw_content {
                 object["raw_content"] = serde_json::json!(raw);
+                if let Some(truncated) = result.raw_content_truncated {
+                    object["raw_content_truncated"] = serde_json::json!(truncated);
+                }
             }
             object
         })
@@ -277,6 +280,26 @@ pub fn escape(value: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn both_json_forms_report_raw_content_truncation() {
+        let query =
+            crate::query::Query::parse("test", &crate::engine::EngineRegistry::default(), &[]);
+        let mut response = crate::aggregator::SearchResponse::new(&query);
+        let mut result = crate::results::SearchResult::new("https://example.org/", "source");
+        result.raw_content = Some("shortened page".into());
+        result.raw_content_truncated = Some(true);
+        response.results.push(result);
+        for value in [upstream_json(&response), json_response_full(&response)] {
+            assert_eq!(value["results"][0]["raw_content_truncated"], true);
+        }
+        response.results[0].raw_content = None;
+        assert!(
+            upstream_json(&response)["results"][0]
+                .get("raw_content_truncated")
+                .is_none()
+        );
+    }
 
     #[test]
     fn the_upstream_json_has_only_upstream_fields() {

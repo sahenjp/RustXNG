@@ -184,7 +184,8 @@ impl Searcher {
                 settings.cache.max_bytes.max(1024),
             ),
         };
-        let page_reader = crate::mcp::page::PageReader::new(&settings.outgoing, &[])?;
+        let page_reader = crate::mcp::page::PageReader::new(&settings.outgoing, &[])?
+            .with_cache_ttl(Duration::from_secs(settings.cache.ttl.max(1)));
         Ok(Self {
             page_reader,
             local_index: open_local_index(&settings),

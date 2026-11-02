@@ -108,6 +108,7 @@ def search(base: str, query: str, language: str, qiita: bool,
                 key: item.get(key) for key in
                 ("url", "title", "content", "published_date", "engine", "engines", "score")
             } | {
+                "published_date": item.get("published_date") or item.get("publishedDate"),
                 "raw_content": raw_content,
                 "raw_content_bytes": len(raw_content.encode("utf-8")) if isinstance(raw_content, str) else None,
                 "raw_content_characters": len(raw_content) if isinstance(raw_content, str) else None,
