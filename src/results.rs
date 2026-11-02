@@ -1332,6 +1332,49 @@ mod tests {
     }
 
     #[test]
+    fn query_delimiters_inside_a_value_do_not_collide_with_parameter_boundaries() {
+        // `b%26c%3Dd` is one value that contains "&c=d", not two parameters.
+        assert_eq!(
+            dedup_key("https://e.test/p?a=b%26c%3Dd"),
+            "e.test/p?a=b%26c%3Dd"
+        );
+        assert_eq!(dedup_key("https://e.test/p?a=b&c=d"), "e.test/p?a=b&c=d");
+        assert_ne!(
+            dedup_key("https://e.test/p?a=b%26c%3Dd"),
+            dedup_key("https://e.test/p?a=b&c=d")
+        );
+    }
+
+    #[test]
+    fn the_port_is_part_of_the_identity() {
+        assert_eq!(dedup_key("https://e.test:8443/p"), "e.test:8443/p");
+        assert_eq!(dedup_key("https://e.test:9443/p"), "e.test:9443/p");
+        assert_ne!(
+            dedup_key("https://e.test:8443/p"),
+            dedup_key("https://e.test:9443/p")
+        );
+    }
+
+    #[test]
+    fn the_https_default_port_is_elided() {
+        // Spec: the key is scheme independent and always assumes https, so the
+        // explicit default port and the absent port produce the same key.
+        assert_eq!(dedup_key("https://e.test:443/p"), "e.test/p");
+        assert_eq!(dedup_key("http://e.test/p"), "e.test/p");
+        assert_eq!(dedup_key("https://e.test:8443/p"), "e.test:8443/p");
+    }
+
+    #[test]
+    fn query_parameter_order_is_significant() {
+        assert_eq!(dedup_key("https://e.test/p?a=1&b=2"), "e.test/p?a=1&b=2");
+        assert_eq!(dedup_key("https://e.test/p?b=2&a=1"), "e.test/p?b=2&a=1");
+        assert_ne!(
+            dedup_key("https://e.test/p?a=1&b=2"),
+            dedup_key("https://e.test/p?b=2&a=1")
+        );
+    }
+
+    #[test]
     fn canonical_subsites_do_not_lend_authority_to_neighbours() {
         // docs.rust-lang.org is exact: the forum next door is not "the docs"
         assert_eq!(
