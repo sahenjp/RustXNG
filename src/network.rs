@@ -4,7 +4,7 @@
 //! timeout, proxies, a redirect limit, retries on transport errors and a
 //! response cache.
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashSet};
 use std::net::{IpAddr, Ipv4Addr, Ipv6Addr, SocketAddr};
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::time::Duration;
@@ -181,6 +181,47 @@ fn is_public_v6(address: Ipv6Addr) -> bool {
     !(unique_local || link_local || documentation)
 }
 
+/// Hosts the operator configured: engine endpoints and proxies may resolve to a
+/// private address on purpose, so they stay reachable.
+fn trusted_hosts(settings: &Settings) -> std::sync::Arc<HashSet<String>> {
+    let mut hosts = HashSet::new();
+    let mut add = |url: &str| {
+        if let Ok(parsed) = Url::parse(url) {
+            if let Some(host) = parsed.host_str() {
+                hosts.insert(normalize_host(host));
+            }
+        }
+    };
+    for engine in &settings.engines {
+        for url in [
+            engine.base_url.as_deref(),
+            engine.search_url.as_deref(),
+            engine.proxy.as_deref(),
+        ]
+        .into_iter()
+        .flatten()
+        {
+            add(url);
+        }
+        // Engines keep their extra options free-form (`api_url`, `backend_url`…).
+        for value in engine.extra.values() {
+            if let Some(url) = value.as_str() {
+                add(url);
+            }
+        }
+    }
+    for proxy in settings.outgoing.proxies.values() {
+        add(proxy);
+    }
+    std::sync::Arc::new(hosts)
+}
+
+fn normalize_host(host: &str) -> String {
+    host.trim_matches(['[', ']'])
+        .trim_end_matches('.')
+        .to_ascii_lowercase()
+}
+
 /// The system resolver, wrapped so [`PublicResolver`] can check its answers.
 struct SystemResolver;
 
@@ -200,33 +241,39 @@ impl Resolve for SystemResolver {
 ///
 /// Checking a name and then letting the connector resolve it again would leave
 /// a window for a second answer (DNS rebinding). This resolver hands the
-/// checked addresses to the connection instead.
+/// checked addresses to the connection instead. A configured engine endpoint or
+/// proxy may resolve privately.
 struct PublicResolver<R> {
     inner: R,
+    trusted: std::sync::Arc<HashSet<String>>,
 }
 
 impl PublicResolver<SystemResolver> {
-    fn system() -> Self {
-        Self::new(SystemResolver)
+    fn system(trusted: std::sync::Arc<HashSet<String>>) -> Self {
+        Self::new(SystemResolver, trusted)
     }
 }
 
 impl<R> PublicResolver<R> {
-    fn new(inner: R) -> Self {
-        Self { inner }
+    fn new(inner: R, trusted: std::sync::Arc<HashSet<String>>) -> Self {
+        Self { inner, trusted }
     }
 }
 
 impl<R: Resolve> Resolve for PublicResolver<R> {
     fn resolve(&self, name: Name) -> Resolving {
+        let trusted = self.trusted.contains(&normalize_host(name.as_str()));
         let resolved = self.inner.resolve(name);
         Box::pin(async move {
             let addresses: Vec<SocketAddr> = resolved.await?.collect();
             if addresses.is_empty() {
                 return Err("the host name resolved to no address".into());
             }
-            if let Some(address) = addresses.iter().find(|address| !is_public_ip(address.ip())) {
-                return Err(format!("{} resolves to a non-public address", address.ip()).into());
+            if !trusted {
+                if let Some(address) = addresses.iter().find(|address| !is_public_ip(address.ip()))
+                {
+                    return Err(format!("{} resolves to a non-public address", address.ip()).into());
+                }
             }
             Ok(Box::new(addresses.into_iter()) as Addrs)
         })
@@ -263,16 +310,19 @@ pub struct Network {
     suffix: String,
     retries: u32,
     counter: AtomicUsize,
+    /// Operator configured hosts that may resolve to a private address.
+    trusted_hosts: std::sync::Arc<HashSet<String>>,
 }
 
 /// Build a client from the outgoing settings, optionally through another proxy.
 fn build_client(
     outgoing: &crate::settings::Outgoing,
     extra_proxy: Option<reqwest::Proxy>,
+    trusted: std::sync::Arc<HashSet<String>>,
 ) -> Result<reqwest::Client, NetworkError> {
     let mut builder = reqwest::Client::builder()
         .redirect(redirect_policy(outgoing.max_redirects))
-        .dns_resolver(std::sync::Arc::new(PublicResolver::system()))
+        .dns_resolver(std::sync::Arc::new(PublicResolver::system(trusted)))
         .timeout(Duration::from_secs_f64(
             outgoing.max_request_timeout.max(1.0),
         ))
@@ -317,7 +367,8 @@ fn build_client(
 impl Network {
     pub fn from_settings(settings: &Settings) -> Result<Self, NetworkError> {
         let outgoing = &settings.outgoing;
-        let client = build_client(outgoing, None)?;
+        let trusted = trusted_hosts(settings);
+        let client = build_client(outgoing, None, std::sync::Arc::clone(&trusted))?;
         Ok(Self {
             client,
             proxied: std::sync::Mutex::new(std::collections::HashMap::new()),
@@ -326,6 +377,7 @@ impl Network {
             suffix: outgoing.useragent_suffix.clone(),
             retries: outgoing.retries,
             counter: AtomicUsize::new(0),
+            trusted_hosts: trusted,
         })
     }
 
@@ -346,7 +398,11 @@ impl Network {
         let Ok(configured) = reqwest::Proxy::all(proxy) else {
             return self.client.clone();
         };
-        let Ok(client) = build_client(&self.outgoing, Some(configured)) else {
+        let Ok(client) = build_client(
+            &self.outgoing,
+            Some(configured),
+            std::sync::Arc::clone(&self.trusted_hosts),
+        ) else {
             return self.client.clone();
         };
         if let Ok(mut cache) = self.proxied.lock() {
@@ -618,6 +674,7 @@ mod tests {
             suffix: String::new(),
             retries: 0,
             counter: AtomicUsize::new(0),
+            trusted_hosts: std::sync::Arc::new(HashSet::new()),
         }
     }
 
@@ -726,9 +783,12 @@ mod tests {
             target.port()
         )))
         .await;
-        let resolver = Arc::new(PublicResolver::new(StubResolver {
-            addresses: vec![SocketAddr::from(([127, 0, 0, 1], 0))],
-        }));
+        let resolver = Arc::new(PublicResolver::new(
+            StubResolver {
+                addresses: vec![SocketAddr::from(([127, 0, 0, 1], 0))],
+            },
+            Arc::new(HashSet::new()),
+        ));
         let client = reqwest::Client::builder()
             .redirect(redirect_policy(5))
             .dns_resolver(resolver)
@@ -772,5 +832,42 @@ mod tests {
             .await
             .unwrap_err();
         assert!(matches!(error, NetworkError::Transport(_)));
+    }
+
+    #[tokio::test]
+    async fn a_configured_host_may_resolve_to_a_private_address() {
+        let resolver = PublicResolver::new(
+            StubResolver {
+                addresses: vec![SocketAddr::from(([10, 0, 0, 5], 7700))],
+            },
+            Arc::new(HashSet::from(["meilisearch".to_string()])),
+        );
+        let name: Name = "meilisearch".parse().expect("name");
+        let addresses: Vec<SocketAddr> = resolver.resolve(name).await.expect("trusted").collect();
+        assert_eq!(addresses, vec![SocketAddr::from(([10, 0, 0, 5], 7700))]);
+    }
+
+    #[test]
+    fn engine_endpoints_and_proxies_are_trusted_hosts() {
+        let mut settings = Settings::defaults();
+        let mut engine =
+            crate::settings::EngineConfig::new("meilisearch", "meilisearch", "mes", &["general"]);
+        engine.base_url = Some("http://meilisearch:7700".to_string());
+        engine.proxy = Some("socks5h://corp-proxy:1080".to_string());
+        engine.extra.insert(
+            "api_url".to_string(),
+            toml::Value::String("http://intranet-api:9000".to_string()),
+        );
+        settings.engines = vec![engine];
+        settings
+            .outgoing
+            .proxies
+            .insert("https".to_string(), "http://egress:3128".to_string());
+
+        let hosts = trusted_hosts(&settings);
+        assert!(hosts.contains("meilisearch"));
+        assert!(hosts.contains("corp-proxy"));
+        assert!(hosts.contains("intranet-api"));
+        assert!(hosts.contains("egress"));
     }
 }
