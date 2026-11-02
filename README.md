@@ -190,6 +190,8 @@ Optional providers require their own credentials and may charge for usage.
 Server-side field selection, relevant passages, and strict token budgets remain future work;
 use `max_results`, domain filters, and client-side projection today.
 
+Engines that keep returning empty results are automatically rested. Configure with `search.empty_result_limit` (default 8, 0 disables) and `search.empty_result_cooldown` (default 300 seconds). Monitor via `/stats` (HTML Resting column), `/stats/errors` (JSON `resting` / `resting_for` fields), or `/metrics` (`searxng_engines_resting` and `searxng_engines_resting_seconds` gauges)
+
 ## Documentation
 
 | Document | Contents |
