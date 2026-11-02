@@ -72,6 +72,8 @@ The browser UI is at <http://127.0.0.1:29483/>. JSON, CSV, RSS, and HTML outputs
 
 ### MCP server
 
+Image and favicon proxy fetches also require direct connections: configured or environment proxies disable these reads. Private engine endpoints remain available for search and do not grant access to third-party media. `server.image_proxy = false` disables both image and favicon fetches.
+
 Run `rustxng mcp` to serve the read-only `search` and `read_page` tools over
 stdio. Search returns ranked snippets and source metadata; page text is fetched
 only when `read_page` is called with a URL returned by search in that session.
