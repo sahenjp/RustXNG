@@ -299,6 +299,154 @@ impl Connection {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::net::TcpListener;
+    use std::sync::Mutex;
+    use std::thread;
+
+    /// Start a stub server that answers the engine in script order and records
+    /// the raw request bytes. Commands are parsed leniently so malformed bytes
+    /// still get an answer; the recorded raw request is what the tests assert.
+    fn stub(replies: Vec<&'static str>) -> (u16, Arc<Mutex<Vec<String>>>) {
+        let listener = TcpListener::bind("127.0.0.1:0").expect("bind");
+        let port = listener.local_addr().expect("local addr").port();
+        let requests = Arc::new(Mutex::new(Vec::new()));
+        let recorded = Arc::clone(&requests);
+        thread::spawn(move || {
+            let Ok((stream, _)) = listener.accept() else {
+                return;
+            };
+            let mut reader = BufReader::new(stream.try_clone().expect("clone stream"));
+            let mut writer = stream;
+            for reply in replies {
+                let Some(request) = read_request(&mut reader) else {
+                    break;
+                };
+                recorded.lock().expect("lock").push(request);
+                if writer.write_all(reply.as_bytes()).is_err() {
+                    break;
+                }
+                let _ = writer.flush();
+            }
+        });
+        (port, requests)
+    }
+
+    fn read_request(reader: &mut impl BufRead) -> Option<String> {
+        let mut request = String::new();
+        let count = resp_line(reader, &mut request)?;
+        let count: usize = count.trim_start_matches('*').parse().ok()?;
+        for _ in 0..count {
+            let header = resp_line(reader, &mut request)?;
+            let digits: String = header
+                .trim_start_matches('$')
+                .chars()
+                .take_while(char::is_ascii_digit)
+                .collect();
+            let length: usize = digits.parse().ok()?;
+            let mut payload = vec![0u8; length + 2];
+            reader.read_exact(&mut payload).ok()?;
+            request.push_str(&String::from_utf8_lossy(&payload));
+        }
+        Some(request)
+    }
+
+    fn resp_line(reader: &mut impl BufRead, request: &mut String) -> Option<String> {
+        let mut line = String::new();
+        if reader.read_line(&mut line).ok()? == 0 {
+            return None;
+        }
+        request.push_str(&line);
+        Some(line.trim_end().to_string())
+    }
+
+    fn engine_at(port: u16, password: &str, exact_match_only: bool) -> Arc<ValkeyServer> {
+        let mut config = EngineConfig::new("valkey", "valkey_server", "", &["general"]);
+        config
+            .extra
+            .insert("host".into(), toml::Value::String("127.0.0.1".into()));
+        config
+            .extra
+            .insert("port".into(), toml::Value::Integer(i64::from(port)));
+        config
+            .extra
+            .insert("password".into(), toml::Value::String(password.into()));
+        config.extra.insert(
+            "exact_match_only".into(),
+            toml::Value::Boolean(exact_match_only),
+        );
+        ValkeyServer::from_config(&config).expect("engine")
+    }
+
+    fn parsed(query: &str) -> Query {
+        Query::parse(query, &crate::engine::EngineRegistry::default(), &[])
+    }
+
+    #[test]
+    fn auth_and_hgetall_send_valid_resp_bulk_headers() {
+        let (port, requests) = stub(vec!["+OK\r\n", "*2\r\n$4\r\nname\r\n$3\r\nAda\r\n"]);
+        let engine = engine_at(port, "hunter2", true);
+        let items = engine.search_offline(&parsed("user1"), 1).expect("search");
+        assert_eq!(items.len(), 1);
+        assert_eq!(
+            *requests.lock().expect("lock"),
+            vec![
+                "*2\r\n$4\r\nAUTH\r\n$7\r\nhunter2\r\n".to_string(),
+                "*2\r\n$7\r\nHGETALL\r\n$5\r\nuser1\r\n".to_string(),
+            ]
+        );
+    }
+
+    #[test]
+    fn scan_sends_valid_resp_bulk_headers() {
+        let (port, requests) = stub(vec!["*2\r\n$1\r\n0\r\n*0\r\n"]);
+        let engine = engine_at(port, "", false);
+        let items = engine.search_offline(&parsed("user1"), 1).expect("search");
+        assert!(items.is_empty());
+        assert_eq!(
+            *requests.lock().expect("lock"),
+            vec![
+                "*6\r\n$4\r\nSCAN\r\n$1\r\n0\r\n$5\r\nMATCH\r\n$7\r\n*user1*\r\n$5\r\nCOUNT\r\n$3\r\n100\r\n"
+                    .to_string(),
+            ]
+        );
+    }
+
+    #[test]
+    fn scan_follows_the_cursor_to_zero() {
+        let (port, requests) = stub(vec![
+            "*2\r\n$1\r\n7\r\n*1\r\n$6\r\nuser:1\r\n",
+            "+hash\r\n",
+            "*4\r\n$4\r\nname\r\n$3\r\nAda\r\n$4\r\ncity\r\n$6\r\nLondon\r\n",
+            "*2\r\n$1\r\n0\r\n*1\r\n$6\r\nuser:2\r\n",
+            "+string\r\n",
+        ]);
+        let engine = engine_at(port, "", false);
+        let items = engine.search_offline(&parsed("user1"), 1).expect("search");
+        assert_eq!(items.len(), 1);
+        let requests = requests.lock().expect("lock").clone();
+        assert_eq!(requests.len(), 5, "one SCAN per page then TYPE per key");
+        assert!(requests[0].starts_with("*6\r\n$4\r\nSCAN\r\n$1\r\n0\r\n"));
+        assert!(requests[3].starts_with("*6\r\n$4\r\nSCAN\r\n$1\r\n7\r\n"));
+    }
+
+    #[test]
+    fn hscan_follows_the_cursor_to_zero() {
+        let (port, requests) = stub(vec![
+            "*0\r\n",
+            "*2\r\n$1\r\n3\r\n*2\r\n$4\r\nname\r\n$3\r\nAda\r\n",
+            "*2\r\n$1\r\n0\r\n*2\r\n$4\r\ncity\r\n$6\r\nLondon\r\n",
+        ]);
+        let engine = engine_at(port, "", true);
+        let items = engine
+            .search_offline(&parsed("people ada"), 1)
+            .expect("search");
+        assert_eq!(items.len(), 2);
+        let requests = requests.lock().expect("lock").clone();
+        assert_eq!(requests.len(), 3);
+        assert!(requests[1].starts_with("*5\r\n$6\r\nHSCAN\r\n$6\r\npeople\r\n"));
+        assert!(requests[1].ends_with("$1\r\n0\r\n"));
+        assert!(requests[2].ends_with("$1\r\n3\r\n"));
+    }
 
     fn engine() -> Arc<ValkeyServer> {
         let mut config = EngineConfig::new("valkey", "valkey_server", "", &["general"]);
