@@ -161,6 +161,32 @@ async fn run_search(
         .filter(|value| !value.is_empty())
         .or_else(|| Some(preferences.locale.clone()).filter(|value| !value.is_empty()))
         .unwrap_or_default();
+    // Upstream `parse_lang`: `:lang` bang > `language` parameter > language
+    // preference. Until now the parameter was only echoed back into the
+    // paging links and never reached the engines.
+    if let Some(language) = params.language.as_deref() {
+        if let Err(message) = query.apply_language_param(language) {
+            return error_page(&state, StatusCode::BAD_REQUEST, &message);
+        }
+    }
+    let language_requested = !query.languages.is_empty();
+    query.apply_language_preference(&preferences.language);
+    // Most engines take their language/region from `query.locale`, so an
+    // explicitly requested language doubles as the locale — unless the
+    // caller picked a locale as well.
+    if language_requested
+        && params
+            .locale
+            .as_deref()
+            .map(|value| value.is_empty())
+            .unwrap_or(true)
+    {
+        if let Some(language) = query.languages.first() {
+            if language != "auto" {
+                query.locale = language.clone();
+            }
+        }
+    }
     query.pageno = params.pageno.unwrap_or(1).max(1);
     query.time_range = params.time_range.as_deref().and_then(TimeRange::parse);
     query.safesearch = params.safesearch.unwrap_or(preferences.safesearch).min(2);
@@ -190,11 +216,7 @@ async fn run_search(
         .unwrap_or_else(|| preferences.enabled_plugins.clone());
     let disabled_plugins = split_param(params.disabled_plugins.as_deref())
         .unwrap_or_else(|| preferences.disabled_plugins.clone());
-    let language = if preferences.language.is_empty() {
-        query.engine_language()
-    } else {
-        preferences.language.clone()
-    };
+    let language = query.engine_language();
 
     let user = user_info(&headers);
     match state.limiter.check(peer.0, &headers, &format) {

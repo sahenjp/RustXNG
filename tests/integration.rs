@@ -6,7 +6,7 @@ use std::sync::Arc;
 
 use axum::Router;
 use axum::body::Body;
-use axum::http::{Request, StatusCode, header};
+use axum::http::{Request, StatusCode, Uri, header};
 use axum::routing::get;
 use http_body_util::BodyExt;
 use tower::ServiceExt;
@@ -487,6 +487,134 @@ async fn the_rate_limiter_answers_429_after_the_limit() {
     // /healthz is not limited
     let (status, _, _) = get_uri(&app, "/healthz").await;
     assert_eq!(status, StatusCode::OK);
+}
+
+/// The JSON payload the fake YaCy engine answers with.
+const YACY_RESPONSE: &str = r#"{
+  "channels": [{
+    "items": [
+      {"link": "https://example.com/yacy", "title": "YaCy Result", "description": "A result."}
+    ]
+  }]
+}"#;
+
+/// The JSON payload the fake declarative JSON engine answers with.
+const JSON_ENGINE_RESPONSE: &str = r#"{
+  "results": [
+    {"url": "https://example.com/json", "title": "JSON Result", "content": "A result."}
+  ]
+}"#;
+
+/// Start fake engines that record every request URI, and return the base
+/// URL plus the recording.
+async fn start_recording_engines() -> (String, Arc<std::sync::Mutex<Vec<String>>>) {
+    let seen = Arc::new(std::sync::Mutex::new(Vec::new()));
+    let seen_yacy = seen.clone();
+    let seen_json = seen.clone();
+    let app = Router::new()
+        .route(
+            "/yacysearch.json",
+            get(move |uri: Uri| {
+                let seen = seen_yacy.clone();
+                async move {
+                    seen.lock().unwrap().push(uri.to_string());
+                    ([(header::CONTENT_TYPE, "application/json")], YACY_RESPONSE)
+                }
+            }),
+        )
+        .route(
+            "/jsonsearch",
+            get(move |uri: Uri| {
+                let seen = seen_json.clone();
+                async move {
+                    seen.lock().unwrap().push(uri.to_string());
+                    (
+                        [(header::CONTENT_TYPE, "application/json")],
+                        JSON_ENGINE_RESPONSE,
+                    )
+                }
+            }),
+        );
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let address: SocketAddr = listener.local_addr().unwrap();
+    tokio::spawn(async move {
+        axum::serve(listener, app).await.unwrap();
+    });
+    (format!("http://{address}"), seen)
+}
+
+/// Settings with two language-aware fake engines: YaCy reads
+/// `Query::engine_language`, the declarative JSON engine reads
+/// `Query::locale` through its `{lang}` URL placeholder.
+fn language_settings(base_url: &str) -> Settings {
+    let mut settings = Settings::defaults();
+    let mut yacy = EngineConfig::new("yacy", "yacy", "ya", &["general"]);
+    yacy.base_url = Some(base_url.to_string());
+    yacy.timeout = Some(1.0);
+    let mut json = EngineConfig::new("fakejson", "json_engine", "fj", &["general"]);
+    json.search_url = Some(format!("{base_url}/jsonsearch?q={{query}}&lang={{lang}}"));
+    json.timeout = Some(1.0);
+    for (key, value) in [
+        ("results_query", "results"),
+        ("url_query", "url"),
+        ("title_query", "title"),
+        ("content_query", "content"),
+    ] {
+        json.extra
+            .insert(key.to_string(), toml::Value::String(value.to_string()));
+    }
+    settings.engines = vec![yacy, json];
+    settings.search.autocomplete = "none".to_string();
+    settings.search.timeout_limit = 1.0;
+    settings.server.secret_key = "test".to_string();
+    settings
+}
+
+#[tokio::test]
+async fn language_parameter_reaches_the_engines() {
+    let (base_url, seen) = start_recording_engines().await;
+    let app = app(language_settings(&base_url));
+
+    // The shape Firecrawl sends: q + language + format=json.
+    let (status, body, _) = get_uri(&app, "/search?q=rust&format=json&language=fr").await;
+    assert_eq!(status, StatusCode::OK);
+    let json: serde_json::Value = serde_json::from_str(&body).unwrap();
+    assert_eq!(json["results"].as_array().unwrap().len(), 2);
+    {
+        let seen = seen.lock().unwrap();
+        assert!(
+            seen.iter()
+                .any(|uri| uri.starts_with("/yacysearch.json") && uri.contains("lr=lang_fr")),
+            "yacy saw: {seen:?}"
+        );
+        assert!(
+            seen.iter()
+                .any(|uri| uri.starts_with("/jsonsearch") && uri.contains("lang=fr")),
+            "json engine saw: {seen:?}"
+        );
+    }
+
+    // A `:lang` bang wins over the parameter, like upstream.
+    seen.lock().unwrap().clear();
+    let (status, _, _) = get_uri(&app, "/search?q=%3Aja+rust&format=json&language=fr").await;
+    assert_eq!(status, StatusCode::OK);
+    {
+        let seen = seen.lock().unwrap();
+        assert!(
+            seen.iter()
+                .any(|uri| uri.starts_with("/yacysearch.json") && uri.contains("lr=lang_ja")),
+            "yacy saw: {seen:?}"
+        );
+        assert!(
+            seen.iter()
+                .any(|uri| uri.starts_with("/jsonsearch") && uri.contains("lang=ja")),
+            "json engine saw: {seen:?}"
+        );
+    }
+
+    // An invalid language is a client error, like upstream.
+    let (status, _, _) = get_uri(&app, "/search?q=rust&format=json&language=not-a-language").await;
+    assert_eq!(status, StatusCode::BAD_REQUEST);
 }
 
 #[tokio::test]
