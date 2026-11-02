@@ -547,6 +547,68 @@ async fn the_rate_limiter_answers_429_after_the_limit() {
     assert_eq!(status, StatusCode::OK);
 }
 
+#[tokio::test]
+async fn research_and_search_share_limits_before_outbound_requests() {
+    use std::sync::atomic::{AtomicUsize, Ordering};
+
+    let engine_calls = Arc::new(AtomicUsize::new(0));
+    let llm_calls = Arc::new(AtomicUsize::new(0));
+    let engine_counter = engine_calls.clone();
+    let llm_counter = llm_calls.clone();
+    let upstream = Router::new()
+        .route(
+            "/api/v1/search/",
+            get(move || {
+                engine_counter.fetch_add(1, Ordering::SeqCst);
+                async { axum::Json(serde_json::json!([])) }
+            }),
+        )
+        .route(
+            "/chat/completions",
+            axum::routing::post(move || {
+                llm_counter.fetch_add(1, Ordering::SeqCst);
+                async {
+                    axum::Json(serde_json::json!({
+                        "choices": [{"message": {"content": "[\"rust\"]"}}]
+                    }))
+                }
+            }),
+        );
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let origin = format!("http://{}", listener.local_addr().unwrap());
+    let server = tokio::spawn(async move { axum::serve(listener, upstream).await.unwrap() });
+    let search = "/search?q=rust&format=json";
+    let research = "/research?q=rust&max_queries=1";
+
+    for first in [search, research] {
+        engine_calls.store(0, Ordering::SeqCst);
+        llm_calls.store(0, Ordering::SeqCst);
+        let mut settings = settings_for(&format!("{origin}/api/v1"));
+        settings.server.limiter = LimiterSettings::Enabled(true);
+        settings.server.limiter_max = 1;
+        settings.search.site_scoped_retry = false;
+        settings.research.enabled = true;
+        settings.research.base_url = origin.clone();
+        settings.research.api_key = "test-key".into();
+        let app = app(settings);
+
+        let (status, _, _) = get_uri(&app, first).await;
+        assert_eq!(status, StatusCode::OK, "{first}");
+        let expected_llm_calls = if first == research { 2 } else { 0 };
+        assert_eq!(engine_calls.load(Ordering::SeqCst), 1);
+        assert_eq!(llm_calls.load(Ordering::SeqCst), expected_llm_calls);
+
+        for blocked in [research, search] {
+            let (status, _, headers) = get_uri(&app, blocked).await;
+            assert_eq!(status, StatusCode::TOO_MANY_REQUESTS, "{blocked}");
+            assert!(headers.contains_key(header::RETRY_AFTER));
+            assert_eq!(engine_calls.load(Ordering::SeqCst), 1);
+            assert_eq!(llm_calls.load(Ordering::SeqCst), expected_llm_calls);
+        }
+    }
+    server.abort();
+}
+
 /// The JSON payload the fake YaCy engine answers with.
 const YACY_RESPONSE: &str = r#"{
   "channels": [{
