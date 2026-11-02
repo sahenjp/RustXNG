@@ -226,7 +226,9 @@ jobs:
               mkdir -p "$RUNNER_TEMP/published"
               gh release download "$RELEASE_TAG" --dir "$RUNNER_TEMP/published"
               read -r -a targets <<< "$TARGETS"
-              python3 tools/release_tools.py verify --tag "$RELEASE_TAG" --dist "$RUNNER_TEMP/published" --targets "${targets[@]}"
+              python3 tools/release_tools.py verify --tag "$RELEASE_TAG" --dist "$RUNNER_TEMP/published" --sha "$SOURCE_SHA" --targets "${targets[@]}"
+              rm -f dist/release-manifest.json
+              cp "$RUNNER_TEMP/published/"* dist/
               echo 'published=true' >> "$GITHUB_OUTPUT"
               exit 0
             fi
@@ -239,7 +241,7 @@ jobs:
           mkdir -p "$RUNNER_TEMP/verify"
           gh release download "$RELEASE_TAG" --dir "$RUNNER_TEMP/verify"
           read -r -a targets <<< "$TARGETS"
-          python3 tools/release_tools.py verify --tag "$RELEASE_TAG" --dist "$RUNNER_TEMP/verify" --targets "${targets[@]}"
+          python3 tools/release_tools.py verify --tag "$RELEASE_TAG" --dist "$RUNNER_TEMP/verify" --sha "$SOURCE_SHA" --targets "${targets[@]}"
           echo 'published=false' >> "$GITHUB_OUTPUT"
       - uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3
         if: ${{ !inputs.dry_run && steps.stage.outputs.published != 'true' && needs.plan.outputs.sha == github.sha }}

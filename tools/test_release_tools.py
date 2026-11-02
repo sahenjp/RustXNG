@@ -47,7 +47,13 @@ class ReleasePolicyTests(unittest.TestCase):
                 else:
                     binary = name.removesuffix('.sha256')
                     (root/name).write_text(hashlib.sha256(b'fixture').hexdigest() + '  ' + binary + '\n')
-            self.assertEqual(len(verify_assets(root, 'v0.27.0', targets)), 6)
+            hashes = verify_assets(root, 'v0.27.0', targets)
+            self.assertEqual(len(hashes), 6)
+            manifest = dict(tag='v0.27.0', targets=targets, sha256=hashes, commit='a'*40)
+            (root/'release-manifest.json').write_text(json.dumps(manifest))
+            verify_assets(root, 'v0.27.0', targets, 'a'*40)
+            with self.assertRaises(ValueError):
+                verify_assets(root, 'v0.27.0', targets, 'b'*40)
             (root/'rustxng-v0.27.0-x86_64-unknown-linux-gnu').write_bytes(b'changed')
             with self.assertRaises(ValueError):
                 verify_assets(root, 'v0.27.0', targets)

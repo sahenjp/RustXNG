@@ -58,7 +58,7 @@ def asset_names(tag: str, targets: list[str]) -> list[str]:
     return names
 
 
-def verify_assets(directory: Path, tag: str, targets: list[str]) -> dict[str, str]:
+def verify_assets(directory: Path, tag: str, targets: list[str], sha: str = "") -> dict[str, str]:
     names = asset_names(tag, targets)
     actual = {p.name for p in directory.iterdir()}
     if actual - set(names) - {'release-manifest.json'}:
@@ -75,6 +75,13 @@ def verify_assets(directory: Path, tag: str, targets: list[str]) -> dict[str, st
             expected = re.fullmatch(r'([0-9a-f]{64}) [ *]' + re.escape(binary) + r'\n?', path.read_text(encoding="utf-8"))
             if expected is None or expected[1] != hashes[binary]:
                 raise ValueError(f'invalid checksum or filename: {name}')
+    manifest_path = directory / 'release-manifest.json'
+    if manifest_path.exists():
+        manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
+        if manifest.get('tag') != tag or manifest.get('targets') != targets or manifest.get('sha256') != hashes:
+            raise ValueError('release manifest disagrees with downloaded assets')
+        if not re.fullmatch(r'[0-9a-f]{40}', manifest.get('commit', '')) or (sha and manifest['commit'] != sha):
+            raise ValueError('release manifest source commit mismatch')
     return hashes
 
 
@@ -141,7 +148,7 @@ def main() -> None:
         if not args.runs or not ci_gate(json.loads(args.runs.read_text(encoding="utf-8"))['workflow_runs'], args.sha, args.repository):
             raise SystemExit('the exact release commit has no successful main push CI run')
     else:
-        hashes = verify_assets(args.dist, args.tag, args.targets)
+        hashes = verify_assets(args.dist, args.tag, args.targets, args.sha)
         if args.command == 'manifest':
             if not re.fullmatch(r'[0-9a-f]{40}', args.sha):
                 raise ValueError('expected a full source commit SHA')
