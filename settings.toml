@@ -1414,6 +1414,15 @@ categories = ["science", "scientific publications"]
 paging = true
 
 [[engines]]
+name = "qiita"
+engine = "qiita"
+shortcut = "qi"
+categories = ["it"]
+paging = true
+# Unauthenticated requests are limited to 60/hour; set api_key (a personal
+# access token) to raise the limit to 1,000/hour.
+
+[[engines]]
 name = "quark"
 engine = "quark"
 shortcut = "qk"

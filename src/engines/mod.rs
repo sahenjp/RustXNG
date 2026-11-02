@@ -8,6 +8,7 @@
 //! | `crates`              | `crates.py`                  |
 //! | `crossref`            | `crossref.py`                |
 //! | `cinii`               | — (CiNii OpenSearch API)     |
+//! | `qiita`               | — (Qiita API v2)             |
 //! | `docker_hub`          | `docker_hub.py`              |
 //! | `duckduckgo`          | `duckduckgo.py`              |
 //! | `github`              | `github.py`                  |
@@ -181,6 +182,7 @@ pub mod privacywall;
 pub mod public_domain_image_archive;
 pub mod pubmed;
 pub mod pypi;
+pub mod qiita;
 pub mod quark;
 pub mod qwant;
 pub mod r1337x;
@@ -383,6 +385,7 @@ pub fn build(config: &EngineConfig) -> Result<EngineHandle, String> {
         "pinterest" => pinterest::Pinterest::from_config(config)?,
         "pixiv" => pixiv::Pixiv::from_config(config)?,
         "pubmed" => pubmed::PubMed::from_config(config)?,
+        "qiita" => qiita::Qiita::from_config(config)?,
         "quark" => quark::Quark::from_config(config)?,
         "repology" => repology::Repology::from_config(config)?,
         "shopify_stock" => shopify_stock::ShopifyStock::from_config(config)?,
