@@ -11,7 +11,7 @@ from eval_japanese import broad_metrics, canonical_page, make_query, pinpoint_su
 
 class JapaneseBenchmarkTests(unittest.TestCase):
     def test_corpus_has_30_pinned_official_japanese_diagnostics(self):
-        corpus = json.loads((Path(__file__).resolve().parents[1] / "bench/japanese-search/diagnostics.json").read_text())
+        corpus = json.loads((Path(__file__).resolve().parents[1] / "bench/japanese-search/diagnostics.json").read_text(encoding="utf-8"))
         self.assertEqual(len(corpus["cases"]), 30)
         for case in corpus["cases"]:
             self.assertEqual(case["typescript_version"], "5.9.3")

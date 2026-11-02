@@ -16,8 +16,8 @@ ROOT = Path(__file__).resolve().parent.parent
 
 
 def inventory() -> str:
-    settings = tomllib.loads((ROOT / 'settings.toml').read_text())
-    policy = json.loads((ROOT / 'docs/provider-policy.json').read_text())
+    settings = tomllib.loads((ROOT / 'settings.toml').read_text(encoding="utf-8"))
+    policy = json.loads((ROOT / 'docs/provider-policy.json').read_text(encoding="utf-8"))
     output = io.StringIO(newline='')
     writer = csv.writer(output, lineterminator='\n')
     writer.writerow(['name', 'module', 'disabled_in_config', 'inactive_in_config', 'enabled_in_config', 'source', 'configured_endpoint',
@@ -26,13 +26,13 @@ def inventory() -> str:
     for engine in settings['engines']:
         module = engine.get('engine', engine['name'])
         source = ROOT / 'src/engines' / f'{module}.rs'
-        text = source.read_text() if source.exists() else ''
+        text = source.read_text(encoding="utf-8") if source.exists() else ''
         production = text.split('#[cfg(test)]', 1)[0]
         disabled = engine.get('disabled', False)
         inactive = engine.get('inactive', False)
         entry = policy['providers'].get(module, {})
         writer.writerow([engine['name'], module, str(disabled).lower(), str(inactive).lower(), str(not disabled and not inactive).lower(),
-                         str(source.relative_to(ROOT)) if source.exists() else 'src/engines/mod.rs (locate registration)',
+                         source.relative_to(ROOT).as_posix() if source.exists() else 'src/engines/mod.rs (locate registration)',
                          engine.get('base_url') or engine.get('search_url') or '',
                          ' | '.join(sorted(set(re.findall(r'https?://[^\s"<>]+', production)))),
                          entry.get('request_url', ''), entry.get('access_method', 'unreviewed'),
@@ -48,12 +48,12 @@ def main() -> None:
     path = ROOT / 'docs/providers.csv'
     text = inventory()
     if args.check:
-        if not path.exists() or path.read_text() != text:
+        if not path.exists() or path.read_text(encoding="utf-8") != text:
             raise SystemExit('Provider inventory is stale; run python3 tools/provider_inventory.py')
         print('Provider inventory matches every settings entry.')
     else:
-        path.write_text(text)
-        print(f'Wrote {len(tomllib.loads((ROOT / "settings.toml").read_text())["engines"])} entries.')
+        path.write_text(text, encoding="utf-8", newline="\n")
+        print(f'Wrote {len(tomllib.loads((ROOT / "settings.toml").read_text(encoding="utf-8"))["engines"])} entries.')
 
 
 if __name__ == '__main__':
