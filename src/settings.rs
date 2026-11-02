@@ -1314,7 +1314,7 @@ shortcut = "only"
 
         assert_eq!(settings.engines.len(), 1);
         assert_eq!(settings.engines[0].name, "only");
-        assert_eq!(settings.server.port, 8888);
+        assert_eq!(settings.server.port, 29483);
     }
 
     #[test]
@@ -1374,15 +1374,13 @@ api_key = "test-key"
 
     #[test]
     fn an_explicit_legacy_port_8888_in_user_config_still_wins() {
-        let user: Settings = toml::from_str(
+        let merged = merged_toml(
             r#"
 use_default_settings = true
 [server]
 port = 8888
 "#,
-        )
-        .expect("user settings parse");
-        let merged = Settings::merge(Settings::defaults(), user).expect("merge");
+        );
         assert_eq!(merged.server.port, 8888);
         merged.validate().expect("legacy port must validate");
     }
