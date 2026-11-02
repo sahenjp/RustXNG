@@ -684,15 +684,13 @@ fn yaml_key(value: &serde_yaml::Value) -> Option<String> {
 }
 
 impl Settings {
-    /// Parse a SearXNG `settings.yml` (YAML) document into settings.
-    ///
-    /// Upstream's configuration format is YAML, so a drop-in `settings.yml` is
-    /// converted to the internal representation: the document is turned into TOML
-    /// values first (the internal merge logic works on those).
+    /// Parse a SearXNG `settings.yml` (YAML) document and merge it onto the
+    /// built-in defaults. Upstream's configuration format is YAML, so a
+    /// drop-in `settings.yml` is converted to TOML values first (the merge
+    /// logic works on those). Unlike [`Settings::load`] this does not apply the
+    /// `SEARXNG_*` overrides and does not validate.
     pub fn from_yaml_str(text: &str) -> Result<Settings, SettingsError> {
-        Self::user_value(text, true)?
-            .try_into()
-            .map_err(SettingsError::Parse)
+        Self::merge_values(Self::defaults_value(), Self::user_value(text, true)?)
     }
 
     /// Upstream's `server.public_instance`, also accepted under `[general]`
@@ -707,8 +705,23 @@ impl Settings {
     }
 
     /// The built-in defaults as raw TOML values, the base of every merge.
+    ///
+    /// `search.suspended_times` ships only in `Search::default()`, so it is
+    /// seeded here. Without the seed a user table would replace the shipped
+    /// entries instead of extending them. A table in the defaults file wins
+    /// over the Rust entries, so the seed merges instead of replacing.
     fn defaults_value() -> toml::Value {
-        toml::from_str(DEFAULT_SETTINGS).expect("built-in settings.toml must be valid")
+        let mut value: toml::Value =
+            toml::from_str(DEFAULT_SETTINGS).expect("built-in settings.toml must be valid");
+        if let Some(toml::Value::Table(search)) = value.get_mut("search") {
+            let mut suspended = toml::Value::try_from(Search::default().suspended_times)
+                .expect("suspended_times is a table of integers");
+            if let Some(shipped) = search.remove("suspended_times") {
+                suspended = deep_merge(suspended, shipped);
+            }
+            search.insert("suspended_times".into(), suspended);
+        }
+        value
     }
 
     /// Parse a user document into raw TOML values. YAML is converted first so
@@ -738,7 +751,25 @@ impl Settings {
                     path.extension().and_then(|extension| extension.to_str()),
                     Some("yml" | "yaml")
                 );
-                Self::merge_values(Self::defaults_value(), Self::user_value(&raw, is_yaml)?)?
+                let user = Self::user_value(&raw, is_yaml)?;
+                Self::merge_values(Self::defaults_value(), user).map_err(|error| {
+                    // The merged deserialize works on values without spans, so a
+                    // TOML type error loses its line and column. Re-parsing the
+                    // user file alone recovers the spanned message. The two
+                    // parsers disagree on TOML datetimes, so only swap in the
+                    // re-parsed error when it reports the same problem.
+                    if is_yaml {
+                        return error;
+                    }
+                    if let SettingsError::Parse(original) = &error {
+                        if let Err(spanned) = toml::from_str::<Settings>(&raw) {
+                            if spanned.message() == original.message() {
+                                return SettingsError::Parse(spanned);
+                            }
+                        }
+                    }
+                    error
+                })?
             }
             None => Settings::defaults(),
         };
@@ -1020,8 +1051,23 @@ fn merge_engines_by_name(
 mod tests {
     use super::*;
 
-    /// Load `text` through the real file path, so the tests exercise the same
-    /// entry point as the server.
+    /// Merge `text` the way `Settings::load` does, but without the `SEARXNG_*`
+    /// overrides, so an ambient environment variable cannot flip an assertion.
+    fn merged(text: &str, is_yaml: bool) -> Settings {
+        let user = Settings::user_value(text, is_yaml).expect("user settings parse");
+        Settings::merge_values(Settings::defaults_value(), user).expect("settings merge")
+    }
+
+    fn merged_toml(text: &str) -> Settings {
+        merged(text, false)
+    }
+
+    fn merged_yaml(text: &str) -> Settings {
+        merged(text, true)
+    }
+
+    /// Load `text` through the real file path and `Settings::load`, the entry
+    /// point the server uses.
     fn load_file(file_name: &str, text: &str) -> Settings {
         let directory = tempfile::tempdir().expect("temporary directory");
         let path = directory.path().join(file_name);
@@ -1029,14 +1075,27 @@ mod tests {
         Settings::load(Some(&path)).expect("settings load")
     }
 
-    fn load_toml(text: &str) -> Settings {
-        load_file("settings.toml", text)
+    #[test]
+    fn a_partial_file_loads_through_the_cli_entry_point() {
+        let settings = load_file("settings.toml", "[server]\nport = 9999\n");
+
+        assert_eq!(settings.cache.max_bytes, 33_554_432);
+        assert_eq!(settings.ui.default_locale, "en");
+        assert!(settings.engine("wikipedia").is_some());
+    }
+
+    #[test]
+    fn a_yaml_file_loads_through_the_cli_entry_point() {
+        let settings = load_file("settings.yml", "server:\n  port: 9999\n");
+
+        assert_eq!(settings.cache.max_bytes, 33_554_432);
+        assert_eq!(settings.ui.default_locale, "en");
     }
 
     #[test]
     fn a_partial_user_file_keeps_the_shipped_defaults() {
         let defaults = Settings::defaults();
-        let settings = load_toml("[server]\nport = 9999\n");
+        let settings = merged_toml("[server]\nport = 9999\n");
 
         assert_eq!(settings.server.port, 9999);
         assert_eq!(settings.cache.max_bytes, 33_554_432);
@@ -1056,7 +1115,7 @@ mod tests {
     #[test]
     fn an_empty_user_file_keeps_every_default() {
         let defaults = Settings::defaults();
-        let settings = load_toml("");
+        let settings = merged_toml("");
 
         assert_eq!(settings.server.port, defaults.server.port);
         assert_eq!(settings.cache.max_bytes, defaults.cache.max_bytes);
@@ -1066,7 +1125,7 @@ mod tests {
 
     #[test]
     fn a_partial_yaml_file_keeps_the_shipped_defaults() {
-        let settings = load_file("settings.yml", "server:\n  port: 9999\n");
+        let settings = merged_yaml("server:\n  port: 9999\n");
 
         assert_eq!(settings.server.port, 9999);
         assert_eq!(settings.ui.default_locale, "en");
@@ -1074,10 +1133,121 @@ mod tests {
     }
 
     #[test]
+    fn a_partial_suspension_map_extends_the_shipped_entries() {
+        let settings = merged_toml(
+            r#"
+[search.suspended_times]
+SearxEngineTooManyRequests = 60
+"#,
+        );
+
+        let suspended = &settings.search.suspended_times;
+        assert_eq!(suspended.get("SearxEngineTooManyRequests"), Some(&60));
+        assert_eq!(suspended.get("SearxEngineCaptcha"), Some(&86_400));
+        assert_eq!(suspended.get("cf_SearxEngineCaptcha"), Some(&1_296_000));
+    }
+
+    #[test]
+    fn a_nested_limiter_table_keeps_the_botdetection_defaults() {
+        let settings = merged_toml(
+            r#"
+[server.limiter]
+enabled = true
+
+[server.limiter.botdetection.ip_limit]
+filter_link_local = true
+"#,
+        );
+
+        assert!(settings.server.limiter_enabled());
+        let limiter = settings.server.limiter_config().expect("table form");
+        assert_eq!(limiter.botdetection.ipv4_prefix, 32);
+        assert_eq!(
+            limiter.botdetection.trusted_proxies,
+            vec!["127.0.0.0/8".to_string(), "::1".to_string()]
+        );
+        assert!(limiter.botdetection.ip_limit.filter_link_local);
+        assert!(!limiter.botdetection.ip_limit.link_token);
+        assert!(limiter.botdetection.ip_lists.pass_searxng_org);
+    }
+
+    #[test]
+    fn engine_specific_options_survive_the_merge() {
+        let settings = merged_toml(
+            r#"
+[[engines]]
+name = "my xpath"
+engine = "xpath"
+shortcut = "mx"
+categories = ["general"]
+content_xpath = "//p"
+"#,
+        );
+
+        // shipped engine options (the flattened `extra` table) stay
+        let shipped = settings.engine("stack overflow").expect("stack overflow");
+        assert_eq!(shipped.opt_str("api_site"), Some("stackoverflow"));
+        // and a user engine keeps its own options
+        let added = settings.engine("my xpath").expect("my xpath");
+        assert_eq!(added.opt_str("content_xpath"), Some("//p"));
+    }
+
+    #[test]
+    fn a_user_tab_list_is_kept() {
+        let settings = merged_toml("categories_as_tabs = [\"general\"]\n");
+
+        assert_eq!(settings.categories_as_tabs, vec!["general".to_string()]);
+    }
+
+    #[test]
+    fn from_yaml_str_merges_onto_the_defaults() {
+        let settings = Settings::from_yaml_str(
+            r#"
+server:
+  port: 9999
+engines:
+  - name: "google"
+    engine: google
+    disabled: true
+"#,
+        )
+        .expect("valid yaml");
+
+        assert_eq!(settings.server.port, 9999);
+        assert_eq!(settings.cache.max_bytes, 33_554_432);
+        assert_eq!(settings.ui.default_locale, "en");
+        assert_eq!(
+            settings.engine("google").expect("google").disabled,
+            Some(true)
+        );
+        assert!(settings.engine("wikipedia").is_some());
+    }
+
+    #[test]
+    fn a_wrong_value_type_is_a_parse_error_that_names_the_line() {
+        let user = Settings::user_value("[server]\nport = \"8888\"\n", false).expect("valid toml");
+        let error = Settings::merge_values(Settings::defaults_value(), user)
+            .expect_err("a string port is rejected");
+        assert!(matches!(error, SettingsError::Parse(_)), "{error}");
+
+        let directory = tempfile::tempdir().expect("temporary directory");
+        let path = directory.path().join("settings.toml");
+        std::fs::write(&path, "[server]\nport = \"8888\"\n").expect("write the settings file");
+        let error = Settings::load(Some(&path)).expect_err("a string port is rejected");
+        assert!(error.to_string().contains("line 2"), "{error}");
+    }
+
+    #[test]
+    fn an_empty_yaml_file_is_rejected_as_validation() {
+        let error = Settings::user_value("", true).expect_err("an empty document");
+        assert!(matches!(error, SettingsError::Validation(_)), "{error}");
+    }
+
+    #[test]
     fn an_explicit_empty_format_list_is_kept() {
         assert!(!Settings::defaults().search.formats.is_empty());
 
-        let settings = load_toml("[search]\nformats = []\n");
+        let settings = merged_toml("[search]\nformats = []\n");
         assert!(
             settings.search.formats.is_empty(),
             "explicit [] disables the extra formats"
@@ -1090,7 +1260,7 @@ mod tests {
     fn an_explicit_false_is_kept() {
         assert!(Settings::defaults().general.enable_metrics);
 
-        let settings = load_toml("[general]\nenable_metrics = false\n");
+        let settings = merged_toml("[general]\nenable_metrics = false\n");
         assert!(!settings.general.enable_metrics);
         assert_eq!(settings.ui.default_locale, "en");
     }
@@ -1099,14 +1269,14 @@ mod tests {
     fn an_explicit_zero_is_kept() {
         assert_eq!(Settings::defaults().outgoing.retries, 1);
 
-        let settings = load_toml("[outgoing]\nretries = 0\n");
+        let settings = merged_toml("[outgoing]\nretries = 0\n");
         assert_eq!(settings.outgoing.retries, 0);
         assert_eq!(settings.cache.max_bytes, 33_554_432);
     }
 
     #[test]
     fn a_partial_file_still_merges_engines_by_name() {
-        let settings = load_toml(
+        let settings = merged_toml(
             r#"
 [server]
 port = 9999
@@ -1131,7 +1301,7 @@ disabled = true
 
     #[test]
     fn use_default_settings_false_replaces_the_engine_list() {
-        let settings = load_toml(
+        let settings = merged_toml(
             r#"
 use_default_settings = false
 
@@ -1149,7 +1319,7 @@ shortcut = "only"
 
     #[test]
     fn a_user_engine_entry_can_set_its_own_proxy() {
-        let settings = load_toml(
+        let settings = merged_toml(
             r#"
 [[engines]]
 name = "mwmbl"
@@ -1173,7 +1343,7 @@ proxy = "http://127.0.0.1:18888"
             Some(true)
         );
 
-        let settings = load_toml(
+        let settings = merged_toml(
             r#"
 [[engines]]
 name = "exaapi"
@@ -1233,7 +1403,7 @@ engines:
     categories: ["general"]
     base_url: "https://ja.wikipedia.org"
 "#;
-        let settings = load_file("settings.yml", yaml);
+        let settings = merged_yaml(yaml);
 
         assert_eq!(settings.server.port, 8880);
         assert_eq!(settings.search.safe_search, 2);
@@ -1244,7 +1414,7 @@ engines:
 
     #[test]
     fn user_engines_merge_by_name() {
-        let settings = load_toml(
+        let settings = merged_toml(
             r#"
             use_default_settings = true
             [[engines]]
