@@ -505,6 +505,47 @@ mod tests {
         assert_eq!(decode_entities("it&#8217;s &#x2764;"), "it’s ❤");
     }
 
+    /// The `<item>` shape Google News and Bing News return.
+    fn rss_item(title: &str, link: &str, description: &str) -> String {
+        format!(
+            r#"<?xml version="1.0"?><rss version="2.0"><channel><item><title>{title}</title><link>{link}</link><description>{description}</description></item></channel></rss>"#
+        )
+    }
+
+    #[test]
+    fn rss_resolves_named_decimal_and_hex_references() {
+        let xml = rss_item(
+            "Rock &amp; Roll",
+            "https://example.com/search?a=1&amp;b=2",
+            "A&#x26;B and C&#38;D",
+        );
+        let items = parse_rss(&xml).unwrap();
+        assert_eq!(items.len(), 1);
+        assert_eq!(items[0].title, "Rock & Roll");
+        assert_eq!(items[0].link, "https://example.com/search?a=1&b=2");
+        assert_eq!(items[0].description, "A&B and C&D");
+    }
+
+    #[test]
+    fn rss_normalizes_whitespace_once_after_joining_fragments() {
+        let xml = rss_item("Rock  &amp;  Roll", "https://example.com/", "a&nbsp;b");
+        let items = parse_rss(&xml).unwrap();
+        assert_eq!(items[0].title, "Rock & Roll");
+        assert_eq!(items[0].description, "a b");
+    }
+
+    #[test]
+    fn rss_cdata_and_plain_text_are_unchanged() {
+        let xml = rss_item(
+            "plain title",
+            "https://example.com/",
+            "<![CDATA[<b>Rust &amp; Go</b>]]>",
+        );
+        let items = parse_rss(&xml).unwrap();
+        assert_eq!(items[0].title, "plain title");
+        assert_eq!(items[0].description, "<b>Rust & Go</b>");
+    }
+
     #[test]
     fn relative_urls_are_resolved() {
         assert_eq!(
