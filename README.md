@@ -205,6 +205,13 @@ use `max_results`, domain filters, and client-side projection today.
 | [Audit](docs/AUDIT-2026-11-02.md) | Findings, reproduction logs, and priorities |
 | [Security](SECURITY.md) | Reporting vulnerabilities and dependency advisories |
 
+## Community and maintenance
+
+Questions and ideas: [Discussions](https://github.com/sahenjp/RustXNG/discussions).
+Contribute through a fork and PR, or [apply to maintain an area](https://github.com/sahenjp/RustXNG/issues/new?template=maintainer_application.yml).
+See [governance](GOVERNANCE.md), [the maintainer roster](MAINTAINERS.md),
+[FAQ](docs/FAQ.md) and [roadmap](docs/ROADMAP.md). No invitation is required to contribute.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Validate changes with:

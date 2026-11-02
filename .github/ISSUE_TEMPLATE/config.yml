@@ -6,3 +6,9 @@ contact_links:
   - name: 移植状況の確認
     url: https://github.com/sahenjp/RustXNG/blob/main/docs/COVERAGE.md
     about: 未移植のエンジン・機能の一覧
+  - name: 質問・アイデア・使ってみた報告
+    url: https://github.com/sahenjp/RustXNG/discussions
+    about: バグ再現ではない相談や使い方はDiscussionsへ
+  - name: メンテナーとして参加する
+    url: https://github.com/sahenjp/RustXNG/blob/main/GOVERNANCE.md
+    about: 担当領域・参加方法・権限付与の方針

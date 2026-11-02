@@ -202,6 +202,12 @@ Seal-0はSeal-Hardの部分集合で、重複する質問には同一の観測�
 | [監査](docs/AUDIT-2026-11-02.md) | 指摘事項・再現ログ・優先順位 |
 | [セキュリティ](SECURITY.md) | 脆弱性の報告方法と依存関係の注意事項 |
 
+## コミュニティとメンテナンス
+
+質問・アイデアは[Discussions](https://github.com/sahenjp/RustXNG/discussions)へ。
+招待なしでfork・PRから参加できます。継続して担当したい方は[メンテナー参加フォーム](https://github.com/sahenjp/RustXNG/issues/new?template=maintainer_application.yml)で相談してください。
+[運営方針](GOVERNANCE.md)・[担当者一覧](MAINTAINERS.md)・[FAQ](docs/FAQ.md)・[ロードマップ](docs/ROADMAP.md)も参照してください。
+
 ## 開発への参加
 
 [CONTRIBUTING.md](CONTRIBUTING.md)を参照してください。変更を次のコマンドで検証します。
