@@ -4,7 +4,7 @@
 
 ## これは何か
 
-**RustXNG は、AI エージェントに検索させるためのセルフホスト型メタ検索エンジンです。**
+**RustXNG はAI エージェントに検索させるためのセルフホスト型メタ検索エンジンです。**
 
 Bing・DuckDuckGo・Wikipedia・GitHub・arXiv・PubMed など複数のサイトを 1 つの JSON API にまとめ、Rust の単一バイナリで動きます。Python もデータベースも API キーも要りません。
 
@@ -109,11 +109,11 @@ query_str = "SELECT title, body FROM docs WHERE body LIKE '%' || $1 || '%'"
 }
 ```
 
-エンドポイントは `GET /search?q=...&format=json` だけです。MCP で使いたい場合は、この 1 本を叩く薄い MCP サーバーを被せれば動きます（組み込みの MCP サーバーはまだありません）。
+HTTP API は `GET /search?q=...&format=json` で利用できます。MCP を使う場合は `rustxng mcp` で組み込みの標準入出力サーバーを起動します。`search` は抜粋を返し、`read_page` は同じセッションの検索で返った URL の本文を取得します。出力上限と取得制限は [README](../README.ja.md#mcpサーバー) を参照してください。
 
 ### トークンを抑える
 
-エージェントに渡す量は、パラメータ 1 つで半分以下にできます。
+エージェントに渡す量はパラメータ 1 つで半分以下にできます。
 
 ```bash
 # 既定: 全結果（例: 60 KB / 200 件）
@@ -134,7 +134,7 @@ cd RustXNG
 cargo run --release -- --port 29483
 ```
 
-Docker なら:
+Docker では次のコマンドで起動します。
 
 ```bash
 docker build -t rustxng . && docker run --rm -p 127.0.0.1:29483:29483 rustxng
@@ -145,6 +145,6 @@ docker build -t rustxng . && docker run --rm -p 127.0.0.1:29483:29483 rustxng
 ## 補足
 
 - **ライセンス**: AGPL-3.0-or-later（SearXNG と同じ）。帰属は NOTICE に記載
-- **互換性**: エンジン 226 型 / 設定エントリ 352 をすべて移植済み。差分は [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md)
+- **互換性**: SearXNG の設定と API を基にしています。Google 関連は削除しています。差分は [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md)
 - **バイナリサイズ**: 17 MB（DB エンジンを外した場合）/ 27 MB（全部入り）
 - **向いていない用途**: 画面デザインは独自なので、SearXNG のテーマをそのまま使いたい場合は不向きです

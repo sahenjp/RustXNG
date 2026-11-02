@@ -1,0 +1,90 @@
+{
+  "started_at": "2026-11-02T08:28:30.491450+00:00",
+  "base": "http://127.0.0.1:18991",
+  "commit": "ba6cee98b38e4f8185ff7f4f5d4bc637458923f2",
+  "settings_sha256": "0bce63bd2b3fb36881ed573580dcad8f80a64d35b4ebc7f46a53ea2e19198177",
+  "corpus_sha256": "4665bc67e43348c35a97e162585477fddc7330a816c97f5326aac1accac40cb7",
+  "server_context": {
+    "operator_supplied_context": {
+      "cache_state": "Warm process after the initial 384-query protocol validation; configured cache remains enabled; no flush between language conditions or repetitions",
+      "engines": [
+        "bing",
+        "brave",
+        "duckduckgo",
+        "yahoo japan"
+      ],
+      "local_index": "disabled",
+      "region": "Execution host; request locale ja-JP (does not imply host geolocation)",
+      "server_settings": "use_default_settings = true\n[server]\nbind_address = \"127.0.0.1\"\nport = 18991\nidle_timeout = 300\n[search]\nstrategy = \"staged\"\nstaged_tier = 4\nstaged_min_results = 10\ntimeout_limit = 4.0\nlocal_index_path = \"\"\n[outgoing]\nrequest_timeout = 3.0\nretries = 0\n",
+      "raw_content": false,
+      "tokenizer": null
+    },
+    "missing_context": []
+  },
+  "server_snapshots": {
+    "before_stats": {
+      "status": 200,
+      "sha256": "79c181421a9561fcc9e03da3f7326b86d1b613ef5cceb0dcb64de115cbe3aa6b",
+      "body_utf8": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Stats — RustXNG</title>\n<link rel=\"stylesheet\" href=\"/static/style.css\">\n</head>\n<body>\n<header>\n  <h1><a href=\"/\">RustXNG</a></h1>\n  <nav><a href=\"/\">Search</a><a href=\"/preferences\">Preferences</a><a href=\"/about\">About</a></nav>\n</header>\n<h2>Statistics</h2>\n<table>\n  <tr><th>Uptime</th><td>277.622837829</td></tr>\n  <tr><th>Searches</th><td>384</td></tr>\n  <tr><th>Engine requests</th><td>770</td></tr>\n  <tr><th>Engine errors</th><td>2</td></tr>\n  <tr><th>Engine timeouts</th><td>0</td></tr>\n  <tr><th>Results served</th><td>3836</td></tr>\n  <tr><th>Cache hits</th><td>0</td></tr>\n  <tr><th>Cache entries</th><td>26 (7811797 bytes, 576 hits / 194 misses)</td></tr>\n</table>\n\n<h3>Engines</h3>\n\n<table>\n  <tr><th>Engine</th><th>Requests</th><th>Results</th><th>Errors</th><th>Average</th><th>Suspended</th><th>Resting</th></tr>\n\n  <tr>\n    <td>bing</td>\n    <td>384</td>\n    <td>3768</td>\n    <td>0</td>\n    <td>20.781762309000023</td>\n    <td>no</td>\n    <td>no</td>\n  </tr>\n\n  <tr>\n    <td>brave</td>\n    <td>0</td>\n    <td>0</td>\n    <td>1</td>\n    <td>0</td>\n    <td>yes</td>\n    <td>no</td>\n  </tr>\n\n  <tr>\n    <td>duckduckgo</td>\n    <td>0</td>\n    <td>0</td>\n    <td>1</td>\n    <td>0</td>\n    <td>yes</td>\n    <td>no</td>\n  </tr>\n\n  <tr>\n    <td>yahoo japan</td>\n    <td>384</td>\n    <td>3320</td>\n    <td>0</td>\n    <td>60.46431209999997</td>\n    <td>no</td>\n    <td>no</td>\n  </tr>\n\n</table>\n\n<footer><p>RustXNG 0.26.0 — metrics are only kept in memory.</p></footer>\n</body>\n</html>"
+    },
+    "before_engine_errors": {
+      "status": 200,
+      "sha256": "3ef9aa5e91855ab130f8b164c15c6e3ce8c6077243ca534e263fd828dc538281",
+      "body_utf8": "[{\"engine\":\"bing\",\"stats\":{\"requests\":384,\"results\":3768,\"errors\":0,\"timeouts\":0,\"http_errors\":0,\"total_time\":20.781762309000023},\"consecutive_failures\":0,\"suspended\":false,\"suspended_for\":0.0,\"suspension_reason\":null,\"resting\":false,\"resting_for\":0.0},{\"engine\":\"brave\",\"stats\":{\"requests\":0,\"results\":0,\"errors\":1,\"timeouts\":0,\"http_errors\":0,\"total_time\":0.0},\"consecutive_failures\":1,\"suspended\":true,\"suspended_for\":23.691099417,\"suspension_reason\":\"too many requests\",\"resting\":false,\"resting_for\":0.0},{\"engine\":\"duckduckgo\",\"stats\":{\"requests\":0,\"results\":0,\"errors\":1,\"timeouts\":0,\"http_errors\":0,\"total_time\":0.0},\"consecutive_failures\":1,\"suspended\":true,\"suspended_for\":86123.876761607,\"suspension_reason\":\"captcha\",\"resting\":false,\"resting_for\":0.0},{\"engine\":\"yahoo japan\",\"stats\":{\"requests\":384,\"results\":3320,\"errors\":0,\"timeouts\":0,\"http_errors\":0,\"total_time\":60.46431209999997},\"consecutive_failures\":0,\"suspended\":false,\"suspended_for\":0.0,\"suspension_reason\":null,\"resting\":false,\"resting_for\":0.0}]"
+    },
+    "after_stats": {
+      "status": 200,
+      "sha256": "4b9747de11ea152ac8d17f18dfd33dd157b67dab6c83ade214b30e51e56b247f",
+      "body_utf8": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Stats — RustXNG</title>\n<link rel=\"stylesheet\" href=\"/static/style.css\">\n</head>\n<body>\n<header>\n  <h1><a href=\"/\">RustXNG</a></h1>\n  <nav><a href=\"/\">Search</a><a href=\"/preferences\">Preferences</a><a href=\"/about\">About</a></nav>\n</header>\n<h2>Statistics</h2>\n<table>\n  <tr><th>Uptime</th><td>379.959487896</td></tr>\n  <tr><th>Searches</th><td>768</td></tr>\n  <tr><th>Engine requests</th><td>1461</td></tr>\n  <tr><th>Engine errors</th><td>7</td></tr>\n  <tr><th>Engine timeouts</th><td>0</td></tr>\n  <tr><th>Results served</th><td>7566</td></tr>\n  <tr><th>Cache hits</th><td>0</td></tr>\n  <tr><th>Cache entries</th><td>27 (8329367 bytes, 1092 hits / 369 misses)</td></tr>\n</table>\n\n<h3>Engines</h3>\n\n<table>\n  <tr><th>Engine</th><th>Requests</th><th>Results</th><th>Errors</th><th>Average</th><th>Suspended</th><th>Resting</th></tr>\n\n  <tr>\n    <td>bing</td>\n    <td>686</td>\n    <td>6748</td>\n    <td>4</td>\n    <td>36.40734848499999</td>\n    <td>no</td>\n    <td>no</td>\n  </tr>\n\n  <tr>\n    <td>brave</td>\n    <td>0</td>\n    <td>0</td>\n    <td>2</td>\n    <td>0</td>\n    <td>yes</td>\n    <td>no</td>\n  </tr>\n\n  <tr>\n    <td>duckduckgo</td>\n    <td>0</td>\n    <td>0</td>\n    <td>1</td>\n    <td>0</td>\n    <td>yes</td>\n    <td>no</td>\n  </tr>\n\n  <tr>\n    <td>yahoo japan</td>\n    <td>768</td>\n    <td>6648</td>\n    <td>0</td>\n    <td>118.41988377499995</td>\n    <td>no</td>\n    <td>no</td>\n  </tr>\n\n</table>\n\n<footer><p>RustXNG 0.26.0 — metrics are only kept in memory.</p></footer>\n</body>\n</html>"
+    },
+    "after_engine_errors": {
+      "status": 200,
+      "sha256": "faba0cc7fbbad0f4f4d077cb2d70e632734350c3aaaccff376b23e70b177704b",
+      "body_utf8": "[{\"engine\":\"bing\",\"stats\":{\"requests\":686,\"results\":6748,\"errors\":4,\"timeouts\":0,\"http_errors\":0,\"total_time\":36.40734848499999},\"consecutive_failures\":0,\"suspended\":false,\"suspended_for\":0.0,\"suspension_reason\":null,\"resting\":false,\"resting_for\":0.0},{\"engine\":\"brave\",\"stats\":{\"requests\":0,\"results\":0,\"errors\":2,\"timeouts\":0,\"http_errors\":0,\"total_time\":0.0},\"consecutive_failures\":2,\"suspended\":true,\"suspended_for\":221.607744933,\"suspension_reason\":\"too many requests\",\"resting\":false,\"resting_for\":0.0},{\"engine\":\"duckduckgo\",\"stats\":{\"requests\":0,\"results\":0,\"errors\":1,\"timeouts\":0,\"http_errors\":0,\"total_time\":0.0},\"consecutive_failures\":1,\"suspended\":true,\"suspended_for\":86021.540155714,\"suspension_reason\":\"captcha\",\"resting\":false,\"resting_for\":0.0},{\"engine\":\"yahoo japan\",\"stats\":{\"requests\":768,\"results\":6648,\"errors\":0,\"timeouts\":0,\"http_errors\":0,\"total_time\":118.41988377499995},\"consecutive_failures\":0,\"suspended\":false,\"suspended_for\":0.0,\"suspension_reason\":null,\"resting\":false,\"resting_for\":0.0}]"
+    }
+  },
+  "request_defaults": {
+    "format": "json",
+    "max_results": 10,
+    "full": 1,
+    "category": "server default",
+    "engine": "server default",
+    "region": null,
+    "locale": "ja-JP",
+    "cache_bypass": false,
+    "raw_content_requested": false
+  },
+  "conditions": {
+    "variants": [
+      "raw",
+      "quoted",
+      "keywords"
+    ],
+    "languages": [
+      "default",
+      "ja"
+    ],
+    "qiita_engine": [
+      false
+    ],
+    "baseline_engines": [
+      "bing",
+      "brave",
+      "duckduckgo",
+      "yahoo japan"
+    ]
+  },
+  "time_range": {
+    "pinpoint": null,
+    "broad_fresh": "month"
+  },
+  "repeats": 2,
+  "source_license": "TypeScript diagnostic localization: Apache-2.0; reference documentation terms remain with TypeScript website",
+  "tokenizer": null,
+  "token_count_status": "unmeasured; no tokenizer implementation/version is specified",
+  "limitations": [
+    "No live benchmark is run by this script's tests.",
+    "The Japanese messages are official localization templates with explicit placeholder instantiations, not captured compiler transcripts.",
+    "Cache, engine and local-index state require an operator-supplied --run-context to be fully attributable."
+  ]
+}

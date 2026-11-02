@@ -1,0 +1,8 @@
+{
+  "server_binary_sha256": "9fcfd500151ae7186810b72642b346eda97f13eb0041b79d56cd0ea55edfe39f",
+  "observations_sha256": "0ca74ce4f5060b81970f284c79216e6bdd1efd172b4229d5513bba1631466738",
+  "observations_gzip_sha256": "3c1094290f787f7b5ea62201d4036515f9ea7599f3172bb019437116b4028035",
+  "evaluator_commit": "ba6cee98b38e4f8185ff7f4f5d4bc637458923f2",
+  "binary_source_commit": "d5bbd78649196702af16b36fececf51d45c572ba",
+  "note": "HTTP query behavior unchanged by later MCP budget fixes. Original server process retained during both runs. Warm process/cache state is recorded in metadata.json. Token counts unmeasured."
+}

@@ -23,7 +23,7 @@ RUSTXNG_URL=http://127.0.0.1:29483 rdsh search-web --engine rustxng --json "pyth
 3. ローカルの `rustxng` コマンド
 4. `http://127.0.0.1:8888`
 
-RustXNG を別ホスト・別ポートで動かす場合:
+RustXNG を別ホスト・別ポートで動かす場合は、次のように指定します。
 
 ```bash
 RUSTXNG_URL=http://127.0.0.1:9999 rdsh search-web --engine rustxng "query"
@@ -31,7 +31,7 @@ RUSTXNG_URL=http://127.0.0.1:9999 rdsh search-web --engine rustxng "query"
 
 ## バイナリの導入
 
-`rdsh rustxng install` は GitHub Releases の最新版を `~/.local/bin` へ入れます。RustXNG 側のリリースは 5 プラットフォーム（Linux gnu/musl、macOS aarch64/x86_64、Windows）にバイナリを添付しています。
+`rdsh rustxng install` は GitHub Releases の最新版を `~/.local/bin` へ入れます。RustXNG v0.26.0 の配布物は5プラットフォーム（Linux gnu/musl、macOS aarch64/x86_64、Windows）です。Linux ARM64 GNU 向けの CI とリリース設定も追加しましたが、導入時は対象バージョンの配布物を確認してください。
 
 ## 互換性
 
@@ -45,9 +45,9 @@ rdsh は SearXNG の JSON API を読むため、RustXNG は同じ形で応答し
 
 ## rdsh と併用するときの推奨設定
 
-- **自前インデックスは任意** — `search.local_index_path`を設定した場合だけ利用します。ディレクトリを置くだけでは有効になりません。
-- **キャッシュ** — rdsh は同じクエリを繰り返しがちです。既定のキャッシュ（300 秒）で 2 回目以降は 16 ms で返ります
-- **`--limit`** — rdsh 側の件数指定に合わせて `max_results` が渡ります
+- 自前インデックスは任意です。`search.local_index_path`を設定した場合だけ利用します。ディレクトリを置くだけでは有効になりません。
+- rdsh は同じクエリを繰り返しがちです。既定のキャッシュ（300 秒）で 2 回目以降は 16 ms で返ります
+- `--limit` はrdsh 側の件数指定に合わせて `max_results` が渡ります
 
 ## サイドカーの後始末
 

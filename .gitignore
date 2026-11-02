@@ -14,3 +14,6 @@ bench/nightly.json
 bench/content-exa.json
 bench/content-tavily.json
 bench/content-ollama.json
+
+# Full benchmark observations are kept as compressed evidence.
+/bench/results/**/observations.jsonl
