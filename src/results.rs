@@ -1146,6 +1146,16 @@ pub fn filter_results(
 
 /// The deduplication key of a URL: scheme independent, without fragment and
 /// without the usual tracking parameters.
+///
+/// The key is assembled from the parsed URL structure, not by concatenating
+/// decoded text, so values and separators stay distinguishable:
+///
+/// - the host keeps its port, except the https default (443). The key always
+///   assumes https, so `http://e.test/p`, `https://e.test/p` and
+///   `https://e.test:443/p` share one key, while `:8443` and `:9443` differ;
+/// - query pairs are re-encoded as pairs, so `?a=b%26c%3Dd` (one value holding
+///   `&c=d`) never collapses into `?a=b&c=d` (two parameters);
+/// - query order is preserved, since servers may treat it as significant.
 pub fn dedup_key(url: &str) -> String {
     let trimmed = url.trim();
     let Ok(mut parsed) = url::Url::parse(trimmed) else {
@@ -1154,23 +1164,27 @@ pub fn dedup_key(url: &str) -> String {
     parsed.set_fragment(None);
     let _ = parsed.set_scheme("https");
     let host = parsed.host_str().unwrap_or_default().to_lowercase();
-    let path = parsed.path().trim_end_matches('/').to_string();
-    let mut query: Vec<(String, String)> = parsed
-        .query_pairs()
-        .filter(|(key, _)| !is_tracking_param(key))
-        .map(|(key, value)| (key.to_string(), value.to_string()))
-        .collect();
-    query.sort();
-    let query: Vec<String> = query
-        .into_iter()
-        .map(|(key, value)| format!("{key}={value}"))
-        .collect();
+    // `port()` keeps an explicit port unless it is the default for the current
+    // scheme, and `set_scheme` does not renormalise, so compare explicitly.
+    let authority = match parsed.port().filter(|port| *port != 443) {
+        Some(port) => format!("{host}:{port}"),
+        None => host,
+    };
+    let path = parsed.path().trim_end_matches('/');
+    let mut serializer = url::form_urlencoded::Serializer::new(String::new());
+    for (key, value) in parsed.query_pairs() {
+        if is_tracking_param(&key) {
+            continue;
+        }
+        serializer.append_pair(&key, &value);
+    }
+    let query = serializer.finish();
     format!(
-        "{host}{path}{}",
+        "{authority}{path}{}",
         if query.is_empty() {
             String::new()
         } else {
-            format!("?{}", query.join("&"))
+            format!("?{query}")
         }
     )
 }
