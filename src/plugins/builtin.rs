@@ -508,6 +508,44 @@ mod tests {
     }
 
     #[test]
+    fn calculator_rejects_deeply_nested_expressions() {
+        let expression = format!("{}1{}", "(".repeat(1000), ")".repeat(1000));
+        assert!(evaluate(&expression).is_none());
+    }
+
+    #[test]
+    fn calculator_rejects_expressions_over_the_depth_budget() {
+        let expression = format!("{}1{}", "(".repeat(100), ")".repeat(100));
+        assert!(evaluate(&expression).is_none());
+    }
+
+    #[test]
+    fn calculator_rejects_overlong_expressions() {
+        let expression = format!("{}1", "1+".repeat(2500));
+        assert!(evaluate(&expression).is_none());
+    }
+
+    #[test]
+    fn calculator_rejects_expressions_over_the_token_budget() {
+        let expression = format!("{}1", "1+".repeat(256));
+        assert!(evaluate(&expression).is_none());
+    }
+
+    #[test]
+    fn calculator_accepts_expressions_within_the_budget() {
+        let expression = format!("{}1", "1+".repeat(100));
+        assert_eq!(evaluate(&expression), Some(101.0));
+    }
+
+    #[test]
+    fn calculator_skips_queries_over_the_budget() {
+        let query = format!("{}1{}", "(".repeat(1000), ")".repeat(1000));
+        let mut response = empty_response(&query);
+        Calculator.post_search(&mut response, &context(&query));
+        assert!(response.answers.is_empty());
+    }
+
+    #[test]
     fn calculator_answers_arithmetic_queries() {
         let mut response = empty_response("2+2*2");
         Calculator.post_search(&mut response, &context("2+2*2"));
