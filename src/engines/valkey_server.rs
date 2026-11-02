@@ -18,6 +18,11 @@ use crate::settings::EngineConfig;
 
 // engine-id: valkey_server
 
+/// Upper bound on the SCAN/HSCAN pages one search follows. Upstream stops when
+/// the server returns cursor 0; a server that never does must not hold the
+/// request open.
+const SCAN_PAGE_BUDGET: usize = 32;
+
 const DEFAULTS: EngineDefaults = EngineDefaults {
     categories: &["general"],
     shortcut: "",
@@ -89,51 +94,61 @@ impl ValkeyServer {
     }
 
     /// Every key/value row, like upstream search_keys().
-    fn search_keys(&self, query: &str) -> Result<Vec<BTreeMap<String, String>>, EngineError> {
-        let mut connection = self.connect()?;
+    fn search_keys(
+        &self,
+        connection: &mut Connection,
+        query: &str,
+    ) -> Result<Vec<BTreeMap<String, String>>, EngineError> {
         let pattern = format!("*{query}*");
-        let reply = connection.command(&["SCAN", "0", "MATCH", &pattern, "COUNT", "100"])?;
-        let Reply::Array(items) = reply else {
-            return Ok(Vec::new());
-        };
-        let Some(Reply::Array(key_list)) = items.get(1) else {
-            return Ok(Vec::new());
-        };
         let mut rows = Vec::new();
-        for key in key_list {
-            let Reply::Bulk(Some(key)) = key else {
-                continue;
+        let mut cursor = "0".to_string();
+        for _ in 0..SCAN_PAGE_BUDGET {
+            let reply =
+                connection.command(&["SCAN", &cursor, "MATCH", &pattern, "COUNT", "100"])?;
+            let Some((next, keys)) = cursor_page(reply) else {
+                break;
             };
-            let kind = match connection.command(&["TYPE", key])? {
-                Reply::Simple(value) | Reply::Bulk(Some(value)) => value,
-                _ => continue,
-            };
-            let mut map = BTreeMap::new();
-            match kind.as_str() {
-                "hash" => {
-                    if let Reply::Array(pairs) = connection.command(&["HGETALL", key])? {
-                        for chunk in pairs.chunks(2) {
-                            if let [Reply::Bulk(Some(name)), Reply::Bulk(Some(value))] = chunk {
-                                map.insert(name.clone(), value.clone());
+            for key in keys {
+                let Reply::Bulk(Some(key)) = key else {
+                    continue;
+                };
+                let kind = match connection.command(&["TYPE", &key])? {
+                    Reply::Simple(value) | Reply::Bulk(Some(value)) => value,
+                    _ => continue,
+                };
+                let mut map = BTreeMap::new();
+                match kind.as_str() {
+                    "hash" => {
+                        if let Reply::Array(pairs) = connection.command(&["HGETALL", &key])? {
+                            for chunk in pairs.chunks(2) {
+                                if let [Reply::Bulk(Some(name)), Reply::Bulk(Some(value))] = chunk {
+                                    map.insert(name.clone(), value.clone());
+                                }
                             }
                         }
                     }
-                }
-                "list" => {
-                    if let Reply::Array(items) = connection.command(&["LRANGE", key, "0", "-1"])? {
-                        for (index, item) in items.iter().enumerate() {
-                            if let Reply::Bulk(Some(value)) = item {
-                                map.insert(index.to_string(), value.clone());
+                    "list" => {
+                        if let Reply::Array(items) =
+                            connection.command(&["LRANGE", &key, "0", "-1"])?
+                        {
+                            for (index, item) in items.iter().enumerate() {
+                                if let Reply::Bulk(Some(value)) = item {
+                                    map.insert(index.to_string(), value.clone());
+                                }
                             }
                         }
                     }
+                    _ => continue,
                 }
-                _ => continue,
+                if !map.is_empty() {
+                    map.insert("valkey_key".to_string(), key.clone());
+                    rows.push(map);
+                }
             }
-            if !map.is_empty() {
-                map.insert("valkey_key".to_string(), key.clone());
-                rows.push(map);
+            if next == "0" {
+                break;
             }
+            cursor = next;
         }
         Ok(rows)
     }
@@ -169,7 +184,7 @@ impl Engine for ValkeyServer {
         }
         let mut connection = self.connect()?;
         if !self.exact_match_only {
-            return Ok(rows_to_items(self.search_keys(&text)?));
+            return Ok(rows_to_items(self.search_keys(&mut connection, &text)?));
         }
         let mut rows = Vec::new();
         if let Reply::Array(pairs) = connection.command(&["HGETALL", &text])? {
@@ -186,18 +201,23 @@ impl Engine for ValkeyServer {
         if rows.is_empty() {
             if let Some((set, rest)) = text.split_once(' ') {
                 let pattern = format!("*{rest}*");
-                if let Reply::Array(entries) =
-                    connection.command(&["HSCAN", set, "0", "MATCH", &pattern])?
-                {
-                    if let Some(Reply::Array(pairs)) = entries.get(1) {
-                        for chunk in pairs.chunks(2) {
-                            if let [Reply::Bulk(Some(name)), Reply::Bulk(Some(value))] = chunk {
-                                let mut map = BTreeMap::new();
-                                map.insert(name.clone(), value.clone());
-                                rows.push(map);
-                            }
+                let mut cursor = "0".to_string();
+                for _ in 0..SCAN_PAGE_BUDGET {
+                    let reply = connection.command(&["HSCAN", set, &cursor, "MATCH", &pattern])?;
+                    let Some((next, pairs)) = cursor_page(reply) else {
+                        break;
+                    };
+                    for chunk in pairs.chunks(2) {
+                        if let [Reply::Bulk(Some(name)), Reply::Bulk(Some(value))] = chunk {
+                            let mut map = BTreeMap::new();
+                            map.insert(name.clone(), value.clone());
+                            rows.push(map);
                         }
                     }
+                    if next == "0" {
+                        break;
+                    }
+                    cursor = next;
                 }
             }
         }
@@ -225,6 +245,24 @@ fn rows_to_items(rows: Vec<BTreeMap<String, String>>) -> Vec<EngineItem> {
         .collect()
 }
 
+/// Split one SCAN/HSCAN reply into its next cursor and the returned elements.
+fn cursor_page(reply: Reply) -> Option<(String, Vec<Reply>)> {
+    let Reply::Array(mut items) = reply else {
+        return None;
+    };
+    if items.len() != 2 {
+        return None;
+    }
+    let Reply::Array(elements) = items.pop()? else {
+        return None;
+    };
+    let cursor = match items.pop()? {
+        Reply::Bulk(Some(cursor)) | Reply::Simple(cursor) => cursor,
+        _ => return None,
+    };
+    Some((cursor, elements))
+}
+
 /// One RESP reply.
 #[derive(Debug, Clone)]
 enum Reply {
@@ -245,7 +283,7 @@ impl Connection {
     fn command(&mut self, args: &[&str]) -> Result<Reply, EngineError> {
         let mut request = format!("*{}\r\n", args.len());
         for argument in args {
-            request.push_str(&format!("${}$\r\n{}\r\n", argument.len(), argument));
+            request.push_str(&format!("${}\r\n{}\r\n", argument.len(), argument));
         }
         self.writer
             .write_all(request.as_bytes())
@@ -443,9 +481,49 @@ mod tests {
         assert_eq!(items.len(), 2);
         let requests = requests.lock().expect("lock").clone();
         assert_eq!(requests.len(), 3);
-        assert!(requests[1].starts_with("*5\r\n$6\r\nHSCAN\r\n$6\r\npeople\r\n"));
-        assert!(requests[1].ends_with("$1\r\n0\r\n"));
-        assert!(requests[2].ends_with("$1\r\n3\r\n"));
+        assert!(requests[1].starts_with("*5\r\n$5\r\nHSCAN\r\n$6\r\npeople\r\n"));
+        assert!(requests[1].contains("$1\r\n0\r\n$5\r\nMATCH"));
+        assert!(requests[2].contains("$1\r\n3\r\n$5\r\nMATCH"));
+    }
+
+    #[test]
+    fn scan_stops_after_the_page_budget() {
+        let mut replies = Vec::new();
+        for _ in 0..SCAN_PAGE_BUDGET {
+            replies.push("*2\r\n$1\r\n1\r\n*1\r\n$6\r\nuser:1\r\n");
+            replies.push("+string\r\n");
+        }
+        let (port, requests) = stub(replies);
+        let engine = engine_at(port, "", false);
+        let items = engine.search_offline(&parsed("user1"), 1).expect("search");
+        assert!(items.is_empty());
+        let requests = requests.lock().expect("lock").clone();
+        let scans = requests
+            .iter()
+            .filter(|request| request.contains("SCAN"))
+            .count();
+        assert_eq!(scans, SCAN_PAGE_BUDGET);
+    }
+
+    #[test]
+    fn hscan_stops_after_the_page_budget() {
+        let mut replies = vec!["*0\r\n"];
+        replies.extend(std::iter::repeat_n(
+            "*2\r\n$1\r\n1\r\n*2\r\n$4\r\nname\r\n$3\r\nAda\r\n",
+            SCAN_PAGE_BUDGET,
+        ));
+        let (port, requests) = stub(replies);
+        let engine = engine_at(port, "", true);
+        let items = engine
+            .search_offline(&parsed("people ada"), 1)
+            .expect("search");
+        assert_eq!(items.len(), SCAN_PAGE_BUDGET);
+        let requests = requests.lock().expect("lock").clone();
+        let scans = requests
+            .iter()
+            .filter(|request| request.contains("HSCAN"))
+            .count();
+        assert_eq!(scans, SCAN_PAGE_BUDGET);
     }
 
     fn engine() -> Arc<ValkeyServer> {
