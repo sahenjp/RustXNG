@@ -75,7 +75,8 @@ The browser UI is at <http://127.0.0.1:29483/>. JSON, CSV, RSS, and HTML outputs
 
 Choose a binary and its `.sha256` sidecar from [Releases](https://github.com/sahenjp/RustXNG/releases).
 The published v0.26.0 release includes Linux x86_64 (GNU and musl), macOS arm64/x86_64,
-and Windows x86_64 binaries. The [agent setup guide](docs/AGENT-SETUP.md) explains selection and verification.
+and Windows x86_64 binaries. Releases after v0.26.0 add Linux ARM64 (`aarch64-unknown-linux-gnu`, glibc 2.39+).
+The [agent setup guide](docs/AGENT-SETUP.md) explains selection and verification.
 Prebuilt binaries do not require a Rust toolchain.
 
 Example for Linux x86_64, using the GitHub CLI and a user-owned install directory:

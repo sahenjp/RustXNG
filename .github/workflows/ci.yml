@@ -55,6 +55,38 @@ jobs:
           key: no-default-features
       - run: cargo build --release --locked --no-default-features
 
+  linux-arm64:
+    # Native Linux ARM64 (aarch64-unknown-linux-gnu) on the GitHub-hosted arm64
+    # runner: no cross toolchain and no emulation. Mirrors the release build,
+    # which publishes this target. Containers stay x86_64 only.
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: linux-arm64
+      - name: Runner is native aarch64
+        run: test "$(uname -m)" = aarch64
+      - name: Clippy
+        run: cargo clippy --locked --all-targets -- -D warnings
+      - name: Build and test
+        run: cargo test --locked --all-targets
+      - name: Build the server binary
+        run: cargo build --locked --bin rustxng
+      - name: The binary is aarch64 and answers
+        run: |
+          set -euo pipefail
+          file target/debug/rustxng | tee /dev/stderr | grep -qF aarch64
+          target/debug/rustxng --version
+      - name: Agent setup smoke test (offline)
+        run: python3 tools/smoke_agent_setup.py --binary target/debug/rustxng
+      - name: Check the slim build (no database engines)
+        run: cargo build --locked --no-default-features
+
   msrv:
     # Cargo.toml's rust-version must hold for the locked dependency set.
     runs-on: ubuntu-latest

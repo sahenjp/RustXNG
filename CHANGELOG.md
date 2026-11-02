@@ -6,6 +6,7 @@
 
 ### Added
 
+- Linux ARM64 release binary (`aarch64-unknown-linux-gnu`, glibc 2.39+), built and smoke-tested natively on GitHub's arm64 runner. CI also runs clippy, tests, the offline agent setup smoke test and the slim build there. When re-running the release workflow for an older tag, `legacy_assets` keeps that tag's original asset set.
 - Explicit `--check-update` and `--update` commands download the matching official stable release, verify its SHA-256 sidecar and preserve settings.
 - OS trusted CA roots and `outgoing.ca_bundle` support allow proxy CA certificates without disabling TLS verification. Document staged search settings for congested outbound proxies.
 

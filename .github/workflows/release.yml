@@ -23,6 +23,11 @@ on:
         required: false
         type: boolean
         default: false
+      legacy_assets:
+        description: 'Only the pre-ARM64 asset set (tags released before Linux ARM64 support)'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -35,32 +40,59 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  plan:
+    # Decide which targets this run builds and publish requires. A normal tag
+    # push builds everything. Re-running an older tag with legacy_assets keeps
+    # the asset set it was released with (no Linux ARM64 binary).
+    #
+    # Matrix fields: os/target/artifact as before; arch is the `file` output
+    # fragment a Linux binary must show; musl installs musl-tools; slim_check
+    # also builds --no-default-features; since_arm64 marks targets a legacy
+    # re-run leaves out.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      targets: ${{ steps.plan.outputs.targets }}
+    steps:
+      - id: plan
+        shell: bash
+        env:
+          LEGACY: ${{ github.event_name == 'workflow_dispatch' && inputs.legacy_assets || false }}
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/all.json" <<'JSON'
+          [
+            {"comment": "glibc 2.35 floor: build on 22.04 so 24.04 and 25.x still run it.",
+             "os": "ubuntu-22.04", "target": "x86_64-unknown-linux-gnu", "artifact": "rustxng", "arch": "x86-64"},
+            {"comment": "Native build on the GitHub-hosted arm64 runner (no cross toolchain, no emulation). Ubuntu 24.04 sets a glibc 2.39 floor. The slim build is checked here because the x86_64 CI jobs do not cover this target.",
+             "os": "ubuntu-24.04-arm", "target": "aarch64-unknown-linux-gnu", "artifact": "rustxng", "arch": "aarch64",
+             "slim_check": true, "since_arm64": true},
+            {"comment": "Static: runs on any x86_64 Linux, including Alpine.",
+             "os": "ubuntu-22.04", "target": "x86_64-unknown-linux-musl", "artifact": "rustxng", "arch": "x86-64", "musl": true},
+            {"comment": "Both macOS targets build on the arm64 runner: the Apple toolchain cross-compiles to x86_64, and the Intel runner labels are retired or queue for hours.",
+             "os": "macos-15", "target": "aarch64-apple-darwin", "artifact": "rustxng"},
+            {"os": "macos-15", "target": "x86_64-apple-darwin", "artifact": "rustxng"},
+            {"os": "windows-latest", "target": "x86_64-pc-windows-msvc", "artifact": "rustxng.exe"}
+          ]
+          JSON
+          if [ "$LEGACY" = "true" ]; then
+            filter='map(select(.since_arm64 != true))'
+          else
+            filter='.'
+          fi
+          matrix="$(jq -c "$filter | {include: map(del(.comment))}" "$RUNNER_TEMP/all.json")"
+          targets="$(jq -r "$filter | map(.target) | join(\" \")" "$RUNNER_TEMP/all.json")"
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+          echo "targets=$targets" >> "$GITHUB_OUTPUT"
+          echo "matrix: $matrix"
+          echo "targets: $targets"
+
   build:
+    needs: plan
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          # glibc 2.35 floor: build on 22.04 so 24.04 and 25.x still run it.
-          - os: ubuntu-22.04
-            target: x86_64-unknown-linux-gnu
-            artifact: rustxng
-          # Static: runs on any Linux, including Alpine.
-          - os: ubuntu-22.04
-            target: x86_64-unknown-linux-musl
-            artifact: rustxng
-            musl: true
-          # Both macOS targets build on the arm64 runner: the Apple toolchain
-          # cross-compiles to x86_64, and the Intel runner labels are retired
-          # or queue for hours.
-          - os: macos-15
-            target: aarch64-apple-darwin
-            artifact: rustxng
-          - os: macos-15
-            target: x86_64-apple-darwin
-            artifact: rustxng
-          - os: windows-latest
-            target: x86_64-pc-windows-msvc
-            artifact: rustxng.exe
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
     steps:
@@ -78,6 +110,11 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y musl-tools
+      - name: Check the slim build (no database engines)
+        if: matrix.slim_check
+        shell: bash
+        # A separate target dir keeps the shipped default-feature binary apart.
+        run: cargo build --release --locked --no-default-features --target "${{ matrix.target }}" --target-dir target/slim
       - name: Build
         shell: bash
         run: cargo build --release --locked --target "${{ matrix.target }}"
@@ -88,8 +125,30 @@ jobs:
           binary="target/${{ matrix.target }}/release/${{ matrix.artifact }}"
           test -f "$binary"
           if [ "${{ runner.os }}" = "Linux" ]; then
+            # The runner must execute the binary natively: refuse a binary
+            # built for a different CPU than the target name claims.
+            command -v file >/dev/null || { sudo apt-get update && sudo apt-get install -y file; }
+            file "$binary"
+            file "$binary" | grep -qF "${{ matrix.arch }}" \
+              || { echo "binary is not ${{ matrix.arch }}" >&2; exit 1; }
             "$binary" --version
           fi
+      - name: Agent setup smoke test (offline)
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          set -euo pipefail
+          binary="target/${{ matrix.target }}/release/${{ matrix.artifact }}"
+          if [ ! -f tools/smoke_agent_setup.py ]; then
+            # Tags older than the smoke test cannot run it; a fresh tag must.
+            if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+              echo "::warning::tools/smoke_agent_setup.py is missing at $RELEASE_TAG; smoke test skipped"
+              exit 0
+            fi
+            echo "tools/smoke_agent_setup.py is missing at $RELEASE_TAG" >&2
+            exit 1
+          fi
+          python3 tools/smoke_agent_setup.py --binary "$binary"
       - name: Name the asset after the tag and the target
         shell: bash
         run: |
@@ -118,7 +177,7 @@ jobs:
           retention-days: 7
 
   publish:
-    needs: build
+    needs: [plan, build]
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -136,7 +195,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          expected="x86_64-unknown-linux-gnu x86_64-unknown-linux-musl aarch64-apple-darwin x86_64-apple-darwin x86_64-pc-windows-msvc"
+          expected="${{ needs.plan.outputs.targets }}"
+          test -n "$expected" || { echo "empty target plan" >&2; exit 1; }
           for target in $expected; do
             case "$target" in
               *windows*) name="rustxng-${RELEASE_TAG}-$target.exe" ;;

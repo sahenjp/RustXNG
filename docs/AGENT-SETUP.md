@@ -32,15 +32,21 @@ rustxng --version
 Inspect the OS and CPU with platform tools (`uname -s` / `uname -m` on Unix;
 `[System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture` in PowerShell).
 Inspect the [release assets](https://github.com/sahenjp/RustXNG/releases) before choosing a file.
-The v0.26.0 asset mapping is:
+Map the reported CPU to the target prefix: `x86_64` or `amd64` → `x86_64`;
+`aarch64` or `arm64` → `aarch64`. Other CPUs (for example 32-bit `armv7l`) have no release binary.
 
-| Platform | Target suffix |
-| --- | --- |
-| Linux x86_64, static build | `x86_64-unknown-linux-musl` |
-| Linux x86_64, GNU build | `x86_64-unknown-linux-gnu` |
-| macOS Apple Silicon | `aarch64-apple-darwin` |
-| macOS Intel | `x86_64-apple-darwin` |
-| Windows x86_64 | `x86_64-pc-windows-msvc.exe` |
+| Platform | Target suffix | Available from |
+| --- | --- | --- |
+| Linux x86_64, static build | `x86_64-unknown-linux-musl` | v0.26.0 |
+| Linux x86_64, GNU build (glibc 2.35+) | `x86_64-unknown-linux-gnu` | v0.26.0 |
+| Linux ARM64, GNU build (glibc 2.39+) | `aarch64-unknown-linux-gnu` | first release after v0.26.0 |
+| macOS Apple Silicon | `aarch64-apple-darwin` | v0.26.0 |
+| macOS Intel | `x86_64-apple-darwin` | v0.26.0 |
+| Windows x86_64 | `x86_64-pc-windows-msvc.exe` | v0.26.0 |
+
+v0.26.0 has no Linux ARM64 binary. Linux ARM64 has no static (musl) build; on an older glibc
+or a musl distribution such as Alpine, use the [Cargo or source instructions](../README.md#2-cargo).
+Check the glibc version with `ldd --version`.
 
 Assets are standalone executables named `rustxng-<tag>-<target>`, with a `.sha256` sidecar.
 Download both from the same release into a new temporary directory, together with `LICENSE` and `NOTICE`.
