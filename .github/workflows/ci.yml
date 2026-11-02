@@ -32,6 +32,8 @@ jobs:
         run: cargo clippy --all-targets -- -D warnings
       - name: Build and test
         run: cargo test --all-targets
+      - name: Offline evaluation tests
+        run: python -m unittest discover -s tools -p "test_*.py"
       - name: Build the server binary
         run: cargo build --locked --bin rustxng
       - name: Agent setup smoke test (offline)

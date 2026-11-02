@@ -2,7 +2,8 @@
 """Measure the quality of a RustXNG instance on a fixed question set.
 
 For every question the script asks the instance for JSON results and checks
-whether one of the gold URL prefixes appears in the top k results. It reports
+whether one of the gold URL prefixes matches at a structural path boundary
+in the top k results. It reports
 hit@1 / hit@5 / MRR together with the latency and the response size, which are
 the numbers an agent tool call actually pays for.
 
@@ -15,7 +16,6 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import re
 import json
 import statistics
 import sys
@@ -23,6 +23,8 @@ import time
 import urllib.parse
 import urllib.request
 from pathlib import Path
+
+from reference_urls import first_hit_rank
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -46,30 +48,8 @@ def search(base: str, query: str, extra: dict[str, str], timeout: float) -> dict
     return {"millis": millis, "urls": urls, "bytes": len(body), "unresponsive": len(payload.get("unresponsive_engines") or [])}
 
 
-_VERSION_SEGMENT = re.compile(r"^(?:stable|current|latest|v?\d+(?:\.\d+)*|\d+(?:\.\d+)*)$")
-
-
-def normalise(url: str) -> str:
-    """Strip the scheme and percent escapes, and treat version segments
-    (stable / current / 6.1 / 3 / v2) as wildcards: the same page under a
-    different version path still counts as the answer."""
-    from urllib.parse import unquote
-
-    rest = unquote(str(url).split("://", 1)[-1]).rstrip("/").lower()
-    host, _, path = rest.partition("/")
-    parts = []
-    for segment in path.split("/"):
-        parts.append("*" if _VERSION_SEGMENT.match(segment) else segment)
-    return host + "/" + "/".join(parts)
-
-
 def hit_rank(urls: list[str], gold: list[str]) -> int | None:
-    prefixes = [normalise(prefix) for prefix in gold]
-    for index, url in enumerate(urls, start=1):
-        candidate = normalise(url)
-        if any(candidate.startswith(prefix) for prefix in prefixes):
-            return index
-    return None
+    return first_hit_rank(urls[:10], gold)
 
 
 def restart_instance(binary: str, port: int, base: str) -> None:
@@ -127,6 +107,7 @@ def main() -> int:
         extra[key] = value
 
     questions = json.loads(Path(args.questions).read_text(encoding="utf-8"))["queries"]
+    base = args.base
     rows = []
     ranks = []
     if args.restart_binary:
@@ -139,7 +120,7 @@ def main() -> int:
             base = f"http://127.0.0.1:{args.port}"
             restart_instance(args.restart_binary, args.port, base)
             print(f"  (restarted instance at question {index})", file=sys.stderr)
-        result = search(args.base, question["query"], extra, args.timeout)
+        result = search(base, question["query"], extra, args.timeout)
         rank = hit_rank(result.get("urls") or [], question["gold"])
         if rank is not None:
             ranks.append(rank)

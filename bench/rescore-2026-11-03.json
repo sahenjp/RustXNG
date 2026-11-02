@@ -1,0 +1,197 @@
+{
+  "format_version": 1,
+  "metric": "legacy-version-tolerant-structured-url-prefix-v2",
+  "matcher_sha256": "6293482445a2c6974322e3c203b46903632db28521c90bb145495c08d9742033",
+  "gold_file": "bench/quality-questions.json",
+  "gold_sha256": "b3cda086dd3497764243068f615f0ffb0ee9130e7421df9d417a47033ced214c",
+  "limitations": [
+    "No new requests; these are historical observations, not current defaults.",
+    "Numeric/stable/current/latest path segments retain the legacy version-alias rule.",
+    "No retained Exa or Tavily per-question content archive is present; their published scores were not recomputed."
+  ],
+  "archives": [
+    {
+      "source": "bench/content-rustxng-raw.json",
+      "sha256": "129ce4a7a77e283fcae61ec26f88ce4bf97906bf0d9d792d184132166ef8efb0",
+      "legacy_recomputed": {
+        "questions": 6,
+        "hit@1": 5,
+        "hit@5": 5,
+        "hit@10": 5,
+        "mrr@10": 0.833333
+      },
+      "corrected": {
+        "questions": 6,
+        "hit@1": 5,
+        "hit@5": 5,
+        "hit@10": 5,
+        "mrr@10": 0.833333
+      },
+      "changed_rows": []
+    },
+    {
+      "source": "bench/content-rustxng.json",
+      "sha256": "c25a4e3eb0c08d0a8335abcef285ed8a3126cb701dd132c82b5e4659822d840c",
+      "legacy_recomputed": {
+        "questions": 20,
+        "hit@1": 12,
+        "hit@5": 16,
+        "hit@10": 19,
+        "mrr@10": 0.685556
+      },
+      "corrected": {
+        "questions": 20,
+        "hit@1": 11,
+        "hit@5": 16,
+        "hit@10": 19,
+        "mrr@10": 0.652222
+      },
+      "changed_rows": [
+        {
+          "id": "ja-genji",
+          "old_rank": 1,
+          "corrected_rank": 3
+        }
+      ]
+    },
+    {
+      "source": "bench/content-searxng.json",
+      "sha256": "37e2621a41cc7c20f46bc964e5a0369dade42044e58d753bfe380063eb7383c0",
+      "legacy_recomputed": {
+        "questions": 20,
+        "hit@1": 13,
+        "hit@5": 16,
+        "hit@10": 18,
+        "mrr@10": 0.735
+      },
+      "corrected": {
+        "questions": 20,
+        "hit@1": 13,
+        "hit@5": 16,
+        "hit@10": 18,
+        "mrr@10": 0.735
+      },
+      "changed_rows": []
+    },
+    {
+      "source": "bench/eval-100-127k.json",
+      "sha256": "275b7cc9814dfde12794f81651f8ed9f167ae420dc943f09abb070b68890dbaa",
+      "legacy_recomputed": {
+        "questions": 100,
+        "hit@1": 82,
+        "hit@5": 94,
+        "hit@10": 98,
+        "mrr@10": 0.876194
+      },
+      "corrected": {
+        "questions": 100,
+        "hit@1": 82,
+        "hit@5": 94,
+        "hit@10": 98,
+        "mrr@10": 0.876194
+      },
+      "changed_rows": []
+    },
+    {
+      "source": "bench/eval-100-13k.json",
+      "sha256": "068ae9766104ac32911b8ec3db1748f81888774c332bf05d98050beef3ef4728",
+      "legacy_recomputed": {
+        "questions": 100,
+        "hit@1": 80,
+        "hit@5": 93,
+        "hit@10": 98,
+        "mrr@10": 0.862512
+      },
+      "corrected": {
+        "questions": 100,
+        "hit@1": 80,
+        "hit@5": 93,
+        "hit@10": 98,
+        "mrr@10": 0.862512
+      },
+      "changed_rows": []
+    },
+    {
+      "source": "bench/eval-100-final.json",
+      "sha256": "7f004c4995ad03232508a824201c6ccb564939161101935a404d30f62d3a54d2",
+      "legacy_recomputed": {
+        "questions": 100,
+        "hit@1": 70,
+        "hit@5": 82,
+        "hit@10": 88,
+        "mrr@10": 0.757028
+      },
+      "corrected": {
+        "questions": 100,
+        "hit@1": 70,
+        "hit@5": 81,
+        "hit@10": 87,
+        "mrr@10": 0.754528
+      },
+      "changed_rows": [
+        {
+          "id": "en-black-hole",
+          "old_rank": 4,
+          "corrected_rank": null
+        }
+      ]
+    },
+    {
+      "source": "bench/eval-100-localmerge-b.json",
+      "sha256": "54f5cfdd05ebcd1d54b6fd60b0cdd94eedde4a4068173bc5400cd316fe7a09d3",
+      "legacy_recomputed": {
+        "questions": 100,
+        "hit@1": 83,
+        "hit@5": 96,
+        "hit@10": 98,
+        "mrr@10": 0.889333
+      },
+      "corrected": {
+        "questions": 100,
+        "hit@1": 83,
+        "hit@5": 96,
+        "hit@10": 98,
+        "mrr@10": 0.889333
+      },
+      "changed_rows": []
+    },
+    {
+      "source": "bench/eval-100-localmerge.json",
+      "sha256": "f33dff3cf0432cd9529b1d3aab6c824d2b7a109d59dd2e68e7cf563470cd3174",
+      "legacy_recomputed": {
+        "questions": 100,
+        "hit@1": 83,
+        "hit@5": 96,
+        "hit@10": 98,
+        "mrr@10": 0.8885
+      },
+      "corrected": {
+        "questions": 100,
+        "hit@1": 83,
+        "hit@5": 96,
+        "hit@10": 98,
+        "mrr@10": 0.8885
+      },
+      "changed_rows": []
+    },
+    {
+      "source": "bench/eval-100-sitemapindex.json",
+      "sha256": "2379f37e1e494fd40815b95cc7e09492bfd8ff224e8cb0142b8148e8ff299cb8",
+      "legacy_recomputed": {
+        "questions": 100,
+        "hit@1": 81,
+        "hit@5": 93,
+        "hit@10": 98,
+        "mrr@10": 0.871179
+      },
+      "corrected": {
+        "questions": 100,
+        "hit@1": 81,
+        "hit@5": 93,
+        "hit@10": 98,
+        "mrr@10": 0.871179
+      },
+      "changed_rows": []
+    }
+  ]
+}

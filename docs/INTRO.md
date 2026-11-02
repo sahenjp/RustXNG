@@ -2,13 +2,15 @@
 
 > 検索 API を 1 本に。複数のサイトを、自分のサーバーから。
 
+起動・メモリ・速度の数値は過去の特定環境の測定例です。現在の性能保証として扱わず、[測定条件](BENCHMARK.md)と[再集計](BENCHMARK-RESCORE-2026-11-03.md)を確認してください。
+
 ## これは何か
 
 **RustXNG はAI エージェントに検索させるためのセルフホスト型メタ検索エンジンです。**
 
-Bing・DuckDuckGo・Wikipedia・GitHub・arXiv・PubMed など複数のサイトを 1 つの JSON API にまとめ、Rust の単一バイナリで動きます。Python もデータベースも API キーも要りません。
+Bing・DuckDuckGo・Wikipedia・GitHub・arXiv・PubMed など複数のサイトを 1 つの JSON API にまとめ、Rust の単一バイナリで動きます。実行に Python は不要で、データベース連携は任意です。APIキーや利用料金の要否は選択したプロバイダーによります。
 
-SearXNG の API・検索構文・設定形式をそのまま引き継いでいるので、既存の SearXNG 前提のツールやプロンプトはそのまま動きます。
+SearXNG の API・検索構文・設定形式に対応しています。[互換性と差異](COMPATIBILITY.md)を確認してから、既存のツールやプロンプトを接続してください。
 
 ## なぜ AI エージェントに良いのか
 
@@ -21,15 +23,15 @@ SearXNG の API・検索構文・設定形式をそのまま引き継いでい�
 | 単一サイト検索（ウォーム） | **1 ms** |
 | 全 169 サイト検索（ウォーム中央値） | **276 ms** |
 
-エージェントは 1 ターンで何度も検索します。1 回 1 秒の API を 5 回呼ぶとそれだけで 5 秒。RustXNG はキャッシュヒット時 1 ms 台なので、ツール呼び出しの待ち時間がほぼ消えます。
+エージェントは 1 ターンで何度も検索します。1 回 1 秒の API を 5 回呼ぶとそれだけで 5 秒。過去の測定ではキャッシュヒット時に1 ms台でした。初回の応答時間は検索先やネットワークの状態にも依存します。
 
-### 2. スキーマが固定で壊れない
+### 2. SearXNG互換のJSONで受け取る
 
-レスポンスは SearXNG 互換の JSON（`query` / `results` / `answers` / `infoboxes` / `suggestions` / `unresponsive_engines`）。LLM に渡す形が毎回変わらないので、プロンプトとパーサが安定します。
+レスポンスは SearXNG 互換の JSON（`search_query` / `results` / `answers` / `infoboxes` / `suggestions` / `unresponsive_engines`）。LLM に渡す形が毎回変わらないので、プロンプトとパーサが安定します。
 
 ```json
 {
-  "query": "rust async runtime",
+  "search_query": "rust async runtime",
   "results": [
     {
       "url": "https://tokio.rs/",
@@ -83,7 +85,9 @@ query_str = "SELECT title, body FROM docs WHERE body LIKE '%' || $1 || '%'"
 
 ### 6. プライバシーとコスト
 
-クエリは各サイトへ直接送られ、広告・追跡・プロファイルはありません。画像や favicon はプロキシ経由なので、利用者の IP も相手サイトに渡りません。自前ホストなので、検索ログが外部ベンダーに渡ることもありません。
+検索語は選択した外部サイトへ送信され、接続先にはRustXNGサーバーのIP等が伝わります。外部サイトでのログ保存や追跡、利用条件は各プロバイダーに依存します。画像・faviconの代理取得は任意の設定であり、自己ホストだけで匿名性を保証するものではありません。
+
+RustXNG本体に検索ごとのソフトウェア利用料はありません。サーバー・回線・保守と、必要なプロバイダー契約の費用は別にかかります。
 
 ## エージェントへの組み込み方
 

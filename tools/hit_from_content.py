@@ -11,36 +11,14 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import re
 import json
 from pathlib import Path
 
-
-_VERSION_SEGMENT = re.compile(r"^(?:stable|current|latest|v?\d+(?:\.\d+)*|\d+(?:\.\d+)*)$")
-
-
-def normalise(url: str) -> str:
-    """Strip the scheme and percent escapes, and treat version segments
-    (stable / current / 6.1 / 3 / v2) as wildcards: the same page under a
-    different version path still counts as the answer."""
-    from urllib.parse import unquote
-
-    rest = unquote(str(url).split("://", 1)[-1]).rstrip("/").lower()
-    host, _, path = rest.partition("/")
-    parts = []
-    for segment in path.split("/"):
-        parts.append("*" if _VERSION_SEGMENT.match(segment) else segment)
-    return host + "/" + "/".join(parts)
+from reference_urls import first_hit_rank
 
 
 def rank(results: list[dict], gold: str | list[str]) -> int | None:
-    """First rank whose URL starts with one of the accepted gold URLs."""
-    prefixes = [normalise(g) for g in ([gold] if isinstance(gold, str) else gold)]
-    for i, r in enumerate(results, start=1):
-        candidate = normalise(str(r.get("url", "")))
-        if any(candidate.startswith(prefix) for prefix in prefixes):
-            return i
-    return None
+    return first_hit_rank([str(result.get("url", "")) for result in results], [gold] if isinstance(gold, str) else gold)
 
 
 def gold_by_id() -> dict:
@@ -66,7 +44,7 @@ def main() -> int:
         ("Ollama", "bench/content-ollama.json"),
     ]
     header = f"{'backend':<10} {'hit@1':>7} {'hit@5':>7} {'hit@10':>7} {'MRR':>6} {'n':>3}"
-    print(f"URL 中率（上位 {args.top} 件・20 問・gold URL 前置き一致）\n")
+    print(f"URL 中率（上位 {args.top} 件・20 問・gold URL 構造・境界一致）\n")
     print(header)
     print("-" * len(header))
     for name, rel in files:
