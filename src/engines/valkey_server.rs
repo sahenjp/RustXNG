@@ -3,11 +3,11 @@
 //! Talks the RESP protocol directly, so no client dependency is needed.
 //! Upstream is an offline engine: it looks keys up in a Valkey/Redis instance.
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashSet};
 use std::io::{BufRead, BufReader, Read, Write};
 use std::net::TcpStream;
 use std::sync::Arc;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use crate::engine::{
     Engine, EngineDefaults, EngineError, EngineItem, EngineMeta, EngineRequest, EngineResponse,
@@ -20,7 +20,8 @@ use crate::settings::EngineConfig;
 
 /// Upper bound on the SCAN/HSCAN pages one search follows. Upstream stops when
 /// the server returns cursor 0; a server that never does must not hold the
-/// request open.
+/// request open. Hitting the budget fails the search, so a truncated key set
+/// never passes for a complete one.
 const SCAN_PAGE_BUDGET: usize = 32;
 
 const DEFAULTS: EngineDefaults = EngineDefaults {
@@ -82,6 +83,7 @@ impl ValkeyServer {
                     .map_err(|error| EngineError::Message(format!("valkey: {error}")))?,
             ),
             writer: stream,
+            deadline: Instant::now() + timeout,
         };
         if !self.password.is_empty() {
             connection.command(&["AUTH", &self.password])?;
@@ -101,7 +103,9 @@ impl ValkeyServer {
     ) -> Result<Vec<BTreeMap<String, String>>, EngineError> {
         let pattern = format!("*{query}*");
         let mut rows = Vec::new();
+        let mut seen = HashSet::new();
         let mut cursor = "0".to_string();
+        let mut complete = false;
         for _ in 0..SCAN_PAGE_BUDGET {
             let reply =
                 connection.command(&["SCAN", &cursor, "MATCH", &pattern, "COUNT", "100"])?;
@@ -112,6 +116,9 @@ impl ValkeyServer {
                 let Reply::Bulk(Some(key)) = key else {
                     continue;
                 };
+                if !seen.insert(key.clone()) {
+                    continue;
+                }
                 let kind = match connection.command(&["TYPE", &key])? {
                     Reply::Simple(value) | Reply::Bulk(Some(value)) => value,
                     _ => continue,
@@ -146,9 +153,15 @@ impl ValkeyServer {
                 }
             }
             if next == "0" {
+                complete = true;
                 break;
             }
             cursor = next;
+        }
+        if !complete {
+            return Err(EngineError::Message(format!(
+                "valkey: SCAN stopped after {SCAN_PAGE_BUDGET} pages before cursor 0"
+            )));
         }
         Ok(rows)
     }
@@ -201,7 +214,9 @@ impl Engine for ValkeyServer {
         if rows.is_empty() {
             if let Some((set, rest)) = text.split_once(' ') {
                 let pattern = format!("*{rest}*");
+                let mut seen = HashSet::new();
                 let mut cursor = "0".to_string();
+                let mut complete = false;
                 for _ in 0..SCAN_PAGE_BUDGET {
                     let reply = connection.command(&["HSCAN", set, &cursor, "MATCH", &pattern])?;
                     let Some((next, pairs)) = cursor_page(reply) else {
@@ -209,15 +224,24 @@ impl Engine for ValkeyServer {
                     };
                     for chunk in pairs.chunks(2) {
                         if let [Reply::Bulk(Some(name)), Reply::Bulk(Some(value))] = chunk {
+                            if !seen.insert(name.clone()) {
+                                continue;
+                            }
                             let mut map = BTreeMap::new();
                             map.insert(name.clone(), value.clone());
                             rows.push(map);
                         }
                     }
                     if next == "0" {
+                        complete = true;
                         break;
                     }
                     cursor = next;
+                }
+                if !complete {
+                    return Err(EngineError::Message(format!(
+                        "valkey: HSCAN stopped after {SCAN_PAGE_BUDGET} pages before cursor 0"
+                    )));
                 }
             }
         }
@@ -277,10 +301,18 @@ enum Reply {
 struct Connection {
     reader: BufReader<TcpStream>,
     writer: TcpStream,
+    /// The whole search shares this deadline; the per-read socket timeout
+    /// cannot bound a sequence of commands on its own.
+    deadline: Instant,
 }
 
 impl Connection {
     fn command(&mut self, args: &[&str]) -> Result<Reply, EngineError> {
+        if Instant::now() >= self.deadline {
+            return Err(EngineError::Message(
+                "valkey: search deadline exceeded".into(),
+            ));
+        }
         let mut request = format!("*{}\r\n", args.len());
         for argument in args {
             request.push_str(&format!("${}\r\n{}\r\n", argument.len(), argument));
@@ -345,6 +377,10 @@ mod tests {
     /// the raw request bytes. Commands are parsed leniently so malformed bytes
     /// still get an answer; the recorded raw request is what the tests assert.
     fn stub(replies: Vec<&'static str>) -> (u16, Arc<Mutex<Vec<String>>>) {
+        stub_delayed(replies, Duration::ZERO)
+    }
+
+    fn stub_delayed(replies: Vec<&'static str>, delay: Duration) -> (u16, Arc<Mutex<Vec<String>>>) {
         let listener = TcpListener::bind("127.0.0.1:0").expect("bind");
         let port = listener.local_addr().expect("local addr").port();
         let requests = Arc::new(Mutex::new(Vec::new()));
@@ -360,6 +396,7 @@ mod tests {
                     break;
                 };
                 recorded.lock().expect("lock").push(request);
+                thread::sleep(delay);
                 if writer.write_all(reply.as_bytes()).is_err() {
                     break;
                 }
@@ -398,7 +435,17 @@ mod tests {
     }
 
     fn engine_at(port: u16, password: &str, exact_match_only: bool) -> Arc<ValkeyServer> {
+        engine_at_with_timeout(port, password, exact_match_only, DEFAULTS.timeout)
+    }
+
+    fn engine_at_with_timeout(
+        port: u16,
+        password: &str,
+        exact_match_only: bool,
+        timeout: f64,
+    ) -> Arc<ValkeyServer> {
         let mut config = EngineConfig::new("valkey", "valkey_server", "", &["general"]);
+        config.timeout = Some(timeout);
         config
             .extra
             .insert("host".into(), toml::Value::String("127.0.0.1".into()));
@@ -488,15 +535,17 @@ mod tests {
 
     #[test]
     fn scan_stops_after_the_page_budget() {
-        let mut replies = Vec::new();
-        for _ in 0..SCAN_PAGE_BUDGET {
-            replies.push("*2\r\n$1\r\n1\r\n*1\r\n$6\r\nuser:1\r\n");
-            replies.push("+string\r\n");
-        }
+        let mut replies = vec!["*2\r\n$1\r\n1\r\n*1\r\n$6\r\nuser:1\r\n", "+string\r\n"];
+        replies.extend(std::iter::repeat_n(
+            "*2\r\n$1\r\n1\r\n*1\r\n$6\r\nuser:1\r\n",
+            SCAN_PAGE_BUDGET - 1,
+        ));
         let (port, requests) = stub(replies);
         let engine = engine_at(port, "", false);
-        let items = engine.search_offline(&parsed("user1"), 1).expect("search");
-        assert!(items.is_empty());
+        let error = engine
+            .search_offline(&parsed("user1"), 1)
+            .expect_err("the budget must fail the search");
+        assert!(error.to_string().contains("SCAN stopped after"), "{error}");
         let requests = requests.lock().expect("lock").clone();
         let scans = requests
             .iter()
@@ -514,16 +563,67 @@ mod tests {
         ));
         let (port, requests) = stub(replies);
         let engine = engine_at(port, "", true);
-        let items = engine
+        let error = engine
             .search_offline(&parsed("people ada"), 1)
-            .expect("search");
-        assert_eq!(items.len(), SCAN_PAGE_BUDGET);
+            .expect_err("the budget must fail the search");
+        assert!(error.to_string().contains("HSCAN stopped after"), "{error}");
         let requests = requests.lock().expect("lock").clone();
         let scans = requests
             .iter()
             .filter(|request| request.contains("HSCAN"))
             .count();
         assert_eq!(scans, SCAN_PAGE_BUDGET);
+    }
+
+    #[test]
+    fn scan_returns_a_key_once_across_pages() {
+        let (port, requests) = stub(vec![
+            "*2\r\n$1\r\n1\r\n*2\r\n$6\r\nuser:1\r\n$6\r\nuser:1\r\n",
+            "+hash\r\n",
+            "*4\r\n$4\r\nname\r\n$3\r\nAda\r\n$4\r\ncity\r\n$6\r\nLondon\r\n",
+            "*2\r\n$1\r\n0\r\n*0\r\n",
+        ]);
+        let engine = engine_at(port, "", false);
+        let items = engine.search_offline(&parsed("user1"), 1).expect("search");
+        assert_eq!(items.len(), 1);
+        let requests = requests.lock().expect("lock").clone();
+        assert_eq!(requests.len(), 4, "the duplicate key is not typed again");
+    }
+
+    #[test]
+    fn hscan_returns_a_field_once_across_pages() {
+        let (port, _) = stub(vec![
+            "*0\r\n",
+            "*2\r\n$1\r\n1\r\n*2\r\n$4\r\nname\r\n$3\r\nAda\r\n",
+            "*2\r\n$1\r\n0\r\n*2\r\n$4\r\nname\r\n$3\r\nAda\r\n",
+        ]);
+        let engine = engine_at(port, "", true);
+        let items = engine
+            .search_offline(&parsed("people ada"), 1)
+            .expect("search");
+        assert_eq!(items.len(), 1);
+    }
+
+    #[test]
+    fn search_stops_at_the_connection_deadline() {
+        let mut replies = Vec::new();
+        for _ in 0..SCAN_PAGE_BUDGET {
+            replies.push("*2\r\n$1\r\n1\r\n*1\r\n$6\r\nuser:1\r\n");
+            replies.push("+string\r\n");
+        }
+        let (port, requests) = stub_delayed(replies, Duration::from_millis(120));
+        let engine = engine_at_with_timeout(port, "", false, 0.2);
+        let error = engine
+            .search_offline(&parsed("user1"), 1)
+            .expect_err("the deadline must stop the search");
+        assert!(error.to_string().contains("deadline"), "{error}");
+        let scans = requests
+            .lock()
+            .expect("lock")
+            .iter()
+            .filter(|request| request.contains("SCAN"))
+            .count();
+        assert!(scans < SCAN_PAGE_BUDGET, "scans: {scans}");
     }
 
     fn engine() -> Arc<ValkeyServer> {
