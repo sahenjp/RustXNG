@@ -52,7 +52,7 @@ concurrency:
 jobs:
   plan:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     outputs:
       sha: ${{ steps.plan.outputs.sha }}
       matrix: ${{ steps.plan.outputs.matrix }}
@@ -101,6 +101,30 @@ jobs:
         run: |
           python3 tools/release_tools.py validate --root source --tag "$RELEASE_TAG"
           python3 tools/release_tools.py notes --root source --tag "$RELEASE_TAG"
+
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        id: audit-cache
+        with:
+          path: ~/.cargo/bin/cargo-audit
+          key: cargo-audit-0.22.2-${{ runner.os }}
+      - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
+      - name: Install pinned release audit tool
+        if: steps.audit-cache.outputs.cache-hit != 'true'
+        run: cargo install cargo-audit --locked --version 0.22.2
+      - name: Audit the actual release lockfile against current advisories
+        working-directory: source
+        run: cargo audit --json > "$RUNNER_TEMP/release-audit.json" 2> "$RUNNER_TEMP/release-audit.log" || true
+      - name: Require current release dependency policy
+        run: python3 tools/check_audit.py "$RUNNER_TEMP/release-audit.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: release-dependency-audit
+          path: |
+            ${{ runner.temp }}/release-audit.json
+            ${{ runner.temp }}/release-audit.log
+          retention-days: 30
+          if-no-files-found: warn
 
   build:
     needs: plan

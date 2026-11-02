@@ -31,7 +31,7 @@ ActionsはコミットSHAで固定し、Dependabotが更新PRを作ります。�
 ## 公開前の検証
 
 リリースタグ・Cargo.toml・Cargo.lockの版が一致し、当該コミットがmainの履歴にあり、そのコミットのpush CIが成功したことを要求します。
-PRのCI成功、別コミットの成功、取得できなかったCI情報を代用しません。CHANGELOGに対象版の本文がない場合も停止します。
+PRのCI成功、別コミットの成功、取得できなかったCI情報を代用しません。対象ソースのCargo.lockを最新の勧告でもう一度監査するため、過去にCIが成功した旧版でも新たな脆弱性があれば停止します。CHANGELOGに対象版の本文がない場合も停止します。
 
 `.github/release-targets.json`の6対象をビルドし、実行ファイルの形式とCPUを確認します。
 Linux・Windows・macOS ARM64では版の確認とローカル偽エンジンによる起動テストを実行します。
