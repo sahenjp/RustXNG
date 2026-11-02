@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "description": "Open-ended Japanese discovery queries, each requested with the server's one-month time filter. Source domains are coverage targets, not exhaustive gold answers.",
+  "window_days": 30,
+  "cases": [
+    {
+      "id": "fresh-typescript-releases",
+      "topic": "TypeScript release activity",
+      "query": "TypeScript 最新リリース 変更点",
+      "time_range": "month",
+      "window_days": 30,
+      "target_source_domains": ["github.com", "typescriptlang.org"]
+    },
+    {
+      "id": "fresh-typescript-compiler",
+      "topic": "TypeScript compiler and language updates",
+      "query": "TypeScript コンパイラー 新機能 最近",
+      "time_range": "month",
+      "window_days": 30,
+      "target_source_domains": ["github.com", "devblogs.microsoft.com", "typescriptlang.org"]
+    },
+    {
+      "id": "fresh-rust-releases",
+      "topic": "Rust language and toolchain updates",
+      "query": "Rust 最新リリース rustc 変更点",
+      "time_range": "month",
+      "window_days": 30,
+      "target_source_domains": ["github.com", "blog.rust-lang.org", "rust-lang.org"]
+    },
+    {
+      "id": "fresh-searxng",
+      "topic": "SearXNG project updates",
+      "query": "SearXNG 最近のリリース 変更点",
+      "time_range": "month",
+      "window_days": 30,
+      "target_source_domains": ["github.com", "docs.searxng.org"]
+    },
+    {
+      "id": "fresh-search-engine-changes",
+      "topic": "Search engine API and access changes",
+      "query": "検索エンジン API 仕様変更 最近 日本語",
+      "time_range": "month",
+      "window_days": 30,
+      "target_source_domains": ["developers.google.com", "learn.microsoft.com", "github.com"]
+    },
+    {
+      "id": "fresh-japanese-web-troubleshooting",
+      "topic": "Recent Japanese web-development troubleshooting reports",
+      "query": "Web 開発 エラー 対処 最近 日本語 TypeScript Rust",
+      "time_range": "month",
+      "window_days": 30,
+      "target_source_domains": ["qiita.com", "zenn.dev", "github.com"]
+    }
+  ]
+}
