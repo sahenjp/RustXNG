@@ -118,7 +118,14 @@ impl Resolve for PublicResolver {
 }
 
 /// Extracted pages as (URL, text), oldest first.
-type Pages = VecDeque<(String, Arc<str>)>;
+type Pages = VecDeque<(String, usize, PageContent)>;
+
+/// Extracted page text and whether the readable source exceeded the limit.
+#[derive(Clone, Debug)]
+pub struct PageContent {
+    pub text: Arc<str>,
+    pub source_truncated: bool,
+}
 
 /// Fetches pages and keeps their extracted text for the session.
 #[derive(Clone)]
@@ -160,7 +167,9 @@ impl PageReader {
         // A proxy can resolve names itself and bypass PublicResolver. Disable
         // implicit environment proxies. Explicit proxy configurations fail page
         // reads closed, while search remains available through the proxy.
-        let proxy_blocked = !outgoing.proxies.is_empty() || outgoing.using_tor_proxy;
+        let proxy_blocked = !outgoing.proxies.is_empty()
+            || outgoing.using_tor_proxy
+            || environment_proxy_configured();
         if let Some(path) = &outgoing.ca_bundle {
             let pem = std::fs::read(path).map_err(|e| format!("cannot read CA bundle: {e}"))?;
             let certificates = reqwest::Certificate::from_pem_bundle(&pem)
@@ -186,11 +195,17 @@ impl PageReader {
     /// The readable text of a page, up to `max_chars` characters (with a
     /// trailing '…' when there was more), or an explanation.
     pub async fn text(&self, url: &str, max_chars: usize) -> Result<Arc<str>, String> {
+        Ok(self.read(url, max_chars).await?.text)
+    }
+
+    /// Fetch and extract a page. `source_truncated` is set when readable text
+    /// exceeded `max_chars`; callers can keep it distinct from output slicing.
+    pub async fn read(&self, url: &str, max_chars: usize) -> Result<PageContent, String> {
         if self.proxy_blocked {
             return Err("page reads are unavailable with configured proxies: destination validation requires direct connections".into());
         }
-        if let Some(text) = self.remembered(url) {
-            return Ok(text);
+        if let Some(content) = self.remembered(url, max_chars) {
+            return Ok(content);
         }
         let parsed = reqwest::Url::parse(url).map_err(|_| "not a valid URL".to_string())?;
         if !is_fetchable(&parsed) {
@@ -214,8 +229,12 @@ impl PageReader {
             return Err("the page has no readable text".into());
         }
         let text: Arc<str> = text.into();
-        self.remember(url, text.clone());
-        Ok(text)
+        let content = PageContent {
+            source_truncated: text.chars().count() > max_chars,
+            text,
+        };
+        self.remember(url, max_chars, content.clone());
+        Ok(content)
     }
 
     async fn fetch(&self, url: reqwest::Url) -> Result<String, String> {
@@ -257,28 +276,47 @@ impl PageReader {
         Ok(String::from_utf8_lossy(&body).into_owned())
     }
 
-    fn remembered(&self, url: &str) -> Option<Arc<str>> {
+    fn remembered(&self, url: &str, max_chars: usize) -> Option<PageContent> {
         let pages = self
             .pages
             .lock()
             .unwrap_or_else(|poisoned| poisoned.into_inner());
         pages
             .iter()
-            .find(|(known, _)| known == url)
-            .map(|(_, text)| text.clone())
+            .find(|(known, limit, _)| known == url && *limit == max_chars)
+            .map(|(_, _, content)| content.clone())
     }
 
-    fn remember(&self, url: &str, text: Arc<str>) {
+    fn remember(&self, url: &str, max_chars: usize, content: PageContent) {
         let mut pages = self
             .pages
             .lock()
             .unwrap_or_else(|poisoned| poisoned.into_inner());
-        pages.retain(|(known, _)| known != url);
-        pages.push_back((url.to_string(), text));
+        pages.retain(|(known, limit, _)| known != url || *limit != max_chars);
+        pages.push_back((url.to_string(), max_chars, content));
         if pages.len() > REMEMBERED_PAGES {
             pages.pop_front();
         }
     }
+}
+
+/// Environment proxies are deliberately rejected: using one would delegate
+/// DNS resolution and destination selection to the proxy, bypassing our pin.
+fn environment_proxy_configured() -> bool {
+    [
+        "HTTP_PROXY",
+        "HTTPS_PROXY",
+        "ALL_PROXY",
+        "http_proxy",
+        "https_proxy",
+        "all_proxy",
+    ]
+    .iter()
+    .any(|name| {
+        std::env::var(name)
+            .ok()
+            .is_some_and(|value| !value.trim().is_empty())
+    })
 }
 
 #[cfg(test)]
@@ -360,6 +398,17 @@ mod tests {
                 "{allowed}"
             );
         }
+    }
+
+    #[tokio::test]
+    async fn configured_proxies_fail_closed() {
+        let mut outgoing = crate::settings::Outgoing::default();
+        outgoing
+            .proxies
+            .insert("all".into(), "http://127.0.0.1:8080".into());
+        let reader = PageReader::new(&outgoing, &[]).unwrap();
+        let error = reader.text("https://example.com/", 100).await.unwrap_err();
+        assert!(error.contains("configured proxies"));
     }
 
     #[tokio::test]

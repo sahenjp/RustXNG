@@ -69,6 +69,26 @@ Character limits are not token limits. Strict token budgets and server-side fiel
 
 The browser UI is at <http://127.0.0.1:29483/>. JSON, CSV, RSS, and HTML outputs are available.
 
+### MCP server
+
+Run `rustxng mcp` to serve the read-only `search` and `read_page` tools over
+stdio. Search returns ranked snippets and source metadata; page text is fetched
+only when `read_page` is called with a URL returned by search in that session.
+Search defaults to five results and limits each snippet to 500 characters.
+Its serialized structured response is bounded to 12,000 Unicode characters
+and 24,000 UTF-8 bytes by default; callers can choose smaller or larger limits
+within the advertised bounds. The server shortens snippets first, then omits
+trailing results while preserving their URLs and metadata. `truncated`,
+`source_truncated`, and `next_offset` report whether to continue. `read_page`
+uses Unicode character offsets and reports the same truncation state. Supplying
+a `query` to `read_page` also returns up to three matching passages.
+
+Page reads require direct connections so DNS answers and redirects can be
+checked against public addresses. They fail closed when configured or
+environment outgoing proxies are present. Search continues to use the normal
+outgoing proxy settings. Character and byte limits bound serialized payloads;
+they do not promise a tokenizer-specific token count.
+
 ## Install
 
 ### 1. Release binary
