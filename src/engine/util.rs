@@ -405,7 +405,9 @@ pub struct RssItem {
 /// document is an error here, a feed without items yields an empty list.
 pub fn parse_rss(xml: &str) -> Result<Vec<RssItem>, EngineError> {
     let mut reader = quick_xml::Reader::from_str(xml);
-    reader.config_mut().trim_text(true);
+    // Keep the text as written so the spaces around an entity survive; the
+    // fragments are joined first and normalized once by `clean`.
+    reader.config_mut().trim_text(false);
     let mut buffer = Vec::new();
     let mut items = Vec::new();
     let mut item: Option<RssItem> = None;
@@ -450,6 +452,11 @@ pub fn parse_rss(xml: &str) -> Result<Vec<RssItem>, EngineError> {
                     captured.push_str(&decode_entities(&raw));
                 }
             }
+            quick_xml::events::Event::GeneralRef(reference) => {
+                if field.is_some() {
+                    captured.push_str(&resolve_reference(&reference));
+                }
+            }
             quick_xml::events::Event::End(end) => {
                 if end.local_name().as_ref().eq_ignore_ascii_case(b"item") {
                     if let Some(entry) = item.take() {
@@ -480,6 +487,26 @@ pub fn parse_rss(xml: &str) -> Result<Vec<RssItem>, EngineError> {
         buffer.clear();
     }
     Ok(items)
+}
+
+/// Resolve one entity reference, as `quick-xml` 0.38+ reports it separately
+/// from the surrounding text.
+///
+/// Numeric character references and the predefined XML entities are resolved
+/// by `quick-xml`. Any other name (`&nbsp;`, `&hellip;`, ...) falls back to
+/// `decode_entities`, which decodes the HTML entities it knows and keeps the
+/// rest literal.
+fn resolve_reference(reference: &quick_xml::events::BytesRef<'_>) -> String {
+    if let Ok(Some(character)) = reference.resolve_char_ref() {
+        return character.to_string();
+    }
+    match reference.decode() {
+        Ok(name) => match quick_xml::escape::resolve_predefined_entity(&name) {
+            Some(value) => value.to_string(),
+            None => decode_entities(&format!("&{name};")),
+        },
+        Err(_) => format!("&{};", String::from_utf8_lossy(&reference[..])),
+    }
 }
 
 /// Unwrap the `url=` parameter of a redirect link (Bing News apiclick).
