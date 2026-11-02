@@ -171,6 +171,8 @@ categories = ["general", "web"]
 [[engines]]
 name = "mojeek"
 engine = "mojeek"
+# HTML automation requires provider permission; see docs/PROVIDERS.md.
+disabled = true
 shortcut = "mjk"
 categories = ["general", "web"]
 
@@ -1231,6 +1233,8 @@ time_range_support = true
 [[engines]]
 name = "yahoo japan"
 engine = "yahoo_japan"
+# HTML automation requires provider permission; see docs/PROVIDERS.md.
+disabled = true
 shortcut = "yjp"
 categories = ["general", "web"]
 

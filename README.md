@@ -26,6 +26,8 @@ An agent can retrieve information as it needs it and keep the amount of text sen
 Many engines work without API keys. Optional authenticated providers have their own credentials and billing.
 The server runs locally; **search terms are sent to the upstream engines selected for a request**.
 
+Yahoo! JAPAN and Mojeek HTML adapters are disabled by default pending permission review. See the [provider inventory and migration notes](docs/PROVIDERS.md); other providers remain subject to their own terms and quotas. Historical scores below used the earlier engine set and do not establish performance of the new defaults.
+
 ## Search from an agent
 
 Start an installed binary, unless an existing service is already available:
@@ -179,7 +181,7 @@ rustxng --config /path/to/settings.toml
 ```
 
 See [settings.toml](settings.toml) and [configuration details](docs/PORTING.md).
-Partial configuration merging has a known issue that can reset unspecified values; see the audit below.
+Partial configuration files override specified values while preserving other defaults. With `use_default_settings = false`, an omitted or empty engine list enables no engines.
 
 - `/healthz`: process health. A successful check does not guarantee upstream search engines are working.
 - `/config`: registered engines and public configuration information.
@@ -189,9 +191,8 @@ Partial configuration merging has a known issue that can reset unspecified value
 - Optional Valkey/Redis cache and database-backed engines support additional deployments.
 - The experimental `rustxng-index` local index is disabled by default.
 
-The [2026-11-02 audit](docs/AUDIT-2026-11-02.md) records open issues including SSRF validation,
-unsafe result URL schemes, response-size limits, and cache isolation. Use loopback for local agent setup;
-review these findings before exposing the service or enabling untrusted page fetching.
+The [2026-11-02 audit](docs/AUDIT-2026-11-02.md) records findings against an older commit.
+Consult the [current review and remaining work](docs/REVIEW-2026-11-03.md) for fixes and validation; loopback remains the default for local agent setup.
 
 ## Measured search performance
 

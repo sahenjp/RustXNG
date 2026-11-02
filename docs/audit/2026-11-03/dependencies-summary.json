@@ -1,0 +1,110 @@
+{
+  "cargo_lock_sha256": "7c3911a58238ea48d278f2c01cb2032bfd49669706bc2bc2b2b523bfc6dfc0f5",
+  "snapshots": {
+    "dependency-audit": {
+      "database": {
+        "advisory-count": 1402,
+        "last-commit": "263a4d951a0867d4bddc29dddd6d59427c78f9a7",
+        "last-updated": "2026-11-02T12:45:44+01:00"
+      },
+      "vulnerabilities": [
+        {
+          "id": "RUSTSEC-2026-0385",
+          "package": "ctutils",
+          "version": "0.4.2",
+          "patched": [
+            ">=0.4.4"
+          ]
+        }
+      ],
+      "warnings": {
+        "unmaintained": [
+          {
+            "id": "RUSTSEC-2026-0374",
+            "package": "basic-toml",
+            "version": "0.1.10",
+            "patched": []
+          },
+          {
+            "id": "RUSTSEC-2025-0057",
+            "package": "fxhash",
+            "version": "0.2.1",
+            "patched": []
+          },
+          {
+            "id": "RUSTSEC-2024-0449",
+            "package": "unsafe-libyaml",
+            "version": "0.2.11",
+            "patched": []
+          }
+        ],
+        "unsound": [
+          {
+            "id": "RUSTSEC-2026-0253",
+            "package": "lru",
+            "version": "0.12.5",
+            "patched": [
+              ">=0.18.2"
+            ]
+          },
+          {
+            "id": "RUSTSEC-2026-0002",
+            "package": "lru",
+            "version": "0.12.5",
+            "patched": [
+              ">=0.16.3"
+            ]
+          }
+        ]
+      }
+    },
+    "dependency-audit-after": {
+      "database": {
+        "advisory-count": 1402,
+        "last-commit": "263a4d951a0867d4bddc29dddd6d59427c78f9a7",
+        "last-updated": "2026-11-02T12:45:44+01:00"
+      },
+      "vulnerabilities": [],
+      "warnings": {
+        "unmaintained": [
+          {
+            "id": "RUSTSEC-2026-0374",
+            "package": "basic-toml",
+            "version": "0.1.10",
+            "patched": []
+          },
+          {
+            "id": "RUSTSEC-2025-0057",
+            "package": "fxhash",
+            "version": "0.2.1",
+            "patched": []
+          },
+          {
+            "id": "RUSTSEC-2024-0449",
+            "package": "unsafe-libyaml",
+            "version": "0.2.11",
+            "patched": []
+          }
+        ],
+        "unsound": [
+          {
+            "id": "RUSTSEC-2026-0253",
+            "package": "lru",
+            "version": "0.12.5",
+            "patched": [
+              ">=0.18.2"
+            ]
+          },
+          {
+            "id": "RUSTSEC-2026-0002",
+            "package": "lru",
+            "version": "0.12.5",
+            "patched": [
+              ">=0.16.3"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "checked_at": "2026-11-03",
+  "providers": {
+    "yahoo_japan": {
+      "request_url": "https://search.yahoo.co.jp/search",
+      "access_method": "HTML",
+      "terms_url": "https://support.yahoo-net.jp/PccSearch/s/article/H000015794",
+      "status": "restricted_html",
+      "decision": "disabled_by_default_pending_permission"
+    },
+    "mojeek": {
+      "request_url": "https://www.mojeek.com/search",
+      "access_method": "HTML",
+      "terms_url": "https://www.mojeek.com/about/terms.html",
+      "status": "restricted_html",
+      "decision": "disabled_by_default_pending_permission"
+    },
+    "bing": {
+      "request_url": "https://www.bing.com/search",
+      "access_method": "HTML",
+      "terms_url": "https://www.microsoft.com/ja-jp/servicesagreement",
+      "status": "scope_review_required",
+      "decision": "review_applicable_permissions_and_reuse_scope"
+    }
+  }
+}

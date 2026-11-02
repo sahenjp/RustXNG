@@ -1337,6 +1337,18 @@ shortcut = "only"
     }
 
     #[test]
+    fn restricted_html_providers_are_not_enabled_by_default() {
+        let settings = Settings::defaults();
+        for name in ["yahoo japan", "mojeek"] {
+            assert_eq!(settings.engine(name).unwrap().disabled, Some(true));
+            assert!(!settings.enabled_engines().any(|engine| engine.name == name));
+        }
+        let partial = merged_toml("[server]\nport = 9999\n");
+        assert_eq!(partial.engine("yahoo japan").unwrap().disabled, Some(true));
+        assert_eq!(partial.engine("mojeek").unwrap().disabled, Some(true));
+    }
+
+    #[test]
     fn a_user_engine_entry_can_set_its_own_proxy() {
         let settings = merged_toml(
             r#"

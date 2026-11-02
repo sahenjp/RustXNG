@@ -16,6 +16,9 @@
 
 ### Fixed
 
+- Updated ctutils to 0.4.4 for RUSTSEC-2026-0385; MySQL/lru unsoundness advisories remain tracked separately.
+- Prefer an engine-returned HTTPS URL when merging HTTP/HTTPS duplicates; keep exact MCP URL authorization.
+
 - `use_default_settings = false` now keeps the engine list empty when the user omits engines or explicitly supplies `engines = []`, in TOML and YAML.
 - Homepage categories select a value in the search form without navigating to an empty search; result-page categories retain their links.
 
@@ -26,6 +29,8 @@
 - MCP `read_page` selects passages at `。！？` sentence boundaries and accepts single Han, kana and Hangul query characters, instead of dropping those queries or returning an unrelated page prefix.
 
 ### Changed
+
+- Yahoo! JAPAN and Mojeek HTML adapters are disabled by default pending permission review. Added an inventory of all shipped provider entries and migration notes; historical benchmark scores do not establish the new defaults' performance.
 
 - Minimum Rust version is now 1.88, matching locked dependencies; CI checks it and runs offline agent setup smoke tests on Linux, macOS and Windows.
 - Default HTTP port changes from 8888 to 29483 across settings, Docker and CI. Explicit `--port`, `SEARXNG_PORT` and configuration overrides remain supported. See [migration notes](docs/PORT-MIGRATION.md).

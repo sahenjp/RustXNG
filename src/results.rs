@@ -468,6 +468,12 @@ fn is_web_url(value: &str) -> bool {
 
 /// Merge `other` into `origin`, keeping the richer field of each pair.
 fn merge_result(origin: &mut SearchResult, other: &SearchResult) {
+    // Only upgrade to an HTTPS spelling that an engine actually returned.
+    // MCP authorization still uses the exact final URL; no caller-provided
+    // scheme substitution is accepted.
+    if origin.url.starts_with("http://") && other.url.starts_with("https://") {
+        origin.url = other.url.clone();
+    }
     if !origin.engines.contains(&other.engine) {
         origin.engines.push(other.engine.clone());
     }
@@ -1529,6 +1535,23 @@ mod tests {
             dedup_key("https://e.test/p?a=1&b=2"),
             dedup_key("https://e.test/p?b=2&a=1")
         );
+    }
+
+    #[test]
+    fn duplicate_results_keep_the_returned_https_url_in_either_order() {
+        for urls in [
+            ["http://github.com/trending", "https://github.com/trending"],
+            ["https://github.com/trending", "http://github.com/trending"],
+        ] {
+            let mut container = ResultContainer::new();
+            container.extend("a", 1.0, vec![result(urls[0], "trending")]);
+            container.extend("b", 1.0, vec![result(urls[1], "trending")]);
+            assert_eq!(container.main_results().len(), 1);
+            assert_eq!(
+                container.main_results()[0].url,
+                "https://github.com/trending"
+            );
+        }
     }
 
     #[test]

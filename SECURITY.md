@@ -31,6 +31,11 @@ it is incorrect to claim these dependencies are absent from the default build.
 See the [recorded advisory output](docs/audit/2026-11-02/dependencies.json).
 This is a dated snapshot, not a claim about the latest advisory database or exploitability of every dependency path.
 
+The [2026-11-03 audit comparison](docs/audit/2026-11-03/dependencies-summary.json) records an update to
+ctutils 0.4.4 for RUSTSEC-2026-0385. The vulnerability section is then empty, but two `lru 0.12.5`
+unsoundness advisories through MySQL and three maintenance warnings remain. They are tracked in
+[issue #64](https://github.com/sahenjp/RustXNG/issues/64); this is not an advisory-free dependency tree.
+
 Updates require review of actual usage, a locked dependency check, tests and platform/MSRV verification.
 Do not silently suppress a security advisory or present a clean normal CI run as a security audit.
 
