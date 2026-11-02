@@ -93,6 +93,8 @@ search_on_category_select = true
 hotkeys = "default"
 
 [outgoing]
+# Additional trusted CA bundle for TLS-intercepting proxies (PEM).
+# ca_bundle = "/path/to/proxy-ca.pem"
 request_timeout = 4.0
 max_request_timeout = 20.0
 useragent_suffix = ""
@@ -152,12 +154,6 @@ categories_as_tabs = ["general", "images", "videos", "news", "map", "music", "it
 name = "duckduckgo"
 engine = "duckduckgo"
 shortcut = "ddg"
-categories = ["general", "web"]
-
-[[engines]]
-name = "google"
-engine = "google"
-shortcut = "go"
 categories = ["general", "web"]
 
 [[engines]]
@@ -278,12 +274,6 @@ shortcut = "ph"
 categories = ["map"]
 
 [[engines]]
-name = "youtube"
-engine = "youtube_noapi"
-shortcut = "yt"
-categories = ["videos"]
-
-[[engines]]
 name = "dailymotion"
 engine = "dailymotion"
 shortcut = "dm"
@@ -307,12 +297,6 @@ engine = "wikicommons"
 shortcut = "wcm"
 categories = ["images"]
 
-
-[[engines]]
-name = "google news"
-engine = "google_news"
-shortcut = "gnews"
-categories = ["news"]
 
 [[engines]]
 name = "bing news"
@@ -793,11 +777,6 @@ categories = ["it", "apps"]
 safesearch = true
 
 [[engines]]
-name = "google_play"
-engine = "google_play"
-categories = ["it", "apps"]
-
-[[engines]]
 name = "dogpile"
 engine = "dogpile"
 shortcut = "dp"
@@ -833,15 +812,6 @@ categories = ["general"]
 safesearch = true
 
 [[engines]]
-name = "startpage"
-engine = "startpage"
-shortcut = "sp"
-categories = ["general", "web"]
-paging = true
-time_range_support = true
-safesearch = true
-
-[[engines]]
 name = "findborg"
 engine = "findborg"
 shortcut = "fbg"
@@ -863,29 +833,11 @@ time_range_support = true
 safesearch = true
 disabled = true  # needs credentials or an instance URL
 [[engines]]
-name = "startpagina"
-engine = "startpagina"
-shortcut = "spg"
-categories = ["general"]
-paging = true
-safesearch = true
-
-disabled = true  # always times out and returns nothing; costs every search its full timeout
-
-[[engines]]
 name = "apkmirror"
 engine = "apkmirror"
 shortcut = "apk"
 categories = ["it", "apps"]
 paging = true
-
-[[engines]]
-name = "tonline"
-engine = "tonline"
-shortcut = "ton"
-categories = ["general"]
-paging = true
-time_range_support = true
 
 [[engines]]
 name = "invidious"
@@ -1252,12 +1204,6 @@ categories = ["videos"]
 paging = true
 
 [[engines]]
-name = "youtube_api"
-engine = "youtube_api"
-shortcut = "yta"
-categories = ["videos", "music"]
-disabled = true  # needs credentials or an instance URL
-[[engines]]
 name = "github_code"
 engine = "github_code"
 shortcut = "ghc"
@@ -1333,14 +1279,6 @@ engine = "gitea"
 shortcut = "gitea"
 categories = ["it", "repos"]
 paging = true
-
-[[engines]]
-name = "google_images"
-engine = "google_images"
-shortcut = "goi"
-categories = ["images", "web"]
-paging = true
-time_range_support = true
 
 [[engines]]
 name = "hex"
@@ -1744,24 +1682,6 @@ categories = ["general"]
 disabled = true  # unverified; remove when confirmed working
 
 [[engines]]
-name = "google_scholar"
-engine = "google_scholar"
-shortcut = "gos"
-categories = ["science", "scientific publications"]
-paging = true
-time_range_support = true
-# verified working (results observed in the engine sweep)
-
-[[engines]]
-name = "google_videos"
-engine = "google_videos"
-shortcut = "gov"
-categories = ["videos", "web"]
-paging = true
-time_range_support = true
-disabled = true  # unverified; remove when confirmed working
-
-[[engines]]
 name = "grokipedia"
 engine = "grokipedia"
 shortcut = "gp"
@@ -1784,13 +1704,6 @@ engine = "ipernity"
 shortcut = "ip"
 categories = ["images"]
 paging = true
-disabled = true  # unverified; remove when confirmed working
-
-[[engines]]
-name = "lingva"
-engine = "lingva"
-shortcut = "lv"
-categories = ["general", "translate"]
 disabled = true  # unverified; remove when confirmed working
 
 [[engines]]
@@ -1866,14 +1779,6 @@ categories = ["movies"]
 # verified working (results observed in the engine sweep)
 
 [[engines]]
-name = "s1search"
-engine = "s1search"
-shortcut = "s1"
-categories = ["general"]
-paging = true
-disabled = true  # needs a base_url (an instance to query)
-
-[[engines]]
 name = "s1search_rampjs"
 engine = "s1search_rampjs"
 shortcut = "s1j"
@@ -1912,13 +1817,6 @@ categories = ["general", "translate"]
 disabled = true  # unverified; remove when confirmed working
 
 [[engines]]
-name = "mozhi"
-engine = "mozhi"
-shortcut = "mz"
-categories = ["general", "translate"]
-disabled = true  # unverified; remove when confirmed working
-
-[[engines]]
 name = "privacywall"
 engine = "privacywall"
 shortcut = "pw"
@@ -1940,14 +1838,6 @@ name = "radio_browser"
 engine = "radio_browser"
 shortcut = "rb"
 categories = ["music", "radio"]
-paging = true
-disabled = true  # unverified; remove when confirmed working
-
-[[engines]]
-name = "searchrockit"
-engine = "searchrockit"
-shortcut = "sr"
-categories = ["general"]
 paging = true
 disabled = true  # unverified; remove when confirmed working
 
@@ -2042,13 +1932,6 @@ name = "deepl"
 engine = "deepl"
 shortcut = "dpl"
 categories = ["general", "translate"]
-disabled = true  # unverified; remove when confirmed working
-
-[[engines]]
-name = "material_icons"
-engine = "material_icons"
-shortcut = "mi"
-categories = ["images", "icons"]
 disabled = true  # unverified; remove when confirmed working
 
 [[engines]]
@@ -2169,15 +2052,6 @@ engine = "freesound"
 shortcut = "fnd"
 categories = ["general"]
 paging = true
-disabled = true  # unverified; remove when confirmed working
-
-[[engines]]
-name = "google_cse"
-engine = "google_cse"
-shortcut = "goc"
-categories = ["general", "web"]
-paging = true
-time_range_support = true
 disabled = true  # unverified; remove when confirmed working
 
 [[engines]]

@@ -98,6 +98,20 @@ fn build_client(
         .pool_max_idle_per_host(outgoing.pool_maxsize)
         .danger_accept_invalid_certs(!outgoing.verify)
         .user_agent(default_user_agent());
+    if let Some(path) = &outgoing.ca_bundle {
+        let pem = std::fs::read(path)
+            .map_err(|e| NetworkError::Build(format!("cannot read CA bundle {path}: {e}")))?;
+        let certificates = reqwest::Certificate::from_pem_bundle(&pem)
+            .map_err(|e| NetworkError::Build(format!("invalid CA bundle: {e}")))?;
+        if certificates.is_empty() {
+            return Err(NetworkError::Build(
+                "CA bundle contains no certificates".into(),
+            ));
+        }
+        for certificate in certificates {
+            builder = builder.add_root_certificate(certificate);
+        }
+    }
     if !outgoing.enable_http2 {
         builder = builder.http1_only();
     }
@@ -117,31 +131,7 @@ fn build_client(
 impl Network {
     pub fn from_settings(settings: &Settings) -> Result<Self, NetworkError> {
         let outgoing = &settings.outgoing;
-        let mut builder = reqwest::Client::builder()
-            .redirect(reqwest::redirect::Policy::limited(outgoing.max_redirects))
-            .timeout(Duration::from_secs_f64(
-                outgoing.max_request_timeout.max(1.0),
-            ))
-            .connect_timeout(Duration::from_secs_f64(
-                (outgoing.request_timeout / 2.0).clamp(1.0, 5.0),
-            ))
-            .pool_max_idle_per_host(outgoing.pool_maxsize)
-            .danger_accept_invalid_certs(!outgoing.verify)
-            .user_agent(default_user_agent());
-        if !outgoing.enable_http2 {
-            builder = builder.http1_only();
-        }
-        for (scheme, proxy) in &outgoing.proxies {
-            // One proxy per scheme (upstream's \`outgoing.proxies\`); the scheme key
-            // selects which requests it applies to in SearXNG, reqwest proxies all.
-            let proxy = reqwest::Proxy::all(proxy)
-                .map_err(|error| NetworkError::Build(error.to_string()))?;
-            tracing::debug!(scheme, "configured proxy");
-            builder = builder.proxy(proxy);
-        }
-        let client = builder
-            .build()
-            .map_err(|error| NetworkError::Build(error.to_string()))?;
+        let client = build_client(outgoing, None)?;
         Ok(Self {
             client,
             proxied: std::sync::Mutex::new(std::collections::HashMap::new()),
@@ -419,6 +409,18 @@ fn build_user_agents() -> Vec<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn invalid_ca_bundle_fails_instead_of_disabling_verification() {
+        let mut outgoing = crate::settings::Outgoing::default();
+        let file = tempfile::NamedTempFile::new().unwrap();
+        std::fs::write(file.path(), b"not a certificate").unwrap();
+        outgoing.ca_bundle = Some(file.path().to_string_lossy().into_owned());
+        assert!(build_client(&outgoing, None).is_err());
+        outgoing.ca_bundle = Some("/nonexistent/rustxng-ca.pem".into());
+        assert!(build_client(&outgoing, None).is_err());
+        assert!(outgoing.verify);
+    }
 
     #[test]
     fn user_agents_are_diverse_and_plausible() {

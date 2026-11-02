@@ -219,3 +219,25 @@ cargo test --all-targets
 
 [AGPL-3.0-or-later](LICENSE). RustXNG is based on [SearXNG](https://github.com/searxng/searxng);
 attribution is in [NOTICE](NOTICE). See the license for source-distribution obligations when operating modified versions.
+
+## Updating and proxy environments
+
+Run `rustxng --check-update` to check the latest stable official GitHub release,
+or `rustxng --update` to download the matching build target, verify its SHA-256
+sidecar, and replace the executable. Settings are preserved; restart your service
+after updating. The executable directory must be writable. Update container images
+through your container runtime; rebuild custom or unsupported targets from source.
+Update TLS verification is always enabled, independent of search settings.
+
+Both search and updates trust OS CA certificates. Use `SSL_CERT_FILE` for a custom
+PEM bundle, or set `outgoing.ca_bundle` for additional search CA certificates.
+Keep `outgoing.verify = true`.
+
+For congested outbound proxies, set `search.strategy = "staged"`,
+`search.staged_tier = 8`, `search.staged_min_results = 10`,
+`search.timeout_limit = 15.0`, and `outgoing.request_timeout = 10.0` in your
+user settings. These opt-in settings stagger engine requests and extend deadlines.
+
+Google search engines, autocomplete, external bangs, YouTube, Google translation
+integrations, Material Icons, and Google-backed search front ends have been removed.
+Remove their entries from older custom settings before starting the server.

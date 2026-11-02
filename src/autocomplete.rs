@@ -8,7 +8,7 @@ use crate::network::Network;
 use crate::settings::Settings;
 
 /// Autocomplete backends, in the order they are tried.
-pub static BACKENDS: &[&str] = &["duckduckgo", "google", "wikipedia", "mwmbl"];
+pub static BACKENDS: &[&str] = &["duckduckgo", "wikipedia", "mwmbl"];
 
 /// Fetch suggestions for `query` from `backend`.
 pub async fn suggest(
@@ -19,13 +19,6 @@ pub async fn suggest(
     locale: &str,
 ) -> Vec<String> {
     let (url, is_json) = match backend {
-        "google" => (
-            format!(
-                "https://suggestqueries.google.com/complete/search?client=firefox&q={}",
-                crate::engine::util::encode(query)
-            ),
-            true,
-        ),
         "wikipedia" => {
             let language = locale_language(locale);
             let language = if language == "all" {
@@ -95,7 +88,7 @@ pub fn parse_suggestions(backend: &str, response: &EngineResponse) -> Vec<String
                 }
             }
         }
-        // duckduckgo: [{"phrase": "..."}], google: ["query", ["...", ...]]
+        // duckduckgo: [{"phrase": "..."}], array responses: ["query", ["...", ...]]
         _ => {
             if let Some(items) = json.as_array() {
                 for item in items {
@@ -144,19 +137,6 @@ mod tests {
     }
 
     #[test]
-    fn google_suggestions_are_parsed() {
-        let body = r#"["rust",["rust","rust book","rustup"]]"#;
-        assert_eq!(
-            parse_suggestions("google", &response(body)),
-            vec![
-                "rust".to_string(),
-                "rust book".to_string(),
-                "rustup".to_string()
-            ]
-        );
-    }
-
-    #[test]
     fn wikipedia_suggestions_are_parsed() {
         let body = r#"["rust",["Rust","Rust (programming language)"]]"#;
         assert_eq!(
@@ -170,6 +150,6 @@ mod tests {
 
     #[test]
     fn broken_json_yields_no_suggestions() {
-        assert!(parse_suggestions("google", &response("<html>")).is_empty());
+        assert!(parse_suggestions("duckduckgo", &response("<html>")).is_empty());
     }
 }

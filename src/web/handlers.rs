@@ -611,7 +611,6 @@ pub async fn preferences_get(State(state): State<AppState>, headers: HeaderMap) 
         vec![
             ("none".to_string(), "Off".to_string()),
             ("duckduckgo".to_string(), "DuckDuckGo".to_string()),
-            ("google".to_string(), "Google".to_string()),
             ("wikipedia".to_string(), "Wikipedia".to_string()),
             ("mwmbl".to_string(), "Mwmbl".to_string()),
         ],

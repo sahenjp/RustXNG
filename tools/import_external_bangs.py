@@ -56,6 +56,12 @@ def main():
             rank_value = 0
         if not bang or not url:
             continue
+        # Keep removed Google integrations out of regenerated data as well.
+        if any(part in (bang + " " + url).lower() for part in (
+            "google", "youtube.com", "youtu.be", "ytimg.com",
+            "blogspot.com", "gstatic.com", "gmail.com",
+        )):
+            continue
         rows.append((bang, url, rank_value))
     rows.sort(key=lambda row: row[0])
     seen = set()

@@ -19,6 +19,8 @@ OPTIONS:
     -c, --config <FILE>    Settings file (default: $SEARXNG_SETTINGS_PATH)
     -b, --bind <ADDRESS>   Address to listen on (default: server.bind_address)
     -p, --port <PORT>      Port to listen on (default: server.port)
+    --check-update        Check the latest official release
+    --update              Download, verify and install the latest release
     -v, --version          Print the version
     -h, --help             Print this help
 
@@ -31,6 +33,7 @@ struct Args {
     config: Option<PathBuf>,
     bind: Option<String>,
     port: Option<u16>,
+    update: Option<bool>,
 }
 
 fn parse_args() -> Result<Option<Args>, String> {
@@ -38,6 +41,7 @@ fn parse_args() -> Result<Option<Args>, String> {
         config: None,
         bind: None,
         port: None,
+        update: None,
     };
     let mut argv = std::env::args().skip(1);
     while let Some(argument) = argv.next() {
@@ -49,6 +53,12 @@ fn parse_args() -> Result<Option<Args>, String> {
             "-v" | "--version" => {
                 println!("{}", version_string());
                 return Ok(None);
+            }
+            "--update" | "--check-update" => {
+                if args.update.is_some() {
+                    return Err("choose only one update action".into());
+                }
+                args.update = Some(argument == "--update");
             }
             "-c" | "--config" => {
                 args.config = Some(PathBuf::from(
@@ -93,6 +103,16 @@ async fn main() -> ExitCode {
             return ExitCode::from(2);
         }
     };
+
+    if let Some(install) = args.update {
+        return match rustxng::update::run(install).await {
+            Ok(()) => ExitCode::SUCCESS,
+            Err(error) => {
+                eprintln!("error: {error}");
+                ExitCode::FAILURE
+            }
+        };
+    }
 
     let settings_path = args.config.or_else(Settings::path_from_env);
     let mut settings = match Settings::load(settings_path.as_deref()) {

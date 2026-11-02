@@ -183,7 +183,7 @@ mod tests {
         let settings = Settings::defaults();
         let mut preferences = Preferences::from_settings(&settings);
         preferences.language = "ja".into();
-        preferences.disabled_engines = vec!["google".into(), "bing".into()];
+        preferences.disabled_engines = vec!["duckduckgo".into(), "bing".into()];
         preferences.safesearch = 2;
         let cookies = preferences.to_cookies();
         let header = cookies
@@ -194,7 +194,7 @@ mod tests {
         let restored = Preferences::from_cookies(Some(&header), &settings);
         assert_eq!(restored.language, "ja");
         assert_eq!(restored.safesearch, 2);
-        assert_eq!(restored.disabled_engines, vec!["google", "bing"]);
+        assert_eq!(restored.disabled_engines, vec!["duckduckgo", "bing"]);
     }
 
     #[test]

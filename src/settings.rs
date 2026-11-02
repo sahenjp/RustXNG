@@ -469,6 +469,8 @@ pub struct Outgoing {
     pub pool_maxsize: usize,
     pub enable_http2: bool,
     pub verify: bool,
+    /// Additional trusted CA certificates in a PEM bundle.
+    pub ca_bundle: Option<String>,
     pub retries: u32,
     pub max_redirects: usize,
     pub keepalive_expiry: f64,
@@ -486,6 +488,7 @@ impl Default for Outgoing {
             pool_maxsize: 20,
             enable_http2: true,
             verify: true,
+            ca_bundle: None,
             retries: 1,
             max_redirects: 20,
             keepalive_expiry: 5.0,
@@ -1124,8 +1127,8 @@ engines:
             r#"
             use_default_settings = true
             [[engines]]
-            name = "google"
-            engine = "google"
+            name = "duckduckgo"
+            engine = "duckduckgo"
             disabled = true
             [[engines]]
             name = "my instance"
@@ -1136,8 +1139,8 @@ engines:
         )
         .unwrap();
         let merged = Settings::merge(defaults, user).unwrap();
-        let google = merged.engine("google").expect("google kept");
-        assert_eq!(google.disabled, Some(true));
+        let duckduckgo = merged.engine("duckduckgo").expect("duckduckgo kept");
+        assert_eq!(duckduckgo.disabled, Some(true));
         assert!(merged.engine("my instance").is_some());
     }
 

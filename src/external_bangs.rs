@@ -131,34 +131,41 @@ mod tests {
     use super::*;
 
     #[test]
-    fn the_full_upstream_table_is_bundled() {
+    fn filtered_upstream_table_is_bundled() {
         assert!(
-            len() > 13_000,
+            len() > 12_000,
             "expected the upstream table, got {} entries",
             len()
         );
-        assert_eq!(lookup("g").map(|entry| entry.bang), Some("g"));
-        assert_eq!(lookup("yt").map(|entry| entry.bang), Some("yt"));
+        assert_eq!(lookup("w").map(|entry| entry.bang), Some("w"));
+        assert_eq!(lookup("ddg").map(|entry| entry.bang), Some("ddg"));
     }
 
     #[test]
     fn lookups_are_case_insensitive() {
-        assert!(lookup("YT").is_some());
+        assert!(lookup("DDG").is_some());
         assert!(lookup("does-not-exist-9f8a").is_none());
     }
 
     #[test]
     fn autocomplete_prefers_ranked_matches() {
-        let suggestions = autocomplete("goo");
-        assert!(suggestions.contains(&"google"), "{suggestions:?}");
-        assert!(autocomplete("").contains(&"g"));
+        let suggestions = autocomplete("duck");
+        assert!(suggestions.contains(&"duckduckgo"), "{suggestions:?}");
+        assert!(!autocomplete("").is_empty());
+    }
+
+    #[test]
+    fn google_bangs_are_removed() {
+        for bang in ["g", "google", "yt", "youtube", "gtranslate"] {
+            assert!(lookup(bang).is_none(), "{bang}");
+        }
     }
 
     #[test]
     fn urls_are_expanded() {
-        let entry = lookup("yt").expect("youtube bang");
+        let entry = lookup("w").expect("wikipedia bang");
         let url = expand_url(entry.url, "cats & dogs");
-        assert!(url.starts_with("https://www.youtube.com/"), "{url}");
+        assert!(url.starts_with("https://en.wikipedia.org/"), "{url}");
         assert!(url.contains("cats%20%26%20dogs"), "{url}");
     }
 }

@@ -42,6 +42,7 @@ pub mod quality;
 pub mod query;
 pub mod results;
 pub mod settings;
+pub mod update;
 pub mod version;
 pub mod web;
 pub mod wikidata_infobox;

@@ -205,9 +205,9 @@ mod tests {
     fn access_denied_suspends_for_a_day() {
         let states = EngineStates::new();
         let settings = Search::default();
-        let seconds = states.record_failure("google", FailureKind::AccessDenied, &settings);
+        let seconds = states.record_failure("duckduckgo", FailureKind::AccessDenied, &settings);
         assert_eq!(seconds, 86_400);
-        assert!(states.suspension("google").is_some());
+        assert!(states.suspension("duckduckgo").is_some());
     }
 
     #[test]

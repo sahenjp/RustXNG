@@ -10,7 +10,6 @@
 //! | `docker_hub`          | `docker_hub.py`              |
 //! | `duckduckgo`          | `duckduckgo.py`              |
 //! | `github`              | `github.py`                  |
-//! | `google`              | `google.py`                  |
 //! | `hackernews`          | `hackernews.py`              |
 //! | `mojeek`              | `mojeek.py`                  |
 //! | `mwmbl`               | `mwmbl.py`                   |
@@ -23,7 +22,6 @@
 //! | `stackexchange`       | `stackexchange.py`           |
 //! | `wikidata`            | `wikidata.py`                |
 //! | `wikipedia`           | `wikipedia.py`               |
-//! | `youtube_noapi`       | `youtube_noapi.py`           |
 
 pub mod acfun;
 pub mod ahmia;
@@ -106,13 +104,6 @@ pub mod github_code;
 pub mod gitlab;
 pub mod gmx;
 pub mod goodreads;
-pub mod google;
-pub mod google_cse;
-pub mod google_images;
-pub mod google_news;
-pub mod google_play;
-pub mod google_scholar;
-pub mod google_videos;
 pub mod grokipedia;
 pub mod hackernews;
 pub mod hex;
@@ -135,7 +126,6 @@ pub mod kickass;
 pub mod lemmy;
 pub mod lib_rs;
 pub mod libretranslate;
-pub mod lingva;
 pub mod lucide;
 pub mod luxxle;
 pub mod magnific;
@@ -143,7 +133,6 @@ pub mod marginalia;
 #[cfg(feature = "db-engines")]
 pub mod mariadb_server;
 pub mod mastodon;
-pub mod material_icons;
 pub mod mediathekviewweb;
 pub mod mediawiki;
 pub mod meilisearch;
@@ -154,7 +143,6 @@ pub mod mojeek;
 #[cfg(feature = "db-engines")]
 pub mod mongodb;
 pub mod moviepilot;
-pub mod mozhi;
 pub mod mwmbl;
 #[cfg(feature = "db-engines")]
 pub mod mysql_server;
@@ -205,10 +193,8 @@ pub mod resulthunter;
 pub mod reuters;
 pub mod rottentomatoes;
 pub mod rumble;
-pub mod s1search;
 pub mod s1search_rampjs;
 pub mod scanr_structures;
-pub mod searchrockit;
 pub mod searchzee;
 pub mod seekninja;
 pub mod selfhst;
@@ -230,8 +216,6 @@ pub mod springer;
 #[cfg(feature = "db-engines")]
 pub mod sqlite;
 pub mod stackexchange;
-pub mod startpage;
-pub mod startpagina;
 pub mod steam;
 pub mod stocksnap;
 pub mod swisscows;
@@ -240,7 +224,6 @@ pub mod tagesschau;
 pub mod tiger;
 pub mod tineye;
 pub mod tokyotoshokan;
-pub mod tonline;
 pub mod tootfinder;
 pub mod torznab;
 pub mod translated;
@@ -271,8 +254,6 @@ pub mod yandex;
 pub mod yandex_api;
 pub mod yandex_music;
 pub mod yep;
-pub mod youtube_api;
-pub mod youtube_noapi;
 pub mod zlibrary;
 
 use crate::engine::EngineHandle;
@@ -292,8 +273,6 @@ pub fn build(config: &EngineConfig) -> Result<EngineHandle, String> {
         "docker_hub" => docker_hub::DockerHub::from_config(config)?,
         "duckduckgo" => duckduckgo::DuckDuckGo::from_config(config)?,
         "github" => github::GitHub::from_config(config)?,
-        "google" => google::Google::from_config(config)?,
-        "google_news" => google_news::GoogleNews::from_config(config)?,
         "hackernews" => hackernews::HackerNews::from_config(config)?,
         "mojeek" => mojeek::Mojeek::from_config(config)?,
         "mwmbl" => mwmbl::Mwmbl::from_config(config)?,
@@ -311,7 +290,6 @@ pub fn build(config: &EngineConfig) -> Result<EngineHandle, String> {
         "json_engine" => json_engine::JsonEngine::from_config(config)?,
         "mediawiki" => mediawiki::MediaWiki::from_config(config)?,
         "xpath" => xpath::XPathEngine::from_config(config)?,
-        "youtube_noapi" => youtube_noapi::YoutubeNoapi::from_config(config)?,
         "andisearch" => andisearch::Andisearch::from_config(config)?,
         "apkmirror" => apkmirror::ApkMirror::from_config(config)?,
         "apple_app_store" => apple_app_store::AppleAppStore::from_config(config)?,
@@ -321,7 +299,6 @@ pub fn build(config: &EngineConfig) -> Result<EngineHandle, String> {
         "findfiles" => findfiles::FindFiles::from_config(config)?,
         "fireball" => fireball::Fireball::from_config(config)?,
         "500px" => five_hundred_px::FiveHundredPx::from_config(config)?,
-        "google_play" => google_play::GooglePlay::from_config(config)?,
         "invidious" => invidious::Invidious::from_config(config)?,
         "lemmy" => lemmy::Lemmy::from_config(config)?,
         "luxxle" => luxxle::Luxxle::from_config(config)?,
@@ -335,9 +312,6 @@ pub fn build(config: &EngineConfig) -> Result<EngineHandle, String> {
         "pixabay" => pixabay::Pixabay::from_config(config)?,
         "qwant" => qwant::Qwant::from_config(config)?,
         "sepiasearch" => sepiasearch::Sepiasearch::from_config(config)?,
-        "startpage" => startpage::Startpage::from_config(config)?,
-        "startpagina" => startpagina::Startpagina::from_config(config)?,
-        "tonline" => tonline::TOnline::from_config(config)?,
         "tootfinder" => tootfinder::Tootfinder::from_config(config)?,
         "tusksearch" => tusksearch::Tusksearch::from_config(config)?,
         "unsplash" => unsplash::Unsplash::from_config(config)?,
@@ -377,7 +351,6 @@ pub fn build(config: &EngineConfig) -> Result<EngineHandle, String> {
         "odysee" => odysee::Odysee::from_config(config)?,
         "rumble" => rumble::Rumble::from_config(config)?,
         "vimeo" => vimeo::Vimeo::from_config(config)?,
-        "youtube_api" => youtube_api::YouTubeApi::from_config(config)?,
         "github_code" => github_code::GitHubCode::from_config(config)?,
         "gitlab" => gitlab::GitLab::from_config(config)?,
         "marginalia" => marginalia::Marginalia::from_config(config)?,
@@ -389,7 +362,6 @@ pub fn build(config: &EngineConfig) -> Result<EngineHandle, String> {
         "europepmc" => europepmc::EuropePmc::from_config(config)?,
         "geizhals" => geizhals::Geizhals::from_config(config)?,
         "gitea" => gitea::Gitea::from_config(config)?,
-        "google_images" => google_images::GoogleImages::from_config(config)?,
         "hex" => hex::Hex::from_config(config)?,
         "neosearch" => neosearch::Neosearch::from_config(config)?,
         "openalex" => openalex::OpenAlex::from_config(config)?,
@@ -449,12 +421,9 @@ pub fn build(config: &EngineConfig) -> Result<EngineHandle, String> {
         "duckduckgo_definitions" => {
             duckduckgo_definitions::DuckDuckGoDefinitions::from_config(config)?
         }
-        "google_scholar" => google_scholar::GoogleScholar::from_config(config)?,
-        "google_videos" => google_videos::GoogleVideos::from_config(config)?,
         "grokipedia" => grokipedia::Grokipedia::from_config(config)?,
         "il_post" => il_post::IlPost::from_config(config)?,
         "ipernity" => ipernity::Ipernity::from_config(config)?,
-        "lingva" => lingva::Lingva::from_config(config)?,
         "magnific" => magnific::Magnific::from_config(config)?,
         "mediathekviewweb" => mediathekviewweb::Mediathekviewweb::from_config(config)?,
         "microsoft_learn" => microsoft_learn::MicrosoftLearn::from_config(config)?,
@@ -464,19 +433,16 @@ pub fn build(config: &EngineConfig) -> Result<EngineHandle, String> {
         "podchaser" => podchaser::Podchaser::from_config(config)?,
         "reuters" => reuters::Reuters::from_config(config)?,
         "rottentomatoes" => rottentomatoes::RottenTomatoes::from_config(config)?,
-        "s1search" => s1search::S1Search::from_config(config)?,
         "s1search_rampjs" => s1search_rampjs::S1SearchRampjs::from_config(config)?,
         "scanr_structures" => scanr_structures::ScanrStructures::from_config(config)?,
         "iseek" => iseek::Iseek::from_config(config)?,
         "keenable" => keenable::Keenable::from_config(config)?,
         "libretranslate" => libretranslate::LibreTranslate::from_config(config)?,
-        "mozhi" => mozhi::Mozhi::from_config(config)?,
         "privacywall" => privacywall::Privacywall::from_config(config)?,
         "public_domain_image_archive" => {
             public_domain_image_archive::PublicDomainImageArchive::from_config(config)?
         }
         "radio_browser" => radio_browser::RadioBrowser::from_config(config)?,
-        "searchrockit" => searchrockit::Searchrockit::from_config(config)?,
         "astrophysics_data_system" => {
             astrophysics_data_system::AstrophysicsDataSystem::from_config(config)?
         }
@@ -491,7 +457,6 @@ pub fn build(config: &EngineConfig) -> Result<EngineHandle, String> {
         "tineye" => tineye::Tineye::from_config(config)?,
         "uxwing" => uxwing::Uxwing::from_config(config)?,
         "deepl" => deepl::Deepl::from_config(config)?,
-        "material_icons" => material_icons::MaterialIcons::from_config(config)?,
         "resulthunter" => resulthunter::Resulthunter::from_config(config)?,
         "searchzee" => searchzee::SearchZee::from_config(config)?,
         "seekninja" => seekninja::SeekNinja::from_config(config)?,
@@ -507,7 +472,6 @@ pub fn build(config: &EngineConfig) -> Result<EngineHandle, String> {
         "xprivo" => xprivo::Xprivo::from_config(config)?,
         "exaapi" => exaapi::ExaApi::from_config(config)?,
         "freesound" => freesound::Freesound::from_config(config)?,
-        "google_cse" => google_cse::GoogleCse::from_config(config)?,
         "kagi" => kagi::Kagi::from_config(config)?,
         "ollama" => ollama::Ollama::from_config(config)?,
         "translated" => translated::Translated::from_config(config)?,

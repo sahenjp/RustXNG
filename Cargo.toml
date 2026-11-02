@@ -13,7 +13,7 @@ categories = ["web-programming::http-server"]
 [dependencies]
 axum = "0.8"
 tokio = { version = "1", features = ["macros", "rt-multi-thread", "net", "signal", "time", "sync"] }
-reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "json", "gzip", "brotli", "deflate", "cookies", "blocking"] }
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "rustls-tls-native-roots", "json", "gzip", "brotli", "deflate", "cookies", "blocking"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 toml = "0.8"
@@ -39,16 +39,20 @@ mongodb = { version = "3", default-features = false, features = ["bson-3", "comp
 bson = { version = "3", optional = true }
 tantivy = "0.27"
 
+tempfile = "3"
+semver = "1"
+self-replace = "1"
+
 [features]
 default = ["db-engines"]
 # Database backed engines (postgresql, mysql, mariadb, sqlite, mongodb).
 # Disable with --no-default-features for a smaller binary.
 db-engines = ["dep:postgres", "dep:mysql", "dep:rusqlite", "dep:mongodb", "dep:bson"]
 
+
 [dev-dependencies]
 tower = { version = "0.5", features = ["util"] }
 http-body-util = "0.1"
-tempfile = "3"
 
 [lints.clippy]
 # Raising MSRV to 1.88 enables let-chain suggestions across existing parsers.

@@ -216,3 +216,40 @@ cargo test --all-targets
 
 [AGPL-3.0-or-later](LICENSE)。RustXNGは[SearXNG](https://github.com/searxng/searxng)を基にしています。
 帰属情報は[NOTICE](NOTICE)に記載しています。改変版のサービス運用時のソース提供等についてはライセンス本文を参照してください。
+
+## 更新とプロキシ環境
+
+```bash
+rustxng --check-update  # 最新の安定版を確認
+rustxng --update        # SHA-256 を確認して実行ファイルを更新
+```
+
+公式 GitHub リリースからビルド対象と一致するバイナリと `.sha256` を取得します。
+新しい版だけを導入し、設定ファイルは変更しません。更新後はサービスを再起動してください。
+実行ファイルのある場所への書き込み権限が必要です。コンテナはイメージを更新し、
+独自ビルドやリリース未対応の環境ではソースから再ビルドしてください。
+更新時の TLS 検証は常に有効で、検索設定の `verify = false` は引き継ぎません。
+
+検索・更新とも OS の信頼済み CA を利用します。独自の CA が必要な場合は
+`SSL_CERT_FILE` で PEM バンドルを指定できます。検索用には `[outgoing]` の
+`ca_bundle = "/path/to/proxy-ca.pem"` でも追加できます。`verify = true` を維持してください。
+
+出口プロキシの接続が集中してタイムアウトする環境では、ユーザー設定に次を指定します。
+既定の並列検索から段階検索へ切り替え、締切を延ばします。
+
+```toml
+[search]
+strategy = "staged"
+staged_tier = 8
+staged_min_results = 10
+timeout_limit = 15.0
+
+[outgoing]
+request_timeout = 10.0
+verify = true
+# ca_bundle = "/path/to/proxy-ca.pem"
+```
+
+Google 系の検索・補完・外部 bang は削除しました。YouTube、Google 翻訳連携、
+Material Icons、Google を検索元にするフロントエンドも含みます。
+旧設定でこれらを明示指定している場合は、そのエンジン設定を削除してください。

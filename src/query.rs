@@ -506,12 +506,12 @@ mod tests {
 
     #[test]
     fn disabled_engines_are_skipped_in_category_bangs() {
-        let disabled = vec!["google images".to_string()];
+        let disabled = vec!["bing images".to_string()];
         let query = Query::parse("!images cats", &registry(), &disabled);
         assert!(
             !query
                 .engine_ref_names()
-                .contains(&"google images".to_string())
+                .contains(&"bing images".to_string())
         );
     }
 
@@ -553,14 +553,14 @@ mod tests {
 
     #[test]
     fn external_bang_is_recognised() {
-        let query = Query::parse("!!yt cats", &registry(), &[]);
-        assert_eq!(query.external_bang.as_deref(), Some("yt"));
+        let query = Query::parse("!!w cats", &registry(), &[]);
+        assert_eq!(query.external_bang.as_deref(), Some("w"));
     }
 
     #[test]
     fn autocomplete_lists_bangs_and_languages() {
-        let query = Query::parse("!goo", &registry(), &[]);
-        assert!(query.autocomplete_list.contains(&"!google".to_string()));
+        let query = Query::parse("!duck", &registry(), &[]);
+        assert!(query.autocomplete_list.contains(&"!duckduckgo".to_string()));
         // ":jap" is a valid language code, so it is parsed instead of being
         // autocompleted; ":engl" is not.
         let query = Query::parse(":engl", &registry(), &[]);

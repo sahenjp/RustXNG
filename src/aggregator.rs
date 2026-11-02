@@ -1187,11 +1187,11 @@ mod orchestration_tests {
     #[tokio::test]
     async fn external_bangs_redirect() {
         let searcher = searcher(vec![FakeEngine::build("web engine", &["general"], 1, true)]);
-        let request = SearchRequest::new(query("!!yt cats", &searcher.registry));
+        let request = SearchRequest::new(query("!!w cats", &searcher.registry));
         let response = searcher.search(request).await;
         assert_eq!(
             response.redirect_url.as_deref(),
-            Some("https://www.youtube.com/results?search_query=cats")
+            Some("https://en.wikipedia.org/wiki/Special:Search?search=cats")
         );
     }
 
