@@ -203,6 +203,17 @@ async fn search_returns_ranked_snippets_without_page_text() {
 
     let one = call(&client, "search", json!({"query": "rust", "limit": 1})).await;
     assert_eq!(structured(&one)["results"].as_array().unwrap().len(), 1);
+
+    let sixth = call(
+        &client,
+        "search",
+        json!({"query": "rust", "limit": 5, "offset": 5}),
+    )
+    .await;
+    let sixth = structured(&sixth);
+    assert_eq!(sixth["results"].as_array().unwrap().len(), 1);
+    assert_eq!(sixth["results"][0]["rank"], 6);
+    assert!(sixth.get("next_offset").is_none());
     client.cancel().await.unwrap();
 }
 

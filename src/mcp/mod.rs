@@ -37,6 +37,8 @@ const DEFAULT_PAYLOAD_CHARS: usize = 12_000;
 const MAX_PAYLOAD_CHARS: usize = 64_000;
 const DEFAULT_PAYLOAD_BYTES: usize = 24_000;
 const MAX_PAYLOAD_BYTES: usize = 128_000;
+/// MCP searches page through a bounded first batch of ranked results.
+const MAX_COLLECTED_RESULTS: usize = 200;
 /// Characters per `read_page` call when the caller does not ask for a number.
 const DEFAULT_READ_CHARS: usize = 4_000;
 /// Most characters per `read_page` call.
@@ -82,8 +84,9 @@ pub struct SearchArgs {
     #[serde(default = "default_payload_bytes")]
     #[schemars(range(min = 512, max = 128000))]
     pub max_payload_bytes: usize,
-    /// Result offset for continuing a truncated search response.
+    /// Result offset within the first 200 ranked results.
     #[serde(default)]
+    #[schemars(range(max = 199))]
     pub offset: usize,
     /// Categories such as "general", "news", "it" or "science" (default: general).
     #[serde(default)]
@@ -317,8 +320,8 @@ impl McpServer {
                 "max_payload_bytes must be between 512 and {MAX_PAYLOAD_BYTES}"
             ));
         }
-        if args.offset > 10_000 {
-            return Err("offset must be at most 10000".into());
+        if args.offset >= MAX_COLLECTED_RESULTS {
+            return Err(format!("offset must be below {MAX_COLLECTED_RESULTS}"));
         }
         let time_range = match args.time_range.as_str() {
             "" => None,
@@ -334,22 +337,24 @@ impl McpServer {
             &self.searcher.registry,
             &defaults.disabled_engines,
         );
-        // Engines read the language from the query's locale (for example the upstream language filter).
-        let explicit_language = Some(args.language).filter(|value| !value.is_empty());
-        if let Some(language) = &explicit_language {
-            query.locale = language.clone();
-        } else if query.locale.is_empty() {
-            query.locale = defaults.locale.clone();
+        // Match the web form: :lang bang > language argument > preference,
+        // while `auto` falls back to query-language detection.
+        query.locale = defaults.locale.clone();
+        query.apply_language_param(&args.language)?;
+        let language_requested = !query.languages.is_empty();
+        query.apply_language_preference(&defaults.language);
+        if language_requested {
+            if let Some(language) = query.languages.first() {
+                query.locale = if language == "auto" {
+                    query.engine_language()
+                } else {
+                    language.clone()
+                };
+            }
         }
         query.safesearch = defaults.safesearch.min(2);
         query.time_range = time_range;
-        let language = explicit_language.unwrap_or_else(|| {
-            if defaults.language.is_empty() {
-                query.engine_language()
-            } else {
-                defaults.language.clone()
-            }
-        });
+        let language = query.engine_language();
         let mut request = SearchRequest::new(query);
         if !args.categories.is_empty() {
             request.categories = args.categories;
@@ -362,7 +367,7 @@ impl McpServer {
         request.disabled_plugins = defaults.disabled_plugins;
         request.include_domains = args.include_domains;
         request.exclude_domains = args.exclude_domains;
-        request.max_results = Some(limit);
+        request.max_results = Some(MAX_COLLECTED_RESULTS);
         Ok((request, limit))
     }
 
@@ -371,8 +376,8 @@ impl McpServer {
         let payload_chars = args.max_payload_chars;
         let payload_bytes = args.max_payload_bytes;
         let (request, limit) = self.build_request(args)?;
-        let mut request = request;
-        request.pageno = (offset / limit + 1) as u32;
+        // Results are sliced from a single ranked batch. Native provider page
+        // sizes differ, so an MCP offset must never be converted to `pageno`.
         let response = self.searcher.search(request).await;
         if let Some(error) = response.error {
             return Err(error);
@@ -382,20 +387,20 @@ impl McpServer {
                 "the query is a redirect (external bang) to {url}; remove the bang to search"
             ));
         }
-        let page_skip = offset % limit;
-        let result_count = response.results.len().saturating_sub(page_skip);
-        let has_more_results =
-            response.paging || response.number_of_results > (offset + result_count) as u64;
+        let result_count = response.results.len().saturating_sub(offset).min(limit);
+        let end = offset + result_count;
+        let has_more_collected_results = end < response.results.len();
+        let source_has_more = has_more_collected_results || response.paging;
         let results: Vec<SearchItem> = response
             .results
             .iter()
-            .skip(page_skip)
+            .skip(offset)
             .take(limit)
             .enumerate()
             .map(|(index, result)| {
                 let (snippet, snippet_truncated) = truncate_chars(&result.content, SNIPPET_CHARS);
                 SearchItem {
-                    rank: index + 1,
+                    rank: offset + index + 1,
                     url: result.url.clone(),
                     title: result.title.clone(),
                     snippet,
@@ -428,9 +433,9 @@ impl McpServer {
                 .map(|engine| format!("{}: {}", engine.engine, engine.error_type))
                 .collect(),
             note: UNTRUSTED.into(),
-            truncated: content_was_cut || has_more_results,
-            source_truncated: content_was_cut || has_more_results,
-            next_offset: (has_more_results && result_count > 0).then_some(offset + result_count),
+            truncated: content_was_cut || source_has_more,
+            source_truncated: content_was_cut || source_has_more,
+            next_offset: (has_more_collected_results && result_count > 0).then_some(end),
         };
         fit_search_payload(&mut output, payload_chars, payload_bytes)?;
         Ok(output)
@@ -721,6 +726,27 @@ mod tests {
         assert_eq!(request.query.locale, "ja");
         let url = bing.build_request(&request.query, 1).unwrap().url;
         assert!(!url.is_empty());
+
+        let mut language_bang = args(":ja 猫");
+        language_bang.language = "fr".into();
+        let (request, _) = server.build_request(language_bang).unwrap();
+        assert_eq!(request.language, "ja", "the query bang takes priority");
+        assert_eq!(request.query.locale, "ja");
+
+        let mut automatic = args("日本語の検索");
+        automatic.language = "auto".into();
+        let (request, _) = server.build_request(automatic).unwrap();
+        assert_eq!(request.language, "ja", "auto detects the query language");
+
+        let mut invalid = args("rust");
+        invalid.language = "xyz".into();
+        assert!(server.build_request(invalid).is_err());
+
+        let mut second_batch = args("rust");
+        second_batch.offset = DEFAULT_LIMIT;
+        let (request, _) = server.build_request(second_batch).unwrap();
+        assert_eq!(request.pageno, 1);
+        assert_eq!(request.max_results, Some(MAX_COLLECTED_RESULTS));
     }
 
     #[test]
