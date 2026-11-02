@@ -1,7 +1,7 @@
 # Build stage: templates and static files are embedded at compile time.
 FROM rust:1.99.1-slim AS build
 WORKDIR /app
-COPY Cargo.toml Cargo.lock ./
+COPY Cargo.toml Cargo.lock build.rs ./
 COPY settings.toml ./
 COPY src ./src
 COPY templates ./templates
