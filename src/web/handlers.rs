@@ -189,9 +189,11 @@ async fn run_search(
             .unwrap_or(true)
     {
         if let Some(language) = query.languages.first() {
-            if language != "auto" {
-                query.locale = language.clone();
-            }
+            query.locale = if language == "auto" {
+                query.engine_language()
+            } else {
+                language.clone()
+            };
         }
     }
     query.pageno = params.pageno.unwrap_or(1).max(1);

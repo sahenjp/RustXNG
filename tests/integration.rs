@@ -612,9 +612,36 @@ async fn language_parameter_reaches_the_engines() {
         );
     }
 
+    // `auto` detects the query language and also reaches engines that use
+    // the request locale directly, such as the JSON engine's `{lang}`.
+    seen.lock().unwrap().clear();
+    let (status, _, _) = get_uri(
+        &app,
+        "/search?q=%E6%97%A5%E6%9C%AC%E8%AA%9E&format=json&language=auto",
+    )
+    .await;
+    assert_eq!(status, StatusCode::OK);
+    {
+        let seen = seen.lock().unwrap();
+        assert!(
+            seen.iter()
+                .any(|uri| uri.starts_with("/yacysearch.json") && uri.contains("lr=lang_ja")),
+            "yacy saw: {seen:?}"
+        );
+        assert!(
+            seen.iter()
+                .any(|uri| uri.starts_with("/jsonsearch") && uri.contains("lang=ja")),
+            "json engine saw: {seen:?}"
+        );
+    }
+
     // An invalid language is a client error, like upstream.
     let (status, _, _) = get_uri(&app, "/search?q=rust&format=json&language=not-a-language").await;
     assert_eq!(status, StatusCode::BAD_REQUEST);
+    let (status, body, _) = get_uri(&app, "/search?q=rust&format=json&language=xyz").await;
+    assert_eq!(status, StatusCode::BAD_REQUEST);
+    let json: serde_json::Value = serde_json::from_str(&body).unwrap();
+    assert_eq!(json["error"], "invalid language code: xyz");
 }
 
 #[tokio::test]

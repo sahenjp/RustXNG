@@ -176,11 +176,6 @@ mod tests {
         };
         let registry = EngineRegistry::from_settings(&settings).unwrap();
         assert_eq!(registry.len(), 3);
-        for name in ["bing UK", "bing Germany", "bing Japan"] {
-            let query = Query::parse(&format!("!{name} rust"), &registry, &[]);
-            // Direct lookup is checked via shortcuts below; names with spaces need underscores.
-            let _ = query;
-        }
         for (shortcut, name) in [
             ("buk", "bing UK"),
             ("bde", "bing Germany"),
@@ -189,5 +184,14 @@ mod tests {
             let query = Query::parse(&format!("!{shortcut} rust"), &registry, &[]);
             assert_eq!(query.engine_ref_names(), vec![name.to_string()]);
         }
+    }
+
+    #[test]
+    fn configured_markets_are_opt_in_in_the_default_registry() {
+        let registry = EngineRegistry::from_settings(&Settings::defaults()).unwrap();
+        assert!(registry.get("bing").is_some());
+        assert!(registry.by_shortcut("buk").is_none());
+        assert!(registry.by_shortcut("bde").is_none());
+        assert!(registry.by_shortcut("bjp").is_none());
     }
 }
