@@ -247,6 +247,8 @@ SearXNG を使っていた場合は、その `settings.yml`（YAML）をその�
 
 休止は「失敗していないが役に立っていない」エンジン向けです。ブロックされて空のページが返るエンジンが毎回タイムアウト分を消費するのを防ぎます。1件でも結果を返せば即座に復帰します。
 
+休止状態は `/stats`（HTML）、`/stats/errors`（JSON）、`/metrics`（Prometheus）で確認できます。`searxng_engines_resting` と `searxng_engines_resting_seconds` gauge でアラートを設定できます。
+
 ### プロキシ
 
 ブロックされているエンジン（Google / Bing など）を復活させる用途で使えます。

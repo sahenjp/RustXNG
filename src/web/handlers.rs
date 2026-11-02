@@ -845,6 +845,8 @@ fn prometheus_metrics(state: &AppState) -> String {
     out.push_str("# HELP searxng_engines_response_time_total_seconds Time spent waiting for an engine\n# TYPE searxng_engines_response_time_total_seconds counter\n");
     out.push_str("# HELP searxng_engines_reliability_total Share of successful requests\n# TYPE searxng_engines_reliability_total gauge\n");
     out.push_str("# HELP searxng_engines_suspended Whether the engine is currently suspended\n# TYPE searxng_engines_suspended gauge\n");
+    out.push_str("# HELP searxng_engines_resting Whether the engine is resting due to repeated empty results\n# TYPE searxng_engines_resting gauge\n");
+    out.push_str("# HELP searxng_engines_resting_seconds Remaining rest time in seconds\n# TYPE searxng_engines_resting_seconds gauge\n");
     for engine in state.searcher.engine_snapshots() {
         let label = engine.engine.replace('"', "");
         let reliability = if engine.stats.requests == 0 {
@@ -874,6 +876,14 @@ fn prometheus_metrics(state: &AppState) -> String {
         out.push_str(&format!(
             "searxng_engines_suspended{{engine=\"{label}\"}} {}\n",
             if engine.suspended { 1 } else { 0 }
+        ));
+        out.push_str(&format!(
+            "searxng_engines_resting{{engine=\"{label}\"}} {}\n",
+            if engine.resting { 1 } else { 0 }
+        ));
+        out.push_str(&format!(
+            "searxng_engines_resting_seconds{{engine=\"{label}\"}} {:.3}\n",
+            engine.resting_for
         ));
     }
     out.push_str("# EOF\n");

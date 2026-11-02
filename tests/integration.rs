@@ -499,3 +499,208 @@ async fn the_search_form_offers_a_time_range() {
     assert!(body.contains("value=\"week\" selected"));
     assert!(body.contains("Past week"));
 }
+
+/// Helper: create settings with no engines and resting enabled after 1 empty result.
+fn resting_test_settings() -> Settings {
+    let mut settings = Settings::defaults();
+    settings.engines.clear();
+    settings.search.empty_result_limit = 1;
+    settings.search.empty_result_cooldown = 300;
+    settings.server.secret_key = "test".to_string();
+    settings
+}
+
+#[tokio::test]
+async fn stats_endpoint_shows_resting_engines() {
+    let settings = resting_test_settings();
+    let searcher = Searcher::new(settings).expect("searcher");
+
+    // Manually trigger resting by recording an empty success
+    searcher.states.record_success(
+        "testeng",
+        0,
+        std::time::Duration::from_millis(50),
+        &searcher.settings.search,
+    );
+
+    let app = router(AppState::new(searcher));
+
+    // /stats HTML should show the Resting column
+    let (status, body, _) = get_uri(&app, "/stats").await;
+    assert_eq!(status, StatusCode::OK);
+    assert!(
+        body.contains("<th>Resting</th>"),
+        "stats should have Resting column"
+    );
+    assert!(
+        body.contains("empty results"),
+        "resting engine should show 'empty results'"
+    );
+
+    // /stats/errors JSON should include resting fields
+    let (status, body, _) = get_uri(&app, "/stats/errors").await;
+    assert_eq!(status, StatusCode::OK);
+    let json: serde_json::Value = serde_json::from_str(&body).unwrap();
+    let engines = json.as_array().unwrap();
+    let eng = engines.iter().find(|e| e["engine"] == "testeng").unwrap();
+    assert!(
+        eng["resting"].as_bool().unwrap(),
+        "engine should be resting"
+    );
+    assert!(
+        eng["resting_for"].as_f64().unwrap() > 0.0,
+        "resting_for should be positive"
+    );
+    // suspended should be false (resting is distinct from failure suspension)
+    assert!(
+        !eng["suspended"].as_bool().unwrap(),
+        "engine should not be suspended"
+    );
+}
+
+#[tokio::test]
+async fn metrics_endpoint_exposes_resting_gauges() {
+    let settings = resting_test_settings();
+    let searcher = Searcher::new(settings).expect("searcher");
+
+    // Trigger resting
+    searcher.states.record_success(
+        "testeng",
+        0,
+        std::time::Duration::from_millis(50),
+        &searcher.settings.search,
+    );
+
+    let app = router(AppState::new(searcher));
+
+    let (status, body, _) = get_uri(&app, "/metrics").await;
+    assert_eq!(status, StatusCode::OK);
+
+    // Check HELP lines exist
+    assert!(
+        body.contains("# HELP searxng_engines_resting"),
+        "metrics should include resting HELP"
+    );
+    assert!(
+        body.contains("# HELP searxng_engines_resting_seconds"),
+        "metrics should include resting_seconds HELP"
+    );
+
+    // Check gauge values for testeng
+    let resting_line = body
+        .lines()
+        .find(|line| line.starts_with("searxng_engines_resting{engine=\"testeng\"}"))
+        .expect("resting gauge should be exported");
+    assert!(
+        resting_line.ends_with(" 1"),
+        "testeng should be resting (value=1)"
+    );
+
+    let seconds_line = body
+        .lines()
+        .find(|line| line.starts_with("searxng_engines_resting_seconds{engine=\"testeng\"}"))
+        .expect("resting_seconds gauge should be exported");
+    let seconds_value: f64 = seconds_line
+        .rsplit(' ')
+        .next()
+        .and_then(|v| v.parse().ok())
+        .expect("seconds value should be a number");
+    assert!(seconds_value > 0.0, "resting_seconds should be positive");
+}
+
+#[tokio::test]
+async fn stats_shows_recovery_from_resting() {
+    let settings = resting_test_settings();
+    let searcher = Searcher::new(settings).expect("searcher");
+    let states = searcher.states.clone();
+
+    // Trigger resting
+    states.record_success(
+        "testeng",
+        0,
+        std::time::Duration::from_millis(50),
+        &searcher.settings.search,
+    );
+
+    let app = router(AppState::new(searcher));
+
+    // Verify resting via /stats HTML
+    let (status, body, _) = get_uri(&app, "/stats").await;
+    assert_eq!(status, StatusCode::OK);
+    assert!(
+        body.contains("empty results"),
+        "engine should be resting initially"
+    );
+
+    // Verify resting via /stats/errors JSON
+    let (_, body, _) = get_uri(&app, "/stats/errors").await;
+    let json: serde_json::Value = serde_json::from_str(&body).unwrap();
+    let eng = json
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|e| e["engine"] == "testeng")
+        .unwrap();
+    assert!(eng["resting"].as_bool().unwrap());
+
+    // Verify resting via /metrics
+    let (_, body, _) = get_uri(&app, "/metrics").await;
+    let resting_line = body
+        .lines()
+        .find(|line| line.starts_with("searxng_engines_resting{engine=\"testeng\"}"))
+        .unwrap();
+    assert!(resting_line.ends_with(" 1"));
+
+    // Recover by returning actual results (using the same Arc<EngineStates>)
+    states.record_success(
+        "testeng",
+        5,
+        std::time::Duration::from_millis(100),
+        &rustxng::settings::Search {
+            empty_result_limit: 1,
+            empty_result_cooldown: 300,
+            ..Default::default()
+        },
+    );
+
+    // /stats HTML should no longer show "empty results"
+    let (_, body, _) = get_uri(&app, "/stats").await;
+    assert!(
+        !body.contains("empty results"),
+        "engine should not be resting after recovery"
+    );
+
+    // /stats/errors JSON should show resting=false, resting_for=0
+    let (_, body, _) = get_uri(&app, "/stats/errors").await;
+    let json: serde_json::Value = serde_json::from_str(&body).unwrap();
+    let eng = json
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|e| e["engine"] == "testeng")
+        .unwrap();
+    assert!(
+        !eng["resting"].as_bool().unwrap(),
+        "engine should not be resting after recovery"
+    );
+    assert_eq!(eng["resting_for"].as_f64().unwrap(), 0.0);
+
+    // /metrics should show resting=0, resting_seconds=0
+    let (_, body, _) = get_uri(&app, "/metrics").await;
+    let resting_line = body
+        .lines()
+        .find(|line| line.starts_with("searxng_engines_resting{engine=\"testeng\"}"))
+        .unwrap();
+    assert!(
+        resting_line.ends_with(" 0"),
+        "resting gauge should be 0 after recovery"
+    );
+    let seconds_line = body
+        .lines()
+        .find(|line| line.starts_with("searxng_engines_resting_seconds{engine=\"testeng\"}"))
+        .unwrap();
+    assert!(
+        seconds_line.ends_with(" 0.000"),
+        "resting_seconds should be 0 after recovery"
+    );
+}

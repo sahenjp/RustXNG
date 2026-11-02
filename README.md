@@ -116,6 +116,8 @@ Two caveats, stated plainly: the numbers move by a few points between runs, and 
 - **Optional local index** (`rustxng-index`): crawl your own corpus, rank with BM25, merge into results — experimental, off by default
 - **Ops**: `/healthz`, OpenMetrics `/metrics`, response cache, image/favicon proxy, bot rate limiting, `RUSTXNG_IDLE_TIMEOUT` for sidecars
 
+Engines that keep returning empty results are automatically rested. Configure with `search.empty_result_limit` (default 8, 0 disables) and `search.empty_result_cooldown` (default 300 seconds). Monitor via `/stats` (HTML Resting column), `/stats/errors` (JSON `resting` / `resting_for` fields), or `/metrics` (`searxng_engines_resting` and `searxng_engines_resting_seconds` gauges)
+
 ## Documentation
 
 | | |

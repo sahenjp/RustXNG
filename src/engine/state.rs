@@ -55,6 +55,10 @@ pub struct EngineSnapshot {
     pub suspended: bool,
     pub suspended_for: f64,
     pub suspension_reason: Option<String>,
+    /// Engine is resting due to repeated empty results.
+    pub resting: bool,
+    /// Remaining rest time in seconds.
+    pub resting_for: f64,
 }
 
 /// Thread safe map of engine states.
@@ -178,7 +182,15 @@ impl EngineStates {
         let mut snapshots: Vec<EngineSnapshot> = states
             .iter()
             .map(|(engine, state)| {
-                let (suspended, suspended_for) = match state.suspended_until {
+                let (suspended, suspended_for, suspension_reason) = match state.suspended_until {
+                    Some(until) if until > now => (
+                        true,
+                        (until - now).as_secs_f64(),
+                        state.suspension_reason.clone(),
+                    ),
+                    _ => (false, 0.0, None),
+                };
+                let (resting, resting_for) = match state.quiet_until {
                     Some(until) if until > now => (true, (until - now).as_secs_f64()),
                     _ => (false, 0.0),
                 };
@@ -188,7 +200,9 @@ impl EngineStates {
                     consecutive_failures: state.consecutive_failures,
                     suspended,
                     suspended_for,
-                    suspension_reason: state.suspension_reason.clone(),
+                    suspension_reason,
+                    resting,
+                    resting_for,
                 }
             })
             .collect();
@@ -230,5 +244,191 @@ mod tests {
         let snapshot = states.snapshot();
         assert_eq!(snapshot[0].stats.results, 3);
         assert_eq!(snapshot[0].consecutive_failures, 0);
+    }
+
+    #[test]
+    fn empty_results_below_limit_do_not_rest() {
+        let states = EngineStates::new();
+        let settings = Search {
+            empty_result_limit: 3,
+            empty_result_cooldown: 60,
+            ..Default::default()
+        };
+
+        // N-1 empty results: no resting yet
+        for _ in 0..2 {
+            states.record_success("eng", 0, Duration::from_millis(50), &settings);
+        }
+        let snapshot = states.snapshot();
+        assert_eq!(snapshot.len(), 1);
+        assert!(!snapshot[0].resting);
+        assert_eq!(snapshot[0].resting_for, 0.0);
+    }
+
+    #[test]
+    fn empty_results_at_limit_trigger_resting() {
+        let states = EngineStates::new();
+        let settings = Search {
+            empty_result_limit: 3,
+            empty_result_cooldown: 60,
+            ..Default::default()
+        };
+
+        // Exactly N empty results triggers rest
+        for _ in 0..3 {
+            states.record_success("eng", 0, Duration::from_millis(50), &settings);
+        }
+        let snapshot = states.snapshot();
+        assert!(snapshot[0].resting);
+        assert!(snapshot[0].resting_for > 0.0);
+
+        // suspension() should return the resting status
+        let sus = states.suspension("eng");
+        assert!(sus.is_some());
+        let (_, reason) = sus.unwrap();
+        assert_eq!(reason.as_deref(), Some("resting"));
+    }
+
+    #[test]
+    fn cooldown_expiry_clears_resting() {
+        let states = EngineStates::new();
+        let settings = Search {
+            empty_result_limit: 2,
+            empty_result_cooldown: 60,
+            ..Default::default()
+        };
+
+        // Trigger resting
+        states.record_success("eng", 0, Duration::from_millis(50), &settings);
+        states.record_success("eng", 0, Duration::from_millis(50), &settings);
+        assert!(states.suspension("eng").is_some());
+
+        // Simulate cooldown expiry by setting quiet_until to the past
+        states.with_state("eng", |state| {
+            state.quiet_until = Some(Instant::now() - Duration::from_secs(1));
+        });
+
+        // snapshot should return resting=false before suspension() cleans up
+        let snapshot = states.snapshot();
+        assert!(!snapshot[0].resting);
+        assert_eq!(snapshot[0].resting_for, 0.0);
+
+        // suspension() also returns None after expiry
+        assert!(states.suspension("eng").is_none());
+    }
+
+    #[test]
+    fn actual_results_clear_resting_and_reset_streak() {
+        let states = EngineStates::new();
+        let settings = Search {
+            empty_result_limit: 2,
+            empty_result_cooldown: 60,
+            ..Default::default()
+        };
+
+        // Trigger resting
+        states.record_success("eng", 0, Duration::from_millis(50), &settings);
+        states.record_success("eng", 0, Duration::from_millis(50), &settings);
+        assert!(states.suspension("eng").is_some());
+
+        // Return actual results - should clear resting immediately
+        states.record_success("eng", 5, Duration::from_millis(100), &settings);
+
+        assert!(states.suspension("eng").is_none());
+        let snapshot = states.snapshot();
+        assert!(!snapshot[0].resting);
+        assert_eq!(snapshot[0].resting_for, 0.0);
+
+        // The empty streak counter should be reset, so N-1 more empties don't rest
+        states.record_success("eng", 0, Duration::from_millis(50), &settings);
+        assert!(states.suspension("eng").is_none());
+    }
+
+    #[test]
+    fn limit_zero_disables_resting() {
+        let states = EngineStates::new();
+        let settings = Search {
+            empty_result_limit: 0, // disabled
+            empty_result_cooldown: 60,
+            ..Default::default()
+        };
+
+        // Many empty results should not trigger resting
+        for _ in 0..100 {
+            states.record_success("eng", 0, Duration::from_millis(50), &settings);
+        }
+        assert!(states.suspension("eng").is_none());
+        let snapshot = states.snapshot();
+        assert!(!snapshot[0].resting);
+    }
+
+    #[test]
+    fn resting_distinct_from_failure_suspension() {
+        let states = EngineStates::new();
+        let settings = Search {
+            empty_result_limit: 2,
+            empty_result_cooldown: 60,
+            ..Default::default()
+        };
+
+        // Trigger failure suspension
+        states.record_failure("a", FailureKind::AccessDenied, &settings);
+        let snap_a = states
+            .snapshot()
+            .into_iter()
+            .find(|s| s.engine == "a")
+            .unwrap();
+        assert!(snap_a.suspended);
+        assert!(!snap_a.resting);
+        assert!(snap_a.suspension_reason.is_some());
+
+        // Trigger resting
+        states.record_success("b", 0, Duration::from_millis(50), &settings);
+        states.record_success("b", 0, Duration::from_millis(50), &settings);
+        let snap_b = states
+            .snapshot()
+            .into_iter()
+            .find(|s| s.engine == "b")
+            .unwrap();
+        assert!(!snap_b.suspended);
+        assert!(snap_b.resting);
+        assert!(snap_b.suspension_reason.is_none());
+
+        // Both appear in suspension() but with different reasons
+        let (_, reason_a) = states.suspension("a").unwrap();
+        let (_, reason_b) = states.suspension("b").unwrap();
+        assert_ne!(reason_a, reason_b);
+        assert_eq!(reason_b.as_deref(), Some("resting"));
+    }
+
+    #[test]
+    fn snapshot_clears_expired_suspension_reason() {
+        let states = EngineStates::new();
+        let settings = Search::default();
+
+        // Create a suspension
+        states.record_failure("eng", FailureKind::AccessDenied, &settings);
+        let snap = states
+            .snapshot()
+            .into_iter()
+            .find(|s| s.engine == "eng")
+            .unwrap();
+        assert!(snap.suspended);
+        assert!(snap.suspension_reason.is_some());
+
+        // Simulate expiry by setting suspended_until to the past
+        states.with_state("eng", |state| {
+            state.suspended_until = Some(Instant::now() - Duration::from_secs(1));
+            state.suspension_reason = Some("access_denied".to_string());
+        });
+
+        // Snapshot should clear the reason since suspension is expired
+        let snap = states
+            .snapshot()
+            .into_iter()
+            .find(|s| s.engine == "eng")
+            .unwrap();
+        assert!(!snap.suspended);
+        assert!(snap.suspension_reason.is_none());
     }
 }
