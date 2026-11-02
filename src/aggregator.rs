@@ -138,6 +138,8 @@ pub struct Searcher {
     pub settings: Arc<Settings>,
     pub registry: Arc<EngineRegistry>,
     pub network: Arc<Network>,
+    /// Checked, bounded page fetcher shared by optional raw-content requests.
+    pub page_reader: crate::mcp::page::PageReader,
     pub cache: Arc<Cache>,
     pub states: Arc<EngineStates>,
     pub metrics: Arc<Metrics>,
@@ -182,7 +184,9 @@ impl Searcher {
                 settings.cache.max_bytes.max(1024),
             ),
         };
+        let page_reader = crate::mcp::page::PageReader::new(&settings.outgoing, &[])?;
         Ok(Self {
+            page_reader,
             local_index: open_local_index(&settings),
             plugins: Arc::new(PluginManager::from_settings(&settings)),
             settings: Arc::new(settings),
@@ -860,31 +864,28 @@ impl Searcher {
                 .map(|result| self.page_text(&result.url)),
         )
         .await;
-        for (result, text) in results.iter_mut().take(count).zip(texts) {
-            result.raw_content = text;
+        for (result, page) in results.iter_mut().take(count).zip(texts) {
+            if let Some(page) = page {
+                result.raw_content = Some(page.text.to_string());
+                result.raw_content_truncated = Some(page.source_truncated);
+            }
         }
     }
 
-    /// The readable text of one page, `None` when it cannot be fetched.
-    async fn page_text(&self, url: &str) -> Option<String> {
-        // Result URLs come from third-party engines, so treat them as untrusted:
-        // an engine (or a poisoned result) must not make us fetch localhost or
-        // the cloud metadata endpoint on its behalf.
-        if !crate::web::image_proxy::is_public_url(url) {
-            tracing::debug!(url, "refusing to fetch a non-public page");
-            return None;
-        }
-        let request = crate::engine::EngineRequest::get(url)
-            .header("Accept", "text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
-        let response = self
-            .network
-            .fetch(request, Duration::from_secs(4), Some(&self.cache), None)
+    /// Optional page reads use the same DNS, redirect, body and concurrency
+    /// checks as MCP. Unchecked engine-response cache entries are not reused.
+    async fn page_text(&self, url: &str) -> Option<crate::mcp::page::PageContent> {
+        match self
+            .page_reader
+            .read(url, self.settings.search.raw_content_chars.max(1))
             .await
-            .ok()?;
-        let html = response.html().ok()?;
-        let text =
-            crate::content::main_text_limited(&html, self.settings.search.raw_content_chars.max(1));
-        if text.is_empty() { None } else { Some(text) }
+        {
+            Ok(page) => Some(page),
+            Err(error) => {
+                tracing::debug!(url, %error, "raw content unavailable");
+                None
+            }
+        }
     }
 
     /// Engine statistics for `/stats`.
@@ -1103,6 +1104,7 @@ mod orchestration_tests {
         }
         let network = Network::from_settings(&settings).unwrap();
         Searcher {
+            page_reader: crate::mcp::page::PageReader::new(&settings.outgoing, &[]).unwrap(),
             local_index: None,
             plugins: Arc::new(PluginManager::new()),
             settings: Arc::new(settings),
@@ -1116,6 +1118,18 @@ mod orchestration_tests {
 
     fn query(text: &str, registry: &EngineRegistry) -> Query {
         Query::parse(text, registry, &[])
+    }
+
+    #[tokio::test]
+    async fn raw_content_refuses_private_result_urls() {
+        let searcher = searcher(vec![]);
+        let mut results = vec![SearchResult::new(
+            "http://127.0.0.1:9/private",
+            "poisoned result",
+        )];
+        searcher.attach_raw_content(&mut results).await;
+        assert!(results[0].raw_content.is_none());
+        assert!(results[0].raw_content_truncated.is_none());
     }
 
     #[tokio::test]

@@ -116,6 +116,9 @@ pub struct SearchResult {
     /// Readable page text, only when the request asked for raw content.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub raw_content: Option<String>,
+    /// Whether optional raw content was cut at the configured character limit.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub raw_content_truncated: Option<bool>,
     /// Whether the result belongs to the group of the previous one (UI only).
     #[serde(skip)]
     pub open_group: bool,
