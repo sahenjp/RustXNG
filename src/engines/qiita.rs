@@ -4,8 +4,7 @@
 //!
 //! Qiita exposes a public search API at `/api/v2/items` that returns JSON
 //! without an API key. Unauthenticated requests are limited to 60 per hour, so
-//! the engine is registered under the `it` category instead of `general`: a
-//! fan-out on every general query would exhaust the budget in a minute.
+//! the engine is disabled by default. Enable it explicitly for the `it` category.
 //! Setting `api_key` (a personal access token) raises the limit to 1,000 per
 //! hour.
 //!
@@ -66,6 +65,11 @@ impl Engine for Qiita {
 
     fn build_request(&self, query: &Query, pageno: u32) -> Result<EngineRequest, EngineError> {
         let page = pageno.max(1);
+        if page > 100 {
+            return Err(EngineError::Message(
+                "qiita supports pages 1 through 100".into(),
+            ));
+        }
         let pairs: Vec<(&str, String)> = vec![
             ("query", query.query_text()),
             ("per_page", PAGE_SIZE.to_string()),
@@ -207,6 +211,23 @@ mod tests {
             "one extra for the ellipsis"
         );
         assert!(cut.ends_with('…'));
+    }
+
+    #[test]
+    fn pagination_respects_the_api_limit() {
+        for page in [0, 1, 100] {
+            assert!(engine().build_request(&query(), page).is_ok());
+        }
+        for page in [101, u32::MAX] {
+            assert!(engine().build_request(&query(), page).is_err());
+        }
+        assert!(
+            crate::settings::Settings::defaults()
+                .engine("qiita")
+                .unwrap()
+                .disabled
+                .unwrap_or(false)
+        );
     }
 
     #[test]

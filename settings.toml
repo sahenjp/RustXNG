@@ -1416,6 +1416,7 @@ paging = true
 [[engines]]
 name = "qiita"
 engine = "qiita"
+disabled = true
 shortcut = "qi"
 categories = ["it"]
 paging = true

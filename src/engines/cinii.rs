@@ -2,14 +2,13 @@
 //! CiNii Research engine (no upstream searx equivalent).
 // engine-id: cinii
 //!
-//! CiNii Research is the Japanese scholarly index run by NII. It exposes an
-//! OpenSearch endpoint that returns JSON without an API key, which makes it
-//! the natural counterpart to `crossref`/`openalex` for Japanese queries:
-//! those two only match romanised metadata, so a query written in Japanese
-//! returns nothing from them.
+//! CiNii Research is the Japanese scholarly index run by NII. Its public
+//! OpenSearch endpoint includes Japanese titles, authors and identifiers.
 //!
-//! Note that `from`/`until` only accept a four digit year; a full date such as
-//! `2020-01-01` is accepted by the API but silently matches nothing.
+//! The API accepts publication years or months (`YYYY` / `YYYYMM`), not
+//! precise rolling day/week/month ranges. This adapter does not advertise
+//! time-range support and refuses such requests rather than widening them.
+//! API reference: <https://support.nii.ac.jp/ja/cir/r_opensearch>.
 
 use std::sync::Arc;
 
@@ -24,7 +23,7 @@ const DEFAULTS: EngineDefaults = EngineDefaults {
     categories: &["science", "scientific publications"],
     shortcut: "ci",
     paging: true,
-    time_range_support: true,
+    time_range_support: false,
     safesearch: false,
     language_support: false,
     weight: 1.0,
@@ -53,18 +52,24 @@ impl Engine for Cinii {
     }
 
     fn build_request(&self, query: &Query, pageno: u32) -> Result<EngineRequest, EngineError> {
-        let page = pageno.max(1);
-        let mut pairs = vec![
+        if query.time_range.is_some() {
+            return Err(EngineError::Message(
+                "cinii does not support precise time-range filtering".into(),
+            ));
+        }
+        let start = pageno
+            .max(1)
+            .checked_sub(1)
+            .and_then(|page| page.checked_mul(PAGE_SIZE))
+            .and_then(|offset| offset.checked_add(1))
+            .filter(|start| *start <= 10_000)
+            .ok_or_else(|| EngineError::Message("cinii page exceeds the API limit".into()))?;
+        let pairs = vec![
             ("q", query.query_text()),
             ("format", "json".to_string()),
             ("count", PAGE_SIZE.to_string()),
-            ("start", ((page - 1) * PAGE_SIZE + 1).to_string()),
+            ("start", start.to_string()),
         ];
-        if let Some(since) = crate::query::TimeRange::since(query.time_range) {
-            // Year granularity: the API ignores a full date.
-            pairs.push(("from", since.format("%Y").to_string()));
-            pairs.push(("until", chrono::Utc::now().format("%Y").to_string()));
-        }
         Ok(
             EngineRequest::get(format!("{SEARCH_URL}?{}", query_string(&pairs)))
                 .header("Accept", "application/json"),
@@ -248,6 +253,42 @@ mod tests {
                 assert_eq!(result.published_date.as_deref(), Some("1970-10"));
             }
             _ => panic!("expected a result"),
+        }
+    }
+
+    #[test]
+    fn refuses_inexact_time_ranges() {
+        assert!(!engine().meta().time_range_support);
+        for range in [
+            crate::query::TimeRange::Day,
+            crate::query::TimeRange::Week,
+            crate::query::TimeRange::Month,
+            crate::query::TimeRange::Year,
+        ] {
+            let mut query = query();
+            query.time_range = Some(range);
+            assert!(engine().build_request(&query, 1).is_err());
+        }
+    }
+
+    #[test]
+    fn pagination_is_bounded_without_overflow() {
+        assert!(
+            engine()
+                .build_request(&query(), 0)
+                .unwrap()
+                .url
+                .contains("start=1")
+        );
+        assert!(
+            engine()
+                .build_request(&query(), 500)
+                .unwrap()
+                .url
+                .contains("start=9981")
+        );
+        for page in [501, u32::MAX] {
+            assert!(engine().build_request(&query(), page).is_err());
         }
     }
 
