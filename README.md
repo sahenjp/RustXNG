@@ -226,12 +226,14 @@ Run `rustxng --check-update` to check the latest stable official GitHub release,
 or `rustxng --update` to download the matching build target, verify its SHA-256
 sidecar, and replace the executable. Settings are preserved; restart your service
 after updating. The executable directory must be writable. Update container images
-through your container runtime; rebuild custom or unsupported targets from source.
+through your container runtime, and use the original package manager for managed
+installations. Rebuild custom or unsupported targets from source.
 Update TLS verification is always enabled, independent of search settings.
 
 Both search and updates trust OS CA certificates. Use `SSL_CERT_FILE` for a custom
 PEM bundle, or set `outgoing.ca_bundle` for additional search CA certificates.
-Keep `outgoing.verify = true`.
+`outgoing.ca_bundle` only applies to the shared search HTTP client, not standalone
+embedding, LLM or crawler clients. Keep `outgoing.verify = true`.
 
 For congested outbound proxies, set `search.strategy = "staged"`,
 `search.staged_tier = 8`, `search.staged_min_results = 10`,

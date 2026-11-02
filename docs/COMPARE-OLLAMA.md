@@ -16,7 +16,7 @@ Ollama の Web Search API と RustXNG を、AI エージェントの検索ツー
 | エンドポイント | `POST https://ollama.com/api/web_search` | `GET /search?q=...&format=json` |
 | 認証 | `OLLAMA_API_KEY` 必須（無料アカウント） | 不要 |
 | 料金 | 無料枠あり + 従量課金プラン | 無料（自前インフラのみ） |
-| 検索対象 | 非公開（独自の検索基盤） | 169 エンジン（Google / Bing / DuckDuckGo / Wikipedia / GitHub / arXiv など） |
+| 検索対象 | 非公開（独自の検索基盤） | 複数エンジン（Bing / DuckDuckGo / Wikipedia / GitHub / arXiv など） |
 | 1 回の返却件数 | 1〜10 件（`max_results`、既定 5） | 数十〜数百件（例: 212 件 / 110 KB） |
 | 絞り込み | `max_results` のみ | `time_range` / `categories` / `engines` / `!site` / `language` / `pageno` / `safesearch` |
 | 返却フィールド | `title` / `url` / `content` | 上流互換 JSON（`score` / `engines` / `category` / `publishedDate` / `thumbnail` / `answers` / `infoboxes` など） |

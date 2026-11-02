@@ -113,7 +113,6 @@ pub mod il_post;
 pub mod imdb;
 pub mod imgur;
 pub mod ina;
-pub mod invidious;
 pub mod ipernity;
 pub mod iqiyi;
 pub mod iseek;
@@ -169,7 +168,6 @@ pub mod pexels;
 pub mod photon;
 pub mod picjumbo;
 pub mod pinterest;
-pub mod piped;
 pub mod piratebay;
 pub mod pixabay;
 pub mod pixiv;
@@ -299,7 +297,6 @@ pub fn build(config: &EngineConfig) -> Result<EngineHandle, String> {
         "findfiles" => findfiles::FindFiles::from_config(config)?,
         "fireball" => fireball::Fireball::from_config(config)?,
         "500px" => five_hundred_px::FiveHundredPx::from_config(config)?,
-        "invidious" => invidious::Invidious::from_config(config)?,
         "lemmy" => lemmy::Lemmy::from_config(config)?,
         "luxxle" => luxxle::Luxxle::from_config(config)?,
         "mastodon" => mastodon::Mastodon::from_config(config)?,
@@ -308,7 +305,6 @@ pub fn build(config: &EngineConfig) -> Result<EngineHandle, String> {
         "openclipart" => openclipart::OpenClipart::from_config(config)?,
         "peertube" => peertube::Peertube::from_config(config)?,
         "pexels" => pexels::Pexels::from_config(config)?,
-        "piped" => piped::Piped::from_config(config)?,
         "pixabay" => pixabay::Pixabay::from_config(config)?,
         "qwant" => qwant::Qwant::from_config(config)?,
         "sepiasearch" => sepiasearch::Sepiasearch::from_config(config)?,

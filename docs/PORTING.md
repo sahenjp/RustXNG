@@ -44,12 +44,12 @@
 | エンジンフレームワーク（paging / time_range / safesearch / language / weight / timeout） | 移植済み | `Engine` トレイト |
 | エンジンのサスペンドと統計 | 移植済み | `ban_time_on_fail`、`max_ban_time_on_fail`、`suspended_times` を反映 |
 | HTTP クライアント（UA ローテーション、プロキシ、リトライ、タイムアウト） | 移植済み | `outgoing` 設定に対応 |
-| 時間範囲フィルタ（`time_range`） | 移植済み | UI のセレクタと API の両方から指定可能。エンジン側はネイティブな日付フィルタへ変換（Google News `when:`、Bing `qft`、Crossref `from-pub-date`、GitHub `pushed:>`、arXiv の日付順ソート、Stack Exchange `fromdate`、Hacker News `numericFilters`、YouTube / Dailymotion の期間指定） |
+| 時間範囲フィルタ（`time_range`） | 移植済み | UI のセレクタと API の両方から指定可能。エンジン側はネイティブな日付フィルタへ変換（Bing `qft`、Crossref `from-pub-date`、GitHub `pushed:>`、arXiv の日付順ソート、Stack Exchange `fromdate`、Hacker News `numericFilters`、Dailymotion の期間指定） |
 | 応答キャッシュ | 部分 | メモリ内 TTL + LRU のみ。上流の valkey / redis / sqlite バックエンドは未移植 |
 | メトリクス | 移植済み | メモリ内カウンタ、`/stats` と `/metrics`（OpenMetrics / Prometheus）。エンジン指標は上流と同じ `searxng_engines_*` 名 |
 | レート制限・bot 検出（`limiter.toml`、botdetection） | 部分 | `server.limiter = true` で動く簡易レート制限（クライアント単位の固定窓、`limiter_window` / `limiter_max`）。上流の botdetection（link token、Redis カウンタ、IP 範囲判定）は未移植 |
 | 検索 API（html / json / csv / rss） | 移植済み | `format=` で切り替え |
-| `/autocompleter` | 移植済み | duckduckgo / google / wikipedia / mwmbl |
+| `/autocompleter` | 移植済み | duckduckgo / wikipedia / mwmbl |
 | `/config`、`/preferences`、`/stats`、`/healthz`、`/opensearch.xml` | 移植済み | 設定は Cookie 保存（上流と同じ発想） |
 | HTML UI（検索フォーム、結果一覧、ページ送り、設定画面） | 部分 | simple テーマ相当の 1 テーマのみ。テーマ切り替えは Cookie に保存するだけ |
 | 多言語 UI（babel 翻訳） | 未移植 | UI 文言は英語のみ |
@@ -81,12 +81,10 @@
 | エンジン | 上流 | 逸脱・補足 |
 | --- | --- | --- |
 | duckduckgo | `duckduckgo.py` | HTML エンドポイント。上流の vqd 取得を伴う 2 ページ目以降の処理は未移植（`s@ オフセットで代替） |
-| google | `google.py` | HTML。JS 必須のインタースティシャルを検出したら `access denied` として報告 |
 | bing | `bing.py` | HTML。`/ck/a` の base64 リダイレクトを展開 |
 | brave | `brave.py` | HTML + Cookie（safesearch / country / ui_lang） |
 | mojeek | `mojeek.py` | HTML。上流の Altcha proof-of-work  solver は未移植で、チャレンジページは `captcha` として報告 |
 | mwmbl | `mwmbl.py` | JSON API |
-| google news | `google_news.py` | 上流は HTML をスクレイプ。本実装は同サービスの RSS を使用（JS 不要で公開日時と配信元が取れる） |
 | bing news | `bing_news.py` | 上流は内部 JSON（`/news/infinitescrollajax`）。本実装は RSS を使用し、`qft` の期間指定は上流と同じ |
 | wikipedia | `wikipedia.py` | MediaWiki API。上流の REST サマリ取得（インフォボックス）は未移植 |
 | wikidata | `wikidata.py` | `wbsearchentities` のみ |
@@ -104,7 +102,6 @@
 | semantic scholar | `semantic_scholar.py` | 上流は内部 POST API（`X-S2-UI-Version` 必須）。本実装はキー不要の Graph API |
 | openstreetmap | `openstreetmap.py` | Nominatim。wikidata 連携や経路アンサーは未移植 |
 | photon | `photon.py` | `/api/` の GeoJSON |
-| youtube | `youtube_noapi.py` | 継続トークンの POST は未移植のため 2 ページ目以降は保証しない |
 | dailymotion | `dailymotion.py` | REST API。説明文は取得しない |
 | deezer | `deezer.py` | 1 ページ 10 件（上流は 25 件） |
 | openverse | `openverse.py` | 1 ページ 10 件（上流は 20 件） |
@@ -112,15 +109,14 @@
 
 ### 意図的に対象外としたエンジン
 
-- **API キーが必要なもの**（Brave API、Google CSE、Kagi、Exa、Wolfram など）
+- **API キーが必要なもの**（Brave API、Kagi、Exa、Wolfram など）
 - **Tor 前提のもの**（Ahmia など）
 - **海賊版・ファイル共有を目的とするもの**（torrent 系）。ライセンスではなく適法性の判断として外しています。
 - **XPath ベースの汎用エンジン**（`settings.yml` の `engine: xpath`）。YAML で宣言された抽出規則を汎用に扱う仕組みは持たず、必要なものは個別モジュールとして実装しています。
 
 ## 既知の制約
 
-- **IP レピュテーション**: DuckDuckGo は CAPTCHA、Google は JS インタースティシャルを返すことがあります。本実装はこれをエラーとして表示するので、結果 0 件と区別できます。
-- **YouTube / Google の DOM**: セレクタは変わりやすいため、結果 0 件になる可能性があります。
+- **IP レピュテーション**: DuckDuckGo は CAPTCHA を返すことがあります。本実装はこれをエラーとして表示するので、結果 0 件と区別できます。
 - **上流のテスト**: 上流には 1 万件規模のテストがありますが、本移植のテストは独自のもの（ユニット 95 件 + 統合 9 件）です。
 - **パフォーマンス**: 上流のプロセッサ分離（`online.py` のスレッドプール）に相当する仕組みは `tokio` の非同期タスクで代替しています。
 
@@ -134,9 +130,8 @@
 ## 今後の課題
 
 1. 上流の Altcha solver 相当の実装（Mojeek など）と、botdetection 本体（link token、Redis カウンタ、IP 範囲判定）
-2. YouTube の継続トークン対応、Google の JS 必須ページへの代替手段
-3. favicon 収集（画像プロキシは実装済み）
-4. valkey / redis バックエンドのキャッシュ（メモリ内キャッシュと Prometheus 出力は実装済み）
-5. アンサー（通貨・天気・単位変換）とインフォボックスの生成側
-6. UI の多言語化（上流の翻訳カタログの取り込み。現在は英語 UI のみ）
-7. 上流テストスイートの取り込み（現在は独自テスト 120 件）
+2. favicon 収集（画像プロキシは実装済み）
+3. valkey / redis バックエンドのキャッシュ（メモリ内キャッシュと Prometheus 出力は実装済み）
+4. アンサー（通貨・天気・単位変換）とインフォボックスの生成側
+5. UI の多言語化（上流の翻訳カタログの取り込み。現在は英語 UI のみ）
+6. 上流テストスイートの取り込み（現在は独自テスト 120 件）

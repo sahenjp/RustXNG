@@ -798,13 +798,6 @@ categories = ["social media"]
 paging = true
 
 [[engines]]
-name = "piped"
-engine = "piped"
-shortcut = "ppd"
-categories = ["videos"]
-paging = true
-
-[[engines]]
 name = "luxxle"
 engine = "luxxle"
 shortcut = "lx"
@@ -838,15 +831,6 @@ engine = "apkmirror"
 shortcut = "apk"
 categories = ["it", "apps"]
 paging = true
-
-[[engines]]
-name = "invidious"
-engine = "invidious"
-shortcut = "iv"
-categories = ["videos", "music"]
-paging = true
-time_range_support = true
-# --- end of imported code engines ---
 
 [[engines]]
 name = "bandcamp"

@@ -1,12 +1,12 @@
 # RustXNG — AI エージェントに使わせる統合検索エンジン
 
-> 検索 API を 1 本に。169 のサイトを、1 ms で、自分のサーバーから。
+> 検索 API を 1 本に。複数のサイトを、自分のサーバーから。
 
 ## これは何か
 
 **RustXNG は、AI エージェントに検索させるためのセルフホスト型メタ検索エンジンです。**
 
-Google・Bing・DuckDuckGo・Wikipedia・GitHub・arXiv・PubMed・YouTube など **169 のサイト**を 1 つの JSON API にまとめ、Rust の単一バイナリで動きます。Python もデータベースも API キーも要りません。
+Bing・DuckDuckGo・Wikipedia・GitHub・arXiv・PubMed など複数のサイトを 1 つの JSON API にまとめ、Rust の単一バイナリで動きます。Python もデータベースも API キーも要りません。
 
 SearXNG の API・検索構文・設定形式をそのまま引き継いでいるので、既存の SearXNG 前提のツールやプロンプトはそのまま動きます。
 
