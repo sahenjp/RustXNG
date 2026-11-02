@@ -36,12 +36,12 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     gold_path = ROOT / "bench/quality-questions.json"
-    golds = {row["id"]: row["gold"] for row in json.loads(gold_path.read_text())["queries"]}
+    golds = {row["id"]: row["gold"] for row in json.loads(gold_path.read_text(encoding="utf-8"))["queries"]}
     archives = []
     for path in sorted((ROOT / "bench").glob("*.json")):
         if not (path.name.startswith("eval-100-") or path.name.startswith("content-")):
             continue
-        data = json.loads(path.read_text())
+        data = json.loads(path.read_text(encoding="utf-8"))
         rows = data.get("rows", data.get("queries", []))
         old, corrected, changes = [], [], []
         for row in rows:
@@ -55,17 +55,17 @@ def main() -> None:
             corrected.append(after)
             if before != after:
                 changes.append({"id": row["id"], "old_rank": before, "corrected_rank": after})
-        archives.append({"source": str(path.relative_to(ROOT)), "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+        archives.append({"source": path.relative_to(ROOT).as_posix(), "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
                          "legacy_recomputed": summary(old), "corrected": summary(corrected), "changed_rows": changes})
     report = {"format_version": 1, "metric": "legacy-version-tolerant-structured-url-prefix-v2",
               "matcher_sha256": hashlib.sha256((ROOT / "tools/reference_urls.py").read_bytes()).hexdigest(),
-              "gold_file": str(gold_path.relative_to(ROOT)), "gold_sha256": hashlib.sha256(gold_path.read_bytes()).hexdigest(),
+              "gold_file": gold_path.relative_to(ROOT).as_posix(), "gold_sha256": hashlib.sha256(gold_path.read_bytes()).hexdigest(),
               "limitations": ["No new requests; these are historical observations, not current defaults.",
                               "Numeric/stable/current/latest path segments retain the legacy version-alias rule.",
                               "No retained Exa or Tavily per-question content archive is present; their published scores were not recomputed."],
               "archives": archives}
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
+    args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     for item in archives:
         print(item["source"], item["legacy_recomputed"]["hit@1"], "->", item["corrected"]["hit@1"], "changed rows", len(item["changed_rows"]))
 
