@@ -82,7 +82,8 @@ within the advertised bounds. The server shortens snippets first, then omits
 trailing results while preserving complete URLs and metadata for the returned results. `truncated`,
 `source_truncated`, and `next_offset` report whether to continue. `read_page`
 uses Unicode character offsets and reports the same truncation state. Supplying
-a `query` to `read_page` also returns up to three matching passages.
+a `query` to `read_page` also returns up to three matching passages from the requested slice.
+Sentence boundaries include `。！？`, and single Han, kana or Hangul query characters are supported.
 
 Page reads require direct connections so DNS answers and redirects can be
 checked against public addresses. They fail closed when configured or
