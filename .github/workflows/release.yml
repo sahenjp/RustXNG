@@ -242,7 +242,7 @@ jobs:
           python3 tools/release_tools.py verify --tag "$RELEASE_TAG" --dist "$RUNNER_TEMP/verify" --targets "${targets[@]}"
           echo 'published=false' >> "$GITHUB_OUTPUT"
       - uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3
-        if: ${{ !inputs.dry_run && steps.stage.outputs.published != 'true' }}
+        if: ${{ !inputs.dry_run && steps.stage.outputs.published != 'true' && needs.plan.outputs.sha == github.sha }}
         with:
           subject-path: dist/*
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
