@@ -103,6 +103,7 @@ Windows x86_64 바이너리가 있습니다. v0.26.0 이후 릴리스에는 Linu
 
 GitHub CLI와 사용자 소유 설치 디렉터리를 쓰는 Linux x86_64 예시입니다.
 
+<!-- x-release-please-start-version -->
 ```bash
 set -eu
 mkdir -p rustxng-download && cd rustxng-download
@@ -115,6 +116,7 @@ mkdir -p "$HOME/.local/share/rustxng"
 cp LICENSE NOTICE "$HOME/.local/share/rustxng/"
 "$HOME/.local/bin/rustxng" --version
 ```
+<!-- x-release-please-end -->
 
 `~/.local/bin`이 `PATH`에 없으면 바이너리의 절대 경로를 쓰거나 셸 설정에 이 디렉터리를 추가하세요.
 
@@ -122,9 +124,11 @@ cp LICENSE NOTICE "$HOME/.local/share/rustxng/"
 
 최신 stable Rust 툴체인과 C 빌드 툴체인을 사용합니다.
 
+<!-- x-release-please-start-version -->
 ```bash
 cargo install --git https://github.com/sahenjp/RustXNG.git --tag v0.26.0 --locked
 ```
+<!-- x-release-please-end -->
 
 `rustxng`와 `rustxng-index`가 설치됩니다.
 최소 지원 버전은 Rust 1.88이며 CI에서 확인합니다. 이 체크아웃은 Rust 1.99.1에서도 검증했습니다.

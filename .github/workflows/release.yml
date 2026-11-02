@@ -1,92 +1,106 @@
 name: release
 
-# Publish the platform binaries on an annotated version tag.
-#
-# rustdsh installs this sidecar with `rdsh rustxng install`, which reads
-# /releases/latest and picks the asset whose name is
-# `rustxng-<tag>-<rustc triple>` (plus `.exe` on Windows). Keep that shape:
-# the tag is part of the file name, so one rule matches every platform.
-
 on:
   push:
     tags: ['v*']
-  workflow_dispatch:
-    # Re-run the release for an existing tag. The workflow file is taken from
-    # the dispatched ref, so a broken step can be fixed without moving the tag.
+  workflow_call:
     inputs:
       tag:
-        description: 'Existing tag to publish, e.g. v0.4.0'
+        required: true
+        type: string
+      source_ref:
         required: true
         type: string
       dry_run:
-        description: 'Build and verify everything, upload nothing'
-        required: false
         type: boolean
         default: false
       legacy_assets:
-        description: 'Only the pre-ARM64 asset set (tags released before Linux ARM64 support)'
-        required: false
+        type: boolean
+        default: false
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Stable version tag, e.g. v0.27.0'
+        required: true
+        type: string
+      source_ref:
+        description: 'Optional exact commit/ref; publishing still requires main CI'
+        type: string
+      dry_run:
+        description: 'Build and verify; do not publish releases or images'
+        type: boolean
+        default: true
+      legacy_assets:
+        description: 'Use the pre-ARM64 target set for an old release'
         type: boolean
         default: false
 
 permissions:
   contents: read
+  actions: read
 
 env:
-  RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+  RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+  DRY_RUN: ${{ inputs.dry_run || false }}
+  SOURCE_REF: ${{ inputs.source_ref || '' }}
+  GH_REPO: ${{ github.repository }}
 
 concurrency:
-  group: release-${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+  group: release-${{ inputs.tag || github.ref_name }}
   cancel-in-progress: false
 
 jobs:
   plan:
-    # Decide which targets this run builds and publish requires. A normal tag
-    # push builds everything. Re-running an older tag with legacy_assets keeps
-    # the asset set it was released with (no Linux ARM64 binary).
-    #
-    # Matrix fields: os/target/artifact as before; arch is the `file` output
-    # fragment a Linux binary must show; musl installs musl-tools; slim_check
-    # also builds --no-default-features; since_arm64 marks targets a legacy
-    # re-run leaves out.
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     outputs:
+      sha: ${{ steps.plan.outputs.sha }}
       matrix: ${{ steps.plan.outputs.matrix }}
       targets: ${{ steps.plan.outputs.targets }}
     steps:
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
       - id: plan
-        shell: bash
         env:
-          LEGACY: ${{ github.event_name == 'workflow_dispatch' && inputs.legacy_assets || false }}
+          LEGACY: ${{ inputs.legacy_assets || false }}
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
         run: |
           set -euo pipefail
-          cat > "$RUNNER_TEMP/all.json" <<'JSON'
-          [
-            {"comment": "glibc 2.35 floor: build on 22.04 so 24.04 and 25.x still run it.",
-             "os": "ubuntu-22.04", "target": "x86_64-unknown-linux-gnu", "artifact": "rustxng", "arch": "x86-64"},
-            {"comment": "Native build on the GitHub-hosted arm64 runner (no cross toolchain, no emulation). Ubuntu 24.04 sets a glibc 2.39 floor. The slim build is checked here because the x86_64 CI jobs do not cover this target.",
-             "os": "ubuntu-24.04-arm", "target": "aarch64-unknown-linux-gnu", "artifact": "rustxng", "arch": "aarch64",
-             "slim_check": true, "since_arm64": true},
-            {"comment": "Static: runs on any x86_64 Linux, including Alpine.",
-             "os": "ubuntu-22.04", "target": "x86_64-unknown-linux-musl", "artifact": "rustxng", "arch": "x86-64", "musl": true},
-            {"comment": "Both macOS targets build on the arm64 runner: the Apple toolchain cross-compiles to x86_64, and the Intel runner labels are retired or queue for hours.",
-             "os": "macos-15", "target": "aarch64-apple-darwin", "artifact": "rustxng"},
-            {"os": "macos-15", "target": "x86_64-apple-darwin", "artifact": "rustxng"},
-            {"os": "windows-latest", "target": "x86_64-pc-windows-msvc", "artifact": "rustxng.exe"}
-          ]
-          JSON
-          if [ "$LEGACY" = "true" ]; then
-            filter='map(select(.since_arm64 != true))'
-          else
-            filter='.'
+          python3 -c 'import os; from tools.release_tools import version; version(os.environ["RELEASE_TAG"])'
+          ref="${SOURCE_REF:-refs/tags/$RELEASE_TAG}"
+          sha=$(git rev-parse --verify --end-of-options "$ref^{commit}")
+          if tagged=$(git rev-parse --verify --end-of-options "refs/tags/$RELEASE_TAG^{commit}" 2>/dev/null); then
+            test "$tagged" = "$sha" || { echo 'tag/source mismatch' >&2; exit 1; }
           fi
-          matrix="$(jq -c "$filter | {include: map(del(.comment))}" "$RUNNER_TEMP/all.json")"
-          targets="$(jq -r "$filter | map(.target) | join(\" \")" "$RUNNER_TEMP/all.json")"
-          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
-          echo "targets=$targets" >> "$GITHUB_OUTPUT"
-          echo "matrix: $matrix"
-          echo "targets: $targets"
+          if [ "$DRY_RUN" != true ]; then
+            git merge-base --is-ancestor "$sha" origin/main
+            gh api "repos/$GITHUB_REPOSITORY/actions/runs?head_sha=$sha&event=push&per_page=100" > "$RUNNER_TEMP/ci-runs.json"
+            python3 tools/release_tools.py ci-gate --tag "$RELEASE_TAG" --sha "$sha" --repository "$GITHUB_REPOSITORY" --runs "$RUNNER_TEMP/ci-runs.json"
+          fi
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          targets = json.loads(Path('.github/release-targets.json').read_text())
+          if os.environ['LEGACY'] == 'true':
+              targets = [target for target in targets if not target.get('since_arm64')]
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
+              out.write('matrix=' + json.dumps({'include': targets}, separators=(',', ':')) + '\n')
+              out.write('targets=' + ' '.join(target['target'] for target in targets) + '\n')
+          PY
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ steps.plan.outputs.sha }}
+          path: source
+      - name: Require matching package versions and real release notes
+        run: |
+          python3 tools/release_tools.py validate --root source --tag "$RELEASE_TAG"
+          python3 tools/release_tools.py notes --root source --tag "$RELEASE_TAG"
 
   build:
     needs: plan
@@ -94,232 +108,202 @@ jobs:
       fail-fast: false
       matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
-          ref: ${{ env.RELEASE_TAG }}
-      - uses: dtolnay/rust-toolchain@stable
+          python-version: "3.12"
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ needs.plan.outputs.sha }}
+          path: source
+      - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
         with:
           targets: ${{ matrix.target }}
-      - uses: Swatinem/rust-cache@v2
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2
         with:
-          key: ${{ matrix.target }}
-      - name: Install the musl toolchain
+          workspaces: source -> target
+          key: release-${{ matrix.target }}
+      - name: Install musl
         if: matrix.musl
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y musl-tools
-      - name: Check the slim build (no database engines)
+        run: sudo apt-get update && sudo apt-get install -y musl-tools
+      - name: Build locked release binaries
+        working-directory: source
+        run: cargo build --release --locked --target ${{ matrix.target }}
+      - name: Check ARM64 slim build
         if: matrix.slim_check
+        working-directory: source
+        run: cargo build --locked --no-default-features --target ${{ matrix.target }}
+      - name: Verify binary architecture and version
         shell: bash
-        # A separate target dir keeps the shipped default-feature binary apart.
-        run: cargo build --release --locked --no-default-features --target "${{ matrix.target }}" --target-dir target/slim
-      - name: Build
-        shell: bash
-        run: cargo build --release --locked --target "${{ matrix.target }}"
-      - name: Check the binary answers
-        shell: bash
+        env:
+          TARGET: ${{ matrix.target }}
+          ARTIFACT: ${{ matrix.artifact }}
+          NATIVE: ${{ matrix.native }}
         run: |
           set -euo pipefail
-          binary="target/${{ matrix.target }}/release/${{ matrix.artifact }}"
-          test -f "$binary"
-          if [ "${{ runner.os }}" = "Linux" ]; then
-            # The runner must execute the binary natively: refuse a binary
-            # built for a different CPU than the target name claims.
-            command -v file >/dev/null || { sudo apt-get update && sudo apt-get install -y file; }
-            file "$binary"
-            file "$binary" | grep -qF "${{ matrix.arch }}" \
-              || { echo "binary is not ${{ matrix.arch }}" >&2; exit 1; }
-            "$binary" --version
-          fi
-      - name: Agent setup smoke test (offline)
-        if: runner.os == 'Linux'
+          args=()
+          if [ "$NATIVE" = true ]; then args+=(--native); fi
+          python tools/release_tools.py binary --tag "$RELEASE_TAG" --target "$TARGET" --binary "source/target/$TARGET/release/$ARTIFACT" "${args[@]}"
+      - name: Offline startup and fake-engine search
+        if: matrix.native
         shell: bash
+        env:
+          TARGET: ${{ matrix.target }}
+          ARTIFACT: ${{ matrix.artifact }}
+        run: python tools/smoke_agent_setup.py --binary "source/target/$TARGET/release/$ARTIFACT"
+      - name: Package and checksum
+        shell: bash
+        env:
+          TARGET: ${{ matrix.target }}
+          ARTIFACT: ${{ matrix.artifact }}
         run: |
           set -euo pipefail
-          binary="target/${{ matrix.target }}/release/${{ matrix.artifact }}"
-          if [ ! -f tools/smoke_agent_setup.py ]; then
-            # Tags older than the smoke test cannot run it; a fresh tag must.
-            if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-              echo "::warning::tools/smoke_agent_setup.py is missing at $RELEASE_TAG; smoke test skipped"
-              exit 0
-            fi
-            echo "tools/smoke_agent_setup.py is missing at $RELEASE_TAG" >&2
-            exit 1
-          fi
-          python3 tools/smoke_agent_setup.py --binary "$binary"
-      - name: Name the asset after the tag and the target
-        shell: bash
-        run: |
-          set -euo pipefail
-          source="target/${{ matrix.target }}/release/${{ matrix.artifact }}"
-          name="rustxng-${RELEASE_TAG}-${{ matrix.target }}"
-          case "${{ matrix.artifact }}" in
-            *.exe) name="$name.exe" ;;
-          esac
-          mkdir -p dist
-          cp "$source" "dist/$name"
-          # macOS ships shasum, not sha256sum. Record the bare file name so
-          # `sha256sum --check` works from the download directory.
-          if command -v sha256sum >/dev/null 2>&1; then
-            ( cd dist && sha256sum "$name" > "$name.sha256" )
-          else
-            ( cd dist && shasum -a 256 "$name" > "$name.sha256" )
-          fi
-          cat "dist/$name.sha256"
-          ls -l dist
-      - uses: actions/upload-artifact@v4
+          python - <<'PY'
+          import hashlib, os, shutil
+          from pathlib import Path
+          target, artifact, tag = (os.environ[key] for key in ('TARGET', 'ARTIFACT', 'RELEASE_TAG'))
+          name = f'rustxng-{tag}-{target}' + ('.exe' if artifact.endswith('.exe') else '')
+          Path('dist').mkdir(exist_ok=True)
+          path = Path('dist') / name
+          shutil.copyfile(Path('source/target') / target / 'release' / artifact, path)
+          with path.open('rb') as stream:
+              digest = hashlib.file_digest(stream, 'sha256').hexdigest()
+          path.with_name(name + '.sha256').write_text(f'{digest}  {name}\n', encoding='utf-8', newline='\n')
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: rustxng-${{ matrix.target }}
+          name: binary-${{ matrix.target }}
           path: dist/*
           if-no-files-found: error
           retention-days: 7
 
-  publish:
+  stage:
     needs: [plan, build]
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
       contents: write
+      id-token: write
+      attestations: write
+    outputs:
+      published: ${{ steps.stage.outputs.published }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
-          ref: ${{ env.RELEASE_TAG }}
-      - uses: actions/download-artifact@v4
+          python-version: "3.12"
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          pattern: rustxng-*
+          ref: ${{ needs.plan.outputs.sha }}
+          path: source
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: binary-*
           merge-multiple: true
           path: dist
-      - name: Require the complete, expected asset set
-        shell: bash
+      - name: Verify complete asset set
+        env:
+          TARGETS: ${{ needs.plan.outputs.targets }}
+          SOURCE_SHA: ${{ needs.plan.outputs.sha }}
         run: |
           set -euo pipefail
-          expected="${{ needs.plan.outputs.targets }}"
-          test -n "$expected" || { echo "empty target plan" >&2; exit 1; }
-          for target in $expected; do
-            case "$target" in
-              *windows*) name="rustxng-${RELEASE_TAG}-$target.exe" ;;
-              *) name="rustxng-${RELEASE_TAG}-$target" ;;
-            esac
-            test -s "dist/$name" || { echo "missing asset: $name" >&2; exit 1; }
-            test -s "dist/$name.sha256" || { echo "missing sidecar: $name.sha256" >&2; exit 1; }
-          done
-          ls -l dist
-      - name: Compose the release notes from the changelog
-        shell: bash
-        run: |
-          set -euo pipefail
-          version="${RELEASE_TAG#v}"
-          # Keep the section for this version; fall back to the tag when the
-          # changelog has no entry yet.
-          awk -v want="## [$version]" '
-            $0 ~ "^" want { inside = 1; next }
-            inside && /^## / { exit }
-            inside { print }
-          ' CHANGELOG.md > "$RUNNER_TEMP/section.md"
-          if [ -s "$RUNNER_TEMP/section.md" ]; then
-            { echo "# RustXNG $RELEASE_TAG"; echo; cat "$RUNNER_TEMP/section.md"; } > "$RUNNER_TEMP/notes.md"
-          else
-            { echo "# RustXNG $RELEASE_TAG"; echo; echo "チェックサムは各アセットの .sha256 を参照してください。"; } > "$RUNNER_TEMP/notes.md"
-          fi
-          echo "--- notes ---"
-          head -20 "$RUNNER_TEMP/notes.md"
-      - name: Create the release when it does not exist
+          cp source/LICENSE source/NOTICE dist/
+          read -r -a targets <<< "$TARGETS"
+          python3 tools/release_tools.py manifest --tag "$RELEASE_TAG" --sha "$SOURCE_SHA" --targets "${targets[@]}"
+          python3 tools/release_tools.py notes --root source --tag "$RELEASE_TAG" > "$RUNNER_TEMP/notes.md"
+      - id: stage
         if: ${{ !inputs.dry_run }}
         env:
           GH_TOKEN: ${{ github.token }}
-        shell: bash
+          SOURCE_SHA: ${{ needs.plan.outputs.sha }}
+          TARGETS: ${{ needs.plan.outputs.targets }}
         run: |
           set -euo pipefail
-          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
-            echo "release $RELEASE_TAG already exists; adding missing assets"
+          if gh release view "$RELEASE_TAG" --json isDraft > "$RUNNER_TEMP/release.json" 2>/dev/null; then
+            if [ "$(jq -r .isDraft "$RUNNER_TEMP/release.json")" = false ]; then
+              mkdir -p "$RUNNER_TEMP/published"
+              gh release download "$RELEASE_TAG" --dir "$RUNNER_TEMP/published"
+              read -r -a targets <<< "$TARGETS"
+              python3 tools/release_tools.py verify --tag "$RELEASE_TAG" --dist "$RUNNER_TEMP/published" --targets "${targets[@]}"
+              echo 'published=true' >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          else
+            gh release create "$RELEASE_TAG" --draft --target "$SOURCE_SHA" --title "RustXNG $RELEASE_TAG" --notes-file "$RUNNER_TEMP/notes.md"
+          fi
+          # Rebuilds can replace draft bytes; published bytes are never overwritten.
+          gh release edit "$RELEASE_TAG" --target "$SOURCE_SHA" --notes-file "$RUNNER_TEMP/notes.md"
+          gh release upload "$RELEASE_TAG" dist/* --clobber
+          mkdir -p "$RUNNER_TEMP/verify"
+          gh release download "$RELEASE_TAG" --dir "$RUNNER_TEMP/verify"
+          read -r -a targets <<< "$TARGETS"
+          python3 tools/release_tools.py verify --tag "$RELEASE_TAG" --dist "$RUNNER_TEMP/verify" --targets "${targets[@]}"
+          echo 'published=false' >> "$GITHUB_OUTPUT"
+      - uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3
+        if: ${{ !inputs.dry_run && steps.stage.outputs.published != 'true' }}
+        with:
+          subject-path: dist/*
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: verified-release-assets
+          path: dist/*
+          retention-days: 7
+
+  container:
+    needs: [plan, stage]
+    if: needs.stage.outputs.published != 'true'
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/docker.yml
+    with:
+      tag: ${{ inputs.tag || github.ref_name }}
+      source_ref: ${{ needs.plan.outputs.sha }}
+      dry_run: ${{ inputs.dry_run || false }}
+
+  publish:
+    needs: [plan, stage, container]
+    if: ${{ always() && !inputs.dry_run && needs.stage.result == 'success' && (needs.container.result == 'success' || needs.stage.outputs.published == 'true') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
+      - uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+      - name: Publish verified release and repair stable aliases on retries
+        env:
+          GH_TOKEN: ${{ github.token }}
+          IMAGE: ${{ needs.container.outputs.image }}
+          DIGEST: ${{ needs.container.outputs.digest }}
+          SOURCE_SHA: ${{ needs.plan.outputs.sha }}
+          PUBLISHED: ${{ needs.stage.outputs.published }}
+        run: |
+          set -euo pipefail
+          current=$(gh api "repos/$GITHUB_REPOSITORY/releases/latest" --jq .tag_name)
+          promote=$(python3 tools/release_tools.py promote --tag "$RELEASE_TAG" --current-tag "$current")
+          if [ "$promote" != true ]; then
+            if [ "$PUBLISHED" != true ]; then gh release edit "$RELEASE_TAG" --draft=false --latest=false; fi
+            echo 'Historical release verified; stable image aliases are unchanged.'
             exit 0
           fi
-          gh release create "$RELEASE_TAG" --verify-tag --title "RustXNG $RELEASE_TAG" \
-            --notes-file "$RUNNER_TEMP/notes.md"
-      - name: Upload only the assets the release does not have
-        if: ${{ !inputs.dry_run }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          # Never overwrite a published asset: a rebuild differs byte for byte,
-          # and replacing it would invalidate every checksum already handed out.
-          # An asset that is already published keeps its bytes; its sidecar is
-          # regenerated from those bytes so the pair still agrees.
-          existing="$RUNNER_TEMP/existing"
-          mkdir -p "$existing"
-          if gh release view "$RELEASE_TAG" --json assets --jq '.assets[].name' > "$RUNNER_TEMP/have.txt" 2>/dev/null; then
-            # An existing release may still have no assets (a previous publish
-            # run created it and stopped): gh refuses to download nothing.
-            if [ -s "$RUNNER_TEMP/have.txt" ]; then
-              gh release download "$RELEASE_TAG" --dir "$existing" >/dev/null
-            fi
-          else
-            : > "$RUNNER_TEMP/have.txt"
+          image="${IMAGE:-ghcr.io/${GITHUB_REPOSITORY,,}}"
+          if [ -z "$DIGEST" ]; then
+            DIGEST=$(docker buildx imagetools inspect "$image:${RELEASE_TAG#v}" | awk '/^Digest:/ {print $2; exit}')
           fi
-          for file in dist/*; do
-            name="$(basename "$file")"
-            case "$name" in *.sha256) continue ;; esac
-            if grep -qxF "$name" "$RUNNER_TEMP/have.txt"; then
-              echo "keep published bytes: $name"
-              cp "$existing/$name" "dist/$name"
-              ( cd dist && sha256sum "$name" > "$name.sha256" )
-            fi
-          done
-          pending=()
-          for file in dist/*; do
-            name="$(basename "$file")"
-            if grep -qxF "$name" "$RUNNER_TEMP/have.txt"; then
-              echo "keep: $name"
-            else
-              pending+=("$file")
-            fi
-          done
-          if [ ${#pending[@]} -eq 0 ]; then
-            echo "nothing to upload"
-          else
-            gh release upload "$RELEASE_TAG" "${pending[@]}"
-          fi
-      - name: Attach the licence files
-        if: ${{ !inputs.dry_run }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          # AGPL-3.0 requires the licence text to travel with the binaries.
-          # These are static, so a published copy is never replaced.
-          for file in LICENSE NOTICE; do
-            if gh release view "$RELEASE_TAG" --json assets --jq '.assets[].name' | grep -qxF "$file"; then
-              echo "$file already attached"
-            else
-              gh release upload "$RELEASE_TAG" "$file"
-            fi
-          done
-      - name: Verify the published asset set
-        if: ${{ !inputs.dry_run }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          gh release view "$RELEASE_TAG" --json assets --jq '.assets[].name' | sort > "$RUNNER_TEMP/published.txt"
-          missing=0
-          for file in dist/*; do
-            name="$(basename "$file")"
-            if ! grep -qxF "$name" "$RUNNER_TEMP/published.txt"; then
-              echo "not published: $name" >&2
-              missing=1
-            fi
-          done
-          cat "$RUNNER_TEMP/published.txt"
-          # Prove the published bytes match the published checksums, including
-          # the assets this run did not build (an earlier upload).
-          verify="$RUNNER_TEMP/verify"
-          mkdir -p "$verify"
-          gh release download "$RELEASE_TAG" --dir "$verify" --clobber
-          ( cd "$verify" && sha256sum --check ./*.sha256 )
-          exit "$missing"
+          [[ "$DIGEST" =~ ^sha256:[0-9a-f]{64}$ ]]
+          docker pull "$image@$DIGEST"
+          revision=$(docker image inspect --format '{{index .Config.Labels "org.opencontainers.image.revision"}}' "$image@$DIGEST")
+          test "$revision" = "$SOURCE_SHA"
+          bash tools/smoke_container.sh "$image@$DIGEST" "${RELEASE_TAG#v}"
+          if [ "$PUBLISHED" != true ]; then gh release edit "$RELEASE_TAG" --draft=false --latest; fi
+          minor="${RELEASE_TAG%.*}"
+          docker buildx imagetools create --tag "$image:latest" --tag "$image:${minor#v}" "$image@$DIGEST"

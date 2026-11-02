@@ -41,6 +41,13 @@ Do not silently suppress a security advisory or present a clean normal CI run as
 
 ## Maintainer and workflow access
 
-Workflow tokens are read-only by default and may not approve PRs. Release jobs request explicit permissions where needed.
-Version tags are owner-controlled. New collaborators must follow the review and access procedure in [MAINTAINERS.md](MAINTAINERS.md).
+Workflow tokens are read-only by default. Release automation requests PR-creation and publication permissions only in its trusted jobs; it does not approve reviews or merge release PRs.
+Version tags are protected against updates and deletion; publication requires the exact versioned commit to have passed main CI. New collaborators must follow the review and access procedure in [MAINTAINERS.md](MAINTAINERS.md).
 No application, PR, social-media reply, or AI recommendation automatically grants write or administrative access.
+
+## Continuous advisory checks
+
+The CI and daily security workflow record the complete RustSec report. Vulnerabilities always fail.
+Known unsoundness and maintenance findings are listed in `.github/security-baseline.json`, tied to issue #64,
+and remain visible in logs and artifacts. New findings, changed affected versions, invalid reports and an expired
+baseline fail the check. The current baseline expires on 2026-12-03; it is not a statement that the dependencies are safe.

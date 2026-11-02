@@ -93,6 +93,7 @@ curl --fail --get 'http://127.0.0.1:29483/search' \
 
 GitHub CLIを使い、Linux x86_64のバイナリをユーザー用ディレクトリへ導入する例です。
 
+<!-- x-release-please-start-version -->
 ```bash
 set -eu
 mkdir -p rustxng-download && cd rustxng-download
@@ -105,6 +106,7 @@ mkdir -p "$HOME/.local/share/rustxng"
 cp LICENSE NOTICE "$HOME/.local/share/rustxng/"
 "$HOME/.local/bin/rustxng" --version
 ```
+<!-- x-release-please-end -->
 
 `~/.local/bin`が`PATH`にない場合は絶対パスで起動するか、シェルの設定へ追加してください。
 
@@ -112,9 +114,11 @@ cp LICENSE NOTICE "$HOME/.local/share/rustxng/"
 
 現在のstable RustとCのビルド環境を用意します。
 
+<!-- x-release-please-start-version -->
 ```bash
 cargo install --git https://github.com/sahenjp/RustXNG.git --tag v0.26.0 --locked
 ```
+<!-- x-release-please-end -->
 
 `rustxng`と`rustxng-index`が導入されます。
 最低対応版はRust 1.88で、CIでも検証します。このチェックアウトはRust 1.99.1でも検証しています。

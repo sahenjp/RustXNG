@@ -108,6 +108,7 @@ Prebuilt binaries do not require a Rust toolchain.
 
 Example for Linux x86_64, using the GitHub CLI and a user-owned install directory:
 
+<!-- x-release-please-start-version -->
 ```bash
 set -eu
 mkdir -p rustxng-download && cd rustxng-download
@@ -120,6 +121,7 @@ mkdir -p "$HOME/.local/share/rustxng"
 cp LICENSE NOTICE "$HOME/.local/share/rustxng/"
 "$HOME/.local/bin/rustxng" --version
 ```
+<!-- x-release-please-end -->
 
 If `~/.local/bin` is not on `PATH`, use the absolute binary path or add the directory to your shell configuration.
 
@@ -127,9 +129,11 @@ If `~/.local/bin` is not on `PATH`, use the absolute binary path or add the dire
 
 Use a current stable Rust toolchain and a C build toolchain:
 
+<!-- x-release-please-start-version -->
 ```bash
 cargo install --git https://github.com/sahenjp/RustXNG.git --tag v0.26.0 --locked
 ```
+<!-- x-release-please-end -->
 
 This installs `rustxng` and `rustxng-index`.
 Rust 1.88 is the minimum supported version and is checked in CI. This checkout was also verified with Rust 1.99.1.

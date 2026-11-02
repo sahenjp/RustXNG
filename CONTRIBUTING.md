@@ -107,3 +107,9 @@ Contributions are accepted under the project's AGPL-3.0-or-later license.
 Preserve source attribution and license notices for upstream-derived code/data and update [NOTICE](NOTICE) when needed.
 Do not introduce material whose redistribution terms you cannot establish.
 SPDX headers are encouraged for new source files.
+
+## Releases and CI
+
+Use Conventional Commit titles for squash-merged PRs (`fix:`, `feat:`, `feat!:`).
+The release bot opens a version/changelog PR after successful main CI. Merging that reviewed PR starts the verified release pipeline.
+See [release and CI operations](docs/RELEASING.md) for dry runs, recovery, artifacts and remaining platform limits.

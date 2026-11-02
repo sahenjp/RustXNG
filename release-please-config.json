@@ -1,0 +1,19 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "bootstrap-sha": "fef998b69cc1882a9258a7f2cba59bf77793d729",
+  "include-component-in-tag": false,
+  "bump-minor-pre-major": true,
+  "draft": true,
+  "packages": {
+    ".": {
+      "release-type": "rust",
+      "package-name": "rustxng",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [
+        "README.md",
+        "README.ja.md",
+        "README.ko.md"
+      ]
+    }
+  }
+}
