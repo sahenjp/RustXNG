@@ -1,5 +1,5 @@
 name: Bug report
-description: 不具合の報告
+description: "不具合の報告"
 labels: [bug]
 body:
   - type: markdown
@@ -9,23 +9,23 @@ body:
   - type: input
     id: version
     attributes:
-      label: バージョン / コミット
-      description: リリースタグ、または `git rev-parse --short HEAD` の出力
-      placeholder: v0.1.0 / a71ac6f
+      label: "バージョン / コミット"
+      description: "リリースタグ、または `git rev-parse --short HEAD` の出力"
+      placeholder: "v0.1.0 / a71ac6f"
     validations:
       required: true
   - type: textarea
     id: what
     attributes:
-      label: 何が起きたか
-      description: 実際の結果と、期待していた結果
+      label: "何が起きたか"
+      description: "実際の結果と、期待していた結果"
     validations:
       required: true
   - type: textarea
     id: steps
     attributes:
-      label: 再現手順
-      description: クエリ文字列、設定、エンドポイント、実行コマンドなど
+      label: "再現手順"
+      description: "クエリ文字列、設定、エンドポイント、実行コマンドなど"
       placeholder: |
         1. cargo run --release -- --port 29483
         2. curl 'http://127.0.0.1:29483/search?q=...&format=json'
@@ -35,17 +35,17 @@ body:
   - type: input
     id: engine
     attributes:
-      label: 関係するエンジン
-      description: 分かる場合のみ（例: wikipedia, duckduckgo）
+      label: "関係するエンジン"
+      description: "分かる場合のみ（例: wikipedia, duckduckgo）"
   - type: textarea
     id: env
     attributes:
-      label: 環境
-      description: OS / Rust のバージョン / CPU アーキテクチャ
-      placeholder: Linux x86_64, Rust 1.99.1
+      label: "環境"
+      description: "OS / Rust のバージョン / CPU アーキテクチャ"
+      placeholder: "Linux x86_64, Rust 1.99.1"
   - type: textarea
     id: logs
     attributes:
-      label: ログ・レスポンス
-      description: `RUST_LOG=debug` の出力や JSON レスポンス（秘密情報は除く）
+      label: "ログ・レスポンス"
+      description: "`RUST_LOG=debug` の出力や JSON レスポンス（秘密情報は除く）"
       render: text

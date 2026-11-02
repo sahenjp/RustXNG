@@ -1,0 +1,47 @@
+name: Search quality / benchmark report
+description: "検索品質・鮮度・転送量・トークン量を、再現できる条件で報告する"
+title: "[Benchmark] "
+labels: [benchmark]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        APIキー、個人情報、非公開のエラーやソースコードは投稿しないでください。
+        参照ページ到達率・回答正解率・文字数・トークン数は別々の指標です。
+  - type: dropdown
+    id: objective
+    attributes:
+      label: "評価したい用途"
+      options:
+        - 正解ページを少数見つける（エラー全文・技術調査など）
+        - 最新情報を広く集める（ニュース・複数出典など）
+        - 返却サイズ・本文・トークン消費
+        - 速度・リグレッション
+    validations:
+      required: true
+  - type: textarea
+    id: inputs
+    attributes:
+      label: "入力・期待する出典・測定日時"
+      description: "公開可能なクエリ、正解URL、時点。引用・翻訳・クエリ加工の有無も記載してください。"
+    validations:
+      required: true
+  - type: textarea
+    id: conditions
+    attributes:
+      label: "再現条件"
+      description: "commit、OS/CPU、エンジン、言語、期間、件数、キャッシュ、local index、本文取得、ネットワーク地域（IP自体は不要）"
+    validations:
+      required: true
+  - type: textarea
+    id: results
+    attributes:
+      label: "結果と再現コマンド"
+      description: "問数・反復数・失敗数・p50/p95。token数の場合はtokenizer名と版も必要です。正解とmissの両方を記録してください。"
+    validations:
+      required: true
+  - type: textarea
+    id: artifacts
+    attributes:
+      label: "データの出所・共有できる成果物"
+      description: "公開可能なログや最小データへのリンク、利用条件。大量の生本文は添付不要です。"

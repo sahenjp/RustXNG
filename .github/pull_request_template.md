@@ -1,18 +1,26 @@
-## 概要
+## Problem and resulting behavior / 解決する問題と変更後の動作
 
-<!-- 何を、なぜ変更したかを 1〜3 行で -->
+<!-- Concrete trigger + before/after. Link the Issue. One purpose per PR. -->
 
-## 変更
+## Scope and compatibility / 範囲と互換性
 
-<!-- 箇条書き。関係するファイルやエンジン名があると助かります -->
+<!-- API/config/default changes, provider quotas, resource or security implications. -->
 
-## 検証
+## Validation / 検証
 
-- [ ] `cargo fmt --all --check`
-- [ ] `cargo clippy --all-targets`
-- [ ] `cargo test`（ユニット + 統合）
-- [ ] エンジン追加・修正の場合はフィクスチャテストを追加した
+<!-- Exact commands, toolchain, outcomes. Say "not run" with a reason when applicable. -->
 
-## 注意点
+- [ ] Relevant offline tests or fixtures cover the behavior (Rust logic changes)
+- [ ] `cargo fmt --all --check` (Rust changes)
+- [ ] `cargo test --all-targets` (Rust changes)
+- [ ] `cargo clippy --all-targets -- -D warnings` (Rust changes)
+- [ ] Markdown lint and links (documentation changes)
+- [ ] Performance/ranking claims include reproducible before/after conditions and errors (if applicable)
 
-<!-- 破壊的変更、未対応の残課題、上流との差分など -->
+## Limitations / 残る制約
+
+<!-- What was not tested, unsupported platforms/filters, risks and follow-up work. -->
+
+## Contribution notes / 作成・レビューについて
+
+<!-- Note material AI assistance and which checks you personally verified. No credentials or private logs. -->

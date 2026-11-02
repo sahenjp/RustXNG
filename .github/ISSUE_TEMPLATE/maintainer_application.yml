@@ -1,0 +1,45 @@
+name: Maintainer participation / メンテナー参加
+description: "担当領域と参加方法の相談。申請だけで権限は付与されません。"
+title: "[Maintainer] "
+labels: [community]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        GOVERNANCE.md と MAINTAINERS.md を先にお読みください。
+        個人のメール・秘密情報・認証トークンは記載しないでください。GitHub上で相談できます。
+  - type: input
+    id: account
+    attributes:
+      label: "GitHub account"
+      description: "招待対象の確認に使うGitHubユーザー名（SNSの表示名ではありません）"
+    validations:
+      required: true
+  - type: textarea
+    id: area
+    attributes:
+      label: "担当したい領域 / Proposed area"
+      placeholder: "エンジン、Linux ARM、ドキュメント、ベンチ、セキュリティ、CIなど"
+    validations:
+      required: true
+  - type: textarea
+    id: experience
+    attributes:
+      label: "関連する貢献・経験 / Relevant work"
+      description: "このプロジェクトや他の公開活動へのリンク。コミット数による選考ではありません。"
+    validations:
+      required: true
+  - type: textarea
+    id: availability
+    attributes:
+      label: "参加できる範囲 / Availability and responsibilities"
+      description: "無理のない参加頻度、レビューや保守でできることを記載してください。"
+    validations:
+      required: true
+  - type: checkboxes
+    id: agreement
+    attributes:
+      label: "確認"
+      options:
+        - label: GOVERNANCE.mdとCODE_OF_CONDUCT.mdを読みました。権限付与は別途オーナーの判断と招待が必要なことを理解しています。
+          required: true
