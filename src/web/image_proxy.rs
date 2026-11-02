@@ -205,6 +205,24 @@ mod tests {
     }
 
     #[test]
+    fn private_targets_are_refused_however_the_host_is_spelled() {
+        // Every one of these passed the old check, which only looked at the host
+        // string: a trailing dot, the IPv6 ranges and an internal DNS name.
+        assert!(!is_public_url("http://localhost./x.png"));
+        assert!(!is_public_url("http://[fc00::1]/x.png"));
+        assert!(!is_public_url("http://[fe80::1]/x.png"));
+        assert!(!is_public_url("http://[::ffff:127.0.0.1]/x.png"));
+        assert!(!is_public_url(
+            "http://metadata.google.internal/latest/meta-data/"
+        ));
+        assert!(!is_public_url("http://intranet/x.png"));
+        // IPv4-mapped and IPv4-compatible public addresses stay reachable.
+        assert!(is_public_url("http://93.184.216.34/x.png"));
+        assert!(is_public_url("http://[::ffff:93.184.216.34]/x.png"));
+        assert!(is_public_url("https://upload.wikimedia.org/x.png"));
+    }
+
+    #[test]
     fn proxy_urls_are_signed() {
         let url = proxied_url(
             "http://localhost:8888",

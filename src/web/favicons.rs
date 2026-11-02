@@ -157,8 +157,10 @@ mod tests {
     use crate::aggregator::Searcher;
     use crate::settings::Settings;
 
-    fn state() -> AppState {
-        AppState::new(Searcher::new(Settings::defaults()).expect("searcher"))
+    fn state_with_image_proxy(enabled: bool) -> AppState {
+        let mut settings = Settings::defaults();
+        settings.server.image_proxy = enabled;
+        AppState::new(Searcher::new(settings).expect("searcher"))
     }
 
     fn secret() -> String {
@@ -227,8 +229,24 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn the_handler_is_refused_when_the_image_proxy_is_disabled() {
+        let state = state_with_image_proxy(false);
+        let origin = "https://example.com";
+        let response = handler(
+            State(state),
+            Query(FaviconParams {
+                url: origin.to_string(),
+                h: Some(signature(&secret(), origin)),
+            }),
+            HeaderMap::new(),
+        )
+        .await;
+        assert_eq!(response.status(), StatusCode::FORBIDDEN);
+    }
+
+    #[tokio::test]
     async fn the_handler_refuses_bad_requests_without_network_access() {
-        let state = state();
+        let state = state_with_image_proxy(true);
         // No signature at all.
         let response = handler(
             State(state.clone()),
