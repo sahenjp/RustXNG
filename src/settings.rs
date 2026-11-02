@@ -690,12 +690,9 @@ impl Settings {
     /// converted to the internal representation: the document is turned into TOML
     /// values first (the internal merge logic works on those).
     pub fn from_yaml_str(text: &str) -> Result<Settings, SettingsError> {
-        let yaml: serde_yaml::Value = serde_yaml::from_str(text)
-            .map_err(|error| SettingsError::Validation(error.to_string()))?;
-        let Some(value) = yaml_to_toml(&yaml) else {
-            return Err(SettingsError::Validation("empty YAML document".into()));
-        };
-        value.try_into().map_err(SettingsError::Parse)
+        Self::user_value(text, true)?
+            .try_into()
+            .map_err(SettingsError::Parse)
     }
 
     /// Upstream's `server.public_instance`, also accepted under `[general]`
@@ -707,6 +704,24 @@ impl Settings {
     /// The built-in defaults (no user file involved).
     pub fn defaults() -> Settings {
         toml::from_str(DEFAULT_SETTINGS).expect("built-in settings.toml must be valid")
+    }
+
+    /// The built-in defaults as raw TOML values, the base of every merge.
+    fn defaults_value() -> toml::Value {
+        toml::from_str(DEFAULT_SETTINGS).expect("built-in settings.toml must be valid")
+    }
+
+    /// Parse a user document into raw TOML values. YAML is converted first so
+    /// both formats share one merge path.
+    fn user_value(text: &str, is_yaml: bool) -> Result<toml::Value, SettingsError> {
+        if is_yaml {
+            let yaml: serde_yaml::Value = serde_yaml::from_str(text)
+                .map_err(|error| SettingsError::Validation(error.to_string()))?;
+            yaml_to_toml(&yaml)
+                .ok_or_else(|| SettingsError::Validation("empty YAML document".into()))
+        } else {
+            toml::from_str::<toml::Value>(text).map_err(SettingsError::Parse)
+        }
     }
 
     /// Load settings from `path`, merged onto the built-in defaults, then apply
@@ -723,12 +738,7 @@ impl Settings {
                     path.extension().and_then(|extension| extension.to_str()),
                     Some("yml" | "yaml")
                 );
-                let user = if is_yaml {
-                    Settings::from_yaml_str(&raw)?
-                } else {
-                    toml::from_str::<Settings>(&raw)?
-                };
-                Self::merge(Settings::defaults(), user)?
+                Self::merge_values(Self::defaults_value(), Self::user_value(&raw, is_yaml)?)?
             }
             None => Settings::defaults(),
         };
@@ -746,40 +756,32 @@ impl Settings {
             .map(PathBuf::from)
     }
 
-    /// Merge a user settings object onto `base`.
+    /// Merge a raw user document onto the raw built-in defaults, then
+    /// deserialize once.
     ///
-    /// Like upstream, scalars and sections are overridden by the user, and the
-    /// engine list is merged by engine name unless `use_default_settings` is
-    /// `false`.
-    fn merge(mut base: Settings, user: Settings) -> Result<Settings, SettingsError> {
-        let merge_engines = user.use_default_settings.unwrap_or(true);
-        base.use_default_settings = user.use_default_settings;
+    /// Merging raw values is what keeps "not specified" apart from an explicit
+    /// `false`, `0` or `[]`: deserializing the user file first fills every
+    /// missing key with the Rust `Default` and loses that difference.
+    ///
+    /// The engine list is the one exception. It merges by engine name unless
+    /// `use_default_settings` is `false`, so it is taken out of the raw
+    /// document and merged on the typed form afterwards.
+    fn merge_values(base: toml::Value, mut user: toml::Value) -> Result<Settings, SettingsError> {
+        let user_engines = strip_engines(&mut user);
+        let merged = deep_merge(base, user);
+        let mut settings: Settings = merged.try_into().map_err(SettingsError::Parse)?;
 
-        // Sections: only overwrite fields the user actually set. TOML gives us
-        // concrete values for every field, so we merge on the serialized form.
-        base.general = merge_table(&base.general, &user.general)?;
-        base.server = merge_table(&base.server, &user.server)?;
-        base.search = merge_table(&base.search, &user.search)?;
-        base.ui = merge_table(&base.ui, &user.ui)?;
-        base.outgoing = merge_table(&base.outgoing, &user.outgoing)?;
-        base.plugins = merge_table(&base.plugins, &user.plugins)?;
-        base.cache = merge_table(&base.cache, &user.cache)?;
-        base.research = merge_table(&base.research, &user.research)?;
-        if !user.categories_as_tabs.is_empty() {
-            base.categories_as_tabs = user.categories_as_tabs;
-        }
-        if user.doi_resolvers.is_some() {
-            base.doi_resolvers = user.doi_resolvers;
-        }
-
-        if !user.engines.is_empty() {
-            if merge_engines {
-                base.engines = merge_engines_by_name(base.engines, user.engines);
-            } else {
-                base.engines = user.engines;
+        if let Some(engines) = user_engines {
+            let engines: Vec<EngineConfig> = engines.try_into().map_err(SettingsError::Parse)?;
+            if !engines.is_empty() {
+                settings.engines = if settings.use_default_settings.unwrap_or(true) {
+                    merge_engines_by_name(settings.engines, engines)
+                } else {
+                    engines
+                };
             }
         }
-        Ok(base)
+        Ok(settings)
     }
 
     fn apply_env(&mut self) {
@@ -927,18 +929,13 @@ impl Settings {
     }
 }
 
-fn merge_table<T>(base: &T, user: &T) -> Result<T, SettingsError>
-where
-    T: Serialize + for<'de> Deserialize<'de>,
-{
-    let base_value = toml::Value::try_from(base)
-        .map_err(|error| SettingsError::Validation(error.to_string()))?;
-    let user_value = toml::Value::try_from(user)
-        .map_err(|error| SettingsError::Validation(error.to_string()))?;
-    let merged = deep_merge(base_value, user_value);
-    merged
-        .try_into()
-        .map_err(|error: toml::de::Error| SettingsError::Parse(error))
+/// Take the `engines` array out of a raw document. Engine lists merge by name
+/// on the typed form, never by value.
+fn strip_engines(value: &mut toml::Value) -> Option<toml::Value> {
+    match value {
+        toml::Value::Table(table) => table.remove("engines"),
+        _ => None,
+    }
 }
 
 fn deep_merge(base: toml::Value, user: toml::Value) -> toml::Value {
@@ -1045,12 +1042,26 @@ mod tests {
         assert_eq!(settings.cache.max_bytes, 33_554_432);
         assert_eq!(settings.search.default_lang, "auto");
         assert_eq!(settings.ui.default_locale, "en");
-        assert_eq!(settings.general.instance_name, defaults.general.instance_name);
+        assert_eq!(
+            settings.general.instance_name,
+            defaults.general.instance_name
+        );
         assert_eq!(settings.search.languages, defaults.search.languages);
         assert_eq!(
             settings.outgoing.request_timeout,
             defaults.outgoing.request_timeout
         );
+    }
+
+    #[test]
+    fn an_empty_user_file_keeps_every_default() {
+        let defaults = Settings::defaults();
+        let settings = load_toml("");
+
+        assert_eq!(settings.server.port, defaults.server.port);
+        assert_eq!(settings.cache.max_bytes, defaults.cache.max_bytes);
+        assert_eq!(settings.ui.default_locale, defaults.ui.default_locale);
+        assert_eq!(settings.engines.len(), defaults.engines.len());
     }
 
     #[test]
@@ -1063,12 +1074,16 @@ mod tests {
     }
 
     #[test]
-    fn an_explicit_empty_tab_list_is_kept() {
-        let defaults = Settings::defaults();
-        assert!(!defaults.categories_as_tabs.is_empty());
+    fn an_explicit_empty_format_list_is_kept() {
+        assert!(!Settings::defaults().search.formats.is_empty());
 
-        let settings = load_toml("categories_as_tabs = []\n");
-        assert!(settings.categories_as_tabs.is_empty());
+        let settings = load_toml("[search]\nformats = []\n");
+        assert!(
+            settings.search.formats.is_empty(),
+            "explicit [] disables the extra formats"
+        );
+        assert_eq!(settings.search.default_lang, "auto");
+        assert_eq!(settings.ui.default_locale, "en");
     }
 
     #[test]
@@ -1103,8 +1118,14 @@ disabled = true
 "#,
         );
 
-        assert_eq!(settings.engine("google").expect("google").disabled, Some(true));
-        assert!(settings.engine("wikipedia").is_some(), "shipped engines stay");
+        assert_eq!(
+            settings.engine("google").expect("google").disabled,
+            Some(true)
+        );
+        assert!(
+            settings.engine("wikipedia").is_some(),
+            "shipped engines stay"
+        );
         assert_eq!(settings.ui.default_locale, "en");
     }
 
@@ -1128,32 +1149,31 @@ shortcut = "only"
 
     #[test]
     fn a_user_engine_entry_can_set_its_own_proxy() {
-        let defaults = Settings::defaults();
-        let user: Settings = toml::from_str(
+        let settings = load_toml(
             r#"
 [[engines]]
 name = "mwmbl"
 engine = "mwmbl"
 proxy = "http://127.0.0.1:18888"
 "#,
-        )
-        .expect("user settings parse");
-        let merged = Settings::merge(defaults, user).expect("merge");
-        let engine = merged.engine("mwmbl").expect("mwmbl kept");
+        );
+        let engine = settings.engine("mwmbl").expect("mwmbl kept");
         assert_eq!(engine.proxy.as_deref(), Some("http://127.0.0.1:18888"));
         // engines without the key stay direct
-        let other = merged.engine("swisscows").expect("swisscows kept");
+        let other = settings.engine("swisscows").expect("swisscows kept");
         assert!(other.proxy.is_none());
     }
 
     #[test]
     fn a_user_can_enable_an_engine_that_ships_disabled() {
-        let defaults = Settings::defaults();
         // exaapi ships disabled in the defaults
-        let shipped = defaults.engine("exaapi").expect("exaapi exists");
-        assert_eq!(shipped.disabled, Some(true));
+        let shipped = Settings::defaults();
+        assert_eq!(
+            shipped.engine("exaapi").expect("exaapi exists").disabled,
+            Some(true)
+        );
 
-        let user: Settings = toml::from_str(
+        let settings = load_toml(
             r#"
 [[engines]]
 name = "exaapi"
@@ -1163,10 +1183,8 @@ categories = ["general", "web"]
 disabled = false
 api_key = "test-key"
 "#,
-        )
-        .expect("user settings parse");
-        let merged = Settings::merge(defaults, user).expect("merge");
-        let enabled = merged.engine("exaapi").expect("exaapi kept");
+        );
+        let enabled = settings.engine("exaapi").expect("exaapi kept");
         assert_eq!(enabled.disabled, Some(false), "explicit false must win");
         assert_eq!(enabled.api_key.as_deref(), Some("test-key"));
     }
@@ -1215,18 +1233,18 @@ engines:
     categories: ["general"]
     base_url: "https://ja.wikipedia.org"
 "#;
-        let user = Settings::from_yaml_str(yaml).expect("valid yaml");
-        let merged = Settings::merge(Settings::defaults(), user).expect("merge");
-        assert_eq!(merged.server.port, 8880);
-        assert_eq!(merged.search.safe_search, 2);
-        assert_eq!(merged.search.default_lang, "ja");
-        assert!(merged.engine("wikipedia (ja)").is_some());
+        let settings = load_file("settings.yml", yaml);
+
+        assert_eq!(settings.server.port, 8880);
+        assert_eq!(settings.search.safe_search, 2);
+        assert_eq!(settings.search.default_lang, "ja");
+        assert!(settings.engine("wikipedia (ja)").is_some());
+        assert_eq!(settings.ui.default_locale, "en");
     }
 
     #[test]
     fn user_engines_merge_by_name() {
-        let defaults = Settings::defaults();
-        let user: Settings = toml::from_str(
+        let settings = load_toml(
             r#"
             use_default_settings = true
             [[engines]]
@@ -1239,12 +1257,10 @@ engines:
             shortcut = "mywiki"
             categories = ["general"]
             "#,
-        )
-        .unwrap();
-        let merged = Settings::merge(defaults, user).unwrap();
-        let duckduckgo = merged.engine("duckduckgo").expect("duckduckgo kept");
+        );
+        let duckduckgo = settings.engine("duckduckgo").expect("duckduckgo kept");
         assert_eq!(duckduckgo.disabled, Some(true));
-        assert!(merged.engine("my instance").is_some());
+        assert!(settings.engine("my instance").is_some());
     }
 
     #[test]
