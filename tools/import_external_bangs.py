@@ -58,8 +58,10 @@ def main():
             continue
         # Keep removed Google integrations out of regenerated data as well.
         if any(part in (bang + " " + url).lower() for part in (
-            "google", "youtube.com", "youtu.be", "ytimg.com",
-            "blogspot.com", "gstatic.com", "gmail.com",
+            "google", "youtube", "youtu.be", "ytimg.com", "blogspot.com",
+            "gstatic.com", "gmail.com", "invidious", "invidio.us", "piped.video",
+            "yewtu.be", "startpage.com", "searchrockit", "startpagina",
+            "s1search", "tonline",
         )):
             continue
         rows.append((bang, url, rank_value))

@@ -156,7 +156,15 @@ mod tests {
 
     #[test]
     fn google_bangs_are_removed() {
-        for bang in ["g", "google", "yt", "youtube", "gtranslate"] {
+        for bang in [
+            "g",
+            "google",
+            "yt",
+            "youtube",
+            "gtranslate",
+            "ytfr",
+            "invidious",
+        ] {
             assert!(lookup(bang).is_none(), "{bang}");
         }
     }

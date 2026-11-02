@@ -1414,7 +1414,6 @@ boardgameprices	http://www.boardgameprices.com/compare-prices-for?q={query}	0
 boardman	http://dillonboardman.wordpress.com/?s={query}&submit=Search	0
 boards	http://www.boards.ie/search/submit/?query={query}	0
 bobdylan	https://www.bobdylan.com/?s={query}	0
-bocca	https://bestonlinecasinoca.com/?s={query}	0
 bocpages	http://bocpages.org/w/index.php?search={query}	0
 bodeka	http://bodeka.org/?s={query}	0
 bodo	https://www.bodo.de/suche.html?tx_kesearch_pi1[sword]={query}	0
@@ -2825,7 +2824,6 @@ dim	https://duckduckgo.com/?q={query}&ia=images&iax=images	25
 dimensions	https://app.dimensions.ai/discover/publication?search_text={query}&search_type=kws&search_field=full_search	0
 din	http://www.dicionarioinformal.com.br/{query}	0
 ding	https://dict.tu-chemnitz.de/dings.cgi?query={query}	0
-dio	https://invidio.us/search?q={query}	0
 diplo	http://www.monde-diplomatique.fr/recherche?s={query}	3
 dirae	http://dirae.es/palabras/?q={query}	0
 dirble	http://dirble.com/search?q={query}	0
@@ -4717,7 +4715,6 @@ gwu	https://search.gwu.edu/search?site=gw_main_VCM&client=gw_main_VCM&proxystyle
 gww	https://wiki.guildwars.com/index.php?search={query}	214
 gyazo	https://gyazo.com/search/{query}	0
 gyk	http://www.gyakorikerdesek.hu/kereses.php?keres={query}	0
-gyt	https://www.genyoutube.net/search.php?q={query}	11
 gz	http://www.geekzone.fr/?s={query}	4
 gzh	http://www.geizhals.at/eu/?such={query}	12
 gzric	http://www.giallozafferano.it/ricerca-ricette/{query} 	0
@@ -5258,7 +5255,6 @@ impericonde	http://www.impericon.com/de/advancedsearch/result/?q={query}	0
 impericonuk	http://www.impericon.com/uk/advancedsearch/result/?q={query}	0
 ims	https://ims.com.br/?s={query}	0
 imslp	http://imslp.org/index.php?title=Special:Search&search={query}	108
-in	https://invidio.us/search?q={query}	0
 in2p3	https://annuaire.in2p3.fr/search/{query}	0
 inab	http://www.ineedabargain.com/deals/search?q={query} 	0
 inah	https://www.inah.gob.mx/buscador?searchword={query}	0
@@ -5340,14 +5336,10 @@ intodns	http://www.intodns.com/{query}	0
 intohu	http://into.hu/kereses.php?kereses={query}&cikk=1&forum=1&letolt=1&fal=1&zene=1&kerdesek=1&page=1	0
 inv	https://inventaire.io/search?q={query}	3
 invak	https://invak.info/?s={query}	0
-invd	https://invidio.us/search?q={query}	0
 invest	https://www.investopedia.com/search/?search-terms={query}	0
 investing	https://www.investing.com/search/?q={query}	4
 investopedia	https://www.investopedia.com/search/?search-terms={query}	0
 investorwords	http://www.investorwords.com/search_cse.php?q={query}	0
-invid	https://invidio.us/search?q={query}	0
-invidio	https://invidio.us/search?q={query}	0
-invidious	https://www.invidio.us/search?q={query}	21
 inwx	http://www.inwx.com/en/domain/check#search={query}#region=DEFAULT	0
 io9	http://io9.com/search?q={query}	0
 iol	https://www.iol.co.za/search?q={query}	0
@@ -6243,7 +6235,6 @@ listcorp	https://www.listcorp.com/search?q={query}	0
 listennotes	https://www.listennotes.com/search?q={query}	0
 listverse	http://listverse.com/search/?q={query}&sa=Search	0
 lit	https://luvit.io/lit.html#{query}	0
-litblog	https://learneditonline.blog/?s={query}	0
 litdev	https://literarydevices.net/?s={query}	0
 lite	https://duckduckgo.com/lite?q={query}	172
 litefx	https://www.litefx.to/search?q={query}	0
@@ -6474,7 +6465,6 @@ macwelt	http://www.macwelt.de/suche?searchStr={query}	0
 macworld	http://www.macworld.com/search?query={query} &submit=search	0
 macys	https://www.macys.com/shop/featured/{query}	8
 made	http://www.made.com/catalogsearch/result/?q={query}	0
-madison	http://host.madison.com/search/?l=25&sd=desc&s=start_time&f=html&t=article%2Cvideo%2Cyoutube%2Ccollection&app=editorial&q={query}&nsa=eedition	0
 madonc	https://madoncollections.com/collectables/?q={query}	0
 madura	https://maduraonline.com/?find={query}	0
 maedler	https://www.maedler.de/ShopSearch?query={query}	0
@@ -9340,7 +9330,6 @@ rz	https://www.rhymezone.com/r/rhyme.cgi?Word={query}&typeofrhyme=perfect&org1=s
 rzelda	https://www.reddit.com/r/zelda/search/?q={query}	0
 rzr	https://www.razer.com/search?text={query}	0
 rztk	https://rozetka.com.ua/ua/search/?text={query}	0
-s	https://startpage.com/do/metasearch.pl?query={query}	4806
 s&m	https://st-sm.com/sante-et-minceur/en/search?s={query}	0
 s-off	https://duckduckgo.com/?q={query}&kp=-2	0
 s-on	https://duckduckgo.com/?q={query}&kp=1	0
@@ -9398,7 +9387,6 @@ sandiamesa	https://sandiamesa.com/?s={query}	0
 sandiego	https://www.sandiego.org/search/site.aspx?q={query}	0
 sandstorm	https://apps.sandstorm.io/search?term={query}	0
 sanskrit	http://spokensanskrit.de/index.php?tinput={query}	0
-sao	http://swordartonline.wikia.com/wiki/Special:Search?go&query={query}	0
 saob	https://svenska.se/tre/?sok={query}&pz=1	45
 saol	https://svenska.se/tre/?sok={query}	36
 sap	https://launchpad.support.sap.com/#/solutions/notesv2/?q={query}	37
@@ -9449,7 +9437,6 @@ sbs	https://www.sbs.com.au/ondemand/search/{query}	0
 sbt	https://socialblade.com/twitter/user/{query}	0
 sbw	https://www.stopbadware.org/clearinghouse/search/?url={query}	0
 sbwiki	http://spongebob.wikia.com/wiki/Special:Search?search={query}	0
-sbyt	http://socialblade.com/youtube/user/{query}	27
 sc	https://soundcloud.com/search?q={query}	5
 sca	https://www.reddit.com/r/skincareaddiction/search?q={query}&restrict_sr=on	0
 scala	http://www.scala-lang.org/api/current/?search={query}	0
@@ -9472,7 +9459,6 @@ scdpo	http://scd.summon.serialssolutions.com/search?s.q={query}	0
 sceptr	https://sceptr.net/?s={query}	0
 scf	http://syncfile.co/{query}	0
 scg	http://sales.starcitygames.com/search.php?substring={query}	0
-sch	https://startpage.com/do/search?cmd=process_search&query={query}&language=deutsch&with_region=countryCH	5
 scheidung	https://www.scheidung.de/suche.html?tx_kesearch_pi1%5Bsword%5D={query}	0
 schema	https://schema.org/docs/search_results.html?q={query}	0
 schnittberichte	http://www.schnittberichte.com/svds.php?Page=Suche&String={query}	0
@@ -9536,7 +9522,6 @@ scz	http://slovnik-cizich-slov.abz.cz/web.php/hledat?typ_hledani=prefix&cizi_slo
 sd	https://slickdeals.net/newsearch.php?q={query}&searcharea=deals&searchin=first	278
 sdb	https://syntaxdb.com/reference/search?utf8=✓&search={query}	0
 sdcl	http://encore.sdcl.org/iii/encore/search/C__S{query}__Orightresult__U?lang=eng&suite=def	0
-sde	https://startpage.com/do/search?cmd=process_search&query={query}&language=deutsch	4
 sdict	http://www.spanishdict.com/translate/{query}	363
 sdirect	https://www.sciencedirect.com/search?qs={query}	0
 sdl	https://wiki.libsdl.org/CategoryAPI?action=fullsearch&context=180&value={query}&titlesearch=Titles	0
@@ -9725,7 +9710,6 @@ signingsavvy	https://www.signingsavvy.com/search/{query}	0
 sikuli	http://doc.sikuli.org/search.html?q={query}	0
 silver	https://www.providentmetals.com/catalogsearch/result/?q={query}	0
 silvergames	https://www.silvergames.com/en/s?q={query}	0
-simages	https://startpage.com/do/metasearch.pl?cat=pics&query={query}	0
 simania	http://simania.co.il/searchBooks.php?searchType=tabAll&query={query}	0
 simbad	http://simbad.u-strasbg.fr/simbad/sim-basic?Ident={query}	23
 similar	http://www.similarsites.com/site/{query}	17
@@ -9904,13 +9888,11 @@ sndcld	https://soundcloud.com/search?q={query}	5
 sndocs	https://docs.servicenow.com/search?q={query}	0
 snf	http://www.snf.ch/en/Search/Pages/default.aspx?k={query}	0
 sniff	https://websniffer.cc/?url={query}	3
-snih	https://www.startpage.com/do/search?q={query}&l=nihongo	10
 snit	http://www.sinonimi-contrari.it/{query}/	0
 snk	https://community.servicenow.com/community?id=community_search&q={query}	0
 snl	http://snl.no/.search?e=snl&query={query}	34
 snm	https://www.nexusmods.com/skyrim/search/?gsearch={query}&gsearchtype=mods	12
 snn	http://sonic.wikia.com/wiki/Special:Search?search={query}	0
-sno	https://www.startpage.com/do/search?cmd=process_search&query={query}&with_region=countryNO	0
 snogard	https://www.snogard.de/suche.html?suchwort={query}	0
 snoopsnoo	https://www.snoopsnoo.com/u/{query}	0
 snopes	http://www.snopes.com/?s={query}	0
@@ -10004,7 +9986,6 @@ southpark	http://www.southparkstudios.com/search?keywords={query}	0
 soxl	http://stackoverflow.com/search?q=[excel]+{query}	0
 soyluna	http://soyluna.wikia.com/wiki/Special:Search?search={query}&fulltext=Search	0
 sozluk	http://www.eksisozluk.com/show.asp?t={query}	0
-sp	https://startpage.com/do/metasearch.pl?query={query}	4806
 spacedock	http://spacedock.info/search?query={query}	0
 spamcheck	http://mxtoolbox.com/SuperTool.aspx?action=blacklist%3a{query}&run=toolpage	0
 spandict	http://www.spanishdict.com/translate/{query}	363
@@ -10020,7 +10001,6 @@ spartan	https://www.spartan-donate.com/?s={query}	0
 spattern	http://subtlepatterns.com/?q={query}	0
 spb	https://speiderbasen.no/?searchWord={query}	0
 spd	http://packages.speedeedelivery.com/packageDetail.php?barcode={query}	0
-spe	https://startpage.com/do/dsearch?query={query}&cat=web&pl=opensearch&language=espanol	3
 speakers	https://www.speakersassociates.com/search?search_api_views_fulltext={query}	0
 speccie	http://www.spectator.co.uk/?s={query}	0
 speedrun	http://speedrun.com/{query}	30
@@ -10030,13 +10010,10 @@ speedyhen	https://www.speedyhen.com/Search/Keyword?keyword={query}	0
 spekbio	https://www.spektrum.de/lexikon/biologie/?q={query}	0
 spekgeo	https://www.spektrum.de/lexikon/geographie/?q={query}	0
 spele	http://spele.nl/zoeken/?q={query}	0
-spen	https://startpage.com/do/dsearch?query={query}&cat=web&pl=opensearch&language=english	11
-spes	https://startpage.com/do/dsearch?query={query}&cat=web&pl=opensearch&language=espanol	3
 speur	http://www.speurders.nl/overzicht/?query={query}	0
 spf	http://mxtoolbox.com/SuperTool.aspx?action=spf%3a{query}&run=toolpage	3
 spg	https://www.speedguide.net/search_rez.php?seek={query}&words=yes	0
 sphereon	https://sphereon.com/?s={query}	0
-spi	https://startpage.com/do/search?cat=pics&cmd=process_search&query={query}	161
 spice	https://community.spiceworks.com/search?query={query}	0
 spics	https://site.pictures/search/images/?q={query}	0
 spiegel	http://www.spiegel.de/suche/index.html?suchbegriff= {query}	0
@@ -10048,7 +10025,6 @@ spinoza	http://www.spinoza.it/?s={query}	0
 spinrilla	https://spinrilla.com/search?q={query}	0
 spion	http://www.spi0n.com/?s={query}	0
 spip	https://duckduckgo.com/?q={query}+site:spip.net	0
-spit	https://startpage.com/do/search?cat=web&cmd=process_search&language=italiano&engine0=v1all&query={query}&abp=-1&prf=ab8a0a99ccae7d38fd1f9b31e845ce7e&SuggestOn=1	0
 spl	https://seattle.bibliocommons.com/search?utf8=%E2%9C%93&t=smart&search_category=keyword&commit=Search&q={query}	20
 splash	https://unsplash.com/search/photos/{query}	0
 splatoon	http://splatoonwiki.org/w/index.php?search={query}	60
@@ -10056,8 +10032,6 @@ splc	https://www.splcenter.org/resources?keyword={query}	0
 splice	https://splice.com/sounds/search?q={query}	0
 splunk	https://www.splunk.com/en_us/search.html?query={query}	0
 splunkbase	https://apps.splunk.com/apps/#/search/{query}/page/1	0
-spm	https://startpage.com/do/m/mobilesearch?&q={query}	0
-spnl	https://startpage.com/do/search?l=nederlands&q={query}	7
 spon	http://www.spiegel.de/suche/index.html?suchbegriff={query}	77
 sponge	https://spongebob.fandom.com/wiki/Special:Search?search={query}	0
 spongebob	http://spongebob.wikia.com/wiki/Special:Search?search={query}&fulltext=Search	0
@@ -10067,9 +10041,6 @@ sport1	http://www.sport1.de/suche#{query}	0
 sporum	http://forum.spore.com/jforum/jforum.page?module=search&action=search&search_keywords={query}	0
 spotify	https://open.spotify.com/search/{query}	386
 spotifysearch	https://open.spotify.com/search/results/{query}	0
-spp	https://startpage.com/do/search?prf=2cc506ab255c98e10570b7d50ef6b1c8&cat=web&query={query}	16
-sppit	https://startpage.com/do/search?prf=77fe802d54508e9ee48b88624be6da56&cat=web&query={query}	0
-sppl	https://www.startpage.com/do/dsearch?query={query}&cat=web&pl=opensearch&language=polski	0
 spr	http://search.sitepoint.com/?q={query}&refinements%5Breference%5D=1	0
 sprd	https://www.spreadshirt.com/{query}	0
 spreadshirt	http://spreadshirt.com/{query}	0
@@ -10085,7 +10056,6 @@ sptio	https://search.privacytools.io/?q={query}	0
 sptv	http://video.samaritanspurse.org/?s={query}	0
 sputnik	http://www.sputnik.ru/search?q={query}	0
 sputnikmusic	https://www.sputnikmusic.com/search_results.php?search_in=Bands&search_text={query}	16
-spv	https://www.startpage.com/do/search?cat=video&cmd=process_search&query={query}	155
 spx	https://www.surplex.com/de/maschinen.html?tx_surplex_pi1%5Bsword%5D={query}	0
 spy	https://open.spotify.com/search/{query}	386
 sqa	https://www.sqa.org.uk/pastpapers/findpastpaper.htm?subject={query}	0
@@ -10165,11 +10135,7 @@ stardewvalley	http://stardewvalleywiki.com/mediawiki/index.php?search={query}	13
 stargate	http://stargate.wikia.com/wiki/Special:Search?query={query}	0
 starmade	https://starmadepedia.net/index.php?title=Special%3ASearch&search={query}&go=Go	0
 starmadedock	https://starmadedock.net/search/1/?q={query}	0
-start	https://www.startpage.com/do/dsearch?query={query}	260
 starticket	https://www.starticket.ch/de/suche?_csquery={query}	0
-startpage	https://www.startpage.com/do/dsearch?query={query}&cat=web&pl=opensearch	527
-startpageimages	https://startpage.com/do/search?cat=pics&cmd=process_search&query={query}	161
-startpagevideos	https://startpage.com/do/search?cat=video&cmd=process_search&query={query}	0
 startrek	http://memory-alpha.wikia.com/wiki/Special:Search?search={query}&fulltext=Search&resultsLang=en	7
 startup	https://startupbuffer.com/search?s={query}	0
 startupjobs	https://startup.jobs/?q={query}	0
@@ -10360,7 +10326,6 @@ swwiki	http://starwars.wikia.com/wiki/Special:Search?search={query}	0
 sx	http://stackexchange.com/search?q={query} 	5
 sxsw	https://schedule.sxsw.com/2019/search?q={query}	0
 sy	http://words.bighugelabs.com/{query}	0
-syear	https://startpage.com/do/metasearch.pl?query={query}&with_date=y	0
 syfr	http://www.synonymes.com/resultats.php?mot={query}	0
 sym	http://symbolhound.com/?q={query}	4
 symantec	https://www.symantec.com/search?hiddenq=Pedroerkul&q={query}&searchJson={%22filter%22:[],%22startPage%22:1,%22start%22:0,%22sort%22:%22score%22}	0
@@ -11530,7 +11495,6 @@ vis	http://visuwords.com/?q={query}	0
 visiondirect	https://www.visiondirect.com.au/search?query={query}	0
 visitwarrington	https://visitwarrington.com/explore/?type=search-all&search_keywords={query}&sort=latest	0
 viso	https://vi.stackexchange.com/search?q={query}	0
-visual-youtube	http://www.yasiv.com/youtube#?q={query}	0
 visualh	https://visualhunt.com/search/instant/?q={query}	0
 visuwords	https://visuwords.com/{query}	0
 viul	http://viu.summon.serialssolutions.com/search?s.q={query}	0
@@ -11643,7 +11607,6 @@ w3v	https://validator.w3.org/nu/?doc={query}	0
 w3w	https://map.what3words.com/{query}	7
 wa	https://www.wolframalpha.com/input/?i={query}	14
 waapt	https://waapt.wiki.tropi.us/wiki/Special:Search/{query}	0
-wacotrib	http://www.wacotrib.com/search/?sd=desc&l=25&s=start_time&f=html&t=article%2Cvideo%2Cyoutube%2Ccollection&app=editorial&nsa=eedition&q={query}	0
 wad	http://www.wad-archive.com/search?o=d&q={query}	0
 wadoku	http://www.wadoku.de/search/{query}	16
 wafresh	https://www.wafresh.com.au/search.php?Search=&search_query={query}	0
@@ -12467,7 +12430,6 @@ yarnpkg	https://yarnpkg.com/en/packages?q={query}	0
 yaslovari	https://slovari.yandex.ru/{query}	0
 yat	https://translate.yandex.com/?text={query}	57
 yatr	https://yandex.com.tr/search/?text={query}	4
-yatu	https://www.youtube.be/?q={query}: 	0
 yav	https://yandex.ru/video/search?text={query}	29
 yaw	https://yandex.ru/pogoda/search?request={query}	0
 yay	https://www.yay.bg/index.php?route=product/search&search={query}	8
@@ -12540,7 +12502,6 @@ yourglish	https://youglish.com/search/{query}?	0
 yours	https://www.yours.org/search?q={query}	0
 yourtv	http://www.yourtv.com.au/guide/search.aspx?q={query}	0
 yout	https://yout.com/search?terms={query}	4
-youtubeonrepeat	http://youtubeonrepeat.com/results/?search_query={query}	11
 youtv	https://www.youtv.de/suche?search[q]={query}	0
 youversion	https://www.bible.com/search/bible?q={query}	0
 yp	https://www.yellowpages.com/search?search_terms={query}	5
@@ -12553,12 +12514,8 @@ yrtjp	https://search.yahoo.co.jp/realtime/search?p={query}	1875
 ys	https://slovari.yandex.ru/{query}	0
 ysports	https://search.yahoo.com/search?p=/{query}	0
 ystream	https://ystream.tv/q/?s={query}	0
-ytch	https://www.youtube.ch/results?search_query={query}	10
-ytfr	http://www.youtube.fr/results?search_query={query}	212
 ytj	https://travel.yahoo.co.jp/dhotel/search/?qry={query}	0
 ytmnd	http://ytmnd.com/search?q={query}	6
-ytn	https://youtubenews.de/?s={query}	9
-ytor	http://youtubeonrepeat.com/results/?search_query={query}	11
 ytr	https://translate.yandex.ru/?text={query}	148
 ytrack	https://youtrack.jetbrains.com/issues?q={query}	5
 ytren	https://translate.yandex.com/?text={query}	57
