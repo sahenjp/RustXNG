@@ -24,7 +24,6 @@ jobs:
       contents: write
       issues: write
       pull-requests: write
-      actions: write
     outputs:
       created: ${{ steps.select.outputs.created }}
       tag: ${{ steps.select.outputs.tag }}
@@ -75,22 +74,6 @@ jobs:
               out.write('created=' + ('true' if tag and sha else 'false') + '\n')
               out.write('tag=' + tag + '\nsha=' + sha + '\n')
           PYTHON
-      - name: Explicitly start CI for bot-created release PRs
-        if: steps.release.outputs.prs_created == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PRS: ${{ steps.release.outputs.prs }}
-        run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          import json, os, subprocess
-          repo = os.environ['GITHUB_REPOSITORY']
-          for pr in json.loads(os.environ['PRS']):
-              data = json.loads(subprocess.check_output(['gh', 'api', f'repos/{repo}/pulls/{pr["number"]}']))
-              if data['head']['repo']['full_name'] != repo or data['base']['ref'] != 'main':
-                  raise SystemExit('unexpected release PR source')
-              subprocess.run(['gh', 'workflow', 'run', 'ci.yml', '--repo', repo, '--ref', data['head']['ref']], check=True)
-          PY
 
   publish:
     needs: prepare

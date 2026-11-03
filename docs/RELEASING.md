@@ -2,6 +2,7 @@
 
 通常の変更はPRで検証し、mainの成功したCIからRelease Pleaseがバージョン・CHANGELOG・インストール例を更新するリリースPRを自動作成します。
 そのPRをレビューしてマージすると、mainのCI成功後に配布処理が自動で進みます。リリースPRの自動承認・自動マージは行いません。
+GitHubの仕様により、標準トークンが作ったPRのCIにはメンテナーの実行承認が必要です。差分を確認し、PRの「Approve workflows to run」で承認してください。承認後のPR CIがすべて成功してからマージします。
 個人アクセストークンを新しく保存する必要はありません。
 
 ```mermaid
@@ -21,6 +22,7 @@ flowchart LR
 - Linux・macOS・WindowsのRustテスト、fmt、Clippy、導入のオフラインスモークテスト。
 - Rust 1.88の最低対応版、既定・slimビルド、ネイティブLinux ARM64。
 - amd64・arm64のコンテナ起動、バージョン、ヘルス確認。
+- 使い捨てMariaDBでのMySQL・MariaDBエンジンの実接続、パラメーターの束縛、ページング。
 - Pythonの評価器・リリース・監査ポリシーの回帰テスト、プロバイダー台帳、Markdown、actionlint。
 - RustSecの脆弱性と新しい勧告。既知のunsoundness・保守終了は期限付きの一覧に残し、隠して除外しない。
 
@@ -63,6 +65,8 @@ Actionsの`release`は手動でも起動できます。既定は`dry_run = true`
 `security-audit`は毎日、最新の勧告を取得します。`nightly-offline`は保存観測の再集計、台帳、回帰テストを実行します。
 外部検索先に自動で負荷をかける定期ベンチは停止しました。新しいライブ評価は[プロバイダー確認](PROVIDERS.md)を踏まえ、構成と条件を決めて実行します。
 
-標準トークンで作成したPRやタグは、後続ワークフローを通常は発火させません。
-この構成では、リリースPRのCIを明示的にdispatchし、配布は再利用可能ワークフローとして呼び出します。
-この動作は[Release Pleaseの認証に関する説明](https://github.com/googleapis/release-please-action#github-credentials)に基づいています。
+標準トークンで作成したタグは後続のpushワークフローを発火させず、PRのワークフローは実行承認待ちになります。
+この構成では、メンテナーが実行承認したリリースPRのCIを必須チェックに使い、配布は再利用可能ワークフローとして呼び出します。
+`workflow_dispatch`で同じコミットを検証しても、PRの必須チェックを満たさないため代用しません。
+これは[GitHubのトークン仕様](https://docs.github.com/en/actions/concepts/security/github_token)と
+[必須チェックの仕様](https://docs.github.com/en/pull-requests/how-tos/merge-and-close-pull-requests/troubleshooting-required-status-checks)に従うものです。
