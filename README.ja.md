@@ -1,5 +1,7 @@
 # RustXNG
 
+[English](README.md) · [한국어](README.ko.md)
+
 ## はじめに：RustXNGの利用について
 
 RustXNGは、SearXNGを参考にRustで実装した、セルフホスト型のメタ検索エンジンです。
@@ -36,7 +38,7 @@ RustXNGを安心して利用できるOSSにしていくため、技術的な改�
 > 最初は短い検索結果を使い、根拠が必要な場合だけページ本文を取得してください。
 > 完了後、バイナリのバージョン、接続先、動作した検索コマンドを報告してください。失敗時は実際のエラーを報告してください。
 
-[English](README.md) · [한국어](README.ko.md) · [エージェント向け導入ガイド](docs/AGENT-SETUP.md)
+[エージェント向け導入ガイド](docs/AGENT-SETUP.md)
 
 [![CI](https://github.com/sahenjp/RustXNG/actions/workflows/ci.yml/badge.svg)](https://github.com/sahenjp/RustXNG/actions/workflows/ci.yml)
 [![License: AGPL-3.0-or-later](https://img.shields.io/badge/license-AGPL--3.0--or--later-blue.svg)](LICENSE)
