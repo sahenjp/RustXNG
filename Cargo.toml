@@ -30,6 +30,7 @@ quick-xml = { version = "0.41", features = ["serialize"] }
 thiserror = "2"
 regex = "1"
 sha2 = "0.10"
+getrandom = "0.3"
 chrono = { version = "0.4", default-features = false, features = ["clock", "std"] }
 base64 = "0.22"
 postgres = { version = "0.19", optional = true }

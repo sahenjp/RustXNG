@@ -137,6 +137,12 @@ fn build_client(
         .map_err(|error| NetworkError::Build(error.to_string()))
 }
 impl Network {
+    #[cfg(test)]
+    pub(crate) fn with_test_media_client(mut self, client: reqwest::Client) -> Self {
+        self.media_client = client;
+        self
+    }
+
     pub fn from_settings(settings: &Settings) -> Result<Self, NetworkError> {
         let outgoing = &settings.outgoing;
         let client = build_client(outgoing, None)?;
