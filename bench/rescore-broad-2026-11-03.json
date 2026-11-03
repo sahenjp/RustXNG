@@ -1,0 +1,374 @@
+{
+  "date": "2026-11-03",
+  "method": "Offline correction of target-domain coverage only; no search results changed, no live provider or LLM calls, no freshness/time-window metrics recomputed.",
+  "source": "bench/results/japanese-2026-11-02/observations.jsonl.gz",
+  "source_sha256": "3c1094290f787f7b5ea62201d4036515f9ea7599f3172bb019437116b4028035",
+  "evaluator_commit": "70605ea01660dbe015d2ec805b9bd351092191ab",
+  "fix_pr": "https://github.com/sahenjp/RustXNG/pull/81",
+  "conditions": {
+    "default": {
+      "observations": 12,
+      "stored_mean": 0.0,
+      "corrected_mean": 0.3888888888888889
+    },
+    "ja": {
+      "observations": 12,
+      "stored_mean": 0.0,
+      "corrected_mean": 0.3888888888888889
+    }
+  },
+  "observations": [
+    {
+      "case_id": "fresh-typescript-releases",
+      "language_condition": "default",
+      "repeat": 1,
+      "target_source_domains": [
+        "github.com",
+        "typescriptlang.org"
+      ],
+      "stored_coverage": 0.0,
+      "corrected_coverage": 0.5,
+      "corrected_domains_seen": [
+        "typescriptlang.org"
+      ]
+    },
+    {
+      "case_id": "fresh-typescript-releases",
+      "language_condition": "default",
+      "repeat": 2,
+      "target_source_domains": [
+        "github.com",
+        "typescriptlang.org"
+      ],
+      "stored_coverage": 0.0,
+      "corrected_coverage": 0.5,
+      "corrected_domains_seen": [
+        "typescriptlang.org"
+      ]
+    },
+    {
+      "case_id": "fresh-typescript-releases",
+      "language_condition": "ja",
+      "repeat": 1,
+      "target_source_domains": [
+        "github.com",
+        "typescriptlang.org"
+      ],
+      "stored_coverage": 0.0,
+      "corrected_coverage": 0.5,
+      "corrected_domains_seen": [
+        "typescriptlang.org"
+      ]
+    },
+    {
+      "case_id": "fresh-typescript-releases",
+      "language_condition": "ja",
+      "repeat": 2,
+      "target_source_domains": [
+        "github.com",
+        "typescriptlang.org"
+      ],
+      "stored_coverage": 0.0,
+      "corrected_coverage": 0.5,
+      "corrected_domains_seen": [
+        "typescriptlang.org"
+      ]
+    },
+    {
+      "case_id": "fresh-typescript-compiler",
+      "language_condition": "default",
+      "repeat": 1,
+      "target_source_domains": [
+        "github.com",
+        "devblogs.microsoft.com",
+        "typescriptlang.org"
+      ],
+      "stored_coverage": 0.0,
+      "corrected_coverage": 0.3333333333333333,
+      "corrected_domains_seen": [
+        "typescriptlang.org"
+      ]
+    },
+    {
+      "case_id": "fresh-typescript-compiler",
+      "language_condition": "default",
+      "repeat": 2,
+      "target_source_domains": [
+        "github.com",
+        "devblogs.microsoft.com",
+        "typescriptlang.org"
+      ],
+      "stored_coverage": 0.0,
+      "corrected_coverage": 0.3333333333333333,
+      "corrected_domains_seen": [
+        "typescriptlang.org"
+      ]
+    },
+    {
+      "case_id": "fresh-typescript-compiler",
+      "language_condition": "ja",
+      "repeat": 1,
+      "target_source_domains": [
+        "github.com",
+        "devblogs.microsoft.com",
+        "typescriptlang.org"
+      ],
+      "stored_coverage": 0.0,
+      "corrected_coverage": 0.3333333333333333,
+      "corrected_domains_seen": [
+        "typescriptlang.org"
+      ]
+    },
+    {
+      "case_id": "fresh-typescript-compiler",
+      "language_condition": "ja",
+      "repeat": 2,
+      "target_source_domains": [
+        "github.com",
+        "devblogs.microsoft.com",
+        "typescriptlang.org"
+      ],
+      "stored_coverage": 0.0,
+      "corrected_coverage": 0.3333333333333333,
+      "corrected_domains_seen": [
+        "typescriptlang.org"
+      ]
+    },
+    {
+      "case_id": "fresh-rust-releases",
+      "language_condition": "default",
+      "repeat": 1,
+      "target_source_domains": [
+        "github.com",
+        "blog.rust-lang.org",
+        "rust-lang.org"
+      ],
+      "stored_coverage": 0.0,
+      "corrected_coverage": 0.3333333333333333,
+      "corrected_domains_seen": [
+        "rust-lang.org"
+      ]
+    },
+    {
+      "case_id": "fresh-rust-releases",
+      "language_condition": "default",
+      "repeat": 2,
+      "target_source_domains": [
+        "github.com",
+        "blog.rust-lang.org",
+        "rust-lang.org"
+      ],
+      "stored_coverage": 0.0,
+      "corrected_coverage": 0.3333333333333333,
+      "corrected_domains_seen": [
+        "rust-lang.org"
+      ]
+    },
+    {
+      "case_id": "fresh-rust-releases",
+      "language_condition": "ja",
+      "repeat": 1,
+      "target_source_domains": [
+        "github.com",
+        "blog.rust-lang.org",
+        "rust-lang.org"
+      ],
+      "stored_coverage": 0.0,
+      "corrected_coverage": 0.3333333333333333,
+      "corrected_domains_seen": [
+        "rust-lang.org"
+      ]
+    },
+    {
+      "case_id": "fresh-rust-releases",
+      "language_condition": "ja",
+      "repeat": 2,
+      "target_source_domains": [
+        "github.com",
+        "blog.rust-lang.org",
+        "rust-lang.org"
+      ],
+      "stored_coverage": 0.0,
+      "corrected_coverage": 0.3333333333333333,
+      "corrected_domains_seen": [
+        "rust-lang.org"
+      ]
+    },
+    {
+      "case_id": "fresh-searxng",
+      "language_condition": "default",
+      "repeat": 1,
+      "target_source_domains": [
+        "github.com",
+        "docs.searxng.org"
+      ],
+      "stored_coverage": 0.0,
+      "corrected_coverage": 0.5,
+      "corrected_domains_seen": [
+        "github.com"
+      ]
+    },
+    {
+      "case_id": "fresh-searxng",
+      "language_condition": "default",
+      "repeat": 2,
+      "target_source_domains": [
+        "github.com",
+        "docs.searxng.org"
+      ],
+      "stored_coverage": 0.0,
+      "corrected_coverage": 0.5,
+      "corrected_domains_seen": [
+        "github.com"
+      ]
+    },
+    {
+      "case_id": "fresh-searxng",
+      "language_condition": "ja",
+      "repeat": 1,
+      "target_source_domains": [
+        "github.com",
+        "docs.searxng.org"
+      ],
+      "stored_coverage": 0.0,
+      "corrected_coverage": 0.5,
+      "corrected_domains_seen": [
+        "github.com"
+      ]
+    },
+    {
+      "case_id": "fresh-searxng",
+      "language_condition": "ja",
+      "repeat": 2,
+      "target_source_domains": [
+        "github.com",
+        "docs.searxng.org"
+      ],
+      "stored_coverage": 0.0,
+      "corrected_coverage": 0.5,
+      "corrected_domains_seen": [
+        "github.com"
+      ]
+    },
+    {
+      "case_id": "fresh-search-engine-changes",
+      "language_condition": "default",
+      "repeat": 1,
+      "target_source_domains": [
+        "developers.google.com",
+        "learn.microsoft.com",
+        "github.com"
+      ],
+      "stored_coverage": 0.0,
+      "corrected_coverage": 0.3333333333333333,
+      "corrected_domains_seen": [
+        "developers.google.com"
+      ]
+    },
+    {
+      "case_id": "fresh-search-engine-changes",
+      "language_condition": "default",
+      "repeat": 2,
+      "target_source_domains": [
+        "developers.google.com",
+        "learn.microsoft.com",
+        "github.com"
+      ],
+      "stored_coverage": 0.0,
+      "corrected_coverage": 0.3333333333333333,
+      "corrected_domains_seen": [
+        "developers.google.com"
+      ]
+    },
+    {
+      "case_id": "fresh-search-engine-changes",
+      "language_condition": "ja",
+      "repeat": 1,
+      "target_source_domains": [
+        "developers.google.com",
+        "learn.microsoft.com",
+        "github.com"
+      ],
+      "stored_coverage": 0.0,
+      "corrected_coverage": 0.3333333333333333,
+      "corrected_domains_seen": [
+        "developers.google.com"
+      ]
+    },
+    {
+      "case_id": "fresh-search-engine-changes",
+      "language_condition": "ja",
+      "repeat": 2,
+      "target_source_domains": [
+        "developers.google.com",
+        "learn.microsoft.com",
+        "github.com"
+      ],
+      "stored_coverage": 0.0,
+      "corrected_coverage": 0.3333333333333333,
+      "corrected_domains_seen": [
+        "developers.google.com"
+      ]
+    },
+    {
+      "case_id": "fresh-japanese-web-troubleshooting",
+      "language_condition": "default",
+      "repeat": 1,
+      "target_source_domains": [
+        "qiita.com",
+        "zenn.dev",
+        "github.com"
+      ],
+      "stored_coverage": 0.0,
+      "corrected_coverage": 0.3333333333333333,
+      "corrected_domains_seen": [
+        "zenn.dev"
+      ]
+    },
+    {
+      "case_id": "fresh-japanese-web-troubleshooting",
+      "language_condition": "default",
+      "repeat": 2,
+      "target_source_domains": [
+        "qiita.com",
+        "zenn.dev",
+        "github.com"
+      ],
+      "stored_coverage": 0.0,
+      "corrected_coverage": 0.3333333333333333,
+      "corrected_domains_seen": [
+        "zenn.dev"
+      ]
+    },
+    {
+      "case_id": "fresh-japanese-web-troubleshooting",
+      "language_condition": "ja",
+      "repeat": 1,
+      "target_source_domains": [
+        "qiita.com",
+        "zenn.dev",
+        "github.com"
+      ],
+      "stored_coverage": 0.0,
+      "corrected_coverage": 0.3333333333333333,
+      "corrected_domains_seen": [
+        "zenn.dev"
+      ]
+    },
+    {
+      "case_id": "fresh-japanese-web-troubleshooting",
+      "language_condition": "ja",
+      "repeat": 2,
+      "target_source_domains": [
+        "qiita.com",
+        "zenn.dev",
+        "github.com"
+      ],
+      "stored_coverage": 0.0,
+      "corrected_coverage": 0.3333333333333333,
+      "corrected_domains_seen": [
+        "zenn.dev"
+      ]
+    }
+  ]
+}
