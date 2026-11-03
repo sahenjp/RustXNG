@@ -290,8 +290,8 @@ def main() -> None:
                         "model_extraction": None,
                         "rank": rank_of([r.get("url", "") for r in row.get("results", [])], case.get("expected_reference_urls", [])) if group == "pinpoint" else None})
             if group == "broad_fresh":
-                row["broad_fresh_metrics"] = broad_metrics(row, case.get("window_days", 30))
                 row["target_source_domains"] = case.get("target_source_domains", [])
+                row["broad_fresh_metrics"] = broad_metrics(row, case.get("window_days", 30))
             observations.append(row)
             out.write(json.dumps(row, ensure_ascii=False) + "\n")
             out.flush()
