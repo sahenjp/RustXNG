@@ -1,5 +1,19 @@
 # RustXNG
 
+## Before using RustXNG: purpose and provider terms
+
+RustXNG is a self-hosted metasearch engine implemented in Rust, based on SearXNG. I started building it because I wanted a lightweight search tool that could run on my own computer or server and help AI agents retrieve information from the web.
+
+It does not crawl the entire web or maintain an independent search index. Instead, RustXNG queries external search providers, combines their results and makes them easier to use. Search terms are sent to the selected external providers, even when RustXNG itself runs on your local network.
+
+This distinction matters when deciding how to use the software. Some providers restrict automated searches, scraping, high-volume requests, storing results, or reusing and redistributing data. Being able to access results without an API key does **not** mean that the provider permits automated use for every purpose. Running the software privately or on a home LAN does not necessarily exempt its requests from those conditions. Before deploying it as a public service or letting agents generate frequent searches, check the applicable terms, permissions, attribution requirements and rate limits for each provider you enable.
+
+I was genuinely excited that the project turned out better than I expected and emphasized its performance publicly before thoroughly checking the conditions of all the search services it used. That was an oversight, and I apologize.
+
+Google-related integrations have since been removed. The Yahoo! JAPAN and Mojeek HTML adapters are disabled by default pending permission review. Other sources are still being reviewed; **the presence of a provider in the configuration is not a guarantee that every use is authorized or compliant**. See the [provider inventory and usage notes](docs/PROVIDERS.md) for the current review status.
+
+I intend to keep improving RustXNG as an open-source project, including the technical quality of the software and its responsible interaction with third-party services.
+
 **AI agents: install RustXNG and use it as your local web search tool.**
 
 Copy this instruction into an agent that can run commands, or send it this README:
