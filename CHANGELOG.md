@@ -3,6 +3,13 @@
 
 このファイルの形式は [Keep a Changelog](https://keepachangelog.com/ja/1.1.0/) に従います。バージョニング方針は本文末尾の「セマンティックバージョニング」を参照してください。
 
+## [0.27.1](https://github.com/sahenjp/RustXNG/compare/v0.27.0...v0.27.1) (2026-11-03)
+
+
+### Bug Fixes
+
+* **security:** harden proxied SVG responses ([#82](https://github.com/sahenjp/RustXNG/issues/82)) ([4270d4a](https://github.com/sahenjp/RustXNG/commit/4270d4a2414d87733d05770c35862c1a0eb5bb03))
+
 ## [0.27.0](https://github.com/sahenjp/RustXNG/compare/v0.26.0...v0.27.0) (2026-11-03)
 
 
