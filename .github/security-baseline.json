@@ -1,7 +1,7 @@
 {
   "expires": "2026-12-03",
-  "tracking_issue": "https://github.com/sahenjp/RustXNG/issues/64",
-  "reason": "Known unsoundness/maintenance findings remain visible; no vulnerability findings are allowed. Review or remediate before expiry.",
+  "tracking_issue": "https://github.com/sahenjp/RustXNG/issues/79",
+  "reason": "Known maintenance findings remain visible; no vulnerability or unsoundness findings are allowed. Replace unmaintained dependencies before expiry.",
   "findings": [
     {
       "id": "RUSTSEC-2026-0374",
@@ -20,18 +20,6 @@
       "kind": "unmaintained",
       "package": "unsafe-libyaml",
       "version": "0.2.11"
-    },
-    {
-      "id": "RUSTSEC-2026-0253",
-      "kind": "unsound",
-      "package": "lru",
-      "version": "0.12.5"
-    },
-    {
-      "id": "RUSTSEC-2026-0002",
-      "kind": "unsound",
-      "package": "lru",
-      "version": "0.12.5"
     }
   ]
 }
