@@ -167,9 +167,10 @@ jobs:
           NATIVE: ${{ matrix.native }}
         run: |
           set -euo pipefail
-          args=()
+          # macOS ships Bash 3.2, where an empty array with nounset fails.
+          args=(python tools/release_tools.py binary --tag "$RELEASE_TAG" --target "$TARGET" --binary "source/target/$TARGET/release/$ARTIFACT")
           if [ "$NATIVE" = true ]; then args+=(--native); fi
-          python tools/release_tools.py binary --tag "$RELEASE_TAG" --target "$TARGET" --binary "source/target/$TARGET/release/$ARTIFACT" "${args[@]}"
+          "${args[@]}"
       - name: Offline startup and fake-engine search
         if: matrix.native
         shell: bash
