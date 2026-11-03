@@ -419,6 +419,15 @@ fn the_binary_serves_mcp_on_stdio() {
         .expect("start rustxng mcp");
     let mut stdin = child.stdin.take().unwrap();
     let mut stdout = BufReader::new(child.stdout.take().unwrap());
+    // Drain stderr while the test talks to the child: debug logging can exceed
+    // the pipe buffer (a few KiB on some hosts), and an unread pipe would
+    // block the server before it answers on stdout.
+    let mut stderr = child.stderr.take().unwrap();
+    let logs = std::thread::spawn(move || {
+        let mut logs = String::new();
+        std::io::Read::read_to_string(&mut stderr, &mut logs).unwrap();
+        logs
+    });
     let mut send = |message: Value| {
         writeln!(stdin, "{message}").unwrap();
         stdin.flush().unwrap();
@@ -445,5 +454,7 @@ fn the_binary_serves_mcp_on_stdio() {
     assert_eq!(tools.len(), 2);
     drop(stdin);
     let status = child.wait().unwrap();
-    assert!(status.success(), "exit status {status}");
+    let logs = logs.join().unwrap();
+    assert!(status.success(), "exit status {status}\n{logs}");
+    assert!(!logs.is_empty(), "the debug logs go to stderr");
 }
