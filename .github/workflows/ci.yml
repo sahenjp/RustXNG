@@ -75,7 +75,7 @@ jobs:
           key: mysql-integration
       - run: cargo test --locked --test mysql -- --ignored
         env:
-          MYSQL_TEST_PORT: ${{ job.services.mariadb.ports[3306] }}
+          MYSQL_TEST_PORT: ${{ job.services.mariadb.ports['3306'] }}
 
   no-default-features:
     # The documented slim build (no database engines) must keep compiling.
