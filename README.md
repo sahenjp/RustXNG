@@ -1,5 +1,7 @@
 # RustXNG
 
+[日本語](README.ja.md) · [한국어](README.ko.md)
+
 ## Before using RustXNG: purpose and provider terms
 
 RustXNG is a self-hosted metasearch engine implemented in Rust, based on SearXNG. I started building it because I wanted a lightweight search tool that could run on my own computer or server and help AI agents retrieve information from the web.
@@ -28,7 +30,7 @@ Copy this instruction into an agent that can run commands, or send it this READM
 > Keep the first response short; request page text only when evidence is needed.
 > Report the binary version, endpoint, and one working search command. If setup fails, report the actual error.
 
-[日本語](README.ja.md) · [한국어](README.ko.md) · [Agent setup guide](docs/AGENT-SETUP.md)
+[Agent setup guide](docs/AGENT-SETUP.md)
 
 [![CI](https://github.com/sahenjp/RustXNG/actions/workflows/ci.yml/badge.svg)](https://github.com/sahenjp/RustXNG/actions/workflows/ci.yml)
 [![License: AGPL-3.0-or-later](https://img.shields.io/badge/license-AGPL--3.0--or--later-blue.svg)](LICENSE)
