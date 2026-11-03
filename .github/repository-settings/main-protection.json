@@ -25,6 +25,26 @@
       {
         "context": "docker",
         "app_id": 15368
+      },
+      {
+        "context": "linux-arm64",
+        "app_id": 15368
+      },
+      {
+        "context": "workflow-lint",
+        "app_id": 15368
+      },
+      {
+        "context": "security / audit",
+        "app_id": 15368
+      },
+      {
+        "context": "docker-arm64",
+        "app_id": 15368
+      },
+      {
+        "context": "mysql-integration",
+        "app_id": 15368
       }
     ]
   },

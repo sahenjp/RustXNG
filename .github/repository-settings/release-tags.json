@@ -1,5 +1,5 @@
 {
-  "name": "Release tags: owner-controlled",
+  "name": "Version tags: immutable after creation",
   "target": "tag",
   "enforcement": "active",
   "bypass_actors": [
@@ -18,9 +18,6 @@
     }
   },
   "rules": [
-    {
-      "type": "creation"
-    },
     {
       "type": "update"
     },
