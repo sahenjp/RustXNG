@@ -3,6 +3,25 @@
 
 このファイルの形式は [Keep a Changelog](https://keepachangelog.com/ja/1.1.0/) に従います。バージョニング方針は本文末尾の「セマンティックバージョニング」を参照してください。
 
+## [0.27.0](https://github.com/sahenjp/RustXNG/compare/v0.26.0...v0.27.0) (2026-11-03)
+
+
+### Features
+
+* エージェント導入を整備し、既定ポートを29483へ移行 ([#23](https://github.com/sahenjp/RustXNG/issues/23)) ([c031e10](https://github.com/sahenjp/RustXNG/commit/c031e1004baad739a10255ef2cca9c4e6dbca56a))
+
+
+### Bug Fixes
+
+* apply the request limiter to research ([#54](https://github.com/sahenjp/RustXNG/issues/54)) ([f47619f](https://github.com/sahenjp/RustXNG/commit/f47619f7f0d5babe8e6224d585f3f34785553f20))
+* enforce media response limits while reading ([#55](https://github.com/sahenjp/RustXNG/issues/55)) ([e8caecc](https://github.com/sahenjp/RustXNG/commit/e8caecc281fe4644302aa8b9f622d55caf35b9b5))
+* fail closed for per-engine proxy overrides ([#53](https://github.com/sahenjp/RustXNG/issues/53)) ([3f64bb5](https://github.com/sahenjp/RustXNG/commit/3f64bb5391b0bafb3773af5b86b4369451a5da90))
+* honor provider selection and correct benchmark claims ([#65](https://github.com/sahenjp/RustXNG/issues/65)) ([0833803](https://github.com/sahenjp/RustXNG/commit/08338038491d57adcfa4990ddf3d8925af292f4e))
+* integrate reviewed maintenance and isolate public media fetching ([#62](https://github.com/sahenjp/RustXNG/issues/62)) ([9811044](https://github.com/sahenjp/RustXNG/commit/9811044efc01f353bcce009d5e81eb375dfa1110))
+* reject executable schemes in search results ([#52](https://github.com/sahenjp/RustXNG/issues/52)) ([13436ac](https://github.com/sahenjp/RustXNG/commit/13436acf5946948d1c01218cd2fc7ff6673510ac))
+* **security:** harden untrusted fetching and update vulnerable dependencies ([#77](https://github.com/sahenjp/RustXNG/issues/77)) ([e62b48e](https://github.com/sahenjp/RustXNG/commit/e62b48e364fac0da88596274fbf804ec5453ee20))
+* 検索連携の修正を統合し、MCP・出力上限・ARM64を整備 ([#43](https://github.com/sahenjp/RustXNG/issues/43)) ([188f778](https://github.com/sahenjp/RustXNG/commit/188f778e0acf460dbdf5010413f3f0aac6877d14))
+
 ## [Unreleased]
 
 ### Added
