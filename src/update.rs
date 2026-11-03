@@ -73,7 +73,10 @@ fn verify(bytes: &[u8], checksum: &str, name: &str) -> Result<(), String> {
     {
         return Err("invalid release checksum sidecar".into());
     }
-    let actual = format!("{:x}", Sha256::digest(bytes));
+    let actual: String = Sha256::digest(bytes)
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect();
     if !actual.eq_ignore_ascii_case(parts[0]) {
         return Err("SHA-256 mismatch; executable was not changed".into());
     }
@@ -134,7 +137,9 @@ mod tests {
     #[test]
     fn checksum_rejects_corruption_and_wrong_asset() {
         let name = "rustxng-v1.0.0-test";
-        let checksum = format!("{:x}  {name}\n", Sha256::digest(b"binary"));
+        // Fixed external digest also checks that the encoding remains 64 lowercase hex digits.
+        let checksum =
+            format!("9a3a45d01531a20e89ac6ae10b0b0beb0492acd7216a368aa062d1a5fecaf9cd  {name}\n");
         assert!(verify(b"binary", &checksum, name).is_ok());
         assert!(verify(b"corrupt", &checksum, name).is_err());
         assert!(verify(b"binary", &checksum, "other").is_err());

@@ -280,7 +280,10 @@ impl Network {
             proxy.map(str::trim),
         ))
         .map_err(|error| NetworkError::Build(error.to_string()))?;
-        let cache_key = format!("{:x}", Sha256::digest(identity));
+        let cache_key: String = Sha256::digest(identity)
+            .iter()
+            .map(|byte| format!("{byte:02x}"))
+            .collect();
         if let Some(cache) = cache {
             if let Some(cached) = tokio::time::timeout_at(deadline, cache.get(&cache_key))
                 .await
