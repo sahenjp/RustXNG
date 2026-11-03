@@ -36,12 +36,18 @@ jobs:
         run: |
           set -euo pipefail
           sha=$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
           if [ "$GITHUB_EVENT_NAME" = workflow_run ] && [ "$sha" != "$FINISHED_SHA" ]; then
             echo 'A newer main commit is waiting for its own CI; no release action.'
             echo 'ready=false' >> "$GITHUB_OUTPUT"
           else
             echo 'ready=true' >> "$GITHUB_OUTPUT"
           fi
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        if: steps.current.outputs.ready == 'true'
+        with:
+          ref: ${{ steps.current.outputs.sha }}
+          persist-credentials: false
       - uses: googleapis/release-please-action@8b8fd2cc23b2e18957157a9d923d75aa0c6f6ad5 # v4
         id: release
         if: steps.current.outputs.ready == 'true'
@@ -49,6 +55,7 @@ jobs:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
           target-branch: main
+          skip-github-pull-request: true
       - id: select
         if: steps.current.outputs.ready == 'true'
         env:
@@ -56,24 +63,27 @@ jobs:
           CREATED: ${{ steps.release.outputs.release_created }}
           TAG: ${{ steps.release.outputs.tag_name }}
           SOURCE_SHA: ${{ steps.release.outputs.sha }}
+        run: python3 tools/release_state.py
+      - id: baseline
+        if: steps.select.outputs.prepare_pr == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_SHA: ${{ steps.current.outputs.sha }}
         run: |
-          python3 - <<'PYTHON'
-          import base64, json, os, subprocess, tomllib
-          repo = os.environ['GITHUB_REPOSITORY']
-          def api(path):
-              return json.loads(subprocess.check_output(['gh', 'api', f'repos/{repo}/{path}']))
-          tag, sha = os.environ['TAG'], os.environ['SOURCE_SHA']
-          if os.environ['CREATED'] != 'true':
-              cargo = api('contents/Cargo.toml?ref=main')
-              version = tomllib.loads(base64.b64decode(cargo['content']).decode())['package']['version']
-              pending = [r for r in api('releases?per_page=100') if r['draft'] and r['tag_name'] == 'v' + version and r['author']['login'] == 'github-actions[bot]']
-              if pending:
-                  tag = pending[0]['tag_name']
-                  sha = api('commits/' + pending[0]['target_commitish'])['sha']
-          with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
-              out.write('created=' + ('true' if tag and sha else 'false') + '\n')
-              out.write('tag=' + tag + '\nsha=' + sha + '\n')
-          PYTHON
+          set -euo pipefail
+          sha=$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)
+          if [ "$sha" = "$EXPECTED_SHA" ]; then
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'A newer main is waiting for CI; skip PR preparation.'
+          fi
+      - uses: googleapis/release-please-action@8b8fd2cc23b2e18957157a9d923d75aa0c6f6ad5 # v4
+        if: steps.baseline.outputs.ready == 'true'
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+          target-branch: main
+          skip-github-release: true
 
   publish:
     needs: prepare
