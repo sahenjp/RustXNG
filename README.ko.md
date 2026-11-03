@@ -1,5 +1,7 @@
 # RustXNG
 
+[English](README.md) · [日本語](README.ja.md)
+
 ## 사용하기 전에: RustXNG의 목적과 검색 제공자 이용 조건
 
 RustXNG는 SearXNG를 바탕으로 Rust로 구현한 셀프 호스팅 메타검색 엔진입니다. 개인 PC나 서버에서 가볍게 실행하고, AI 에이전트가 웹 정보를 편리하게 찾을 수 있도록 만들기 시작했습니다.
@@ -28,7 +30,7 @@ RustXNG가 웹 전체를 직접 크롤링하여 독립적인 검색 인덱스를
 > 첫 응답은 짧게 유지하고, 근거가 필요할 때만 페이지 본문을 요청하세요.
 > 바이너리 버전, 접속 주소, 동작한 검색 명령 하나를 보고하세요. 설치에 실패하면 실제 오류를 보고하세요.
 
-[English](README.md) · [日本語](README.ja.md) · [에이전트 설치 가이드](docs/AGENT-SETUP.md)
+[에이전트 설치 가이드](docs/AGENT-SETUP.md)
 
 [![CI](https://github.com/sahenjp/RustXNG/actions/workflows/ci.yml/badge.svg)](https://github.com/sahenjp/RustXNG/actions/workflows/ci.yml)
 [![License: AGPL-3.0-or-later](https://img.shields.io/badge/license-AGPL--3.0--or--later-blue.svg)](LICENSE)
