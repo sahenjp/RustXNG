@@ -86,6 +86,35 @@ class JapaneseBenchmarkTests(unittest.TestCase):
         self.assertEqual(result["target_source_domain_coverage"], 1.0)
         self.assertGreaterEqual(result["within_time_window_count"], 1)
 
+    def test_main_scores_target_domains_attached_from_the_case(self):
+        """Observation rows from main() must be scored against the case's target domains."""
+        import sys
+        import tempfile
+        import eval_japanese
+
+        corpus = {"cases": [{"id": "fresh-x", "query": "q", "time_range": "month", "window_days": 30,
+                             "target_source_domains": ["a.example", "b.example"]}]}
+        response = {"http_status": 200, "results": [{"url": "https://www.a.example/1"}, {"url": "https://c.example/2"}],
+                    "elapsed_ms": 1.0, "error": None}
+        with tempfile.TemporaryDirectory() as directory:
+            broad = Path(directory) / "broad.json"
+            broad.write_text(json.dumps(corpus), encoding="utf-8")
+            output = Path(directory) / "out"
+            argv = ["eval_japanese.py", "--output", str(output), "--groups", "broad_fresh", "--languages", "default",
+                    "--qiita", "off", "--repeats", "2", "--delay", "0", "--broad-fresh-json", str(broad)]
+            with patch.object(sys, "argv", argv), \
+                    patch.object(eval_japanese, "search", side_effect=lambda *a, **k: dict(response)), \
+                    patch.object(eval_japanese, "server_snapshot", return_value={}), \
+                    patch("builtins.print"):
+                eval_japanese.main()
+            rows = [json.loads(line) for line in (output / "observations.jsonl").read_text().splitlines()]
+            summary = json.loads((output / "summary.json").read_text())["summaries"]
+        self.assertEqual(len(rows), 2)
+        for row in rows:
+            self.assertEqual(row["broad_fresh_metrics"]["target_source_domains_seen"], ["a.example"])
+            self.assertEqual(row["broad_fresh_metrics"]["target_source_domain_coverage"], 0.5)
+        self.assertEqual(summary["broad_fresh/raw/default/qiita=False"]["mean_target_source_domain_coverage"], 0.5)
+
 
 if __name__ == "__main__":
     unittest.main()
