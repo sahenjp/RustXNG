@@ -6,11 +6,13 @@
 
 pub mod deepseek;
 mod direct;
+mod pdf;
+mod render;
 
 pub(crate) use direct::public_client;
 #[cfg(test)]
 pub(crate) use direct::test_public_client;
-pub use direct::{PageContent, PageReader, is_fetchable, is_global};
+pub use direct::{MAX_BODY_BYTES, PageContent, PageReader, is_fetchable, is_global};
 
 use std::sync::Arc;
 
