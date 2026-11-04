@@ -3,6 +3,20 @@
 
 このファイルの形式は [Keep a Changelog](https://keepachangelog.com/ja/1.1.0/) に従います。バージョニング方針は本文末尾の「セマンティックバージョニング」を参照してください。
 
+## [0.28.0](https://github.com/sahenjp/RustXNG/compare/v0.27.1...v0.28.0) (2026-11-04)
+
+
+### Features
+
+* add DeepSeek search and fetch backends ([#97](https://github.com/sahenjp/RustXNG/issues/97)) ([a2628a1](https://github.com/sahenjp/RustXNG/commit/a2628a1d0edcd3597fade6a7ec820c2fa1f93877))
+* read PDF and JavaScript page content ([#91](https://github.com/sahenjp/RustXNG/issues/91)) ([4c58b7e](https://github.com/sahenjp/RustXNG/commit/4c58b7e9dcb1474b9f59554410b35e676306e430))
+* switchable standard/full/clean profiles, own crawl and faster merge ([#96](https://github.com/sahenjp/RustXNG/issues/96)) ([b90b2a4](https://github.com/sahenjp/RustXNG/commit/b90b2a4b3134c367cda38dd9c04a5d4893153884))
+
+
+### Bug Fixes
+
+* **content:** keep line breaks and &lt;pre&gt; indentation in page text ([#93](https://github.com/sahenjp/RustXNG/issues/93)) ([aea9a9d](https://github.com/sahenjp/RustXNG/commit/aea9a9d5631898dc954e4ceb6c8be3b70e9e5b63))
+
 ## [0.27.1](https://github.com/sahenjp/RustXNG/compare/v0.27.0...v0.27.1) (2026-11-03)
 
 

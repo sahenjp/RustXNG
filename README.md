@@ -186,7 +186,7 @@ Example for Linux x86_64, using the GitHub CLI and a user-owned install director
 ```bash
 set -eu
 mkdir -p rustxng-download && cd rustxng-download
-tag=v0.27.1
+tag=v0.28.0
 asset="rustxng-${tag}-x86_64-unknown-linux-musl"
 gh release download "$tag" --repo sahenjp/RustXNG \
   --pattern "${asset}*" --pattern LICENSE --pattern NOTICE
@@ -206,7 +206,7 @@ Use a current stable Rust toolchain and a C build toolchain:
 
 <!-- x-release-please-start-version -->
 ```bash
-cargo install --git https://github.com/sahenjp/RustXNG.git --tag v0.27.1 --locked
+cargo install --git https://github.com/sahenjp/RustXNG.git --tag v0.28.0 --locked
 ```
 <!-- x-release-please-end -->
 

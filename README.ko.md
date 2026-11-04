@@ -138,7 +138,7 @@ GitHub CLI와 사용자 소유 설치 디렉터리를 쓰는 Linux x86_64 예시
 ```bash
 set -eu
 mkdir -p rustxng-download && cd rustxng-download
-tag=v0.27.1
+tag=v0.28.0
 asset="rustxng-${tag}-x86_64-unknown-linux-musl"
 gh release download "$tag" --repo sahenjp/RustXNG \
   --pattern "${asset}*" --pattern LICENSE --pattern NOTICE
@@ -158,7 +158,7 @@ cp LICENSE NOTICE "$HOME/.local/share/rustxng/"
 
 <!-- x-release-please-start-version -->
 ```bash
-cargo install --git https://github.com/sahenjp/RustXNG.git --tag v0.27.1 --locked
+cargo install --git https://github.com/sahenjp/RustXNG.git --tag v0.28.0 --locked
 ```
 <!-- x-release-please-end -->
 
