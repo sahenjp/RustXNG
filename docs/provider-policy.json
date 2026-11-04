@@ -21,6 +21,13 @@
       "terms_url": "https://www.microsoft.com/ja-jp/servicesagreement",
       "status": "scope_review_required",
       "decision": "review_applicable_permissions_and_reuse_scope"
+    },
+    "deepseek": {
+      "request_url": "https://api.deepseek.com/v1/tools/search",
+      "access_method": "JSON API with bearer token",
+      "terms_url": "https://api-docs.deepseek.com/guides/search",
+      "status": "api_key_required",
+      "decision": "disabled_by_default_requires_api_key"
     }
   }
 }

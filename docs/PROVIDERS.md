@@ -73,9 +73,15 @@ Hacker News（Algolia）と Europe PMC も、自動利用についての規定�
 
 比較は `docs/COMPARISON-2026-11-04.md` を参照してください。
 
+## DeepSeek Search / Fetch API
+
+`deepseek` エンジンは DeepSeek の Search API を検索先として使います。APIキーが必要で、既定では無効です。Search と Fetch は成功したリクエストごとに課金され、それぞれ QPS の上限があります。料金・上限・データの扱いは [DeepSeek の検索ガイド](https://api-docs.deepseek.com/guides/search)で確認してください。
+
+本文取得を DeepSeek Fetch API に切り替える場合は、`settings.toml` の `[fetch]` で `provider = "deepseek"` を指定します。この場合、`read_page` と `include_raw_content` が取得対象の URL を DeepSeek へ送信します。既定の `direct` は、宛先をローカルで検証する従来の取得のままです。
+
 ## 全設定エントリの台帳
 
-[機械可読CSV](providers.csv)は同梱設定の全270エントリを列挙します。[確認済み情報](provider-policy.json)から、
+[機械可読CSV](providers.csv)は同梱設定の全271エントリを列挙します。[確認済み情報](provider-policy.json)から、
 接続方式・規約URL・確認日・判断を載せます。それ以外は `unreviewed` とし、許可済みとはみなしません。
 この台帳を作成したことは、全プロバイダーの利用条件の確認完了を意味しません。
 
