@@ -39,10 +39,10 @@ struct Fixture {
 /// returns pages on `example.com:PORT`, pages that redirect to loopback, a
 /// literal loopback URL and an oversized page.
 async fn connect() -> Fixture {
-    connect_with_page(PAGE).await
+    connect_with_page(PAGE.to_string()).await
 }
 
-async fn connect_with_page(page: &'static str) -> Fixture {
+async fn connect_with_page(page: String) -> Fixture {
     let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
     let port = listener.local_addr().unwrap().port();
     let origin = format!("http://example.com:{port}");
@@ -69,6 +69,7 @@ async fn connect_with_page(page: &'static str) -> Fixture {
     ])
     .to_string();
     let counter = page_fetches.clone();
+    let book = page.clone();
     let app =
         Router::new()
             .route(
@@ -79,6 +80,7 @@ async fn connect_with_page(page: &'static str) -> Fixture {
                 "/rust",
                 get(move || {
                     counter.fetch_add(1, Ordering::SeqCst);
+                    let page = page.clone();
                     async move { ([(header::CONTENT_TYPE, "text/html")], page) }
                 }),
             )
@@ -93,7 +95,10 @@ async fn connect_with_page(page: &'static str) -> Fixture {
             )
             .route(
                 "/rust-book",
-                get(move || async move { ([(header::CONTENT_TYPE, "text/html")], page) }),
+                get(move || {
+                    let book = book.clone();
+                    async move { ([(header::CONTENT_TYPE, "text/html")], book) }
+                }),
             )
             .route(
                 "/to-loopback",
@@ -288,7 +293,8 @@ async fn read_page_pages_through_a_returned_url_by_character() {
 async fn read_page_selects_cjk_passages_within_the_requested_slice() {
     let Fixture { client, origin, .. } = connect_with_page(
         "<html><body><article>前置きです。猫は眠っています！内存安全吗？\
-         Rust ownership keeps memory safe.猫は起きました。</article></body></html>",
+         Rust ownership keeps memory safe.猫は起きました。</article></body></html>"
+            .to_string(),
     )
     .await;
     call(&client, "search", json!({"query": "rust", "limit": 10})).await;
@@ -332,9 +338,66 @@ async fn read_page_selects_cjk_passages_within_the_requested_slice() {
     client.cancel().await.unwrap();
 }
 
-/// Results are third-party data: a returned URL must not reach private
-/// addresses directly, through a redirect or through a name that resolves
-/// to one, and a huge page is cut at the byte limit, not read whole.
+#[tokio::test]
+async fn read_page_returns_twenty_thousand_japanese_characters_with_larger_budgets() {
+    let text = "日本語の本文。".repeat(3000);
+    let Fixture {
+        client,
+        origin,
+        page_fetches,
+        ..
+    } = connect_with_page(format!("<article>{text}</article>")).await;
+    call(&client, "search", json!({"query": "rust", "limit": 1})).await;
+    let url = format!("{origin}/rust");
+
+    let limited = call(
+        &client,
+        "read_page",
+        json!({"url": url, "max_chars": 20000}),
+    )
+    .await;
+    let limited = structured(&limited);
+    let limited_chars = limited["text"].as_str().unwrap().chars().count();
+    assert!(limited_chars < 8000);
+    assert_eq!(limited["next_offset"], limited_chars);
+    assert_eq!(limited["source_truncated"], false);
+
+    let first = call(
+        &client,
+        "read_page",
+        json!({
+            "url": url,
+            "max_chars": 20000,
+            "max_payload_chars": 64000,
+            "max_payload_bytes": 128000
+        }),
+    )
+    .await;
+    let first = structured(&first);
+    let expected: String = text.chars().take(20000).collect();
+    assert_eq!(first["text"], expected);
+    assert_eq!(first["next_offset"], 20000);
+    assert_eq!(first["truncated"], true);
+    assert_eq!(first["source_truncated"], false);
+    let payload = serde_json::to_string(first).unwrap();
+    assert!(payload.chars().count() <= 64000);
+    assert!(payload.len() <= 128000);
+
+    let next = call(
+        &client,
+        "read_page",
+        json!({"url": url, "offset": first["next_offset"]}),
+    )
+    .await;
+    let next = structured(&next);
+    assert_eq!(next["text"], text.chars().skip(20000).collect::<String>());
+    assert!(next.get("next_offset").is_none());
+    assert_eq!(next["truncated"], false);
+    assert_eq!(next["source_truncated"], false);
+    assert_eq!(page_fetches.load(Ordering::SeqCst), 1);
+    client.cancel().await.unwrap();
+}
+
 #[tokio::test]
 async fn read_page_respects_robots_txt() {
     let Fixture {
@@ -362,6 +425,9 @@ async fn read_page_respects_robots_txt() {
     client.cancel().await.unwrap();
 }
 
+/// Results are third-party data: a returned URL must not reach private
+/// addresses directly, through a redirect or through a name that resolves
+/// to one, and a huge page is cut at the byte limit, not read whole.
 #[tokio::test]
 async fn read_page_only_reaches_public_addresses_and_bounds_downloads() {
     let Fixture {
@@ -461,14 +527,17 @@ fn the_binary_serves_mcp_on_stdio() {
         .stderr(Stdio::piped())
         .spawn()
         .expect("start rustxng mcp");
-    // Drain the debug logs so a full stderr pipe cannot block the server.
-    let mut stderr = child.stderr.take().unwrap();
-    let logs = std::thread::spawn(move || {
-        let mut sink = Vec::new();
-        std::io::Read::read_to_end(&mut stderr, &mut sink).ok();
-    });
     let mut stdin = child.stdin.take().unwrap();
     let mut stdout = BufReader::new(child.stdout.take().unwrap());
+    // Drain stderr while the test talks to the child: debug logging can exceed
+    // the pipe buffer (a few KiB on some hosts), and an unread pipe would
+    // block the server before it answers on stdout.
+    let mut stderr = child.stderr.take().unwrap();
+    let logs = std::thread::spawn(move || {
+        let mut logs = String::new();
+        std::io::Read::read_to_string(&mut stderr, &mut logs).unwrap();
+        logs
+    });
     let mut send = |message: Value| {
         writeln!(stdin, "{message}").unwrap();
         stdin.flush().unwrap();
@@ -495,6 +564,7 @@ fn the_binary_serves_mcp_on_stdio() {
     assert_eq!(tools.len(), 2);
     drop(stdin);
     let status = child.wait().unwrap();
-    logs.join().unwrap();
-    assert!(status.success(), "exit status {status}");
+    let logs = logs.join().unwrap();
+    assert!(status.success(), "exit status {status}\n{logs}");
+    assert!(!logs.is_empty(), "the debug logs go to stderr");
 }

@@ -381,6 +381,8 @@ pub struct Search {
     pub engine_allowlist: Vec<String>,
     /// Longest page text returned per result by include_raw_content.
     pub raw_content_chars: usize,
+    /// Optional command for JavaScript page rendering.
+    pub page_renderer_command: Vec<String>,
     /// How many extra result pages of the paging engines to merge into the
     /// answer. 0 (the default) only uses page 1; 1 adds page 2, and so on.
     pub deep_pages: u32,
@@ -448,6 +450,7 @@ impl Default for Search {
             official_sites_wait_ms: 400,
             engine_allowlist: Vec::new(),
             raw_content_chars: 8_000,
+            page_renderer_command: Vec::new(),
             deep_pages: 0,
             site_scoped_retry: false,
             authority_weight: 8.0,

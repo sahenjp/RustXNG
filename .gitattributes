@@ -3,3 +3,4 @@
 *.png -text
 *.jpg -text
 *.zip -text
+*.pdf binary
