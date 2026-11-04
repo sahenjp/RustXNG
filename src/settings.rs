@@ -411,6 +411,25 @@ pub struct Search {
     pub local_index_path: String,
     /// Set false to keep the index on disk but out of the ranking.
     pub local_index_merge: bool,
+    /// EXPERIMENTAL: directory of an index built by `rustxng-wikidump` (the
+    /// opening of every Wikipedia article). Empty keeps it off. It is matched
+    /// loosely (one content word is enough, ranking decides) and merged like
+    /// any other source; it follows `local_index_merge`.
+    pub wikipedia_index_path: String,
+    /// Add the official website (Wikidata P856) of the top Wikipedia articles
+    /// a general search found. One request to the Wikidata Query Service.
+    pub official_sites: bool,
+    /// Weight of those official-site results in the merge.
+    pub official_sites_weight: f64,
+    /// How long the merge waits for that lookup once the engines are done,
+    /// in milliseconds. The Query Service usually answers in about half a
+    /// second but sometimes takes seconds; a later answer is dropped.
+    pub official_sites_wait_ms: u64,
+    /// When not empty, only engines named here (display name or engine id,
+    /// case-insensitive) are enabled and every other entry is off. An engine
+    /// listed here runs even if it ships disabled. This is how a reviewed,
+    /// "clean" provider set is pinned (see `settings.clean.toml`).
+    pub engine_allowlist: Vec<String>,
     /// Longest page text returned per result by include_raw_content.
     pub raw_content_chars: usize,
     /// Optional command for JavaScript page rendering.
@@ -476,6 +495,11 @@ impl Default for Search {
             embedding_model: "BAAI/bge-small-en-v1.5".into(),
             local_index_path: String::new(),
             local_index_merge: true,
+            wikipedia_index_path: String::new(),
+            official_sites: true,
+            official_sites_weight: 1.0,
+            official_sites_wait_ms: 400,
+            engine_allowlist: Vec::new(),
             raw_content_chars: 8_000,
             page_renderer_command: Vec::new(),
             deep_pages: 0,
@@ -530,6 +554,19 @@ pub struct Outgoing {
     pub keepalive_expiry: f64,
     pub proxies: BTreeMap<String, String>,
     pub using_tor_proxy: bool,
+    /// Announce ourselves honestly: every upstream request carries the fixed
+    /// `rustxng/<version> (+repo; contact)` User-Agent instead of a rotating
+    /// browser look-alike. API providers (Wikimedia, crates.io, Crossref, ...)
+    /// ask for an identifiable client with a contact.
+    pub identified_ua: bool,
+    /// Contact (mail address or URL) added to the identified User-Agent.
+    pub contact: String,
+    /// Minimum pause between two requests to the same host, in milliseconds.
+    /// 0 disables it. API etiquette is often "at most one request a second".
+    pub host_spacing_ms: u64,
+    /// Per-host exceptions to `host_spacing_ms`, keyed by host or domain
+    /// (`"wikipedia.org"` covers every edition). The most specific key wins.
+    pub host_spacing_overrides: BTreeMap<String, u64>,
 }
 
 impl Default for Outgoing {
@@ -548,6 +585,10 @@ impl Default for Outgoing {
             keepalive_expiry: 5.0,
             proxies: BTreeMap::new(),
             using_tor_proxy: false,
+            identified_ua: false,
+            contact: String::new(),
+            host_spacing_ms: 0,
+            host_spacing_overrides: BTreeMap::new(),
         }
     }
 }
@@ -591,7 +632,9 @@ pub struct Plugins {
 pub struct EngineConfig {
     /// Display name, used by bangs and preferences.
     pub name: String,
-    /// Engine implementation id (`searx/engines/<engine>.py` upstream).
+    /// Engine implementation id (`searx/engines/<engine>.py` upstream). May
+    /// be left out of a user entry that overrides a default engine by name.
+    #[serde(default)]
     pub engine: String,
     #[serde(default)]
     pub shortcut: Option<String>,
@@ -806,6 +849,17 @@ impl Settings {
     /// Load settings from `path`, merged onto the built-in defaults, then apply
     /// the `SEARXNG_*` environment overrides.
     pub fn load(path: Option<&Path>) -> Result<Settings, SettingsError> {
+        Self::load_profile(path, Profile::Standard)
+    }
+
+    /// Load settings for a profile: the built-in defaults, then the profile's
+    /// overlay (built into the binary), then the file at `path`, then the
+    /// `SEARXNG_*` environment overrides. A later layer wins.
+    pub fn load_profile(path: Option<&Path>, profile: Profile) -> Result<Settings, SettingsError> {
+        let overlay = profile
+            .overlay()
+            .map(|text| toml::from_str::<toml::Value>(text).map_err(SettingsError::Parse))
+            .transpose()?;
         let mut settings = match path {
             Some(path) => {
                 let raw = std::fs::read_to_string(path).map_err(|source| SettingsError::Read {
@@ -818,6 +872,10 @@ impl Settings {
                     Some("yml" | "yaml")
                 );
                 let user = Self::user_value(&raw, is_yaml)?;
+                let user = match overlay {
+                    Some(overlay) => layer(overlay, user),
+                    None => user,
+                };
                 Self::merge_values(Self::defaults_value(), user).map_err(|error| {
                     // The merged deserialize works on values without spans, so a
                     // TOML type error loses its line and column. Re-parsing the
@@ -837,7 +895,10 @@ impl Settings {
                     error
                 })?
             }
-            None => Settings::defaults(),
+            None => match overlay {
+                Some(overlay) => Self::merge_values(Self::defaults_value(), overlay)?,
+                None => Settings::defaults(),
+            },
         };
         settings.apply_env();
         settings.validate()?;
@@ -919,6 +980,16 @@ impl Settings {
 
     /// Validate the settings the way upstream does before starting.
     pub fn validate(&self) -> Result<(), SettingsError> {
+        if let Some(engine) = self
+            .engines
+            .iter()
+            .find(|engine| engine.engine.trim().is_empty())
+        {
+            return Err(SettingsError::Validation(format!(
+                "engine {:?} needs `engine` (only entries that override a default engine by name may leave it out)",
+                engine.name
+            )));
+        }
         if self.server.port == 0 {
             return Err(SettingsError::Validation(
                 "server.port must not be 0".into(),
@@ -1009,9 +1080,22 @@ impl Settings {
 
     /// Engines that are enabled by default, in config order.
     pub fn enabled_engines(&self) -> impl Iterator<Item = &EngineConfig> {
-        self.engines
+        let allowlist: Vec<String> = self
+            .search
+            .engine_allowlist
             .iter()
-            .filter(|engine| engine.disabled != Some(true) && !engine.inactive)
+            .map(|name| name.trim().to_lowercase())
+            .collect();
+        self.engines.iter().filter(move |engine| {
+            if engine.inactive {
+                return false;
+            }
+            if allowlist.is_empty() {
+                return engine.disabled != Some(true);
+            }
+            allowlist.contains(&engine.name.to_lowercase())
+                || allowlist.contains(&engine.engine.to_lowercase())
+        })
     }
 
     pub fn engine(&self, name: &str) -> Option<&EngineConfig> {
@@ -1038,6 +1122,78 @@ impl Settings {
 
 /// Take the `engines` array out of a raw document. Engine lists merge by name
 /// on the typed form, never by value.
+/// A set of built-in settings to start from (`--profile`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum Profile {
+    /// `settings.toml`: keyless providers that do not refuse automated use.
+    #[default]
+    Standard,
+    /// `settings.full.toml`: the standard set plus HTML search engines whose
+    /// terms prohibit or do not permit automated access. Private use only.
+    Full,
+    /// `settings.clean.toml`: documented public APIs and our own crawl only.
+    Clean,
+}
+
+impl Profile {
+    pub const NAMES: &'static str = "standard, full, clean";
+
+    /// Parse a profile name (`default` and `normal` mean `standard`).
+    pub fn parse(name: &str) -> Result<Profile, String> {
+        match name.trim().to_ascii_lowercase().as_str() {
+            "standard" | "default" | "normal" => Ok(Profile::Standard),
+            "full" => Ok(Profile::Full),
+            "clean" => Ok(Profile::Clean),
+            other => Err(format!(
+                "unknown profile {other:?} (choose one of: {})",
+                Profile::NAMES
+            )),
+        }
+    }
+
+    /// The profile named by `RUSTXNG_PROFILE`, if set.
+    pub fn from_env() -> Result<Option<Profile>, String> {
+        match std::env::var("RUSTXNG_PROFILE") {
+            Ok(value) if !value.trim().is_empty() => Profile::parse(&value).map(Some),
+            _ => Ok(None),
+        }
+    }
+
+    pub fn name(self) -> &'static str {
+        match self {
+            Profile::Standard => "standard",
+            Profile::Full => "full",
+            Profile::Clean => "clean",
+        }
+    }
+
+    /// The settings this profile lays over the defaults.
+    fn overlay(self) -> Option<&'static str> {
+        match self {
+            Profile::Standard => None,
+            Profile::Full => Some(include_str!("../settings.full.toml")),
+            Profile::Clean => Some(include_str!("../settings.clean.toml")),
+        }
+    }
+}
+
+/// Lay `user` over `profile`: tables merge key by key and the engine lists
+/// are concatenated, so a user entry still overrides the profile's by name.
+fn layer(mut profile: toml::Value, mut user: toml::Value) -> toml::Value {
+    let engines = match (strip_engines(&mut profile), strip_engines(&mut user)) {
+        (Some(toml::Value::Array(mut first)), Some(toml::Value::Array(second))) => {
+            first.extend(second);
+            Some(toml::Value::Array(first))
+        }
+        (first, second) => second.or(first),
+    };
+    let mut merged = deep_merge(profile, user);
+    if let (Some(engines), toml::Value::Table(table)) = (engines, &mut merged) {
+        table.insert("engines".into(), engines);
+    }
+    merged
+}
+
 fn strip_engines(value: &mut toml::Value) -> Option<toml::Value> {
     match value {
         toml::Value::Table(table) => table.remove("engines"),
@@ -1448,6 +1604,29 @@ shortcut = "only"
     }
 
     #[test]
+    fn an_allowlist_enables_exactly_the_named_engines() {
+        let settings = merged_toml(
+            r#"
+[search]
+engine_allowlist = ["Wikipedia", "crates", "mojeek"]
+"#,
+        );
+        let names: Vec<&str> = settings
+            .enabled_engines()
+            .map(|engine| engine.name.as_str())
+            .collect();
+        assert!(names.contains(&"wikipedia"), "{names:?}");
+        // Matched by engine id too, and an allowed engine runs even if it
+        // ships disabled.
+        assert!(names.contains(&"crates.io"), "{names:?}");
+        assert!(names.contains(&"mojeek"), "{names:?}");
+        assert!(!names.contains(&"duckduckgo"), "{names:?}");
+        assert_eq!(names.len(), 3, "{names:?}");
+        // No allowlist keeps the shipped behaviour.
+        assert!(Settings::defaults().enabled_engines().count() > 100);
+    }
+
+    #[test]
     fn a_user_engine_entry_can_set_its_own_proxy() {
         let settings = merged_toml(
             r#"
@@ -1559,6 +1738,73 @@ engines:
         let duckduckgo = settings.engine("duckduckgo").expect("duckduckgo kept");
         assert_eq!(duckduckgo.disabled, Some(true));
         assert!(settings.engine("my instance").is_some());
+    }
+
+    #[test]
+    fn profiles_switch_the_provider_set() {
+        let standard = Settings::load_profile(None, Profile::Standard).unwrap();
+        let full = Settings::load_profile(None, Profile::Full).unwrap();
+        let clean = Settings::load_profile(None, Profile::Clean).unwrap();
+        let enabled = |settings: &Settings, name: &str| {
+            settings.enabled_engines().any(|engine| engine.name == name)
+        };
+        assert!(!enabled(&standard, "yahoo japan"));
+        assert!(enabled(&full, "yahoo japan"));
+        assert!(enabled(&full, "wikipedia"));
+        assert!(!enabled(&clean, "bing"));
+        assert!(enabled(&clean, "wikipedia"));
+        assert_eq!(clean.outgoing.host_spacing_ms, 1100);
+        assert_eq!(Profile::parse("normal"), Ok(Profile::Standard));
+        assert!(Profile::parse("everything").is_err());
+    }
+
+    #[test]
+    fn a_settings_file_is_laid_over_the_profile() {
+        let dir = std::env::temp_dir().join(format!("rustxng-profile-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let path = dir.join("settings.toml");
+        std::fs::write(
+            &path,
+            "[server]\nport = 19999\n[[engines]]\nname = \"yahoo japan\"\ndisabled = true\n",
+        )
+        .unwrap();
+        let settings = Settings::load_profile(Some(&path), Profile::Full).unwrap();
+        std::fs::remove_dir_all(&dir).ok();
+        assert_eq!(settings.server.port, 19999);
+        assert_eq!(settings.general.instance_name, "RustXNG (full)");
+        assert!(
+            !settings
+                .enabled_engines()
+                .any(|engine| engine.name == "yahoo japan")
+        );
+        assert!(
+            settings
+                .enabled_engines()
+                .any(|engine| engine.name == "yahoo")
+        );
+    }
+
+    #[test]
+    fn an_override_by_name_needs_no_engine_id() {
+        let settings = merged_toml(
+            r#"
+            [[engines]]
+            name = "yahoo"
+            disabled = false
+            "#,
+        );
+        let yahoo = settings.engine("yahoo").expect("yahoo kept");
+        assert_eq!(yahoo.disabled, Some(false));
+        assert_eq!(yahoo.engine, "yahoo");
+        assert!(settings.validate().is_ok());
+
+        let unknown = merged_toml(
+            r#"
+            [[engines]]
+            name = "no such engine"
+            "#,
+        );
+        assert!(unknown.validate().is_err());
     }
 
     #[test]

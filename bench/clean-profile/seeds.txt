@@ -1,0 +1,20 @@
+# General documentation and reference sites for the clean profile's own crawl.
+# Chosen as broad, well-known open documentation: NOT derived from any
+# benchmark's reference URLs. The crawler still checks robots.txt on every
+# host and skips what it forbids.
+https://docs.python.org/3/
+https://doc.rust-lang.org/book/
+https://doc.rust-lang.org/std/
+https://developer.mozilla.org/en-US/docs/Web
+https://go.dev/doc/
+https://nodejs.org/docs/latest/api/
+https://www.postgresql.org/docs/current/
+https://docs.docker.com/
+https://kubernetes.io/docs/
+https://www.sqlite.org/docs.html
+https://git-scm.com/docs
+https://www.kernel.org/doc/html/latest/
+https://docs.djangoproject.com/en/stable/
+https://numpy.org/doc/stable/
+https://pandas.pydata.org/docs/
+https://www.gsi.go.jp/

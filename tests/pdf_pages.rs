@@ -16,6 +16,10 @@ async fn pdf_pages_preserve_japanese_text_limits_and_cached_reads() {
     let app = Router::new().fallback(get(move |uri: Uri| {
         let count = count.clone();
         async move {
+            // Page fetches only: the reader also asks for robots.txt once.
+            if uri.path() == "/robots.txt" {
+                return Response::builder().status(404).body(Body::empty()).unwrap();
+            }
             count.fetch_add(1, Ordering::SeqCst);
             let content_type = match uri.path() {
                 "/pdf" | "/oversized" | "/not-pdf" => Some("application/pdf; charset=binary"),

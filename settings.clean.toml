@@ -1,0 +1,54 @@
+# RustXNG "clean" profile.
+#
+# Only providers whose operator publishes an API and usage policy are enabled,
+# plus our own crawl (the local index). Every other entry in settings.toml is
+# off, including all HTML-scraped web search engines whose terms are
+# unreviewed or restrictive (see docs/PROVIDERS.md and
+# docs/CLEAN-PROFILE.md).
+#
+#   rustxng --profile clean         (built into the binary)
+#   rustxng --config settings.clean.toml
+#
+# "Clean" here means: a documented API, an identifiable client and a request
+# rate that stays inside the published etiquette. It is NOT a legal opinion and
+# does not replace reading each provider's terms for your own use.
+
+[general]
+instance_name = "RustXNG (clean)"
+
+[search]
+# Names only (never engine ids: `mediawiki` is shared with unreviewed wikis).
+engine_allowlist = [
+  # Wikimedia APIs (descriptive User-Agent with contact, rate limits apply)
+  "wikipedia", "wikipedia any words", "wikidata", "wikibooks", "wikinews", "wikiquote", "wikisource",
+  "wikispecies", "wikiversity", "wikivoyage", "wiktionary", "wikicommons",
+  # Developer registries and code hosting with documented public APIs
+  "github", "stack overflow", "crates.io", "npm", "pypi",
+  # Scholarly APIs
+  "arxiv", "crossref", "semantic scholar", "openalex",
+  # Open data
+  "openstreetmap", "openverse",
+]
+# Autocomplete would send every keystroke to a scraped endpoint.
+autocomplete = ""
+# Our own crawl is the independent part of the profile (robots.txt-compliant,
+# built with `rustxng-index crawl`). Point this at the directory you crawled.
+local_index_path = "index-docs"
+wikipedia_index_path = "index-wikipedia"
+local_index_merge = true
+# Without a web search engine, the official site from Wikidata is often the
+# only way to the entity's own pages: wait longer for it than the default.
+official_sites_wait_ms = 1500
+
+[outgoing]
+# A fixed, honest User-Agent: rustxng/<version> (+repo; contact).
+identified_ua = true
+# Put a mail address or URL where the providers can reach you.
+contact = ""
+# crates.io and others ask for at most one request per second per host.
+host_spacing_ms = 1100
+
+# Wikimedia sets no fixed limit for API reads (mediawiki.org API:Etiquette);
+# the three Wikipedia searches of one query should not wait a second each.
+[outgoing.host_spacing_overrides]
+"wikipedia.org" = 200

@@ -18,6 +18,61 @@ Yahoo! JAPANとMojeekのアダプターは残します。利用者が明示的�
 既存のユーザー設定が `disabled = false` を明示していれば、その指定は引き続き優先されます。
 既存の有効化設定も見直してください。プロキシ・UA変更やCAPTCHA回避を、利用条件の問題の解決策として扱いません。
 
+## 2026-11-03の追加変更（監査 `RustXNG_全270プロバイダー規約・性能監査` への対応）
+
+| 変更 | 内容 |
+| --- | --- |
+| NAVER・Keenable・Swisscows を既定無効 | NAVER は公表規約との整合が未確認。Keenable は API キーがなくても公開エンドポイントを呼ぶ。Swisscows は署名付きエンドポイントの第三者利用が未確認。有効化する場合は先に許可・条件を確認してください |
+| API 提供元には識別できる User-Agent を送る | Wikimedia 系、GitHub、crates.io、PyPI、npm、Crossref、OpenAlex、Semantic Scholar、StackExchange、arXiv、Openverse、OSM（Nominatim・Photon）、Open-Meteo 宛ての通信は、ブラウザ風のローテーションではなく `rustxng/<版> (+https://github.com/sahenjp/RustXNG[; 連絡先])` を使う。連絡先は `[outgoing] contact` |
+| `read_page` / 生本文取得 | 識別できる User-Agent を使い、robots.txt（RFC 9309）に従う。robots.txt に到達できない場合のみ、利用者が求めたページは取得を続ける |
+| カテゴリ指定の誤り 22 件を修正 | `categories = ["g","e","n",...]` のように 1 文字ずつの配列になっていた。20 件は設定上有効だったが、実際にはどのカテゴリにも属していなかった。**修正後も、これまで一度も動いていないことを踏まえて 20 件とも既定無効にした**（有効化は各プロバイダーの確認後） |
+| 比較表現の修正 | `settings.toml` のコメントから他社サービスとの優劣を示す記述を除いた |
+| クリーン構成 | 確認済み API と自前クロールだけの `settings.clean.toml` を追加（`docs/CLEAN-PROFILE.md`） |
+
+プロキシ・UA 変更や CAPTCHA 回避を、利用条件の問題の解決策として扱わない方針は変わりません。
+
+## 2026-11-04の既定設定の変更（通常構成の強化）
+
+既定の設定で 10 問を流し、各エンジンの応答を確認しました。そのうえで次のとおり変更しました。どれも API キーは不要です。
+
+| 変更 | 対象 | 理由 |
+| --- | --- | --- |
+| 既定無効 | 米 Yahoo | [Yahoo 利用規約 2.4(9)](https://legal.yahoo.com/us/en/yahoo/terms/otos/index.html) は、事前の明示的な許可のない自動手段（ロボット・スクレイパー等）によるデータ取得を禁止 |
+| 既定無効 | Brave、DuckDuckGo（2 件）、Yandex、Qwant、Dogpile、AndiSearch、Findborg、Fireball、NeoSearch、TuskSearch、searchmysite、Quark | 最初の問い合わせから CAPTCHA・アクセス拒否・429 を返した。サイト側が自動アクセスを拒んでいるので、送り続けない。結果も返らない |
+| 既定無効 | Erowid、Luxxle、Sogou、Yep、Neocities | すべての問い合わせで失敗し、毎回タイムアウトまで検索を待たせていた |
+| 既定無効 | Grokipedia | 技術文書 100 問・SealQA 254 問のどちらでも正解を 1 件も返さず、上位の枠だけを使っていた |
+| 一般検索から外す | Wikibooks・Wikiquote・Wikisource・Wikispecies・Wikiversity・Wikivoyage | 一般検索の正解を 1 件も返さず、上位 10 件の枠を使っていた。上流の SearXNG でも既定無効。bang（`!wb` など）と `wikimedia` カテゴリでは引き続き使える |
+| 自動補完 | DuckDuckGo → Wikipedia（opensearch API） | DuckDuckGo はボットに CAPTCHA を返す。Wikipedia は公開 API |
+| Wikipedia ダンプの索引 | `wikipedia_index_path = "index-wikipedia"` | 外部への問い合わせは増えない。ディレクトリが無ければ使わない（`docs/WIKIPEDIA-INDEX.md`） |
+| Mwmbl | v1 → 公式 v2 API | [Mwmbl API 規約](https://developer.mwmbl.org/terms/)は、キーなしの匿名利用（1 req/s・月 1,000 回）と商用利用を認める。結果は CC BY-NC-SA 4.0。キーがあれば `api_key` で枠が増える |
+| ローカル索引の検索 | 締め切りで打ち切る | 索引の読み込みが遅いとき、検索全体を止めない |
+| 自前の文書索引 | `local_index_path = "index-docs"` | 自前クローラーで作る（`docs/LOCAL-INDEX.md`）。ディレクトリが無ければ使わない |
+| 公式サイトの補完 | Wikidata Query Service | 見つかった Wikipedia 記事の公式サイト・リポジトリ・arXiv を 1 回の SPARQL で引く（`src/official.rs`） |
+
+Seznam と Bing は有効のまま残しました。Seznam は公開ページに自動問い合わせの規定が見つかりませんでした。Bing は上の表のとおり確認を続けています。どちらも許諾を確認したわけではありません。
+
+Hacker News（Algolia）と Europe PMC も、自動利用についての規定を確認できませんでした。HN の API ページは規約を載せておらず、Europe PMC の規約ページは 403 を返しました。EMBL-EBI の一般規約は、他の利用者を妨げない範囲での利用を認めています。
+
+**測定**（SealQA 254 問、URL 完全一致、直列 2 秒間隔、1 回、自前索引あり）: hit@1 70、hit@5 116、**hit@10 132（52.0%）**、MRR@10 0.352、エラー 0、中央値 1.4 s。
+クリーン構成は hit@10 123、フル構成（`settings.full.toml`）は 165 です。技術文書 100 問と Exa・Tavily との比較は `docs/COMPARISON-2026-11-04.md` を参照してください。旧監査で、保存済みの結果から Swisscows と Yahoo! JAPAN を除いて試算した値は hit@10 57 でした（新しい検索ではないため、直接は比べられません）。
+正解が Wikipedia 以外の 58 問で取れたのは 2 問です。
+
+## 規約を確認しない構成（`settings.full.toml`）
+
+既定の設定に、規約上の理由で既定無効にしている HTML 検索を足した構成です。自分専用のインスタンスで、各提供元の規約を自分で確認したうえで使うためのものです。公開インスタンスには使わないでください。
+
+| 有効にするもの | 既定で無効にしている理由 |
+| --- | --- |
+| Yahoo（米国） | 利用規約 2.4(9) が許可のない自動アクセスを禁止 |
+| Yahoo! JAPAN | 公式ヘルプが、インデックス作成目的のクロール等の例外を除きスクレイピングを禁止 |
+| NAVER | 公表規約との整合が未確認 |
+| Keenable | API キーなしで公開エンドポイントを呼ぶ |
+| fynd | 規約未確認 |
+
+2026-11-04 に、既定で無効の一般検索 58 件を 1 件ずつ 5 問で試しました。上の 5 件のほかに結果を返したのは reloado（数分で 429）、ayo・Quark（たびたびタイムアウト）、bing Japan（Bing と同じ結果）です。どれも速度か重複の理由で入れていません。DuckDuckGo、Brave、Mojeek、Qwant、Yandex などは最初の問い合わせから CAPTCHA・アクセス拒否・429 を返すので、この構成でも無効のままです。**RustXNG はこうした拒否を回避しません**（UA の偽装・CAPTCHA の突破・プロキシの切り替えはしません）。
+
+比較は `docs/COMPARISON-2026-11-04.md` を参照してください。
+
 ## DeepSeek Search / Fetch API
 
 `deepseek` エンジンは DeepSeek の Search API を検索先として使います。APIキーが必要で、既定では無効です。Search と Fetch は成功したリクエストごとに課金され、それぞれ QPS の上限があります。料金・上限・データの扱いは [DeepSeek の検索ガイド](https://api-docs.deepseek.com/guides/search)で確認してください。

@@ -1,10 +1,12 @@
 name,module,disabled_in_config,inactive_in_config,enabled_in_config,source,configured_endpoint,source_url_literals_unverified,reviewed_request_url,access_method,terms_url,review_status,review_date,decision
-duckduckgo,duckduckgo,false,false,true,src/engines/duckduckgo.rs,,https://duckduckgo.com/ | https://html.duckduckgo.com | https://html.duckduckgo.com/ | https://html.duckduckgo.com/html/,,unreviewed,,unreviewed,,provider_review_needed
+duckduckgo,duckduckgo,true,false,false,src/engines/duckduckgo.rs,,https://duckduckgo.com/ | https://html.duckduckgo.com | https://html.duckduckgo.com/ | https://html.duckduckgo.com/html/,,unreviewed,,unreviewed,,provider_review_needed
 bing,bing,false,false,true,src/engines/bing.rs,,https://www.bing.com/ | https://www.bing.com/search,https://www.bing.com/search,HTML,https://www.microsoft.com/ja-jp/servicesagreement,scope_review_required,2026-11-03,review_applicable_permissions_and_reuse_scope
-brave,brave,false,false,true,src/engines/brave.rs,,https://search.brave.com/ | https://search.brave.com/search,,unreviewed,,unreviewed,,provider_review_needed
+brave,brave,true,false,false,src/engines/brave.rs,,https://search.brave.com/ | https://search.brave.com/search,,unreviewed,,unreviewed,,provider_review_needed
 mojeek,mojeek,true,false,false,src/engines/mojeek.rs,,https://www.mojeek.com/ | https://www.mojeek.com/search,https://www.mojeek.com/search,HTML,https://www.mojeek.com/about/terms.html,restricted_html,2026-11-03,disabled_by_default_pending_permission
-mwmbl,mwmbl,false,false,true,src/engines/mwmbl.rs,,https://api.mwmbl.org/api/v1,,unreviewed,,unreviewed,,provider_review_needed
+mwmbl,mwmbl,false,false,true,src/engines/mwmbl.rs,,https://api.mwmbl.org/api/v2 | https://developer.mwmbl.org/terms/,,unreviewed,,unreviewed,,provider_review_needed
 wikipedia,wikipedia,false,false,true,src/engines/wikipedia.rs,,https://{language}.wikipedia.org,,unreviewed,,unreviewed,,provider_review_needed
+wikipedia entities,wikipedia_entities,false,false,true,src/engines/mod.rs (locate registration),,,,unreviewed,,unreviewed,,provider_review_needed
+wikipedia any words,wikipedia_any,false,false,true,src/engines/mod.rs (locate registration),,,,unreviewed,,unreviewed,,provider_review_needed
 wikidata,wikidata,false,false,true,src/engines/wikidata.rs,,https://www.wikidata.org/w/api.php | https://www.wikidata.org/wiki/{id},,unreviewed,,unreviewed,,provider_review_needed
 hackernews,hackernews,false,false,true,src/engines/hackernews.rs,,https://hn.algolia.com/api/v1 | https://news.ycombinator.com/item?id={object_id},,unreviewed,,unreviewed,,provider_review_needed
 github,github,false,false,true,src/engines/github.rs,,https://api.github.com/search/repositories,,unreviewed,,unreviewed,,provider_review_needed
@@ -13,46 +15,46 @@ crates.io,crates,false,false,true,src/engines/crates.rs,,https://crates.io/api/v
 npm,npm,false,false,true,src/engines/npm.rs,,https://api.npms.io/v2/search | https://www.npmjs.com/package/{name},,unreviewed,,unreviewed,,provider_review_needed
 pypi,pypi,false,false,true,src/engines/pypi.rs,,https://pypi.org,,unreviewed,,unreviewed,,provider_review_needed
 docker hub,docker_hub,false,false,true,src/engines/docker_hub.rs,,https://hub.docker.com,,unreviewed,,unreviewed,,provider_review_needed
-arxiv,arxiv,false,false,true,src/engines/arxiv.rs,,https://export.arxiv.org/api/query,,unreviewed,,unreviewed,,provider_review_needed
+arxiv,arxiv,false,false,true,src/engines/arxiv.rs,,http://arxiv.org/abs/ | http://arxiv.org/abs/1706.03762v7` | https://arxiv.org/abs/ | https://arxiv.org/abs/1706.03762`: | https://arxiv.org/abs/{paper} | https://export.arxiv.org/api/query,,unreviewed,,unreviewed,,provider_review_needed
 crossref,crossref,false,false,true,src/engines/crossref.rs,,https://api.crossref.org/works,,unreviewed,,unreviewed,,provider_review_needed
 cinii,cinii,false,false,true,src/engines/cinii.rs,,https://cir.nii.ac.jp/opensearch/all | https://doi.org/{doi} | https://support.nii.ac.jp/ja/cir/r_opensearch,,unreviewed,,unreviewed,,provider_review_needed
 semantic scholar,semantic_scholar,false,false,true,src/engines/semantic_scholar.rs,,https://api.semanticscholar.org/graph/v1/paper/search | https://doi.org/{doi} | https://www.semanticscholar.org/paper/{paper_id},,unreviewed,,unreviewed,,provider_review_needed
 openlibrary,openlibrary,true,false,false,src/engines/openlibrary.rs,,https://openlibrary.org/search.json | https://openlibrary.org{key},,unreviewed,,unreviewed,,provider_review_needed
-openstreetmap,openstreetmap,false,false,true,src/engines/openstreetmap.rs,,https://github.com/searxng/searxng) | https://nominatim.openstreetmap.org/search | https://openstreetmap.org/{osm_type}/{osm_id},,unreviewed,,unreviewed,,provider_review_needed
-photon,photon,false,false,true,src/engines/photon.rs,,https://github.com/searxng/searxng) | https://openstreetmap.org/{osm_type}/{osm_id} | https://photon.komoot.io/api/,,unreviewed,,unreviewed,,provider_review_needed
+openstreetmap,openstreetmap,false,false,true,src/engines/openstreetmap.rs,,https://github.com/sahenjp/RustXNG) | https://nominatim.openstreetmap.org/search | https://openstreetmap.org/{osm_type}/{osm_id},,unreviewed,,unreviewed,,provider_review_needed
+photon,photon,false,false,true,src/engines/photon.rs,,https://github.com/sahenjp/RustXNG) | https://openstreetmap.org/{osm_type}/{osm_id} | https://photon.komoot.io/api/,,unreviewed,,unreviewed,,provider_review_needed
 dailymotion,dailymotion,false,false,true,src/engines/dailymotion.rs,,https://api.dailymotion.com/videos | https://www.dailymotion.com/embed/video/{video_id},,unreviewed,,unreviewed,,provider_review_needed
 deezer,deezer,false,false,true,src/engines/deezer.rs,,https://api.deezer.com/search | https://{rest},,unreviewed,,unreviewed,,provider_review_needed
 openverse,openverse,false,false,true,src/engines/openverse.rs,,https://api.openverse.org/v1/images/,,unreviewed,,unreviewed,,provider_review_needed
 wikicommons,wikicommons,false,false,true,src/engines/wikicommons.rs,,https://commons.wikimedia.org/w/api.php,,unreviewed,,unreviewed,,provider_review_needed
 bing news,bing_news,false,false,true,src/engines/bing_news.rs,,https://www.bing.com/news/search,,unreviewed,,unreviewed,,provider_review_needed
-abcnyheter,xpath,false,false,true,src/engines/xpath.rs,https://startsiden.abcnyheter.no/sok/?q={query}&page={pageno},,,unreviewed,,unreviewed,,provider_review_needed
+abcnyheter,xpath,true,false,false,src/engines/xpath.rs,https://startsiden.abcnyheter.no/sok/?q={query}&page={pageno},,,unreviewed,,unreviewed,,provider_review_needed
 anaconda,xpath,true,false,false,src/engines/xpath.rs,https://anaconda.org/search?q={query}&page={pageno},,,unreviewed,,unreviewed,,provider_review_needed
 nixos wiki,mediawiki,false,false,true,src/engines/mediawiki.rs,https://wiki.nixos.org/,,,unreviewed,,unreviewed,,provider_review_needed
 ayo,xpath,true,false,false,src/engines/xpath.rs,https://search.ayo.de/search?q={query},,,unreviewed,,unreviewed,,provider_review_needed
 bitbucket,xpath,false,false,true,src/engines/xpath.rs,https://bitbucket.org/repo/all/{pageno}?name={query},,,unreviewed,,unreviewed,,provider_review_needed
-crowdview,json_engine,false,false,true,src/engines/json_engine.rs,https://crowdview-next-js.onrender.com/api/search-v3?query={query},,,unreviewed,,unreviewed,,provider_review_needed
-encyclosearch,json_engine,false,false,true,src/engines/json_engine.rs,https://encyclosearch.org/encyclosphere/search?q={query}&page={pageno}&resultsPerPage=15,,,unreviewed,,unreviewed,,provider_review_needed
-erowid,xpath,false,false,true,src/engines/xpath.rs,https://www.erowid.org/search.php?q={query}&s={pageno},,,unreviewed,,unreviewed,,provider_review_needed
+crowdview,json_engine,true,false,false,src/engines/json_engine.rs,https://crowdview-next-js.onrender.com/api/search-v3?query={query},,,unreviewed,,unreviewed,,provider_review_needed
+encyclosearch,json_engine,true,false,false,src/engines/json_engine.rs,https://encyclosearch.org/encyclosphere/search?q={query}&page={pageno}&resultsPerPage=15,,,unreviewed,,unreviewed,,provider_review_needed
+erowid,xpath,true,false,false,src/engines/xpath.rs,https://www.erowid.org/search.php?q={query}&s={pageno},,,unreviewed,,unreviewed,,provider_review_needed
 etymonline,xpath,false,false,true,src/engines/xpath.rs,https://etymonline.com/search?page={pageno}&q={query},,,unreviewed,,unreviewed,,provider_review_needed
-fastbot,xpath,false,false,true,src/engines/xpath.rs,https://fastbot.de/search?q={query},,,unreviewed,,unreviewed,,provider_review_needed
+fastbot,xpath,true,false,false,src/engines/xpath.rs,https://fastbot.de/search?q={query},,,unreviewed,,unreviewed,,provider_review_needed
 free software directory,mediawiki,false,false,true,src/engines/mediawiki.rs,https://directory.fsf.org/,,,unreviewed,,unreviewed,,provider_review_needed
-fynd,xpath,false,false,true,src/engines/xpath.rs,https://fynd.bot/?search={query}&offset={pageno}{safe_search},,,unreviewed,,unreviewed,,provider_review_needed
-gabanza,xpath,false,false,true,src/engines/xpath.rs,https://www.gabanza.com/search?query={query},,,unreviewed,,unreviewed,,provider_review_needed
+fynd,xpath,true,false,false,src/engines/xpath.rs,https://fynd.bot/?search={query}&offset={pageno}{safe_search},,,unreviewed,,unreviewed,,provider_review_needed
+gabanza,xpath,true,false,false,src/engines/xpath.rs,https://www.gabanza.com/search?query={query},,,unreviewed,,unreviewed,,provider_review_needed
 gentoo,mediawiki,false,false,true,src/engines/mediawiki.rs,https://wiki.gentoo.org/,,,unreviewed,,unreviewed,,provider_review_needed
-habrahabr,xpath,false,false,true,src/engines/xpath.rs,https://habr.com/en/search/page{pageno}/?q={query},,,unreviewed,,unreviewed,,provider_review_needed
+habrahabr,xpath,true,false,false,src/engines/xpath.rs,https://habr.com/en/search/page{pageno}/?q={query},,,unreviewed,,unreviewed,,provider_review_needed
 hoogle,xpath,false,false,true,src/engines/xpath.rs,https://hoogle.haskell.org/?hoogle={query},,,unreviewed,,unreviewed,,provider_review_needed
-library genesis,xpath,false,false,true,src/engines/xpath.rs,https://libgen.rs/search.php?req={query},,,unreviewed,,unreviewed,,provider_review_needed
-lobste.rs,xpath,false,false,true,src/engines/xpath.rs,https://lobste.rs/search?q={query}&what=stories&order=relevance,,,unreviewed,,unreviewed,,provider_review_needed
+library genesis,xpath,true,false,false,src/engines/xpath.rs,https://libgen.rs/search.php?req={query},,,unreviewed,,unreviewed,,provider_review_needed
+lobste.rs,xpath,true,false,false,src/engines/xpath.rs,https://lobste.rs/search?q={query}&what=stories&order=relevance,,,unreviewed,,unreviewed,,provider_review_needed
 mdn,json_engine,false,false,true,src/engines/json_engine.rs,https://developer.mozilla.org/api/v1/search?q={query}&page={pageno},,,unreviewed,,unreviewed,,provider_review_needed
-mankier,json_engine,false,false,true,src/engines/json_engine.rs,https://www.mankier.com/api/v2/mans/?q={query},,,unreviewed,,unreviewed,,provider_review_needed
-openairedatasets,json_engine,false,false,true,src/engines/json_engine.rs,https://api.openaire.eu/search/datasets?format=json&page={pageno}&size=10&title={query},,,unreviewed,,unreviewed,,provider_review_needed
-openairepublications,json_engine,false,false,true,src/engines/json_engine.rs,https://api.openaire.eu/search/publications?format=json&page={pageno}&size=10&title={query},,,unreviewed,,unreviewed,,provider_review_needed
-openrepos,xpath,false,false,true,src/engines/xpath.rs,https://openrepos.net/search/node/{query}?page={pageno},,,unreviewed,,unreviewed,,provider_review_needed
+mankier,json_engine,true,false,false,src/engines/json_engine.rs,https://www.mankier.com/api/v2/mans/?q={query},,,unreviewed,,unreviewed,,provider_review_needed
+openairedatasets,json_engine,true,false,false,src/engines/json_engine.rs,https://api.openaire.eu/search/datasets?format=json&page={pageno}&size=10&title={query},,,unreviewed,,unreviewed,,provider_review_needed
+openairepublications,json_engine,true,false,false,src/engines/json_engine.rs,https://api.openaire.eu/search/publications?format=json&page={pageno}&size=10&title={query},,,unreviewed,,unreviewed,,provider_review_needed
+openrepos,xpath,true,false,false,src/engines/xpath.rs,https://openrepos.net/search/node/{query}?page={pageno},,,unreviewed,,unreviewed,,provider_review_needed
 packagist,json_engine,false,false,true,src/engines/json_engine.rs,https://packagist.org/search.json?q={query}&page={pageno},,,unreviewed,,unreviewed,,provider_review_needed
 pub.dev,xpath,false,false,true,src/engines/xpath.rs,https://pub.dev/packages?q={query}&page={pageno},,,unreviewed,,unreviewed,,provider_review_needed
-searchmysite,xpath,false,false,true,src/engines/xpath.rs,https://searchmysite.net/search/?q={query}&page={pageno},,,unreviewed,,unreviewed,,provider_review_needed
-tmdb,xpath,false,false,true,src/engines/xpath.rs,https://www.themoviedb.org/search?page={pageno}&query={query},,,unreviewed,,unreviewed,,provider_review_needed
-torch,xpath,false,false,true,src/engines/xpath.rs,http://xmh57jrknzkhv6y3ls3ubitzfqnkrwxhopf5aygthi7d6rplyvk3noyd.onion/cgi-bin/omega/omega?P={query}&DEFAULTOP=and,,,unreviewed,,unreviewed,,provider_review_needed
+searchmysite,xpath,true,false,false,src/engines/xpath.rs,https://searchmysite.net/search/?q={query}&page={pageno},,,unreviewed,,unreviewed,,provider_review_needed
+tmdb,xpath,true,false,false,src/engines/xpath.rs,https://www.themoviedb.org/search?page={pageno}&query={query},,,unreviewed,,unreviewed,,provider_review_needed
+torch,xpath,true,false,false,src/engines/xpath.rs,http://xmh57jrknzkhv6y3ls3ubitzfqnkrwxhopf5aygthi7d6rplyvk3noyd.onion/cgi-bin/omega/omega?P={query}&DEFAULTOP=and,,,unreviewed,,unreviewed,,provider_review_needed
 wiby,json_engine,false,false,true,src/engines/json_engine.rs,https://wiby.me/json/?q={query}&p={pageno},,,unreviewed,,unreviewed,,provider_review_needed
 wikibooks,mediawiki,false,false,true,src/engines/mediawiki.rs,https://{language}.wikibooks.org/,,,unreviewed,,unreviewed,,provider_review_needed
 wikinews,mediawiki,false,false,true,src/engines/mediawiki.rs,https://{language}.wikinews.org/,,,unreviewed,,unreviewed,,provider_review_needed
@@ -63,22 +65,22 @@ wiktionary,mediawiki,false,false,true,src/engines/mediawiki.rs,https://{language
 wikiversity,mediawiki,false,false,true,src/engines/mediawiki.rs,https://{language}.wikiversity.org/,,,unreviewed,,unreviewed,,provider_review_needed
 wikivoyage,mediawiki,false,false,true,src/engines/mediawiki.rs,https://{language}.wikivoyage.org/,,,unreviewed,,unreviewed,,provider_review_needed
 rubygems,xpath,false,false,true,src/engines/xpath.rs,https://rubygems.org/search?page={pageno}&query={query},,,unreviewed,,unreviewed,,provider_review_needed
-reloado,xpath,false,false,true,src/engines/xpath.rs,https://reloado.com/search?q={query}&page={pageno},,,unreviewed,,unreviewed,,provider_review_needed
+reloado,xpath,true,false,false,src/engines/xpath.rs,https://reloado.com/search?q={query}&page={pageno},,,unreviewed,,unreviewed,,provider_review_needed
 searchch,xpath,true,false,false,src/engines/xpath.rs,https://search.ch/web/api/loadmore.html?path=/web/&q={query}&page={pageno},,,unreviewed,,unreviewed,,provider_review_needed
 woxikon.de synonyme,xpath,false,false,true,src/engines/xpath.rs,https://synonyme.woxikon.de/synonyme/{query}.php,,,unreviewed,,unreviewed,,provider_review_needed
-wikimini,xpath,false,false,true,src/engines/xpath.rs,https://fr.wikimini.org/w/index.php?search={query}&title=Sp%C3%A9cial%3ASearch&fulltext=Search,,,unreviewed,,unreviewed,,provider_review_needed
-zapmeta,xpath,false,false,true,src/engines/xpath.rs,https://www.zapmeta.com/search?q={query}&pg={pageno},,,unreviewed,,unreviewed,,provider_review_needed
+wikimini,xpath,true,false,false,src/engines/xpath.rs,https://fr.wikimini.org/w/index.php?search={query}&title=Sp%C3%A9cial%3ASearch&fulltext=Search,,,unreviewed,,unreviewed,,provider_review_needed
+zapmeta,xpath,true,false,false,src/engines/xpath.rs,https://www.zapmeta.com/search?q={query}&pg={pageno},,,unreviewed,,unreviewed,,provider_review_needed
 minecraft wiki,mediawiki,false,false,true,src/engines/mediawiki.rs,https://minecraft.wiki/,,,unreviewed,,unreviewed,,provider_review_needed
 apple_app_store,apple_app_store,false,false,true,src/engines/apple_app_store.rs,,https://itunes.apple.com/search,,unreviewed,,unreviewed,,provider_review_needed
-dogpile,dogpile,false,false,true,src/engines/dogpile.rs,,https://www.dogpile.com,,unreviewed,,unreviewed,,provider_review_needed
+dogpile,dogpile,true,false,false,src/engines/dogpile.rs,,https://www.dogpile.com,,unreviewed,,unreviewed,,provider_review_needed
 openclipart,openclipart,false,false,true,src/engines/openclipart.rs,,https://openclipart.org,,unreviewed,,unreviewed,,provider_review_needed
 lemmy,lemmy,false,false,true,src/engines/lemmy.rs,,https://lemmy.ml,,unreviewed,,unreviewed,,provider_review_needed
-luxxle,luxxle,false,false,true,src/engines/luxxle.rs,,https://luxxle.com,,unreviewed,,unreviewed,,provider_review_needed
-findborg,findborg,false,false,true,src/engines/findborg.rs,,https://www.findborg.com,,unreviewed,,unreviewed,,provider_review_needed
+luxxle,luxxle,true,false,false,src/engines/luxxle.rs,,https://luxxle.com,,unreviewed,,unreviewed,,provider_review_needed
+findborg,findborg,true,false,false,src/engines/findborg.rs,,https://www.findborg.com,,unreviewed,,unreviewed,,provider_review_needed
 mastodon,mastodon,false,false,true,src/engines/mastodon.rs,,https://mastodon.social,,unreviewed,,unreviewed,,provider_review_needed
 pixabay,pixabay,true,false,false,src/engines/pixabay.rs,,https://pixabay.com,,unreviewed,,unreviewed,,provider_review_needed
 apkmirror,apkmirror,false,false,true,src/engines/apkmirror.rs,,https://www.apkmirror.com,,unreviewed,,unreviewed,,provider_review_needed
-bandcamp,bandcamp,false,false,true,src/engines/bandcamp.rs,,https://bandcamp.com/ | https://bandcamp.com/EmbeddedPlayer/{kind}={result_id}/size=large/bgcol=000/linkcol=fff/artwork=small,,unreviewed,,unreviewed,,provider_review_needed
+bandcamp,bandcamp,true,false,false,src/engines/bandcamp.rs,,https://bandcamp.com/ | https://bandcamp.com/EmbeddedPlayer/{kind}={result_id}/size=large/bgcol=000/linkcol=fff/artwork=small,,unreviewed,,unreviewed,,provider_review_needed
 genius,genius,false,false,true,src/engines/genius.rs,,https://genius.com/api | https://genius.com{api_path}/apple_music_player,,unreviewed,,unreviewed,,provider_review_needed
 goodreads,goodreads,true,false,false,src/engines/goodreads.rs,,https://www.goodreads.com,,unreviewed,,unreviewed,,provider_review_needed
 imdb,imdb,false,false,true,src/engines/imdb.rs,,https://imdb.com/{category}/{entry_id} | https://v2.sg.media-imdb.com/suggestion/{letter}/{query}.json,,unreviewed,,unreviewed,,provider_review_needed
@@ -87,19 +89,19 @@ soundcloud,soundcloud,true,false,false,src/engines/soundcloud.rs,,https://api-v2
 wallhaven,wallhaven,false,false,true,src/engines/wallhaven.rs,,https://wallhaven.cc,,unreviewed,,unreviewed,,provider_review_needed
 500px,500px,false,false,true,src/engines/mod.rs (locate registration),,,,unreviewed,,unreviewed,,provider_review_needed
 9gag,9gag,false,false,true,src/engines/mod.rs (locate registration),,,,unreviewed,,unreviewed,,provider_review_needed
-andisearch,andisearch,false,false,true,src/engines/andisearch.rs,,https://andisearch.com,,unreviewed,,unreviewed,,provider_review_needed
+andisearch,andisearch,true,false,false,src/engines/andisearch.rs,,https://andisearch.com,,unreviewed,,unreviewed,,provider_review_needed
 baidu,baidu,true,false,false,src/engines/baidu.rs,,https://image.baidu.com/search/acjson | https://kaifa.baidu.com/rest/v1/search | https://www.baidu.com/s,,unreviewed,,unreviewed,,provider_review_needed
 findfiles,findfiles,false,false,true,src/engines/findfiles.rs,,https://findfiles.net,,unreviewed,,unreviewed,,provider_review_needed
-fireball,fireball,false,false,true,src/engines/fireball.rs,,https://fireball.com,,unreviewed,,unreviewed,,provider_review_needed
-naver,naver,false,false,true,src/engines/naver.rs,,https://github.com/`); | https://search.naver.com,,unreviewed,,unreviewed,,provider_review_needed
+fireball,fireball,true,false,false,src/engines/fireball.rs,,https://fireball.com,,unreviewed,,unreviewed,,provider_review_needed
+naver,naver,true,false,false,src/engines/naver.rs,,https://github.com/`); | https://search.naver.com,,unreviewed,,unreviewed,,provider_review_needed
 peertube,peertube,false,false,true,src/engines/peertube.rs,,https://peer.tube,,unreviewed,,unreviewed,,provider_review_needed
 pexels,pexels,false,false,true,src/engines/pexels.rs,,https://www.pexels.com,,unreviewed,,unreviewed,,provider_review_needed
-qwant,qwant,false,false,true,src/engines/qwant.rs,,https://api.qwant.com/v3/search/ | https://s1.qwant.com | https://s2.qwant.com | https://www.qwant.com,,unreviewed,,unreviewed,,provider_review_needed
+qwant,qwant,true,false,false,src/engines/qwant.rs,,https://api.qwant.com/v3/search/ | https://s1.qwant.com | https://s2.qwant.com | https://www.qwant.com,,unreviewed,,unreviewed,,provider_review_needed
 sepiasearch,sepiasearch,false,false,true,src/engines/sepiasearch.rs,,https://sepiasearch.org,,unreviewed,,unreviewed,,provider_review_needed
 tootfinder,tootfinder,false,false,true,src/engines/tootfinder.rs,,https://www.tootfinder.ch,,unreviewed,,unreviewed,,provider_review_needed
-tusksearch,tusksearch,false,false,true,src/engines/tusksearch.rs,,https://api.tusksearch.com | https://tusksearch.com | https://tusksearch.com/,,unreviewed,,unreviewed,,provider_review_needed
+tusksearch,tusksearch,true,false,false,src/engines/tusksearch.rs,,https://api.tusksearch.com | https://tusksearch.com | https://tusksearch.com/,,unreviewed,,unreviewed,,provider_review_needed
 unsplash,unsplash,false,false,true,src/engines/unsplash.rs,,https://unsplash.com/napi/search/photos?,,unreviewed,,unreviewed,,provider_review_needed
-artstation,artstation,false,false,true,src/engines/artstation.rs,,https://www.artstation.com/api/v2/search/projects.json,,unreviewed,,unreviewed,,provider_review_needed
+artstation,artstation,true,false,false,src/engines/artstation.rs,,https://www.artstation.com/api/v2/search/projects.json,,unreviewed,,unreviewed,,provider_review_needed
 deviantart,deviantart,false,false,true,src/engines/deviantart.rs,,https://www.deviantart.com,,unreviewed,,unreviewed,,provider_review_needed
 flickr,flickr_noapi,false,false,true,src/engines/flickr_noapi.rs,,https://www.flickr.com/photos/{owner}/{photo_id} | https://www.flickr.com/search,,unreviewed,,unreviewed,,provider_review_needed
 giphy,giphy,true,false,false,src/engines/giphy.rs,,https://api.giphy.com,,unreviewed,,unreviewed,,provider_review_needed
@@ -108,7 +110,7 @@ alpinelinux,alpinelinux,false,false,true,src/engines/alpinelinux.rs,,https://pkg
 annas_archive,annas_archive,true,false,false,src/engines/annas_archive.rs,,,,unreviewed,,unreviewed,,provider_review_needed
 discourse,discourse,true,false,false,src/engines/discourse.rs,,,,unreviewed,,unreviewed,,provider_review_needed
 duckduckgo_extra,duckduckgo_extra,true,false,false,src/engines/duckduckgo_extra.rs,,https://duckduckgo.com | https://duckduckgo.com/,,unreviewed,,unreviewed,,provider_review_needed
-duckduckgo_web,duckduckgo_web,false,false,true,src/engines/duckduckgo_web.rs,,https://duckduckgo.com | https://links.duckduckgo.com/d.js,,unreviewed,,unreviewed,,provider_review_needed
+duckduckgo_web,duckduckgo_web,true,false,false,src/engines/duckduckgo_web.rs,,https://duckduckgo.com | https://links.duckduckgo.com/d.js,,unreviewed,,unreviewed,,provider_review_needed
 r1337x,1337x,false,false,true,src/engines/mod.rs (locate registration),,,,unreviewed,,unreviewed,,provider_review_needed
 r360search,360search,true,false,false,src/engines/mod.rs (locate registration),,,,unreviewed,,unreviewed,,provider_review_needed
 artic,artic,false,false,true,src/engines/artic.rs,,https://api.artic.edu/api/v1/artworks/search | https://artic.edu/artworks/{id} | https://www.artic.edu/iiif/2/,,unreviewed,,unreviewed,,provider_review_needed
@@ -132,26 +134,26 @@ github_code,github_code,false,false,true,src/engines/github_code.rs,,https://api
 gitlab,gitlab,false,false,true,src/engines/gitlab.rs,,https://gitlab.com,,unreviewed,,unreviewed,,provider_review_needed
 marginalia,marginalia,true,false,false,src/engines/marginalia.rs,,https://api2.marginalia-search.com | https://github.com/sahenjp/rustxng),,unreviewed,,unreviewed,,provider_review_needed
 seznam,seznam,false,false,true,src/engines/seznam.rs,,https://search.seznam.cz/,,unreviewed,,unreviewed,,provider_review_needed
-yahoo,yahoo,false,false,true,src/engines/yahoo.rs,,https://{}/search?{},,unreviewed,,unreviewed,,provider_review_needed
+yahoo,yahoo,true,false,false,src/engines/yahoo.rs,,https://{}/search?{},,unreviewed,,unreviewed,,provider_review_needed
 yahoo japan,yahoo_japan,true,false,false,src/engines/yahoo_japan.rs,,https://search.yahoo.co.jp/search,https://search.yahoo.co.jp/search,HTML,https://support.yahoo-net.jp/PccSearch/s/article/H000015794,restricted_html,2026-11-03,disabled_by_default_pending_permission
-yandex,yandex,false,false,true,src/engines/yandex.rs,,https://yandex.com/ | https://yandex.com/search/site/,,unreviewed,,unreviewed,,provider_review_needed
+yandex,yandex,true,false,false,src/engines/yandex.rs,,https://yandex.com/ | https://yandex.com/search/site/,,unreviewed,,unreviewed,,provider_review_needed
 ebay,ebay,false,false,true,src/engines/ebay.rs,,https://www.ebay.com,,unreviewed,,unreviewed,,provider_review_needed
 europepmc,europepmc,false,false,true,src/engines/europepmc.rs,,https://europepmc.org/article/ | https://www.ebi.ac.uk/europepmc/webservices/rest/search,,unreviewed,,unreviewed,,provider_review_needed
 geizhals,geizhals,false,false,true,src/engines/geizhals.rs,,https://geizhals.de,,unreviewed,,unreviewed,,provider_review_needed
 gitea,gitea,false,false,true,src/engines/gitea.rs,,https://gitea.com,,unreviewed,,unreviewed,,provider_review_needed
 hex,hex,false,false,true,src/engines/hex.rs,,https://hex.pm/api/packages/,,unreviewed,,unreviewed,,provider_review_needed
-neosearch,neosearch,false,false,true,src/engines/neosearch.rs,,https://neosearch.org,,unreviewed,,unreviewed,,provider_review_needed
+neosearch,neosearch,true,false,false,src/engines/neosearch.rs,,https://neosearch.org,,unreviewed,,unreviewed,,provider_review_needed
 openalex,openalex,false,false,true,src/engines/openalex.rs,,https://api.openalex.org/works | https://doi.org/,,unreviewed,,unreviewed,,provider_review_needed
 pkg_go_dev,pkg_go_dev,false,false,true,src/engines/pkg_go_dev.rs,,https://pkg.go.dev,,unreviewed,,unreviewed,,provider_review_needed
-sogou,sogou,false,false,true,src/engines/sogou.rs,,https://www.sogou.com,,unreviewed,,unreviewed,,provider_review_needed
+sogou,sogou,true,false,false,src/engines/sogou.rs,,https://www.sogou.com,,unreviewed,,unreviewed,,provider_review_needed
 sogou_images,sogou_images,false,false,true,src/engines/sogou_images.rs,,https://pic.sogou.com,,unreviewed,,unreviewed,,provider_review_needed
 sogou_videos,sogou_videos,false,false,true,src/engines/sogou_videos.rs,,https://v.sogou.com,,unreviewed,,unreviewed,,provider_review_needed
-sourcehut,sourcehut,false,false,true,src/engines/sourcehut.rs,,https://github.com/searxng/searxng) | https://sr.ht/projects,,unreviewed,,unreviewed,,provider_review_needed
+sourcehut,sourcehut,false,false,true,src/engines/sourcehut.rs,,https://github.com/sahenjp/RustXNG) | https://sr.ht/projects,,unreviewed,,unreviewed,,provider_review_needed
 springer,springer,true,false,false,src/engines/springer.rs,,https://api.springernature.com/meta/v2/json,,unreviewed,,unreviewed,,provider_review_needed
 steam,steam,false,false,true,src/engines/steam.rs,,https://store.steampowered.com,,unreviewed,,unreviewed,,provider_review_needed
-swisscows,swisscows,false,false,true,src/engines/swisscows.rs,,https://api.swisscows.com,,unreviewed,,unreviewed,,provider_review_needed
+swisscows,swisscows,true,false,false,src/engines/swisscows.rs,,https://api.swisscows.com,,unreviewed,,unreviewed,,provider_review_needed
 www1x,www1x,false,false,true,src/engines/www1x.rs,,https://1x.com | https://gallery.1x.com/,,unreviewed,,unreviewed,,provider_review_needed
-yep,yep,false,false,true,src/engines/yep.rs,,https://api.yep.com | https://yep.com | https://yep.com/,,unreviewed,,unreviewed,,provider_review_needed
+yep,yep,true,false,false,src/engines/yep.rs,,https://api.yep.com | https://yep.com | https://yep.com/,,unreviewed,,unreviewed,,provider_review_needed
 duden,duden,false,false,true,src/engines/duden.rs,,https://www.duden.de,,unreviewed,,unreviewed,,provider_review_needed
 fdroid,fdroid,false,false,true,src/engines/fdroid.rs,,https://search.f-droid.org,,unreviewed,,unreviewed,,provider_review_needed
 flaticon,flaticon,false,false,true,src/engines/flaticon.rs,,https://www.flaticon.com,,unreviewed,,unreviewed,,provider_review_needed
@@ -161,7 +163,7 @@ pinterest,pinterest,false,false,true,src/engines/pinterest.rs,,https://www.pinte
 pixiv,pixiv,false,false,true,src/engines/pixiv.rs,,https://i.pximg.net | https://www.pixiv.net/ | https://www.pixiv.net/ajax/search/illustrations,,unreviewed,,unreviewed,,provider_review_needed
 pubmed,pubmed,false,false,true,src/engines/pubmed.rs,,https://eutils.ncbi.nlm.nih.gov/entrez/eutils | https://www.ncbi.nlm.nih.gov/pubmed/,,unreviewed,,unreviewed,,provider_review_needed
 qiita,qiita,true,false,false,src/engines/qiita.rs,,https://qiita.com/api/v2/items,,unreviewed,,unreviewed,,provider_review_needed
-quark,quark,false,false,true,src/engines/quark.rs,,https://quark.sm.cn/s | https://vt.sm.cn/api/pic/list,,unreviewed,,unreviewed,,provider_review_needed
+quark,quark,true,false,false,src/engines/quark.rs,,https://quark.sm.cn/s | https://vt.sm.cn/api/pic/list,,unreviewed,,unreviewed,,provider_review_needed
 repology,repology,false,false,true,src/engines/repology.rs,,https://repology.org,,unreviewed,,unreviewed,,provider_review_needed
 shopify_stock,shopify_stock,false,false,true,src/engines/shopify_stock.rs,,https://www.shopify.com,,unreviewed,,unreviewed,,provider_review_needed
 wordnik,wordnik,false,false,true,src/engines/wordnik.rs,,https://www.wordnik.com,,unreviewed,,unreviewed,,provider_review_needed
@@ -197,14 +199,14 @@ archlinux,archlinux,true,false,false,src/engines/archlinux.rs,,https://{netloc}{
 boardreader,boardreader,true,false,false,src/engines/boardreader.rs,,https://boardreader.com,,unreviewed,,unreviewed,,provider_review_needed
 devicons,devicons,true,false,false,src/engines/devicons.rs,,https://cdn.jsdelivr.net/gh/devicons/devicon@latest,,unreviewed,,unreviewed,,provider_review_needed
 duckduckgo_definitions,duckduckgo_definitions,true,false,false,src/engines/duckduckgo_definitions.rs,,https://api.duckduckgo.com/ | https://duckduckgo.com/,,unreviewed,,unreviewed,,provider_review_needed
-grokipedia,grokipedia,false,false,true,src/engines/grokipedia.rs,,https://grokipedia.com/api/full-text-search | https://grokipedia.com/page/,,unreviewed,,unreviewed,,provider_review_needed
+grokipedia,grokipedia,true,false,false,src/engines/grokipedia.rs,,https://grokipedia.com/api/full-text-search | https://grokipedia.com/page/,,unreviewed,,unreviewed,,provider_review_needed
 il_post,il_post,true,false,false,src/engines/il_post.rs,,https://api.ilpost.org/search/api/site_search/,,unreviewed,,unreviewed,,provider_review_needed
 ipernity,ipernity,true,false,false,src/engines/ipernity.rs,,https://www.ipernity.com,,unreviewed,,unreviewed,,provider_review_needed
 magnific,magnific,true,false,false,src/engines/magnific.rs,,https://www.magnific.com,,unreviewed,,unreviewed,,provider_review_needed
 mediathekviewweb,mediathekviewweb,true,false,false,src/engines/mediathekviewweb.rs,,https://mediathekviewweb.de,,unreviewed,,unreviewed,,provider_review_needed
 microsoft_learn,microsoft_learn,false,false,true,src/engines/microsoft_learn.rs,,https://learn.microsoft.com/api/search,,unreviewed,,unreviewed,,provider_review_needed
 moviepilot,moviepilot,true,false,false,src/engines/moviepilot.rs,,https://assets.cdn.moviepilot.de/files | https://www.moviepilot.de,,unreviewed,,unreviewed,,provider_review_needed
-neocities,neocities,false,false,true,src/engines/neocities.rs,,https://neocities.org,,unreviewed,,unreviewed,,provider_review_needed
+neocities,neocities,true,false,false,src/engines/neocities.rs,,https://neocities.org,,unreviewed,,unreviewed,,provider_review_needed
 picjumbo,picjumbo,true,false,false,src/engines/picjumbo.rs,,https://picjumbo.com,,unreviewed,,unreviewed,,provider_review_needed
 podchaser,podchaser,true,false,false,src/engines/podchaser.rs,,https://api.podchaser.com,,unreviewed,,unreviewed,,provider_review_needed
 reuters,reuters,true,false,false,src/engines/reuters.rs,,https://www.reuters.com,,unreviewed,,unreviewed,,provider_review_needed
@@ -212,7 +214,7 @@ rottentomatoes,rottentomatoes,false,false,true,src/engines/rottentomatoes.rs,,ht
 s1search_rampjs,s1search_rampjs,true,false,false,src/engines/s1search_rampjs.rs,,https://search.answers.com,,unreviewed,,unreviewed,,provider_review_needed
 scanr_structures,scanr_structures,true,false,false,src/engines/scanr_structures.rs,,https://scanr.enseignementsup-recherche.gouv.fr,,unreviewed,,unreviewed,,provider_review_needed
 iseek,iseek,true,false,false,src/engines/iseek.rs,,https://api.iseek.com,,unreviewed,,unreviewed,,provider_review_needed
-keenable,keenable,false,false,true,src/engines/keenable.rs,,https://api.keenable.ai,,unreviewed,,unreviewed,,provider_review_needed
+keenable,keenable,true,false,false,src/engines/keenable.rs,,https://api.keenable.ai,,unreviewed,,unreviewed,,provider_review_needed
 libretranslate,libretranslate,true,false,false,src/engines/libretranslate.rs,,https://libretranslate.com | https://libretranslate.com/translate,,unreviewed,,unreviewed,,provider_review_needed
 privacywall,privacywall,true,false,false,src/engines/privacywall.rs,,https://www.privacywall.org,,unreviewed,,unreviewed,,provider_review_needed
 public_domain_image_archive,public_domain_image_archive,true,false,false,src/engines/public_domain_image_archive.rs,,https://pdimagearchive.org,,unreviewed,,unreviewed,,provider_review_needed

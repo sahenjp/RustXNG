@@ -146,12 +146,68 @@ pub struct Searcher {
     pub plugins: Arc<PluginManager>,
     /// Our own BM25 index, when one is configured and opened.
     pub local_index: Option<Arc<crate::localindex::LocalIndex>>,
+    /// The Wikipedia index built from the dump, when configured.
+    pub wiki_index: Option<Arc<crate::localindex::LocalIndex>>,
 }
 
 /// Open the configured local index, if any.
 fn open_local_index(settings: &Settings) -> Option<Arc<crate::localindex::LocalIndex>> {
-    let path = settings.search.local_index_path.trim();
+    open_index_at(settings.search.local_index_path.trim())
+}
+
+/// Open the configured Wikipedia index, if any.
+/// How long a local index may overrun the search deadline before its hits are
+/// dropped. An index on a cold disk cache can take seconds; a search must not
+/// wait for it, nor block an async worker while it reads.
+/// Extra weight for a source the query names ("... arxiv", "... npm").
+const ROUTED_WEIGHT: f64 = 2.0;
+
+/// Longest wait for the Wikidata official-site lookup.
+const OFFICIAL_SITE_BUDGET: Duration = Duration::from_millis(1500);
+
+const INDEX_GRACE: Duration = Duration::from_millis(400);
+
+/// Query a local index off the async workers and give up at the deadline.
+/// Failures and timeouts yield no hits (the engines' results still stand).
+async fn bounded_index_search(
+    index: &Arc<crate::localindex::LocalIndex>,
+    text: String,
+    loose: bool,
+    deadline: Instant,
+) -> Vec<crate::localindex::Hit> {
+    let index = Arc::clone(index);
+    let budget = deadline.saturating_duration_since(Instant::now()) + INDEX_GRACE;
+    let task = tokio::task::spawn_blocking(move || {
+        if loose {
+            index.search_loose(&text, 20)
+        } else {
+            index.search(&text, 20)
+        }
+    });
+    match tokio::time::timeout(budget, task).await {
+        Ok(Ok(Ok(hits))) => hits,
+        Ok(Ok(Err(error))) => {
+            tracing::debug!(%error, "local index search failed");
+            Vec::new()
+        }
+        _ => {
+            tracing::debug!("local index search did not finish in time");
+            Vec::new()
+        }
+    }
+}
+
+fn open_wiki_index(settings: &Settings) -> Option<Arc<crate::localindex::LocalIndex>> {
+    open_index_at(settings.search.wikipedia_index_path.trim())
+}
+
+fn open_index_at(path: &str) -> Option<Arc<crate::localindex::LocalIndex>> {
     if path.is_empty() {
+        return None;
+    }
+    if !std::path::Path::new(path).exists() {
+        // The shipped settings name an index most installs never build.
+        tracing::debug!(path, "local index not built; skipping it");
         return None;
     }
     match crate::localindex::LocalIndex::open(std::path::Path::new(path)) {
@@ -192,6 +248,7 @@ impl Searcher {
         Ok(Self {
             page_reader,
             local_index: open_local_index(&settings),
+            wiki_index: open_wiki_index(&settings),
             plugins: Arc::new(PluginManager::from_settings(&settings)),
             settings: Arc::new(settings),
             registry: Arc::new(registry),
@@ -250,6 +307,110 @@ impl Searcher {
             return run(&[]);
         }
         selected
+    }
+
+    /// Specialised engines a general search names by their own name
+    /// ("attention is all you need arxiv", "tokio-rs tokio github"), with the
+    /// request they should get: the same query without the site's name.
+    /// Only engines of developer and science categories are routed, so a
+    /// common word that happens to be an engine name does not add requests.
+    fn site_routes(
+        &self,
+        request: &SearchRequest,
+        selected: &[EngineHandle],
+    ) -> Option<(Vec<EngineHandle>, SearchRequest)> {
+        const ROUTABLE: &[&str] = &[
+            "it",
+            "repos",
+            "packages",
+            "q&a",
+            "science",
+            "scientific publications",
+        ];
+        const MAX_ROUTED: usize = 2;
+        let general_only = request.categories.is_empty()
+            || request.categories.iter().all(|category| {
+                crate::categories::normalize(category) == crate::categories::GENERAL
+            });
+        if !request.engines.is_empty() || request.query.specific || !general_only {
+            return None;
+        }
+        let words: Vec<String> = request
+            .query
+            .user_query_parts
+            .iter()
+            .map(|word| word.to_lowercase())
+            .collect();
+        let mut routed: Vec<EngineHandle> = Vec::new();
+        let mut matched: Vec<usize> = Vec::new();
+        for engine in self.registry.iter() {
+            if routed.len() >= MAX_ROUTED {
+                break;
+            }
+            let name = engine.name().to_lowercase();
+            if request
+                .disabled_engines
+                .iter()
+                .any(|disabled| disabled.eq_ignore_ascii_case(&name))
+                || selected.iter().any(|known| known.name() == engine.name())
+                || !engine.categories().iter().any(|category| {
+                    ROUTABLE.contains(&crate::categories::normalize(category).as_str())
+                })
+            {
+                continue;
+            }
+            let name_words: Vec<&str> = name.split_whitespace().collect();
+            if name_words.is_empty() || name.chars().count() < 3 || words.len() <= name_words.len()
+            {
+                continue;
+            }
+            let found = words
+                .windows(name_words.len())
+                .position(|window| window.iter().zip(&name_words).all(|(a, b)| a == b));
+            if let Some(start) = found {
+                routed.push(engine.clone());
+                matched.extend(start..start + name_words.len());
+            }
+        }
+        if routed.is_empty() {
+            return None;
+        }
+        // Words that only say what kind of thing is wanted ("serde crate",
+        // "react package") match unrelated entries inside the source itself.
+        const KIND_WORDS: &[&str] = &[
+            "crate",
+            "crates",
+            "package",
+            "packages",
+            "repo",
+            "repository",
+            "library",
+            "paper",
+        ];
+        let kept: Vec<String> = request
+            .query
+            .user_query_parts
+            .iter()
+            .enumerate()
+            .filter(|(index, _)| !matched.contains(index))
+            .map(|(_, word)| word.clone())
+            .collect();
+        let without_kind: Vec<String> = kept
+            .iter()
+            .filter(|word| !KIND_WORDS.contains(&word.to_lowercase().as_str()))
+            .cloned()
+            .collect();
+        let mut routed_request = request.clone();
+        routed_request.query.user_query_parts = if without_kind.is_empty() {
+            kept
+        } else {
+            without_kind
+        };
+        tracing::debug!(
+            engines = ?routed.iter().map(|engine| engine.name().to_string()).collect::<Vec<_>>(),
+            "query names a specialised source"
+        );
+        Some((routed, routed_request))
     }
 
     /// Run a search: this is the entry point used by the web layer.
@@ -311,19 +472,87 @@ impl Searcher {
                     .unwrap_or(self.settings.search.timeout_limit)
                     .max(0.1),
             );
-        let outcomes = match request.strategy {
-            crate::settings::SearchStrategy::Parallel => {
-                futures::future::join_all(
-                    engines
-                        .iter()
-                        .map(|engine| self.run_engine(engine, &request, deadline)),
+        // A general search that names a specialised source ("... arxiv",
+        // "... github") also asks that source, without the site's name.
+        let routed = self.site_routes(&request, &engines);
+        // The local indexes are read on blocking threads while the engines
+        // are out, so they add no latency of their own.
+        let merged_search = self.settings.search.local_index_merge && request.engines.len() != 1;
+        let local_task = self
+            .local_index
+            .as_ref()
+            .filter(|_| merged_search)
+            .map(|index| {
+                let index = Arc::clone(index);
+                let text = request.query.query_text();
+                tokio::spawn(
+                    async move { bounded_index_search(&index, text, false, deadline).await },
                 )
-                .await
-            }
-            crate::settings::SearchStrategy::Staged => {
-                self.run_staged(&engines, &request, deadline).await
+            });
+        let wiki_task = self
+            .wiki_index
+            .as_ref()
+            .filter(|_| merged_search)
+            .map(|index| {
+                let index = Arc::clone(index);
+                let text = crate::engine::util::search_keywords(
+                    &crate::engines::wikipedia::without_site_name(&request.query.query_text()),
+                );
+                tokio::spawn(
+                    async move { bounded_index_search(&index, text, true, deadline).await },
+                )
+            });
+        // The official-site lookup starts as soon as Wikipedia has answered,
+        // not after the slowest engine.
+        let official_task: std::sync::Mutex<Option<tokio::task::JoinHandle<Vec<SearchResult>>>> =
+            std::sync::Mutex::new(None);
+        let start_official = |outcome: &EngineOutcome| {
+            if let Some(task) = self.official_lookup_for(&request, outcome) {
+                if let Ok(mut slot) = official_task.lock() {
+                    slot.get_or_insert(task);
+                }
             }
         };
+        let main = async {
+            match request.strategy {
+                crate::settings::SearchStrategy::Parallel => {
+                    futures::future::join_all(engines.iter().map(|engine| async {
+                        let outcome = self.run_engine(engine, &request, deadline).await;
+                        start_official(&outcome);
+                        outcome
+                    }))
+                    .await
+                }
+                crate::settings::SearchStrategy::Staged => {
+                    self.run_staged(&engines, &request, deadline).await
+                }
+            }
+        };
+        let extra = async {
+            match &routed {
+                Some((routed_engines, routed_request)) => {
+                    futures::future::join_all(
+                        routed_engines
+                            .iter()
+                            .map(|engine| self.run_engine(engine, routed_request, deadline)),
+                    )
+                    .await
+                }
+                None => Vec::new(),
+            }
+        };
+        let (mut outcomes, extra_outcomes) = futures::join!(main, extra);
+        // The query named these sources: their own results are what was asked for.
+        outcomes.extend(extra_outcomes.into_iter().map(|mut outcome| {
+            outcome.weight *= ROUTED_WEIGHT;
+            outcome
+        }));
+
+        // Staged searches did not start the lookup while running.
+        for outcome in &outcomes {
+            start_official(outcome);
+        }
+        let official_lookup = official_task.into_inner().ok().flatten();
 
         // Remember which engines answered before the outcomes are consumed;
         // the deep-page pass only asks those again.
@@ -395,22 +624,59 @@ impl Searcher {
             self.settings.search.authority_weight
         };
         // The local index is just another source of pages.
-        if self.settings.search.local_index_merge {
-            if let Some(index) = self.local_index.as_ref() {
-                if request.engines.len() != 1 {
-                    let text = request.query.query_text();
-                    if let Ok(hits) = index.search(&text, 20) {
-                        let items: Vec<EngineItem> = hits
-                            .into_iter()
-                            .map(|hit| {
-                                let mut result = SearchResult::new(hit.url, hit.title);
-                                result.score = f64::from(hit.score);
-                                EngineItem::Result(result)
-                            })
-                            .collect();
-                        container.extend("local_index", 1.0, items);
-                    }
-                }
+        if let Some(task) = local_task {
+            let hits = task.await.unwrap_or_default();
+            let items: Vec<EngineItem> = hits
+                .into_iter()
+                .map(|hit| {
+                    let mut result = SearchResult::new(hit.url, hit.title);
+                    result.content = hit.snippet;
+                    result.score = f64::from(hit.score);
+                    EngineItem::Result(result)
+                })
+                .collect();
+            container.extend("local_index", 1.0, items);
+        }
+
+        // The Wikipedia dump index: loose matching over the opening of every
+        // article, so a question finds the article even when the words are spread.
+        if let Some(task) = wiki_task {
+            let hits = task.await.unwrap_or_default();
+            let items: Vec<EngineItem> = hits
+                .into_iter()
+                .map(|hit| {
+                    // Older dumps were indexed with `%28`-style
+                    // titles; use the canonical article URL.
+                    let url = match crate::official::article_of(&hit.url) {
+                        Some(article) => crate::official::article_iri(&article),
+                        None => hit.url,
+                    };
+                    let mut result = SearchResult::new(url, hit.title);
+                    result.content = hit.snippet;
+                    result.score = f64::from(hit.score);
+                    EngineItem::Result(result)
+                })
+                .collect();
+            container.extend("wikipedia_index", 1.0, items);
+        }
+
+        if let Some(task) = official_lookup {
+            // It started with Wikipedia's answer; give it a little more time,
+            // never past the search deadline.
+            let wait =
+                deadline
+                    .saturating_duration_since(Instant::now())
+                    .min(Duration::from_millis(
+                        self.settings.search.official_sites_wait_ms,
+                    ));
+            let found = tokio::time::timeout(wait, task).await;
+            if let Ok(Ok(found)) = found {
+                let items: Vec<EngineItem> = found.into_iter().map(EngineItem::Result).collect();
+                container.extend(
+                    "official site",
+                    self.settings.search.official_sites_weight,
+                    items,
+                );
             }
         }
 
@@ -495,6 +761,39 @@ impl Searcher {
         response.answers.extend(answers);
         Metrics::incr(&self.metrics.results, response.results.len() as u64);
         response
+    }
+
+    /// Start the official-site lookup for the articles Wikipedia returned.
+    fn official_lookup_for(
+        &self,
+        request: &SearchRequest,
+        outcome: &EngineOutcome,
+    ) -> Option<tokio::task::JoinHandle<Vec<SearchResult>>> {
+        if !self.settings.search.official_sites
+            || request.engines.len() == 1
+            || outcome.engine != "wikipedia"
+        {
+            return None;
+        }
+        let articles: Vec<crate::official::Article> = outcome
+            .items
+            .as_ref()
+            .ok()?
+            .iter()
+            .filter_map(|item| match item {
+                EngineItem::Result(result) => crate::official::article_of(&result.url),
+                _ => None,
+            })
+            .take(crate::official::MAX_ARTICLES)
+            .collect();
+        if articles.is_empty() {
+            return None;
+        }
+        let network = Arc::clone(&self.network);
+        let kinds = crate::official::kinds_for(&request.query.query_text());
+        Some(tokio::spawn(async move {
+            crate::official::lookup(&network, &articles, &kinds, OFFICIAL_SITE_BUDGET).await
+        }))
     }
 
     async fn run_engine(
@@ -589,10 +888,14 @@ impl Searcher {
             .network
             .fetch(engine_request, timeout, Some(&self.cache), engine.proxy())
             .await
-            .map_err(|error| error.failure_kind())?;
-        let items = engine
-            .parse(&response, &request.query)
-            .map_err(|error| FailureKind::from(&error))?;
+            .map_err(|error| {
+                tracing::debug!(engine = %engine.name(), %error, "engine request failed");
+                error.failure_kind()
+            })?;
+        let items = engine.parse(&response, &request.query).map_err(|error| {
+            tracing::debug!(engine = %engine.name(), %error, "engine response rejected");
+            FailureKind::from(&error)
+        })?;
         check_quality(engine.name(), &request.query, items)
     }
 
@@ -937,6 +1240,25 @@ where
 }
 
 /// `[[engine, "Translated error"]]`, the shape upstream uses.
+/// The label shown for an engine that did not answer (JSON, feeds and HTML).
+pub fn unresponsive_text(error_type: &str, suspended: bool) -> String {
+    let mut text = match error_type {
+        "timeout" => "Timeout".to_string(),
+        "access denied" => "Access denied".to_string(),
+        "captcha" => "CAPTCHA".to_string(),
+        "too many requests" => "Too many requests".to_string(),
+        "http error" => "HTTP error".to_string(),
+        "parsing error" => "Parsing error".to_string(),
+        "suspended" => "Suspended".to_string(),
+        "resting" => "Resting: no results lately".to_string(),
+        _ => "Unexpected error".to_string(),
+    };
+    if suspended && text != "Suspended" && error_type != "resting" {
+        text = format!("Suspended: {text}");
+    }
+    text
+}
+
 fn serialize_unresponsive<S>(
     engines: &[UnresponsiveEngine],
     serializer: S,
@@ -948,19 +1270,7 @@ where
     let mut pairs: Vec<(String, String)> = engines
         .iter()
         .map(|engine| {
-            let mut text = match engine.error_type.as_str() {
-                "timeout" => "Timeout".to_string(),
-                "access denied" => "Access denied".to_string(),
-                "captcha" => "CAPTCHA".to_string(),
-                "too many requests" => "Too many requests".to_string(),
-                "http error" => "HTTP error".to_string(),
-                "parsing error" => "Parsing error".to_string(),
-                "suspended" => "Suspended".to_string(),
-                _ => "Unexpected error".to_string(),
-            };
-            if engine.suspended && text != "Suspended" {
-                text = format!("Suspended: {text}");
-            }
+            let text = unresponsive_text(&engine.error_type, engine.suspended);
             (engine.engine.clone(), text)
         })
         .collect();
@@ -999,6 +1309,7 @@ fn failure_kind_from_error_type(error_type: &str) -> FailureKind {
         "http error" => FailureKind::Http,
         "parsing error" => FailureKind::Parse,
         "suspicious response" => FailureKind::Suspicious,
+        "resting" => FailureKind::Resting,
         _ => FailureKind::Other,
     }
 }
@@ -1110,6 +1421,7 @@ mod orchestration_tests {
         Searcher {
             page_reader: crate::fetch::PageReader::new(&settings.outgoing, &[]).unwrap(),
             local_index: None,
+            wiki_index: None,
             plugins: Arc::new(PluginManager::new()),
             settings: Arc::new(settings),
             registry: Arc::new(registry),
@@ -1122,6 +1434,49 @@ mod orchestration_tests {
 
     fn query(text: &str, registry: &EngineRegistry) -> Query {
         Query::parse(text, registry, &[])
+    }
+
+    fn searcher_for_routes(engine: EngineHandle) -> Searcher {
+        searcher(vec![engine])
+    }
+
+    #[test]
+    fn a_named_specialised_source_is_asked_without_its_name() {
+        let general = FakeEngine::build("web", &["general"], 1, false);
+        let arxiv = FakeEngine::build("arxiv", &["science"], 1, false);
+        let steam = FakeEngine::build("steam", &["games"], 1, false);
+        let searcher = searcher(vec![general.clone(), arxiv, steam]);
+        let selected = vec![general as EngineHandle];
+
+        let request =
+            SearchRequest::new(query("attention is all you need arxiv", &searcher.registry));
+        let (routed, routed_request) = searcher.site_routes(&request, &selected).unwrap();
+        assert_eq!(routed.len(), 1);
+        assert_eq!(routed[0].name(), "arxiv");
+        assert_eq!(
+            routed_request.query.query_text(),
+            "attention is all you need"
+        );
+        // Every other engine still gets the query as typed.
+        assert_eq!(
+            request.query.query_text(),
+            "attention is all you need arxiv"
+        );
+
+        // Only developer/science sources are routed, and a lone name is not.
+        let crates = FakeEngine::build("crates.io", &["it", "packages"], 1, false);
+        let searcher_with_crates = searcher_for_routes(crates);
+        let request = SearchRequest::new(query(
+            "crates.io serde crate",
+            &searcher_with_crates.registry,
+        ));
+        let (_, routed_request) = searcher_with_crates.site_routes(&request, &[]).unwrap();
+        assert_eq!(routed_request.query.query_text(), "serde");
+
+        let request = SearchRequest::new(query("steam engine history", &searcher.registry));
+        assert!(searcher.site_routes(&request, &selected).is_none());
+        let request = SearchRequest::new(query("arxiv", &searcher.registry));
+        assert!(searcher.site_routes(&request, &selected).is_none());
     }
 
     #[tokio::test]
@@ -1322,6 +1677,23 @@ mod orchestration_tests {
 }
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn unresponsive_labels_distinguish_resting_from_suspended() {
+        assert_eq!(
+            unresponsive_text("resting", true),
+            "Resting: no results lately"
+        );
+        assert_eq!(
+            unresponsive_text("parsing error", true),
+            "Suspended: Parsing error"
+        );
+        assert_eq!(unresponsive_text("timeout", false), "Timeout");
+        assert_eq!(
+            unresponsive_text("anything else", false),
+            "Unexpected error"
+        );
+    }
+
     use super::*;
 
     #[test]

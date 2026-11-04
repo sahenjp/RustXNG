@@ -28,14 +28,18 @@ method = "POST"
 
 [search]
 safe_search = 0
-autocomplete = "duckduckgo"
+# Wikipedia's documented opensearch API (DuckDuckGo's endpoint answers bots
+# with a CAPTCHA and every keystroke would be a scraped request).
+autocomplete = "wikipedia"
 autocomplete_min = 4
 default_lang = "auto"
-# --- 実験機能（既定オフ）---
-# 自前の BM25 インデックス（rustxng-index で構築）。空なら無効。
-# 有効にするとローカルのヒットが上流の結果に足され、精度が上がる代わりに
-# クロールとインデックス管理が必要になる。
-local_index_path = ""
+# --- 自前の索引（無ければ使わない）---
+# rustxng-index で作る BM25 索引（docs/LOCAL-INDEX.md）。空文字列で無効。
+# ディレクトリが無ければ黙って使わない。ヒットは上流の結果に足される。
+local_index_path = "index-docs"
+# Wikipedia の公式ダンプから作る索引（rustxng-wikidump、docs/WIKIPEDIA-INDEX.md）。
+# 外部への問い合わせは増えない。ディレクトリが無ければ黙って使わない。
+wikipedia_index_path = "index-wikipedia"
 # インデックスのヒットを上流の結果に足す（精度が上がる）
 local_index_merge = true
 
@@ -48,11 +52,11 @@ max_ban_time_on_fail = 120
 max_page = 0
 timeout_limit = 3.0
 formats = ["html", "csv", "json", "rss"]
-# --- 推奨設定（20 問ベンチで Tavily を上回ることを確認済み） ---
-# parallel: 全エンジンを同時に開始。hit@5 80% / MRR 0.80（Tavily 0.41）で最良。
-# timeout_limit=3.0: より短くすると品質が落ちる（1.5 秒で MRR 0.74）。3 秒が最良。
-# include_raw_content=1（リクエスト側）で本文を付けると 4,158 字/件になり
-# Tavily の 1,248 字を上回る。生本文はキャッシュされ繰り返しクエリは高速。
+# --- 推奨設定（社内 20 問ベンチの結果。他社サービスとの優劣を示すものではない） ---
+# parallel: 全エンジンを同時に開始。20 問ベンチで最良だった。
+# timeout_limit=3.0: より短くすると品質が落ちた（1.5 秒で MRR 0.74）。3 秒が最良。
+# include_raw_content=1（リクエスト側）で本文を付けられる。生本文はキャッシュされ
+# 繰り返しクエリは高速。
 strategy = "parallel"
 staged_tier = 8
 staged_min_results = 10
@@ -63,8 +67,8 @@ raw_content_chars = 8000
 # Optional JavaScript renderer; see tools/page-renderer/README.md.
 page_renderer_command = []
 # URL/タイトルにクエリ語が含まれる結果をどれだけ押し上げるか（0=上流の位置融合のみ）。
-# Exa のニューラル検索は「公式ドキュメントの意図」を掴むため、これを上げて対抗する。
-# 20 問ベンチで 4.0 が最良（MRR 0.838・hit@5 19/20 で Exa と同率）。
+# 公式ドキュメントのように URL・タイトルにクエリ語が現れるページを上げる。
+# 20 問ベンチで 4.0 が最良だった（MRR 0.838）。
 relevance_weight = 4.0
 
 # クエリがサイト名を指すとき、そのサイト内検索（site: 付き）を二段目として
@@ -73,7 +77,7 @@ relevance_weight = 4.0
 # 特定サイトのリファレンスを狙う用途では true にすると見つかりやすい。
 site_scoped_retry = false
 
-# 意味（埋め込み）リランキング — Exa のニューラル検索に完全対抗するため。
+# 意味（埋め込み）リランキング。
 # OpenAI 互換の embeddings エンドポイントを指す。tools/embed_server.py
 # （ローカル・高速・キー不要）か、クラウドの embeddings API を指定。
 # 空文字列で無効（位置融合 + 関連度のみ）。
@@ -84,7 +88,7 @@ embedding_weight = 2.5
 # クエリが指すサイト（arxiv / mdn / python / docker など）の正規ドメインを
 # 押し上げ、ミラー（docker-docs.uclv.cu 等）を下げる強さ。意味検索でも
 # 弁別できない「公式 vs コピー」を分ける。0 で無効。
-# 20 問ベンチで 8.0 が最良（MRR 0.870・hit@1 17/20 で Exa を上回る）。
+# 20 問ベンチで 8.0 が最良だった（MRR 0.870）。
 authority_weight = 8.0
 # 何件の上位結果を埋め込みで並べ替えるか
 embedding_topk = 25
@@ -173,6 +177,7 @@ name = "duckduckgo"
 engine = "duckduckgo"
 shortcut = "ddg"
 categories = ["general", "web"]
+disabled = true  # the site blocks automated queries (CAPTCHA / access denied / 429 on the first request, 2026-11-04)
 
 [[engines]]
 name = "bing"
@@ -185,6 +190,7 @@ name = "brave"
 engine = "brave"
 shortcut = "brave"
 categories = ["general", "web"]
+disabled = true  # the site blocks automated queries (CAPTCHA / access denied / 429 on the first request, 2026-11-04)
 
 [[engines]]
 name = "mojeek"
@@ -204,6 +210,20 @@ categories = ["general"]
 name = "wikipedia"
 engine = "wikipedia"
 shortcut = "wp"
+categories = ["general"]
+
+# Companion to "wikipedia": searches the named entities of a long question.
+[[engines]]
+name = "wikipedia entities"
+engine = "wikipedia_entities"
+shortcut = "wpe"
+categories = ["general"]
+
+# Companion to "wikipedia": any of the topic words of a long question, best match first.
+[[engines]]
+name = "wikipedia any words"
+engine = "wikipedia_any"
+shortcut = "wpa"
 categories = ["general"]
 
 [[engines]]
@@ -335,9 +355,10 @@ categories = ["news"]
 
 [[engines]]
 name = "abcnyheter"
+disabled = true  # category typo fixed: this entry never ran before; enable it after reviewing the provider
 engine = "xpath"
 shortcut = "abc"
-categories = ["g", "e", "n", "e", "r", "a", "l"]
+categories = ["general"]
 paging = true
 search_url = "https://startsiden.abcnyheter.no/sok/?q={query}&page={pageno}"
 results_xpath = "//ul[contains(@class, \"results__list\")]/li[contains(@class, \"result\")]"
@@ -348,7 +369,7 @@ content_xpath = "./div"
 name = "anaconda"
 engine = "xpath"
 shortcut = "conda"
-categories = ["i", "t"]
+categories = ["it"]
 paging = true
 timeout = 6.0
 search_url = "https://anaconda.org/search?q={query}&page={pageno}"
@@ -369,7 +390,7 @@ search_type = "text"
 name = "ayo"
 engine = "xpath"
 shortcut = "ayo"
-categories = ["g", "e", "n", "e", "r", "a", "l"]
+categories = ["general"]
 search_url = "https://search.ayo.de/search?q={query}"
 results_xpath = "//div[contains(@class, 'search-result')]/div"
 url_xpath = ".//a/@href"
@@ -390,9 +411,10 @@ title_xpath = "//article[@class=\"repo-summary\"]//a[@class=\"repo-link\"]"
 content_xpath = "//article[@class=\"repo-summary\"]/p"
 [[engines]]
 name = "crowdview"
+disabled = true  # category typo fixed: this entry never ran before; enable it after reviewing the provider
 engine = "json_engine"
 shortcut = "cv"
-categories = ["g", "e", "n", "e", "r", "a", "l"]
+categories = ["general"]
 paging = false
 search_url = "https://crowdview-next-js.onrender.com/api/search-v3?query={query}"
 results_query = "results"
@@ -403,9 +425,10 @@ content_html_to_text = true
 title_html_to_text = true
 [[engines]]
 name = "encyclosearch"
+disabled = true  # category typo fixed: this entry never ran before; enable it after reviewing the provider
 engine = "json_engine"
 shortcut = "es"
-categories = ["g", "e", "n", "e", "r", "a", "l"]
+categories = ["general"]
 paging = true
 search_url = "https://encyclosearch.org/encyclosphere/search?q={query}&page={pageno}&resultsPerPage=15"
 results_query = "Results"
@@ -422,6 +445,8 @@ url_xpath = "//dl[@class=\"results-list\"]/dt[@class=\"result-title\"]/a/@href"
 title_xpath = "//dl[@class=\"results-list\"]/dt[@class=\"result-title\"]/a/text()"
 content_xpath = "//dl[@class=\"results-list\"]/dd[@class=\"result-details\"]"
 first_page_num = 0
+disabled = true  # fails on every request (2026-11-04); costs each search its timeout
+
 [[engines]]
 name = "etymonline"
 engine = "xpath"
@@ -435,9 +460,10 @@ content_xpath = "//section[contains(@class, \"word__defination\")]"
 first_page_num = 1
 [[engines]]
 name = "fastbot"
+disabled = true  # category typo fixed: this entry never ran before; enable it after reviewing the provider
 engine = "xpath"
 shortcut = "fa"
-categories = ["g", "e", "n", "e", "r", "a", "l"]
+categories = ["general"]
 search_url = "https://fastbot.de/search?q={query}"
 results_xpath = "//section[contains(@class, 'organic-results')]/div[contains(@class, 'result-item')]"
 url_xpath = "(./a/@href)[last()]"
@@ -454,9 +480,10 @@ base_url = "https://directory.fsf.org/"
 search_type = "title"
 [[engines]]
 name = "fynd"
+disabled = true  # category typo fixed: this entry never ran before; enable it after reviewing the provider
 engine = "xpath"
 shortcut = "fynd"
-categories = ["g", "e", "n", "e", "r", "a", "l"]
+categories = ["general"]
 paging = true
 safesearch = true
 search_url = "https://fynd.bot/?search={query}&offset={pageno}{safe_search}"
@@ -468,9 +495,10 @@ thumbnail_xpath = ".//img[contains(@class, \"preview-img\")]/@src"
 first_page_num = 0
 [[engines]]
 name = "gabanza"
+disabled = true  # category typo fixed: this entry never ran before; enable it after reviewing the provider
 engine = "xpath"
 shortcut = "gab"
-categories = ["g", "e", "n", "e", "r", "a", "l"]
+categories = ["general"]
 timeout = 4
 search_url = "https://www.gabanza.com/search?query={query}"
 results_xpath = "//div[contains(@class, \"border-t\")]/div/div"
@@ -488,9 +516,10 @@ search_type = "text"
 api_path = "api.php"
 [[engines]]
 name = "habrahabr"
+disabled = true  # category typo fixed: this entry never ran before; enable it after reviewing the provider
 engine = "xpath"
 shortcut = "habr"
-categories = ["i", "t"]
+categories = ["it"]
 paging = true
 timeout = 4.0
 search_url = "https://habr.com/en/search/page{pageno}/?q={query}"
@@ -510,9 +539,10 @@ title_xpath = ".//div[@class=\"ans\"]//a"
 content_xpath = ".//div[@class=\"from\"]"
 [[engines]]
 name = "library genesis"
+disabled = true  # category typo fixed: this entry never ran before; enable it after reviewing the provider
 engine = "xpath"
 shortcut = "lg"
-categories = ["f", "i", "l", "e", "s"]
+categories = ["files"]
 timeout = 7.0
 search_url = "https://libgen.rs/search.php?req={query}"
 url_xpath = "//a[contains(@href,\"book/index.php?md5\")]/@href"
@@ -520,9 +550,10 @@ title_xpath = "//a[contains(@href,\"book/\")]/text()[1]"
 content_xpath = "//td/a[1][contains(@href,\"=author\")]/text()"
 [[engines]]
 name = "lobste.rs"
+disabled = true  # category typo fixed: this entry never ran before; enable it after reviewing the provider
 engine = "xpath"
 shortcut = "lo"
-categories = ["i", "t"]
+categories = ["it"]
 timeout = 5.0
 search_url = "https://lobste.rs/search?q={query}&what=stories&order=relevance"
 results_xpath = "//li[contains(@class, \"story\")]"
@@ -543,9 +574,10 @@ content_query = "summary"
 url_prefix = "https://developer.mozilla.org"
 [[engines]]
 name = "mankier"
+disabled = true  # category typo fixed: this entry never ran before; enable it after reviewing the provider
 engine = "json_engine"
 shortcut = "man"
-categories = ["i", "t"]
+categories = ["it"]
 search_url = "https://www.mankier.com/api/v2/mans/?q={query}"
 results_query = "results"
 url_query = "url"
@@ -553,9 +585,10 @@ title_query = "name"
 content_query = "description"
 [[engines]]
 name = "openairedatasets"
+disabled = true  # category typo fixed: this entry never ran before; enable it after reviewing the provider
 engine = "json_engine"
 shortcut = "oad"
-categories = ["s", "c", "i", "e", "n", "c", "e"]
+categories = ["science"]
 paging = true
 timeout = 5.0
 search_url = "https://api.openaire.eu/search/datasets?format=json&page={pageno}&size=10&title={query}"
@@ -566,9 +599,10 @@ content_query = "metadata/oaf:entity/oaf:result/description/$"
 content_html_to_text = true
 [[engines]]
 name = "openairepublications"
+disabled = true  # category typo fixed: this entry never ran before; enable it after reviewing the provider
 engine = "json_engine"
 shortcut = "oap"
-categories = ["s", "c", "i", "e", "n", "c", "e"]
+categories = ["science"]
 paging = true
 timeout = 5.0
 search_url = "https://api.openaire.eu/search/publications?format=json&page={pageno}&size=10&title={query}"
@@ -579,9 +613,10 @@ content_query = "metadata/oaf:entity/oaf:result/description/$"
 content_html_to_text = true
 [[engines]]
 name = "openrepos"
+disabled = true  # category typo fixed: this entry never ran before; enable it after reviewing the provider
 engine = "xpath"
 shortcut = "or"
-categories = ["f", "i", "l", "e", "s"]
+categories = ["files"]
 paging = true
 timeout = 4.0
 search_url = "https://openrepos.net/search/node/{query}?page={pageno}"
@@ -624,11 +659,14 @@ results_xpath = "//div[contains(@class,'search-result')]"
 url_xpath = ".//a[contains(@class,'result-link')]/@href"
 title_xpath = ".//span[contains(@class,'result-title-txt')]/text()"
 content_xpath = "./p[@id='result-hightlight']"
+disabled = true  # the site blocks automated queries (CAPTCHA / access denied / 429 on the first request, 2026-11-04)
+
 [[engines]]
 name = "tmdb"
+disabled = true  # category typo fixed: this entry never ran before; enable it after reviewing the provider
 engine = "xpath"
 shortcut = "tm"
-categories = ["m", "o", "v", "i", "e", "s"]
+categories = ["movies"]
 paging = true
 search_url = "https://www.themoviedb.org/search?page={pageno}&query={query}"
 results_xpath = "//div[contains(@class,\"movie\") or contains(@class,\"tv\")]//div[contains(@class,\"card\")]"
@@ -638,9 +676,10 @@ content_xpath = ".//div[contains(@class,\"overview\")]"
 thumbnail_xpath = ".//img/@src"
 [[engines]]
 name = "torch"
+disabled = true  # category typo fixed: this entry never ran before; enable it after reviewing the provider
 engine = "xpath"
 shortcut = "tch"
-categories = ["o", "n", "i", "o", "n", "s"]
+categories = ["onions"]
 paging = true
 search_url = "http://xmh57jrknzkhv6y3ls3ubitzfqnkrwxhopf5aygthi7d6rplyvk3noyd.onion/cgi-bin/omega/omega?P={query}&DEFAULTOP=and"
 results_xpath = "//table//tr"
@@ -661,7 +700,8 @@ content_query = "Snippet"
 name = "wikibooks"
 engine = "mediawiki"
 shortcut = "wb"
-categories = ["general", "wikimedia"]
+# Not in "general": no general-search answer came from it (SealQA 2026-11-04), as in upstream where it is off.
+categories = ["wikimedia"]
 weight = 0.5
 base_url = "https://{language}.wikibooks.org/"
 search_type = "text"
@@ -677,7 +717,8 @@ srsort = "create_timestamp_desc"
 name = "wikiquote"
 engine = "mediawiki"
 shortcut = "wq"
-categories = ["general", "wikimedia"]
+# Not in "general": no general-search answer came from it (SealQA 2026-11-04), as in upstream where it is off.
+categories = ["wikimedia"]
 weight = 0.5
 base_url = "https://{language}.wikiquote.org/"
 search_type = "text"
@@ -685,7 +726,8 @@ search_type = "text"
 name = "wikisource"
 engine = "mediawiki"
 shortcut = "ws"
-categories = ["general", "wikimedia"]
+# Not in "general": no general-search answer came from it (SealQA 2026-11-04), as in upstream where it is off.
+categories = ["wikimedia"]
 weight = 0.5
 base_url = "https://{language}.wikisource.org/"
 search_type = "text"
@@ -693,7 +735,8 @@ search_type = "text"
 name = "wikispecies"
 engine = "mediawiki"
 shortcut = "wsp"
-categories = ["general", "science", "wikimedia"]
+# Not in "general": no general-search answer came from it (SealQA 2026-11-04), as in upstream where it is off.
+categories = ["science", "wikimedia"]
 base_url = "https://species.wikimedia.org/"
 search_type = "text"
 [[engines]]
@@ -707,7 +750,8 @@ search_type = "text"
 name = "wikiversity"
 engine = "mediawiki"
 shortcut = "wv"
-categories = ["general", "wikimedia"]
+# Not in "general": no general-search answer came from it (SealQA 2026-11-04), as in upstream where it is off.
+categories = ["wikimedia"]
 weight = 0.5
 base_url = "https://{language}.wikiversity.org/"
 search_type = "text"
@@ -715,7 +759,8 @@ search_type = "text"
 name = "wikivoyage"
 engine = "mediawiki"
 shortcut = "wy"
-categories = ["general", "wikimedia"]
+# Not in "general": no general-search answer came from it (SealQA 2026-11-04), as in upstream where it is off.
+categories = ["wikimedia"]
 weight = 0.5
 base_url = "https://{language}.wikivoyage.org/"
 search_type = "text"
@@ -734,9 +779,10 @@ suggestion_xpath = "/html/body/main/div/div[@class=\"search__suggestions\"]/p/a"
 first_page_num = 1
 [[engines]]
 name = "reloado"
+disabled = true  # category typo fixed: this entry never ran before; enable it after reviewing the provider
 engine = "xpath"
 shortcut = "rel"
-categories = ["g", "e", "n", "e", "r", "a", "l"]
+categories = ["general"]
 paging = true
 search_url = "https://reloado.com/search?q={query}&page={pageno}"
 results_xpath = "//div[contains(@class, 'result-item')]"
@@ -766,18 +812,20 @@ title_xpath = "//div[@class=\"upper-synonyms\"]/a"
 content_xpath = "//div[@class=\"synonyms-list-group\"]"
 [[engines]]
 name = "wikimini"
+disabled = true  # category typo fixed: this entry never ran before; enable it after reviewing the provider
 engine = "xpath"
 shortcut = "wkmn"
-categories = ["g", "e", "n", "e", "r", "a", "l"]
+categories = ["general"]
 search_url = "https://fr.wikimini.org/w/index.php?search={query}&title=Sp%C3%A9cial%3ASearch&fulltext=Search"
 url_xpath = "//li/div[@class=\"mw-search-result-heading\"]/a/@href"
 title_xpath = "//li//div[@class=\"mw-search-result-heading\"]/a"
 content_xpath = "//li/div[@class=\"searchresult\"]"
 [[engines]]
 name = "zapmeta"
+disabled = true  # category typo fixed: this entry never ran before; enable it after reviewing the provider
 engine = "xpath"
 shortcut = "zpm"
-categories = ["g", "e", "n", "e", "r", "a", "l"]
+categories = ["general"]
 paging = true
 search_url = "https://www.zapmeta.com/search?q={query}&pg={pageno}"
 results_xpath = "//article[contains(@class, \"organic-results-item\")]"
@@ -809,6 +857,7 @@ shortcut = "dp"
 categories = ["general"]
 paging = true
 safesearch = true
+disabled = true  # the site blocks automated queries (CAPTCHA / access denied / 429 on the first request, 2026-11-04)
 
 [[engines]]
 name = "openclipart"
@@ -829,6 +878,7 @@ engine = "luxxle"
 shortcut = "lx"
 categories = ["general"]
 safesearch = true
+disabled = true  # fails on every request (2026-11-04); costs each search its timeout
 
 [[engines]]
 name = "findborg"
@@ -836,6 +886,7 @@ engine = "findborg"
 shortcut = "fbg"
 categories = ["general"]
 time_range_support = true
+disabled = true  # the site blocks automated queries (CAPTCHA / access denied / 429 on the first request, 2026-11-04)
 
 [[engines]]
 name = "mastodon"
@@ -860,9 +911,10 @@ paging = true
 
 [[engines]]
 name = "bandcamp"
+disabled = true  # category typo fixed: this entry never ran before; enable it after reviewing the provider
 engine = "bandcamp"
 shortcut = "bc"
-categories = ["m", "u", "s", "i", "c"]
+categories = ["music"]
 
 [[engines]]
 name = "genius"
@@ -920,6 +972,7 @@ name = "andisearch"
 engine = "andisearch"
 shortcut = "andi"
 categories = ["general"]
+disabled = true  # the site blocks automated queries (CAPTCHA / access denied / 429 on the first request, 2026-11-04)
 
 [[engines]]
 name = "baidu"
@@ -945,10 +998,13 @@ engine = "fireball"
 shortcut = "fb"
 categories = ["general"]
 safesearch = true
+disabled = true  # the site blocks automated queries (CAPTCHA / access denied / 429 on the first request, 2026-11-04)
 
 [[engines]]
 name = "naver"
 engine = "naver"
+# Off by default: published terms not yet reconciled (docs/audit); enable only after checking them.
+disabled = true
 shortcut = "nv"
 categories = ["general"]
 paging = true
@@ -978,6 +1034,7 @@ shortcut = "qw"
 categories = ["general", "web"]
 paging = true
 safesearch = true
+disabled = true  # the site blocks automated queries (CAPTCHA / access denied / 429 on the first request, 2026-11-04)
 
 [[engines]]
 name = "sepiasearch"
@@ -1000,6 +1057,7 @@ engine = "tusksearch"
 shortcut = "tsk"
 categories = ["general"]
 paging = true
+disabled = true  # the site blocks automated queries (CAPTCHA / access denied / 429 on the first request, 2026-11-04)
 
 [[engines]]
 name = "unsplash"
@@ -1010,9 +1068,10 @@ paging = true
 
 [[engines]]
 name = "artstation"
+disabled = true  # category typo fixed: this entry never ran before; enable it after reviewing the provider
 engine = "artstation"
 shortcut = "as"
-categories = ["i", "m", "a", "g", "e", "s"]
+categories = ["images"]
 
 [[engines]]
 name = "deviantart"
@@ -1069,6 +1128,7 @@ engine = "duckduckgo_web"
 shortcut = "ddgb"
 categories = ["general", "web"]
 paging = true
+disabled = true  # the site blocks automated queries (CAPTCHA / access denied / 429 on the first request, 2026-11-04)
 
 [[engines]]
 name = "r1337x"
@@ -1247,6 +1307,7 @@ shortcut = "yh"
 categories = ["general", "web"]
 paging = true
 time_range_support = true
+disabled = true  # Yahoo terms 2.4(9) forbid automated collection without prior permission
 
 [[engines]]
 name = "yahoo japan"
@@ -1263,6 +1324,7 @@ shortcut = "yd"
 categories = ["general"]
 paging = true
 time_range_support = true
+disabled = true  # the site blocks automated queries (CAPTCHA / access denied / 429 on the first request, 2026-11-04)
 
 [[engines]]
 name = "ebay"
@@ -1304,6 +1366,7 @@ name = "neosearch"
 engine = "neosearch"
 shortcut = "neo"
 categories = ["general"]
+disabled = true  # the site blocks automated queries (CAPTCHA / access denied / 429 on the first request, 2026-11-04)
 
 [[engines]]
 name = "openalex"
@@ -1325,6 +1388,7 @@ shortcut = "sogou"
 categories = ["general"]
 paging = true
 time_range_support = true
+disabled = true  # fails on every request (2026-11-04); costs each search its timeout
 
 [[engines]]
 name = "sogou_images"
@@ -1363,6 +1427,8 @@ categories = ["general"]
 [[engines]]
 name = "swisscows"
 engine = "swisscows"
+# Off by default: uses a signed endpoint whose third-party use is unconfirmed; enable only with the operator's permission.
+disabled = true
 shortcut = "sw"
 categories = ["general"]
 paging = true
@@ -1379,6 +1445,7 @@ name = "yep"
 engine = "yep"
 shortcut = "yep"
 categories = ["general"]
+disabled = true  # fails on every request (2026-11-04); costs each search its timeout
 
 [[engines]]
 name = "duden"
@@ -1452,6 +1519,7 @@ shortcut = "qk"
 categories = ["general"]
 paging = true
 time_range_support = true
+disabled = true  # the site blocks automated queries (CAPTCHA / access denied / 429 on the first request, 2026-11-04)
 
 [[engines]]
 name = "repology"
@@ -1708,8 +1776,8 @@ name = "grokipedia"
 engine = "grokipedia"
 shortcut = "gp"
 categories = ["general"]
+disabled = true  # no answer of either benchmark came from it (2026-11-04); it only took result slots
 paging = true
-# verified working (results observed in the 100-question sweep)
 
 [[engines]]
 name = "il_post"
@@ -1766,7 +1834,7 @@ engine = "neocities"
 shortcut = "nc"
 categories = ["general", "blogs"]
 paging = true
-# verified working (results observed in the 100-question sweep)
+disabled = true  # fails on every request (2026-11-04); costs each search its timeout
 
 [[engines]]
 name = "picjumbo"
@@ -1827,6 +1895,8 @@ disabled = true  # unverified; remove when confirmed working
 [[engines]]
 name = "keenable"
 engine = "keenable"
+# Off by default: calls a public endpoint even without an API key; enable only with a key and after checking the terms.
+disabled = true
 shortcut = "keen"
 categories = ["general"]
 # verified working (results observed in the 100-question sweep)

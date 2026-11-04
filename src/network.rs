@@ -87,6 +87,17 @@ pub struct Network {
     suffix: String,
     retries: u32,
     counter: AtomicUsize,
+    /// Fixed, honest User-Agent used instead of the rotating pool.
+    identified: Option<String>,
+    /// The honest User-Agent sent to hosts that publish an API policy, even
+    /// when the instance as a whole does not identify itself.
+    api_agent: String,
+    /// Minimum pause between two requests to one host.
+    host_spacing: Duration,
+    /// Per-domain exceptions to `host_spacing` (domain, pause).
+    host_spacing_overrides: Vec<(String, Duration)>,
+    /// Earliest start of the next request per host.
+    host_slots: std::sync::Mutex<std::collections::HashMap<String, tokio::time::Instant>>,
 }
 
 /// Build a client from the outgoing settings, optionally through another proxy.
@@ -174,7 +185,72 @@ impl Network {
             suffix: outgoing.useragent_suffix.clone(),
             retries: outgoing.retries,
             counter: AtomicUsize::new(0),
+            api_agent: identified_user_agent(&outgoing.contact),
+            identified: outgoing
+                .identified_ua
+                .then(|| identified_user_agent(&outgoing.contact)),
+            host_spacing: Duration::from_millis(outgoing.host_spacing_ms),
+            host_spacing_overrides: outgoing
+                .host_spacing_overrides
+                .iter()
+                .map(|(domain, millis)| {
+                    (
+                        domain.trim().trim_start_matches('.').to_lowercase(),
+                        Duration::from_millis(*millis),
+                    )
+                })
+                .collect(),
+            host_slots: std::sync::Mutex::new(std::collections::HashMap::new()),
         })
+    }
+
+    /// The pause between two requests to `host`: the most specific override
+    /// (exact host or a parent domain), else the general spacing.
+    fn spacing_for(&self, host: &str) -> Duration {
+        self.host_spacing_overrides
+            .iter()
+            .filter(|(domain, _)| {
+                host == domain
+                    || host
+                        .strip_suffix(domain.as_str())
+                        .is_some_and(|rest| rest.ends_with('.'))
+            })
+            .max_by_key(|(domain, _)| domain.len())
+            .map_or(self.host_spacing, |(_, spacing)| *spacing)
+    }
+
+    /// Reserve this host's next request slot and wait for it.
+    ///
+    /// Returns `Timeout` when the slot starts after the request's own budget,
+    /// so a busy host is skipped instead of being asked early.
+    async fn wait_for_host_slot(&self, url: &str, budget: Duration) -> Result<(), NetworkError> {
+        if self.host_spacing.is_zero() && self.host_spacing_overrides.is_empty() {
+            return Ok(());
+        }
+        let Some(host) = reqwest::Url::parse(url)
+            .ok()
+            .and_then(|parsed| parsed.host_str().map(str::to_lowercase))
+        else {
+            return Ok(());
+        };
+        let spacing = self.spacing_for(&host);
+        if spacing.is_zero() {
+            return Ok(());
+        }
+        let now = tokio::time::Instant::now();
+        let slot = {
+            let Ok(mut slots) = self.host_slots.lock() else {
+                return Ok(());
+            };
+            let next = slots.get(&host).copied().unwrap_or(now).max(now);
+            if next.saturating_duration_since(now) >= budget {
+                return Err(NetworkError::Timeout);
+            }
+            slots.insert(host, next + spacing);
+            next
+        };
+        tokio::time::sleep_until(slot).await;
+        Ok(())
     }
 
     /// The client for one request, honouring a per-engine proxy.
@@ -205,6 +281,9 @@ impl Network {
 
     /// A different user agent on every call, like upstream's rotation.
     pub fn user_agent(&self) -> String {
+        if let Some(identified) = &self.identified {
+            return identified.clone();
+        }
         if self.user_agents.is_empty() {
             return default_user_agent();
         }
@@ -403,7 +482,15 @@ impl Network {
             Method::Get => reqwest::Method::GET,
             Method::Post => reqwest::Method::POST,
         };
+        self.wait_for_host_slot(&request.url, timeout).await?;
         let mut headers = self.default_headers();
+        // Hosts that publish an API policy ask clients to name themselves, so
+        // they never see the browser-like rotation.
+        if is_documented_api_host(&request.url) {
+            if let Ok(value) = HeaderValue::from_str(&self.api_agent) {
+                headers.insert(reqwest::header::USER_AGENT, value);
+            }
+        }
         for (name, value) in request.headers.iter() {
             headers.insert(name.clone(), value.clone());
         }
@@ -484,6 +571,65 @@ fn is_retryable(error: &NetworkError) -> bool {
         NetworkError::Timeout => false,
         NetworkError::Status { status, .. } => *status == 429 || *status >= 500,
         NetworkError::Build(_) | NetworkError::TooLarge(_) => false,
+    }
+}
+
+/// Hosts whose operators publish an API policy that asks for an identifiable
+/// client (Wikimedia, GitHub, crates.io, PyPI, Crossref, OpenAlex, ...).
+const DOCUMENTED_API_SUFFIXES: &[&str] = &[
+    "wikipedia.org",
+    "wikidata.org",
+    "wikimedia.org",
+    "wikibooks.org",
+    "wikinews.org",
+    "wikiquote.org",
+    "wikisource.org",
+    "wikiversity.org",
+    "wikivoyage.org",
+    "wiktionary.org",
+    "api.github.com",
+    "crates.io",
+    "pypi.org",
+    "registry.npmjs.org",
+    "api.npms.io",
+    "api.crossref.org",
+    "api.openalex.org",
+    "api.semanticscholar.org",
+    "api.stackexchange.com",
+    "export.arxiv.org",
+    "api.openverse.org",
+    "api.openverse.engineering",
+    "nominatim.openstreetmap.org",
+    "photon.komoot.io",
+    "api.open-meteo.com",
+    "geocoding-api.open-meteo.com",
+    "api.mwmbl.org",
+    "hn.algolia.com",
+    "www.ebi.ac.uk",
+];
+
+/// Whether the URL points at a host with a published API policy.
+pub fn is_documented_api_host(url: &str) -> bool {
+    let Some(host) = reqwest::Url::parse(url)
+        .ok()
+        .and_then(|parsed| parsed.host_str().map(str::to_lowercase))
+    else {
+        return false;
+    };
+    DOCUMENTED_API_SUFFIXES
+        .iter()
+        .any(|suffix| host == *suffix || host.ends_with(&format!(".{suffix}")))
+}
+
+/// The User-Agent of an instance that identifies itself (`identified_ua`).
+pub fn identified_user_agent(contact: &str) -> String {
+    let base = format!(
+        "rustxng/{} (+https://github.com/sahenjp/RustXNG",
+        env!("CARGO_PKG_VERSION")
+    );
+    match contact.trim() {
+        "" => format!("{base})"),
+        contact => format!("{base}; {contact})"),
     }
 }
 
@@ -683,6 +829,11 @@ mod tests {
             suffix: String::new(),
             retries: 0,
             counter: AtomicUsize::new(0),
+            api_agent: identified_user_agent(""),
+            identified: None,
+            host_spacing: Duration::ZERO,
+            host_spacing_overrides: Vec::new(),
+            host_slots: std::sync::Mutex::new(std::collections::HashMap::new()),
         };
         let first = network.user_agent();
         let second = network.user_agent();
@@ -901,5 +1052,93 @@ mod tests {
         assert_eq!(classify_status(403, "denied"), FailureKind::AccessDenied);
         assert_eq!(classify_status(429, ""), FailureKind::TooManyRequests);
         assert_eq!(classify_status(500, ""), FailureKind::Http);
+    }
+
+    fn network_with(configure: impl FnOnce(&mut crate::settings::Outgoing)) -> Network {
+        let mut settings = Settings::default();
+        configure(&mut settings.outgoing);
+        Network::from_settings(&settings).expect("network")
+    }
+
+    #[test]
+    fn documented_api_hosts_are_recognised_exactly() {
+        assert!(is_documented_api_host(
+            "https://en.wikipedia.org/w/api.php?x=1"
+        ));
+        assert!(is_documented_api_host("https://crates.io/api/v1/crates"));
+        assert!(is_documented_api_host(
+            "https://api.github.com/search/repositories"
+        ));
+        assert!(!is_documented_api_host("https://github.com/search"));
+        assert!(!is_documented_api_host("https://evilcrates.io/"));
+        assert!(!is_documented_api_host("https://www.bing.com/search"));
+    }
+
+    #[test]
+    fn an_identified_instance_always_sends_the_same_honest_user_agent() {
+        let network = network_with(|outgoing| {
+            outgoing.identified_ua = true;
+            outgoing.contact = "ops@example.org".into();
+        });
+        let first = network.user_agent();
+        assert_eq!(first, network.user_agent());
+        assert!(first.starts_with("rustxng/"), "{first}");
+        assert!(first.contains("ops@example.org"));
+        assert!(!first.contains("Mozilla"));
+        // The default stays the rotating pool.
+        assert!(network_with(|_| {}).user_agent().starts_with("Mozilla/5.0"));
+    }
+
+    #[test]
+    fn a_domain_can_have_its_own_spacing() {
+        let network = network_with(|outgoing| {
+            outgoing.host_spacing_ms = 1100;
+            outgoing
+                .host_spacing_overrides
+                .insert("wikipedia.org".into(), 200);
+            outgoing
+                .host_spacing_overrides
+                .insert("ja.wikipedia.org".into(), 0);
+        });
+        assert_eq!(
+            network.spacing_for("en.wikipedia.org"),
+            Duration::from_millis(200)
+        );
+        assert_eq!(network.spacing_for("ja.wikipedia.org"), Duration::ZERO);
+        assert_eq!(
+            network.spacing_for("crates.io"),
+            Duration::from_millis(1100)
+        );
+        assert_eq!(
+            network.spacing_for("notwikipedia.org"),
+            Duration::from_millis(1100)
+        );
+    }
+
+    #[tokio::test]
+    async fn requests_to_one_host_are_spaced_and_a_busy_host_is_skipped() {
+        let network = network_with(|outgoing| outgoing.host_spacing_ms = 200);
+        let budget = Duration::from_secs(5);
+        let started = std::time::Instant::now();
+        network
+            .wait_for_host_slot("https://api.example.org/a", budget)
+            .await
+            .unwrap();
+        // A different host does not wait.
+        network
+            .wait_for_host_slot("https://other.example.org/a", budget)
+            .await
+            .unwrap();
+        assert!(started.elapsed() < Duration::from_millis(100));
+        network
+            .wait_for_host_slot("https://api.example.org/b", budget)
+            .await
+            .unwrap();
+        assert!(started.elapsed() >= Duration::from_millis(190));
+        // The next slot is 200 ms away: a 50 ms budget gives up instead.
+        let result = network
+            .wait_for_host_slot("https://api.example.org/c", Duration::from_millis(50))
+            .await;
+        assert!(matches!(result, Err(NetworkError::Timeout)));
     }
 }

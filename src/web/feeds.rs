@@ -62,19 +62,7 @@ pub fn upstream_json(response: &SearchResponse) -> serde_json::Value {
         .unresponsive_engines
         .iter()
         .map(|engine| {
-            let mut text = match engine.error_type.as_str() {
-                "timeout" => "Timeout",
-                "access denied" => "Access denied",
-                "captcha" => "CAPTCHA",
-                "too many requests" => "Too many requests",
-                "http error" => "HTTP error",
-                "parsing error" => "Parsing error",
-                _ => "Unexpected error",
-            }
-            .to_string();
-            if engine.suspended {
-                text = format!("Suspended: {text}");
-            }
+            let text = crate::aggregator::unresponsive_text(&engine.error_type, engine.suspended);
             (engine.engine.clone(), text)
         })
         .collect();

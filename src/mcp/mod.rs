@@ -358,6 +358,7 @@ impl McpServer {
                 };
             }
         }
+        query.follow_query_script(language_requested);
         query.safesearch = defaults.safesearch.min(2);
         query.time_range = time_range;
         let language = query.engine_language();

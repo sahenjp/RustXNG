@@ -63,3 +63,9 @@ http-body-util = "0.1"
 collapsible_if = "allow"
 # Existing upstream plural rules intentionally retain modulo expressions.
 manual_is_multiple_of = "allow"
+
+# Smaller, faster release binaries (one-off cost at build time).
+[profile.release]
+lto = "thin"
+codegen-units = 1
+strip = "debuginfo"

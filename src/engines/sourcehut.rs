@@ -24,7 +24,7 @@ const DEFAULTS: EngineDefaults = EngineDefaults {
 
 const BASE_URL: &str = "https://sr.ht/projects";
 /// SourceHut blocks the standard user agents with its go-away filter.
-const USER_AGENT: &str = "rustxng/0.1 (+https://github.com/searxng/searxng)";
+const USER_AGENT: &str = "rustxng/0.1 (+https://github.com/sahenjp/RustXNG)";
 
 /// Project search on SourceHut.
 pub struct SourceHut {

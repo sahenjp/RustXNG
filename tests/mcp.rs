@@ -69,6 +69,7 @@ async fn connect_with_page(page: String) -> Fixture {
     ])
     .to_string();
     let counter = page_fetches.clone();
+    let book = page.clone();
     let app =
         Router::new()
             .route(
@@ -81,6 +82,22 @@ async fn connect_with_page(page: String) -> Fixture {
                     counter.fetch_add(1, Ordering::SeqCst);
                     let page = page.clone();
                     async move { ([(header::CONTENT_TYPE, "text/html")], page) }
+                }),
+            )
+            .route(
+                "/robots.txt",
+                get(|| async {
+                    (
+                        [(header::CONTENT_TYPE, "text/plain")],
+                        "User-agent: *\nDisallow: /rust-book\n",
+                    )
+                }),
+            )
+            .route(
+                "/rust-book",
+                get(move || {
+                    let book = book.clone();
+                    async move { ([(header::CONTENT_TYPE, "text/html")], book) }
                 }),
             )
             .route(
@@ -109,6 +126,10 @@ async fn connect_with_page(page: String) -> Fixture {
     tokio::spawn(async move { axum::serve(listener, app).await.unwrap() });
 
     let mut settings = Settings::defaults();
+
+    settings.search.wikipedia_index_path = String::new();
+
+    settings.search.local_index_path = String::new();
     let mut engine = EngineConfig::new("mwmbl", "mwmbl", "mwm", &["general"]);
     engine.base_url = Some(format!("http://127.0.0.1:{port}/api/v1"));
     engine.timeout = Some(2.0);
@@ -373,6 +394,33 @@ async fn read_page_returns_twenty_thousand_japanese_characters_with_larger_budge
     assert!(next.get("next_offset").is_none());
     assert_eq!(next["truncated"], false);
     assert_eq!(next["source_truncated"], false);
+    assert_eq!(page_fetches.load(Ordering::SeqCst), 1);
+    client.cancel().await.unwrap();
+}
+
+#[tokio::test]
+async fn read_page_respects_robots_txt() {
+    let Fixture {
+        client,
+        origin,
+        page_fetches,
+        ..
+    } = connect().await;
+    call(&client, "search", json!({"query": "rust", "limit": 10})).await;
+    let blocked = call(
+        &client,
+        "read_page",
+        json!({"url": format!("{origin}/rust-book")}),
+    )
+    .await;
+    assert!(error_text(&blocked).contains("robots.txt"), "{blocked:?}");
+    let allowed = call(
+        &client,
+        "read_page",
+        json!({"url": format!("{origin}/rust")}),
+    )
+    .await;
+    assert_eq!(structured(&allowed)["text"], PAGE_TEXT);
     assert_eq!(page_fetches.load(Ordering::SeqCst), 1);
     client.cancel().await.unwrap();
 }

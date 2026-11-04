@@ -17,10 +17,10 @@
 //! fetched without these checks. Extracted text is kept per session instead,
 //! so reading a page slice by slice fetches it once.
 
-use std::collections::VecDeque;
+use std::collections::{HashMap, VecDeque};
 use std::net::{IpAddr, Ipv4Addr, Ipv6Addr, SocketAddr};
 use std::sync::{Arc, Mutex};
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use reqwest::dns::{Addrs, Name, Resolve, Resolving};
 
@@ -33,6 +33,10 @@ const REMEMBERED_PAGES: usize = 8;
 /// Time for connecting, redirects and the whole body.
 const FETCH_TIMEOUT: Duration = Duration::from_secs(8);
 const MAX_REDIRECTS: usize = 5;
+/// How long a site's robots.txt is remembered.
+const ROBOTS_TTL: Duration = Duration::from_secs(3600);
+/// robots.txt bytes read at most (RFC 9309 asks parsers to accept 500 KiB).
+const ROBOTS_MAX_BYTES: usize = 500 * 1024;
 
 /// Whether an address is globally routable (not loopback, private, link
 /// local, shared, multicast, documentation or otherwise reserved).
@@ -162,7 +166,7 @@ fn public_client_with_resolver(
         .timeout(FETCH_TIMEOUT)
         .connect_timeout(Duration::from_secs(4))
         .danger_accept_invalid_certs(!outgoing.verify)
-        .user_agent(crate::network::default_user_agent());
+        .user_agent(crate::network::identified_user_agent(&outgoing.contact));
     if !outgoing.enable_http2 {
         builder = builder.http1_only();
     }
@@ -219,6 +223,9 @@ enum PageBody {
 /// Extracted page text and whether the readable source exceeded the limit.
 pub use crate::fetch::FetchedPage as PageContent;
 
+/// robots.txt policies by site, with the time they were fetched.
+type RobotsCache = HashMap<String, (Instant, Arc<crate::robots::Robots>)>;
+
 /// Fetches pages and keeps their extracted text for the session.
 #[derive(Clone)]
 pub struct PageReader {
@@ -227,6 +234,8 @@ pub struct PageReader {
     pages: Arc<Mutex<Pages>>,
     proxy_blocked: bool,
     cache_ttl: Option<Duration>,
+    /// robots.txt per site (`host:port`), kept for an hour.
+    robots: Arc<Mutex<RobotsCache>>,
     /// Optional external backend, such as a provider API. `None` keeps the
     /// direct fetcher.
     source: Option<Arc<dyn crate::fetch::PageSource>>,
@@ -255,6 +264,7 @@ impl PageReader {
             renderer_command: Arc::from([]),
             permits: Arc::new(tokio::sync::Semaphore::new(MAX_CONCURRENT)),
             pages: Arc::new(Mutex::new(VecDeque::new())),
+            robots: Arc::new(Mutex::new(HashMap::new())),
             source: None,
         })
     }
@@ -319,6 +329,11 @@ impl PageReader {
             self.remember(url, max_chars, content.clone());
             return Ok(content);
         }
+        // An external provider fetches the page itself; robots.txt is checked
+        // here for our own (direct) fetches.
+        if !self.robots_allow(&parsed).await {
+            return Err("the site's robots.txt asks automated tools not to read this page".into());
+        }
         let body = tokio::time::timeout(FETCH_TIMEOUT, self.fetch(parsed))
             .await
             .map_err(|_| "the page took too long to load".to_string())??;
@@ -359,6 +374,63 @@ impl PageReader {
         };
         self.remember(url, max_chars, content.clone());
         Ok(content)
+    }
+
+    /// Whether the site's robots.txt lets us read this page.
+    ///
+    /// The same RFC 9309 rules as the crawler, with one difference: a robots.txt
+    /// that cannot be reached at all (network failure) does not block a page
+    /// the user asked for, because the page fetch would fail the same way.
+    async fn robots_allow(&self, url: &reqwest::Url) -> bool {
+        let Some(host) = url.host_str() else {
+            return true;
+        };
+        let site = match url.port() {
+            Some(port) => format!("{host}:{port}"),
+            None => host.to_string(),
+        };
+        let cached = self.robots.lock().ok().and_then(|robots| {
+            robots
+                .get(&site)
+                .filter(|(at, _)| at.elapsed() < ROBOTS_TTL)
+                .map(|(_, policy)| Arc::clone(policy))
+        });
+        let policy = match cached {
+            Some(policy) => policy,
+            None => {
+                let fetched = Arc::new(self.fetch_robots(url).await);
+                if let Ok(mut robots) = self.robots.lock() {
+                    robots.insert(site, (Instant::now(), Arc::clone(&fetched)));
+                }
+                fetched
+            }
+        };
+        let target = match url.query() {
+            Some(query) => format!("{}?{query}", url.path()),
+            None => url.path().to_string(),
+        };
+        policy.allowed(&target)
+    }
+
+    async fn fetch_robots(&self, url: &reqwest::Url) -> crate::robots::Robots {
+        let mut location = url.clone();
+        location.set_path("/robots.txt");
+        location.set_query(None);
+        location.set_fragment(None);
+        let request = self.client.get(location).timeout(Duration::from_secs(5));
+        let Ok(mut response) = request.send().await else {
+            return crate::robots::Robots::allow_all();
+        };
+        let status = response.status().as_u16();
+        let mut body = Vec::new();
+        while let Ok(Some(chunk)) = response.chunk().await {
+            body.extend_from_slice(&chunk);
+            if body.len() > ROBOTS_MAX_BYTES {
+                body.truncate(ROBOTS_MAX_BYTES);
+                break;
+            }
+        }
+        crate::robots::Robots::from_response(status, &String::from_utf8_lossy(&body), "rustxng")
     }
 
     async fn fetch(&self, url: reqwest::Url) -> Result<PageBody, String> {

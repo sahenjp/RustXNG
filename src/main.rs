@@ -1,4 +1,4 @@
-//! Binary entry point: `rustxng [--config FILE] [--bind ADDRESS] [--port PORT]`.
+//! Binary entry point: `rustxng [--profile NAME] [--config FILE] [--bind ADDRESS] [--port PORT]`.
 
 use std::net::SocketAddr;
 use std::path::PathBuf;
@@ -6,7 +6,7 @@ use std::process::ExitCode;
 use std::sync::atomic::{AtomicU64, Ordering};
 
 use rustxng::aggregator::Searcher;
-use rustxng::settings::Settings;
+use rustxng::settings::{Profile, Settings};
 use rustxng::version::version_string;
 use rustxng::web::{self, AppState};
 
@@ -14,10 +14,18 @@ const HELP: &str = "rustxng - a Rust rewrite of the SearXNG metasearch engine
 
 USAGE:
     rustxng [OPTIONS]
-    rustxng mcp [--config FILE]    Serve MCP tools on stdin/stdout
+    rustxng mcp [--profile NAME] [--config FILE]
+                                   Serve MCP tools on stdin/stdout
 
 OPTIONS:
-    -c, --config <FILE>    Settings file (default: $SEARXNG_SETTINGS_PATH)
+    --profile <NAME>       Built-in provider set (default: standard)
+                             standard  keyless providers that allow automated use
+                             full      standard + search engines whose terms
+                                       forbid automated access (private use only;
+                                       read their terms first)
+                             clean     documented public APIs and own crawl only
+    -c, --config <FILE>    Settings file laid over the profile
+                           (default: $SEARXNG_SETTINGS_PATH)
     -b, --bind <ADDRESS>   Address to listen on (default: server.bind_address)
     -p, --port <PORT>      Port to listen on (default: server.port)
     --check-update        Check the latest official release
@@ -26,13 +34,14 @@ OPTIONS:
     -h, --help             Print this help
 
 ENVIRONMENT:
-    SEARXNG_SETTINGS_PATH, SEARXNG_BIND_ADDRESS, SEARXNG_PORT, SEARXNG_SECRET,
+    RUSTXNG_PROFILE, SEARXNG_SETTINGS_PATH, SEARXNG_BIND_ADDRESS, SEARXNG_PORT, SEARXNG_SECRET,
     SEARXNG_BASE_URL, SEARXNG_DEBUG, SEARXNG_ENABLE_METRICS, RUST_LOG
 ";
 
 struct Args {
     mcp: bool,
     config: Option<PathBuf>,
+    profile: Option<Profile>,
     bind: Option<String>,
     port: Option<u16>,
     update: Option<bool>,
@@ -42,6 +51,7 @@ fn parse_args() -> Result<Option<Args>, String> {
     let mut args = Args {
         mcp: false,
         config: None,
+        profile: None,
         bind: None,
         port: None,
         update: None,
@@ -71,6 +81,14 @@ fn parse_args() -> Result<Option<Args>, String> {
                 args.config = Some(PathBuf::from(
                     argv.next().ok_or("--config needs a file path")?,
                 ));
+            }
+            "--profile" => {
+                args.profile = Some(Profile::parse(
+                    &argv.next().ok_or("--profile needs a name")?,
+                )?);
+            }
+            other if other.starts_with("--profile=") => {
+                args.profile = Some(Profile::parse(&other["--profile=".len()..])?);
             }
             "-b" | "--bind" => args.bind = Some(argv.next().ok_or("--bind needs an address")?),
             "-p" | "--port" => {
@@ -105,7 +123,7 @@ async fn main() -> ExitCode {
     };
 
     if args.mcp && (args.update.is_some() || args.bind.is_some() || args.port.is_some()) {
-        eprintln!("error: mcp only accepts --config");
+        eprintln!("error: mcp only accepts --profile and --config");
         return ExitCode::from(2);
     }
     tracing_subscriber::fmt()
@@ -127,8 +145,20 @@ async fn main() -> ExitCode {
         };
     }
 
+    let profile = match args
+        .profile
+        .map(Ok)
+        .or_else(|| Profile::from_env().transpose())
+    {
+        Some(Ok(profile)) => profile,
+        Some(Err(error)) => {
+            eprintln!("error: {error}");
+            return ExitCode::from(2);
+        }
+        None => Profile::Standard,
+    };
     let settings_path = args.config.or_else(Settings::path_from_env);
-    let mut settings = match Settings::load(settings_path.as_deref()) {
+    let mut settings = match Settings::load_profile(settings_path.as_deref(), profile) {
         Ok(settings) => settings,
         Err(error) => {
             eprintln!("error: {error}");
@@ -159,7 +189,12 @@ async fn main() -> ExitCode {
             }
         };
     }
-    tracing::info!(engines = searcher.registry.len(), "{}", version_string());
+    tracing::info!(
+        profile = profile.name(),
+        engines = searcher.registry.len(),
+        "{}",
+        version_string()
+    );
 
     let state = AppState::new(searcher);
     // Track the last request so an idle sidecar can exit on its own.

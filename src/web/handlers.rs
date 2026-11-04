@@ -196,6 +196,13 @@ async fn run_search(
             };
         }
     }
+    query.follow_query_script(
+        language_requested
+            || params
+                .locale
+                .as_deref()
+                .is_some_and(|value| !value.is_empty()),
+    );
     query.pageno = params.pageno.unwrap_or(1).max(1);
     query.time_range = params.time_range.as_deref().and_then(TimeRange::parse);
     query.safesearch = params.safesearch.unwrap_or(preferences.safesearch).min(2);

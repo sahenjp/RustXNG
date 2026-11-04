@@ -4,7 +4,6 @@
 > クロールとインデックスの管理が必要になるため、通常の利用では不要です。
 
 RustXNG は上流エンジンに依存しない**自前の全文検索インデックス**を持てます。ローカルのヒットを上流の結果に足すことで、上流が取りこぼすページを補い**精度が上がります**。
-RustXNG は上流エンジンに依存しない**自前の全文検索インデックス**を持てます。ローカルのヒットを上流の結果に足すことで、上流が取りこぼすページを補い**精度が上がります**。
 
 ## 構成
 
@@ -18,7 +17,7 @@ rustxng（--port 29483）  →  ローカルのヒットを上流の結果に併
 
 - **転置インデックス**: Tantivy（Rust 製、BM25 でスコアリング）
 - **二重トークナイズ**: 空白区切り言語は既定トークナイザ、日本語・中国語は**文字バイグラム**（分かち書きが無いため）
-- **礼儀**: robots.txt の `Disallow` を尊重、同一ホストのみ辿る、ホストごとに間隔を空ける、200 ページごとにコミット
+- **礼儀**: RFC 9309 の robots.txt（最長一致・`*`/`$`・自分のグループ優先・取得不能なら全面禁止）と `Crawl-delay` を守る。名乗る User-Agent、ホストごとの間隔とページ上限、`Retry-After` の尊重、`noindex`/`nofollow`（meta と `X-Robots-Tag`）の遵守、同一サイト内のリダイレクトのみ追従、本文 2 MB 上限、200 ページごとにコミット
 - **読み書き分離**: クロール中でも検索側は読み取り専用で開ける
 
 ## 使い方
@@ -29,7 +28,8 @@ https://doc.rust-lang.org/book/
 https://docs.python.org/3/library/
 
 # 2. クロール（robots.txt を尊重、8 ワーカー）
-rustxng-index crawl --seeds seeds.txt --out ./index-data --max-pages 5000 --max-depth 3 --workers 8
+rustxng-index crawl --seeds seeds.txt --out ./index-data --max-pages 5000 --max-depth 3 --workers 8 \
+  --contact ops@example.org   # User-Agent に連絡先を載せる（推奨）
 
 # 3. 確認
 rustxng-index stats --index ./index-data
@@ -38,6 +38,29 @@ rustxng-index search --index ./index-data "python dict get" --limit 5
 # 4. 下記のlocal_index_pathを設定した構成ファイルを指定して起動
 rustxng
 ```
+
+2026-11-04 の比較（`docs/COMPARISON-2026-11-04.md`）で使った索引 `index-docs` は、`bench/clean-profile/` の `seeds.txt`（主要な文書サイト 16）・`seeds-devdocs.txt`（DevDocs の一覧）・`seeds-ja.txt`（公式文書の日本語版 20）から、`--sitemaps --within-seed-path --skip-indexed`・ホスト上限 300〜400 で作った 41,144 ページ（125 MB）です。
+
+Wikipedia 全体を対象にした索引は、クロールではなく公式ダンプから作ります。`docs/WIKIPEDIA-INDEX.md` を参照してください。
+
+## クロール時のふるまい（スキーマ v2 以降）
+
+| 項目 | 内容 |
+| --- | --- |
+| User-Agent | `rustxng-index/<版> (+https://github.com/sahenjp/RustXNG[; 連絡先])`。ブラウザを装わない |
+| robots.txt | ホスト（ポート込み）ごとに 1 回取得してキャッシュ。4xx は許可、5xx・429・通信失敗は**そのホストを取得しない** |
+| 間隔 | `--delay-ms`（既定 1000）。robots の `Crawl-delay` が大きければそちらを優先（上限 30 秒） |
+| 上限 | `--max-per-host`（既定 2000）。1 つのホストが全体を占有しない |
+| 429/503 | `Retry-After` の間そのホストを止める |
+| 重複 | URL 正規化（トラッキングパラメータ・フラグメント除去）、同一ホストの canonical、本文ハッシュで除外 |
+| 取得しないもの | `noindex`、`nofollow` のリンク（`ugc`・`sponsored` 含む） |
+| 保存 | タイトル・本文・URL の語・検索結果用スニペット |
+| `--sitemaps` | robots.txt が示すサイトマップの URL を取り込む。**上限はホストごと**（`--max-per-host`）なので、巨大なサイトマップ 1 つで全体を使い切らない |
+| `--within-seed-path` | シードのディレクトリ配下だけを辿る（`https://docs.python.org/3/` なら `/3/` の下だけ）。他言語版・旧版・ブログなどにキューが膨らむのを防ぐ |
+| `--skip-indexed` | 続きから再開するとき、索引済みでサイトマップに載っている URL を取り直さない（リンクを辿るための取得は残す） |
+
+検索側はタイトル一致（×3）、URL の語（×1.5）、フレーズ一致（×2）を加点し、スニペットを結果の本文に使います。
+**スキーマ版が変わったため、旧版のインデックスは開くとエラーになります。** `rustxng-index crawl` で作り直してください。
 
 ## 設定
 
@@ -50,6 +73,8 @@ local_index_merge = true          # false にするとインデックスを保�
 **既定では無効です。** 上の local_index_path を設定したときだけ併用が始まります。
 
 ## 実測（100 問）
+
+> 以下の数値は旧クローラー・全エンジン有効の構成で測ったものです。クリーン構成（`docs/CLEAN-PROFILE.md`）の結果とは比較できません。
 
 | 構成 | hit@1 | hit@5 | MRR | レイテンシ |
 | --- | ---: | ---: | ---: | ---: |
@@ -65,7 +90,7 @@ local_index_merge = true          # false にするとインデックスを保�
 | ---: | ---: |
 | 5,000 | 12.5 分 |
 
-8 ワーカー、ホストごと 150 ms 間隔。並列化前は同規模で 1 時間以上かかっていました。
+8 ワーカー、ホストごと 150 ms 間隔（旧クローラーでの値。現在の既定は 1,000 ms で、礼儀正しい分だけ遅くなります。ホスト単位のスケジューラにより複数ホストを並行して進めるので、全体のスループットは落ちません）。並列化前は同規模で 1 時間以上かかっていました。
 
 ## 制約
 

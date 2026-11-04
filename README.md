@@ -6,7 +6,7 @@
 
 RustXNG is a self-hosted metasearch engine implemented in Rust, based on SearXNG. I started building it because I wanted a lightweight search tool that could run on my own computer or server and help AI agents retrieve information from the web.
 
-It does not crawl the entire web or maintain an independent search index. Instead, RustXNG queries external search providers, combines their results and makes them easier to use. Search terms are sent to the selected external providers, even when RustXNG itself runs on your local network.
+It does not crawl the entire web or maintain an independent search index. Instead, RustXNG queries external search providers, combines their results and makes them easier to use (its own crawler, `rustxng-index`, can add an index of documentation sites you choose). Search terms are sent to the selected external providers, even when RustXNG itself runs on your local network.
 
 This distinction matters when deciding how to use the software. Some providers restrict automated searches, scraping, high-volume requests, storing results, or reusing and redistributing data. Being able to access results without an API key does **not** mean that the provider permits automated use for every purpose. Running the software privately or on a home LAN does not necessarily exempt its requests from those conditions. Before deploying it as a public service or letting agents generate frequent searches, check the applicable terms, permissions, attribution requirements and rate limits for each provider you enable.
 
@@ -44,7 +44,7 @@ An agent can retrieve information as it needs it and keep the amount of text sen
 Many engines work without API keys. Optional authenticated providers have their own credentials and billing.
 The server runs locally; **search terms are sent to the upstream engines selected for a request**.
 
-Yahoo! JAPAN and Mojeek HTML adapters are disabled by default pending permission review. See the [provider inventory and migration notes](docs/PROVIDERS.md); other providers remain subject to their own terms and quotas. Historical scores below used the earlier engine set and do not establish performance of the new defaults.
+The standard (default) profile leaves out providers whose terms prohibit automated access and providers that refuse it. You can [switch between the standard, full and clean profiles](#profiles-standard-full-clean). See the [provider inventory and migration notes](docs/PROVIDERS.md); other providers remain subject to their own terms and quotas.
 
 ## Search from an agent
 
@@ -82,6 +82,7 @@ Use these existing parameters to narrow the response:
 | `include_raw_content=1` | Fetch page text into `raw_content` for the top results |
 | `engines=wikipedia` | Select a registered engine |
 | `time_range=day` | Request recent results from engines supporting this filter |
+| `language=ja` | Search language. `auto` (default) follows the query's script; `all` applies no language filter |
 
 Page text is optional. With default settings it is fetched for up to five results,
 with a limit of 8,000 characters per page; individual fetches can fail.
@@ -105,7 +106,7 @@ The browser UI is at <http://127.0.0.1:29483/>. JSON, CSV, RSS, and HTML outputs
 
 Image and favicon proxy fetches also require direct connections: configured or environment proxies disable these reads. Private engine endpoints remain available for search and do not grant access to third-party media. `server.image_proxy = false` disables both image and favicon fetches.
 
-Run `rustxng mcp` to serve the read-only `search` and `read_page` tools over
+Run `rustxng mcp` (add `--profile clean` or another profile, or `--config settings.toml`) to serve the read-only `search` and `read_page` tools over
 stdio. Search returns ranked snippets and source metadata; page text is fetched
 only when `read_page` is called with a URL returned by search in that session.
 Search defaults to five results and limits each snippet to 500 characters.
@@ -136,7 +137,7 @@ Pass the returned `next_offset` as `offset` to continue; an absent `next_offset`
 means the available text is exhausted. `source_truncated: true` means extraction
 hit the 200,000-character page limit; continuation cannot recover the discarded tail.
 
-Page reads require direct connections so DNS answers and redirects can be
+Page reads follow the site's robots.txt (RFC 9309). They require direct connections so DNS answers and redirects can be
 checked against public addresses. They fail closed when configured or
 environment outgoing proxies are present. Search continues to use the normal
 outgoing proxy settings. Character and byte limits count the serialized structured JSON payload only,
@@ -230,9 +231,11 @@ docker run --rm -p 127.0.0.1:29483:29483 -e SEARXNG_PORT=29483 ghcr.io/sahenjp/r
 ```
 
 Publishing on other interfaces is an explicit deployment choice; configure authentication/access controls as appropriate.
-To supply settings, mount a complete copy of [settings.toml](settings.toml) with
-`-v "$PWD/settings.toml:/app/settings.toml:ro"` before the image name. When replacing container arguments,
-include both `--bind 0.0.0.0` and `--port 29483`. Published images currently target Linux amd64;
+To supply settings, write a file with only the values you change and mount it with
+`-v "$PWD/settings.toml:/app/settings.toml:ro"` before the image name (defaults and profiles are built into the
+binary; a complete copy of [settings.toml](settings.toml) also works but cancels out `--profile`). When replacing
+container arguments, include both `--bind 0.0.0.0` and `--port 29483`
+(for example `... rustxng:latest --profile clean --bind 0.0.0.0 --port 29483`). Published images currently target Linux amd64;
 on other architectures build locally or use the corresponding native binary.
 
 ### 4. Source
@@ -252,6 +255,31 @@ This checkout defaults to `127.0.0.1:29483`. Published v0.26.0 binaries still de
 the explicit `--port 29483` commands above work with either version.
 See [port migration and selection](docs/PORT-MIGRATION.md), including rdsh configuration.
 
+### Profiles: standard, full, clean
+
+Pick one of three provider sets at startup. All three are built into the binary; no settings file is needed.
+
+| Profile | Start | Providers | Docs-100 hit@10 / MRR | SealQA hit@10 | Median latency |
+| --- | --- | --- | ---: | ---: | ---: |
+| **standard** (default) | `rustxng` | keyless providers that do not refuse automated access | 88 / 0.790 | 128–132 | 0.7–1.2 s |
+| full | `rustxng --profile full` | standard + HTML search engines whose terms prohibit or do not permit automated access (Yahoo, Yahoo! JAPAN, NAVER, ...) | 98 / 0.878 | 165 | 1.2–1.9 s |
+| clean | `rustxng --profile clean` | documented public APIs (Wikimedia, GitHub, arXiv, ...) and our own crawl only | 61 / 0.549 | 123 | 1.0–1.2 s |
+
+```bash
+rustxng --profile full                      # full
+RUSTXNG_PROFILE=clean rustxng               # or via the environment
+rustxng mcp --profile clean                 # the MCP server takes it too
+rustxng --profile full --config my.toml     # your settings on top of a profile
+```
+
+Put only the values you change in a file given with `--config`: a complete copy of `settings.toml` on top cancels out the profile.
+
+**The full profile uses providers whose terms prohibit automated access.** Use it only on a private instance, after reading each provider's terms yourself, and never for a public instance. Providers that answer with a CAPTCHA or "access denied" (DuckDuckGo, Brave, ...) stay off even in full; RustXNG does not work around such blocks.
+
+Measured on 2026-11-04 with the `index-docs` crawl index. On the same 100 documentation questions Exa scores hit@10 93 / MRR 0.840 and Tavily 86 / 0.499. See the [profile comparison](docs/COMPARISON-2026-11-04.md) (Japanese) for conditions and caveats.
+
+### Settings file
+
 Defaults are embedded in the binary. To supply a configuration file:
 
 ```bash
@@ -267,12 +295,14 @@ Partial configuration files override specified values while preserving other def
 - Per-engine timeouts, suspension, and empty-result rest handle unavailable sources.
 - `RUSTXNG_IDLE_TIMEOUT=300`: exit after five minutes without requests.
 - Optional Valkey/Redis cache and database-backed engines support additional deployments.
-- The experimental `rustxng-index` local index is disabled by default.
+- The `rustxng-index` crawl index is used when an `index-docs` directory exists ([local index](docs/LOCAL-INDEX.md)).
 
 The [2026-11-02 audit](docs/AUDIT-2026-11-02.md) records findings against an older commit.
 Consult the [current review and remaining work](docs/REVIEW-2026-11-03.md) for fixes and validation; loopback remains the default for local agent setup.
 
 ## Measured search performance
+
+The latest measurements (2026-11-04, three profiles against Exa and Tavily) are in the [profile table above](#profiles-standard-full-clean) and the [profile comparison](docs/COMPARISON-2026-11-04.md). The record below used the earlier engine set, which included Yahoo! JAPAN.
 
 A retrieval-only SealQA run on 2026-11-02 used default settings, ten results per question,
 no LLM, and no local index:
@@ -314,7 +344,10 @@ Engines that keep returning empty results are automatically rested. Configure wi
 | [Benchmarks](docs/BENCHMARK.md) | Earlier performance and quality measurements |
 | [Compatibility](docs/COMPATIBILITY.md) | SearXNG compatibility and differences |
 | [Coverage](docs/COVERAGE.md) | Engine coverage |
+| [Profile comparison](docs/COMPARISON-2026-11-04.md) | standard, full and clean profiles against Exa and Tavily (Japanese) |
 | [Local index](docs/LOCAL-INDEX.md) | Optional crawl and BM25 index |
+| [Wikipedia index](docs/WIKIPEDIA-INDEX.md) | Index built from the official Wikipedia dump (Japanese) |
+| [Clean profile](docs/CLEAN-PROFILE.md) | Public APIs and our own crawl only (Japanese) |
 | [rdsh](docs/RDSH.md) | Integration with rdsh |
 | [Audit](docs/AUDIT-2026-11-02.md) | Findings, reproduction logs, and priorities |
 | [Security](SECURITY.md) | Reporting vulnerabilities and dependency advisories |

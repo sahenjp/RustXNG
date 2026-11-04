@@ -290,6 +290,8 @@ pub fn build(config: &EngineConfig) -> Result<EngineHandle, String> {
         "wikicommons" => wikicommons::Wikicommons::from_config(config)?,
         "wikidata" => wikidata::Wikidata::from_config(config)?,
         "wikipedia" => wikipedia::Wikipedia::from_config(config)?,
+        "wikipedia_entities" => wikipedia::Wikipedia::entities_from_config(config)?,
+        "wikipedia_any" => wikipedia::Wikipedia::any_words_from_config(config)?,
         "json_engine" => json_engine::JsonEngine::from_config(config)?,
         "mediawiki" => mediawiki::MediaWiki::from_config(config)?,
         "xpath" => xpath::XPathEngine::from_config(config)?,

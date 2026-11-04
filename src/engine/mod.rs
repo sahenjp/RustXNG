@@ -179,6 +179,8 @@ pub enum FailureKind {
     Parse,
     /// The response parsed, but looks fabricated or unrelated (see \`quality\`).
     Suspicious,
+    /// The engine kept answering with nothing and is resting for a while.
+    Resting,
     Other,
 }
 
@@ -193,6 +195,7 @@ impl FailureKind {
             Self::Http => "http error",
             Self::Parse => "parsing error",
             Self::Suspicious => "suspicious response",
+            Self::Resting => "resting",
             Self::Other => "unexpected error",
         }
     }

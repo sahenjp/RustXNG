@@ -24,7 +24,7 @@ const DEFAULTS: EngineDefaults = EngineDefaults {
 const BASE_URL: &str = "https://photon.komoot.io/api/";
 const PAGE_SIZE: u32 = 10;
 const RESULT_URL: &str = "https://openstreetmap.org/{osm_type}/{osm_id}";
-const USER_AGENT: &str = "rustxng/0.1 (+https://github.com/searxng/searxng)";
+const USER_AGENT: &str = "rustxng/0.1 (+https://github.com/sahenjp/RustXNG)";
 /// Languages the Photon index actually carries (upstream list).
 const PHOTON_LANGUAGES: &[&str] = &["de", "en", "fr", "it"];
 

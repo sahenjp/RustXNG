@@ -91,6 +91,9 @@ async fn state(
     .to_string();
     let engine = Server::start(response(&engine_body, "application/json")).await;
     let mut settings = Settings::defaults();
+    // Only the fixture engine may answer, whatever index the checkout holds.
+    settings.search.wikipedia_index_path = String::new();
+    settings.search.local_index_path = String::new();
     let mut config = EngineConfig::new("mwmbl", "mwmbl", "mwm", &["general"]);
     config.base_url = Some(engine.url("127.0.0.1"));
     settings.engines = vec![config];

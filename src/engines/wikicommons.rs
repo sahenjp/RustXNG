@@ -47,7 +47,7 @@ impl Engine for Wikicommons {
         let mut pairs: Vec<(&str, String)> = vec![
             ("action", "query".to_string()),
             ("generator", "search".to_string()),
-            ("gsrsearch", query.query_text()),
+            ("gsrsearch", search_keywords(&query.query_text())),
             ("gsrnamespace", "6".to_string()),
             ("gsrlimit", PAGE_SIZE.to_string()),
             ("gsroffset", ((pageno.max(1) - 1) * PAGE_SIZE).to_string()),

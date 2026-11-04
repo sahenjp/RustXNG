@@ -397,14 +397,16 @@ impl Query {
     /// The language sent to the engines: the first requested language, or the
     /// UI locale when nothing was requested.
     pub fn engine_language(&self) -> String {
+        // "all" asks for no language filter; where one language is needed
+        // (which Wikipedia to ask, a translation target) it behaves like "auto".
         let automatic = self
             .languages
             .first()
-            .is_some_and(|language| language == "auto");
+            .is_some_and(|language| language == "auto" || language == "all");
         if let Some(language) = self
             .languages
             .first()
-            .filter(|language| language.as_str() != "auto")
+            .filter(|language| language.as_str() != "auto" && language.as_str() != "all")
         {
             return language.clone();
         }
@@ -422,6 +424,23 @@ impl Query {
         } else {
             "en".to_string()
         }
+    }
+
+    /// With no language chosen ("auto"), a Japanese query searches in
+    /// Japanese even when the locale only came from the UI language: the UI
+    /// locale says how to show the page, not what the query is written in.
+    /// `explicit_locale` is true when the request itself named a locale.
+    pub fn follow_query_script(&mut self, explicit_locale: bool) {
+        if explicit_locale || !self.languages.iter().all(|language| language == "auto") {
+            return;
+        }
+        let ui_locale = std::mem::take(&mut self.locale);
+        let detected = self.engine_language();
+        self.locale = if detected == "ja" {
+            detected
+        } else {
+            ui_locale
+        };
     }
 
     /// Apply the `language` request parameter, following upstream's
@@ -452,7 +471,7 @@ impl Query {
             return;
         }
         if let Some(language) = language_code_value(value) {
-            if language != "auto" {
+            if language != "auto" && language != "all" {
                 self.languages.push(language);
             }
         }
@@ -476,10 +495,11 @@ impl Query {
 }
 
 /// A request language value normalised like a `:lang` code, or `None`
-/// when the value is not a language code (and not `auto`).
+/// when the value is not a language code (and not `auto` or `all`; upstream
+/// accepts `all` as "every language").
 fn language_code_value(value: &str) -> Option<String> {
     let lowered = value.trim().to_lowercase().replace('_', "-");
-    if lowered == "auto" {
+    if lowered == "auto" || lowered == "all" {
         return Some(lowered);
     }
     let normalized = normalise_locale(&lowered);
@@ -519,6 +539,24 @@ fn is_language_code(value: &str) -> bool {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn a_japanese_query_searches_in_japanese_unless_a_locale_was_asked_for() {
+        let mut query = Query::parse("気象庁 天気予報", &registry(), &[]);
+        query.locale = "en".into();
+        query.follow_query_script(false);
+        assert_eq!(query.locale, "ja");
+
+        let mut query = Query::parse("weather forecast", &registry(), &[]);
+        query.locale = "en".into();
+        query.follow_query_script(false);
+        assert_eq!(query.locale, "en");
+
+        let mut query = Query::parse("気象庁", &registry(), &[]);
+        query.locale = "en-US".into();
+        query.follow_query_script(true);
+        assert_eq!(query.locale, "en-US");
+    }
+
     use super::*;
     use crate::engine::EngineRegistry;
     use crate::settings::Settings;
@@ -546,8 +584,8 @@ mod tests {
 
     #[test]
     fn shortcut_bang_selects_engine() {
-        let query = Query::parse("!ddg async rust", &registry(), &[]);
-        assert_eq!(query.engine_ref_names(), vec!["duckduckgo".to_string()]);
+        let query = Query::parse("!bi async rust", &registry(), &[]);
+        assert_eq!(query.engine_ref_names(), vec!["bing".to_string()]);
     }
 
     #[test]
@@ -593,6 +631,21 @@ mod tests {
         query.apply_language_param("fr").expect("valid code");
         assert_eq!(query.languages, vec!["fr".to_string()]);
         assert_eq!(query.engine_language(), "fr");
+    }
+
+    #[test]
+    fn language_all_means_every_language() {
+        let mut query = Query::parse("rust", &EngineRegistry::default(), &[]);
+        assert!(query.apply_language_param("all").is_ok());
+        assert_eq!(query.languages, vec!["all".to_string()]);
+        // Where one language is needed, it follows the query like "auto".
+        assert_eq!(query.engine_language(), "en");
+        let mut japanese = Query::parse("富士山", &EngineRegistry::default(), &[]);
+        japanese.apply_language_param("ALL").unwrap();
+        assert_eq!(japanese.engine_language(), "ja");
+        assert!(query.apply_language_param("nonsense").is_ok()); // already chosen
+        let mut fresh = Query::parse("rust", &EngineRegistry::default(), &[]);
+        assert!(fresh.apply_language_param("nonsense").is_err());
     }
 
     #[test]
@@ -685,8 +738,8 @@ mod tests {
 
     #[test]
     fn autocomplete_lists_bangs_and_languages() {
-        let query = Query::parse("!duck", &registry(), &[]);
-        assert!(query.autocomplete_list.contains(&"!duckduckgo".to_string()));
+        let query = Query::parse("!bin", &registry(), &[]);
+        assert!(query.autocomplete_list.contains(&"!bing".to_string()));
         // ":jap" is a valid language code, so it is parsed instead of being
         // autocompleted; ":engl" is not.
         let query = Query::parse(":engl", &registry(), &[]);

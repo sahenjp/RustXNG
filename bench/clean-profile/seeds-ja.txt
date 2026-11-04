@@ -1,0 +1,23 @@
+# Japanese editions of official documentation (translations published by the
+# projects themselves or their official translation teams). Community and
+# user-group sites are not seeded.
+https://docs.python.org/ja/3/
+https://developer.mozilla.org/ja/docs/Web/
+https://ja.react.dev/
+https://ja.vuejs.org/
+https://docs.djangoproject.com/ja/6.1/
+https://doc.rust-jp.rs/book-ja/
+https://kubernetes.io/ja/docs/
+https://docs.github.com/ja
+https://nginx.org/ja/docs/
+https://www.postgresql.jp/document/current/html/
+https://www.typescriptlang.org/ja/docs/
+https://git-scm.com/book/ja/v2
+https://docs.ruby-lang.org/ja/latest/doc/
+https://www.php.net/manual/ja/
+https://www.kernel.org/doc/html/latest/translations/ja_JP/
+https://learn.microsoft.com/ja-jp/dotnet/
+https://docs.aws.amazon.com/ja_jp/
+https://docs.oracle.com/javase/jp/21/
+https://angular.jp/
+https://ja.wordpress.org/support/

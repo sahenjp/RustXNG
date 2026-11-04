@@ -47,6 +47,8 @@ async fn start_fake_engine() -> String {
 /// Settings with a single engine pointing at the fake server.
 fn settings_for(base_url: &str) -> Settings {
     let mut settings = Settings::defaults();
+    settings.search.wikipedia_index_path = String::new();
+    settings.search.local_index_path = String::new();
     let mut engine = EngineConfig::new("mwmbl", "mwmbl", "mwm", &["general"]);
     engine.base_url = Some(base_url.to_string());
     engine.timeout = Some(1.0);
@@ -756,6 +758,8 @@ async fn start_recording_engines() -> (String, Arc<std::sync::Mutex<Vec<String>>
 /// `Query::locale` through its `{lang}` URL placeholder.
 fn language_settings(base_url: &str) -> Settings {
     let mut settings = Settings::defaults();
+    settings.search.wikipedia_index_path = String::new();
+    settings.search.local_index_path = String::new();
     let mut yacy = EngineConfig::new("yacy", "yacy", "ya", &["general"]);
     yacy.base_url = Some(base_url.to_string());
     yacy.timeout = Some(1.0);
@@ -866,6 +870,8 @@ async fn the_search_form_offers_a_time_range() {
 /// Helper: create settings with no engines and resting enabled after 1 empty result.
 fn resting_test_settings() -> Settings {
     let mut settings = Settings::defaults();
+    settings.search.wikipedia_index_path = String::new();
+    settings.search.local_index_path = String::new();
     settings.engines.clear();
     settings.search.empty_result_limit = 1;
     settings.search.empty_result_cooldown = 300;
