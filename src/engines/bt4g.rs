@@ -48,16 +48,16 @@ fn parse_feed(xml: &str) -> Result<Vec<Entry>, EngineError> {
         match event {
             Event::Start(start) => {
                 let name = start.local_name().as_ref().to_ascii_lowercase();
-                field = match name.as_slice() {
-                    b"item" => {
+                field = match name.as_str() {
+                    "item" => {
                         entry = Some(Entry::default());
                         None
                     }
-                    b"title" if entry.is_some() => Some("title"),
-                    b"guid" if entry.is_some() => Some("guid"),
-                    b"link" if entry.is_some() => Some("link"),
-                    b"description" if entry.is_some() => Some("description"),
-                    b"pubdate" if entry.is_some() => Some("pub_date"),
+                    "title" if entry.is_some() => Some("title"),
+                    "guid" if entry.is_some() => Some("guid"),
+                    "link" if entry.is_some() => Some("link"),
+                    "description" if entry.is_some() => Some("description"),
+                    "pubdate" if entry.is_some() => Some("pub_date"),
                     _ => None,
                 };
                 if field.is_some() {
@@ -66,18 +66,16 @@ fn parse_feed(xml: &str) -> Result<Vec<Entry>, EngineError> {
             }
             Event::Text(text) => {
                 if field.is_some() {
-                    captured.push_str(&decode_entities(&String::from_utf8_lossy(
-                        &text.into_inner(),
-                    )));
+                    captured.push_str(&decode_entities(&text.into_inner()));
                 }
             }
             Event::CData(data) => {
                 if field.is_some() {
-                    captured.push_str(&String::from_utf8_lossy(&data.into_inner()));
+                    captured.push_str(&data.into_inner());
                 }
             }
             Event::End(end) => {
-                if end.local_name().as_ref().eq_ignore_ascii_case(b"item") {
+                if end.local_name().as_ref().eq_ignore_ascii_case("item") {
                     if let Some(item) = entry.take() {
                         entries.push(item);
                     }

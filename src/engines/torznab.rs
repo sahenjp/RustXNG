@@ -36,7 +36,7 @@ impl XmlItem {
     }
 }
 
-fn attribute(start: &BytesStart<'_>, name: &[u8]) -> String {
+fn attribute(start: &BytesStart<'_>, name: &str) -> String {
     let found = start
         .attributes()
         .flatten()
@@ -80,45 +80,46 @@ fn parse_items(body: &str) -> Result<Vec<XmlItem>, EngineError> {
         match event {
             Event::Start(start) | Event::Empty(start) => {
                 match start.local_name().as_ref() {
-                    b"error" => {
-                        return Err(EngineError::Message(attribute(&start, b"description")));
+                    "error" => {
+                        return Err(EngineError::Message(attribute(&start, "description")));
                     }
-                    b"item" => item = Some(XmlItem::default()),
-                    b"enclosure" => {
+                    "item" => item = Some(XmlItem::default()),
+                    "enclosure" => {
                         if let Some(entry) = item.as_mut() {
                             entry
                                 .fields
-                                .insert("enclosure_url".into(), attribute(&start, b"url"));
+                                .insert("enclosure_url".into(), attribute(&start, "url"));
                             entry
                                 .fields
-                                .insert("enclosure_length".into(), attribute(&start, b"length"));
+                                .insert("enclosure_length".into(), attribute(&start, "length"));
                         }
                     }
-                    b"attr" => {
+                    "attr" => {
                         if let Some(entry) = item.as_mut() {
-                            let value = attribute(&start, b"value");
-                            entry.fields.insert(attribute(&start, b"name"), value);
+                            let value = attribute(&start, "value");
+                            entry.fields.insert(attribute(&start, "name"), value);
                         }
                     }
-                    b"title" => field = Some("title"),
-                    b"guid" => field = Some("guid"),
-                    b"comments" => field = Some("comments"),
-                    b"link" => field = Some("link"),
-                    b"pubDate" | b"pubdate" => field = Some("pubDate"),
-                    b"size" => field = Some("size"),
+                    "title" => field = Some("title"),
+                    "guid" => field = Some("guid"),
+                    "comments" => field = Some("comments"),
+                    "link" => field = Some("link"),
+                    "pubDate" | "pubdate" => field = Some("pubDate"),
+                    "size" => field = Some("size"),
                     _ => field = None,
                 }
                 captured.clear();
             }
             Event::Text(text) => {
                 if field.is_some() {
-                    if let Ok(value) = text.xml_content(quick_xml::XmlVersion::Explicit1_0) {
+                    {
+                        let value = text.xml_content(quick_xml::XmlVersion::Explicit1_0);
                         captured.push_str(&value);
                     }
                 }
             }
             Event::End(end) => {
-                if end.local_name().as_ref() == b"item" {
+                if end.local_name().as_ref() == "item" {
                     if let Some(entry) = item.take() {
                         items.push(entry);
                     }
