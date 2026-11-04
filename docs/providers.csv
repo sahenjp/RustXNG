@@ -243,6 +243,7 @@ voidlinux,voidlinux,true,false,false,src/engines/voidlinux.rs,,https://github.co
 vuhuv,vuhuv,true,false,false,src/engines/vuhuv.rs,,https://vuhuv.com,,unreviewed,,unreviewed,,provider_review_needed
 xprivo,xprivo,true,false,false,src/engines/xprivo.rs,,https://www.xprivo.com,,unreviewed,,unreviewed,,provider_review_needed
 exaapi,exaapi,true,false,false,src/engines/exaapi.rs,,https://api.exa.ai/search,,unreviewed,,unreviewed,,provider_review_needed
+deepseek,deepseek,true,false,false,src/engines/deepseek.rs,,https://api.deepseek.com,https://api.deepseek.com/v1/tools/search,JSON API with bearer token,https://api-docs.deepseek.com/guides/search,api_key_required,2026-11-03,disabled_by_default_requires_api_key
 freesound,freesound,true,false,false,src/engines/freesound.rs,,https://freesound.org/apiv2,,unreviewed,,unreviewed,,provider_review_needed
 kagi,kagi,true,false,false,src/engines/kagi.rs,,https://kagi.com,,unreviewed,,unreviewed,,provider_review_needed
 ollama,ollama,true,false,false,src/engines/ollama.rs,,https://ollama.com,,unreviewed,,unreviewed,,provider_review_needed
