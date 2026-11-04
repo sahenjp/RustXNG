@@ -114,14 +114,12 @@ impl XmlDocument {
                     if let Some(current) = stack.last_mut() {
                         current
                             .text
-                            .push_str(&text.xml_content(quick_xml::XmlVersion::Explicit1_0).ok()?);
+                            .push_str(&text.xml_content(quick_xml::XmlVersion::Explicit1_0));
                     }
                 }
                 Ok(Event::CData(data)) => {
                     if let Some(current) = stack.last_mut() {
-                        current
-                            .text
-                            .push_str(&String::from_utf8_lossy(&data.into_inner()));
+                        current.text.push_str(&data.into_inner());
                     }
                 }
                 // Entity references arrive as their own event in 0.38; resolve
@@ -130,11 +128,10 @@ impl XmlDocument {
                     if let Some(current) = stack.last_mut() {
                         if let Ok(Some(character)) = reference.resolve_char_ref() {
                             current.text.push(character);
-                        } else if let Ok(name) = reference.decode() {
-                            if let Some(value) = quick_xml::escape::resolve_predefined_entity(&name)
-                            {
-                                current.text.push_str(value);
-                            }
+                        } else if let Some(value) =
+                            quick_xml::escape::resolve_predefined_entity(&reference)
+                        {
+                            current.text.push_str(value);
                         }
                     }
                 }
@@ -169,11 +166,11 @@ fn push_element(stack: &mut [XmlElement], roots: &mut Vec<XmlElement>, element: 
 /// A malformed tag (bad UTF-8, bad entity) makes the whole document non-XML;
 /// that is reported as `None` so the caller can fall back to HTML.
 fn element_from_start(start: &quick_xml::events::BytesStart<'_>) -> Option<XmlElement> {
-    let name = String::from_utf8(start.name().as_ref().to_vec()).ok()?;
+    let name = start.name().as_ref().to_string();
     let mut attributes = Vec::new();
     for attribute in start.attributes() {
         let attribute = attribute.ok()?;
-        let key = String::from_utf8(attribute.key.as_ref().to_vec()).ok()?;
+        let key = attribute.key.as_ref().to_string();
         let value = attribute
             .normalized_value(quick_xml::XmlVersion::Explicit1_0)
             .ok()?

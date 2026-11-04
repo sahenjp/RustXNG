@@ -190,20 +190,20 @@ fn parse_atom(body: &str) -> Result<Vec<AtomEntry>, EngineError> {
         match event {
             Event::Start(start) => {
                 match start.local_name().as_ref() {
-                    b"entry" => {
+                    "entry" => {
                         entry = Some(AtomEntry::default());
                         field = None;
                         captured.clear();
                     }
-                    b"title" if entry.is_some() => field = Some(Field::Title),
-                    b"id" if entry.is_some() => field = Some(Field::Id),
-                    b"summary" if entry.is_some() => field = Some(Field::Summary),
-                    b"published" if entry.is_some() => field = Some(Field::Published),
-                    b"name" if entry.is_some() => field = Some(Field::AuthorName),
-                    b"doi" if entry.is_some() => field = Some(Field::Doi),
-                    b"journal_ref" if entry.is_some() => field = Some(Field::Journal),
-                    b"comment" if entry.is_some() => field = Some(Field::Comment),
-                    b"link" | b"category" => {
+                    "title" if entry.is_some() => field = Some(Field::Title),
+                    "id" if entry.is_some() => field = Some(Field::Id),
+                    "summary" if entry.is_some() => field = Some(Field::Summary),
+                    "published" if entry.is_some() => field = Some(Field::Published),
+                    "name" if entry.is_some() => field = Some(Field::AuthorName),
+                    "doi" if entry.is_some() => field = Some(Field::Doi),
+                    "journal_ref" if entry.is_some() => field = Some(Field::Journal),
+                    "comment" if entry.is_some() => field = Some(Field::Comment),
+                    "link" | "category" => {
                         if let Some(entry) = entry.as_mut() {
                             apply_attributes(entry, &start);
                         }
@@ -216,20 +216,21 @@ fn parse_atom(body: &str) -> Result<Vec<AtomEntry>, EngineError> {
             }
             Event::Empty(start) => {
                 if let Some(entry) = entry.as_mut() {
-                    if matches!(start.local_name().as_ref(), b"link" | b"category") {
+                    if matches!(start.local_name().as_ref(), "link" | "category") {
                         apply_attributes(entry, &start);
                     }
                 }
             }
             Event::Text(text) => {
                 if field.is_some() {
-                    if let Ok(value) = text.xml_content(quick_xml::XmlVersion::Explicit1_0) {
+                    {
+                        let value = text.xml_content(quick_xml::XmlVersion::Explicit1_0);
                         captured.push_str(&value);
                     }
                 }
             }
             Event::End(end) => {
-                if end.local_name().as_ref() == b"entry" {
+                if end.local_name().as_ref() == "entry" {
                     if let Some(entry) = entry.take() {
                         entries.push(entry);
                     }
@@ -268,9 +269,9 @@ fn apply_attributes(entry: &mut AtomEntry, start: &BytesStart<'_>) {
             .map(|value| value.to_string())
             .unwrap_or_default();
         match attribute.key.local_name().as_ref() {
-            b"term" => term = Some(value),
-            b"title" => is_pdf = value == "pdf",
-            b"href" => href = Some(value),
+            "term" => term = Some(value),
+            "title" => is_pdf = value == "pdf",
+            "href" => href = Some(value),
             _ => {}
         }
     }

@@ -149,7 +149,7 @@ fn attributes_of(start: &BytesStart<'_>) -> Vec<(String, String)> {
         .flatten()
         .map(|a| {
             (
-                String::from_utf8_lossy(a.key.local_name().as_ref()).to_string(),
+                a.key.local_name().as_ref().to_string(),
                 a.normalized_value(quick_xml::XmlVersion::Explicit1_0)
                     .map(|value| value.to_string())
                     .unwrap_or_default(),
@@ -182,10 +182,10 @@ fn parse_query_result(body: &str) -> Result<QueryResult, EngineError> {
         })?;
         match event {
             Event::Start(start) => match start.local_name().as_ref() {
-                b"queryresult" => {
+                "queryresult" => {
                     result.success = attribute(&attributes_of(&start), "success") != Some("false")
                 }
-                b"pod" => {
+                "pod" => {
                     let attributes = attributes_of(&start);
                     pod = Some(Pod {
                         id: attribute(&attributes, "id").unwrap_or_default().to_string(),
@@ -196,19 +196,19 @@ fn parse_query_result(body: &str) -> Result<QueryResult, EngineError> {
                         subpods: Vec::new(),
                     });
                 }
-                b"subpod" => subpod = Some(Subpod::default()),
-                b"plaintext" => in_plaintext = true,
-                b"img" => apply_image(&mut subpod, &start),
+                "subpod" => subpod = Some(Subpod::default()),
+                "plaintext" => in_plaintext = true,
+                "img" => apply_image(&mut subpod, &start),
                 _ => {}
             },
             Event::Empty(start) => {
-                if start.local_name().as_ref() == b"img" {
+                if start.local_name().as_ref() == "img" {
                     apply_image(&mut subpod, &start);
                 }
             }
             Event::Text(text) => {
                 if in_plaintext {
-                    if let (Ok(value), Some(subpod)) = (
+                    if let (value, Some(subpod)) = (
                         text.xml_content(quick_xml::XmlVersion::Explicit1_0),
                         subpod.as_mut(),
                     ) {
@@ -217,13 +217,13 @@ fn parse_query_result(body: &str) -> Result<QueryResult, EngineError> {
                 }
             }
             Event::End(end) => match end.local_name().as_ref() {
-                b"plaintext" => in_plaintext = false,
-                b"subpod" => {
+                "plaintext" => in_plaintext = false,
+                "subpod" => {
                     if let (Some(pod), Some(open)) = (pod.as_mut(), subpod.take()) {
                         pod.subpods.push(open);
                     }
                 }
-                b"pod" => {
+                "pod" => {
                     if let Some(open) = pod.take() {
                         result.pods.push(open);
                     }
