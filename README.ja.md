@@ -8,7 +8,7 @@ RustXNGは、SearXNGを参考にRustで実装した、セルフホスト型の�
 
 自分のPCやサーバーで動かせる軽量な検索基盤を作り、AIエージェントなどから手軽にWeb上の情報を取得できるようにしたいと考えて開発しました。
 
-ただし、RustXNGはWeb全体を独自にクロールして検索インデックスを構築しているわけではありません。外部の検索サービスから結果を取得し、それらを統合・整理して提供する仕組みです。
+ただし、RustXNGはWeb全体を独自にクロールして検索インデックスを構築しているわけではありません。外部の検索サービスから結果を取得し、それらを統合・整理して提供する仕組みです（自前のクローラー `rustxng-index` で、選んだ文書サイトを索引にして併用することはできます）。
 
 そのため、利用にあたってはいくつか注意していただきたい点があります。
 
@@ -90,6 +90,7 @@ curl --fail --get 'http://127.0.0.1:29483/search' \
 | `include_raw_content=1` | 上位結果のページ本文を`raw_content`へ追加する |
 | `engines=wikipedia` | 登録済みのエンジンを指定する |
 | `time_range=day` | 対応するエンジンへ期間指定を渡す |
+| `language=ja` | 検索言語を指定する。`auto`（既定）は質問の文字種から決め、`all` は言語で絞らない |
 
 ページ本文の取得は任意です。既定設定では上位5件まで、1ページあたり8,000文字を上限として取得します。
 取得に失敗したページには本文が付きません。より長い本文が必要な場合は、`settings.toml` の既存の `[search]` セクションを変更し、`rustxng --config settings.toml` で起動します。
@@ -108,7 +109,7 @@ raw_content_chars = 20000
 
 画像・faviconの取得にも直接接続が必要です。設定や環境変数にプロキシがある場合、これらの取得を拒否します。検索用の私設エンジン設定は、第三者の画像へのアクセスを許可するものではありません。`server.image_proxy = false` は画像とfaviconの両方の取得を無効にします。
 
-`rustxng mcp --config settings.toml` で、組み込みの `search` と `read_page` を標準入出力経由で利用できます。検索は URL・タイトル・抜粋・出典を返し、本文は同じセッションの検索で返った URL を `read_page` に渡したときだけ取得します。
+`rustxng mcp`（構成を選ぶ場合は `rustxng mcp --profile clean` など、設定を足す場合は `--config settings.toml`）で、組み込みの `search` と `read_page` を標準入出力経由で利用できます。検索は URL・タイトル・抜粋・出典を返し、本文は同じセッションの検索で返った URL を `read_page` に渡したときだけ取得します。
 
 `max_payload_chars` と `max_payload_bytes` の既定値は12,000文字と24,000バイトです。計数対象は構造化 JSON で、JSON-RPC の外枠、SDK によるテキスト表示、呼出し側のプロンプトは含みません。必要な URL とメタデータを収められない場合はエラーを返します。`truncated`、`source_truncated`、`next_offset` で打切りと続きを確認できます。`read_page` の `query` に検索語を指定すると、関連する段落を選べます。文字数・バイト数の上限はトークン数の保証ではありません。
 
@@ -127,7 +128,7 @@ raw_content_chars = 20000
 
 続きは返された `next_offset` を `offset` に指定して取得します。`next_offset` がなければ取得済み本文の末尾です。`source_truncated: true` は1ページ200,000文字の抽出上限で打ち切ったことを示し、その先は続きの呼び出しでも取得できません。
 
-本文取得では DNS 解決先とリダイレクト先を検査し、展開後の本文を4 MiB、同時取得を4件までに制限します。設定や環境変数で外向きプロキシを指定している場合は、接続先を検証できないため本文取得を拒否します。検索は通常のプロキシ設定で続けられます。HTTP の `include_raw_content=1` にも同じ取得制限が適用され、本文を文字数上限で打ち切った場合は `raw_content_truncated` を返します。
+本文取得はサイトの robots.txt（RFC 9309）に従い、DNS 解決先とリダイレクト先を検査し、展開後の本文を4 MiB、同時取得を4件までに制限します。設定や環境変数で外向きプロキシを指定している場合は、接続先を検証できないため本文取得を拒否します。検索は通常のプロキシ設定で続けられます。HTTP の `include_raw_content=1` にも同じ取得制限が適用され、本文を文字数上限で打ち切った場合は `raw_content_truncated` を返します。
 
 ### PDFの本文取得
 
@@ -316,6 +317,8 @@ DeepSeek の Search API は `deepseek` エンジンとして利用できます�
 | [対応範囲](docs/COVERAGE.md) | エンジンの対応範囲 |
 | [構成ごとの比較](docs/COMPARISON-2026-11-04.md) | 通常版・フル版・クリーン版と Exa・Tavily の比較 |
 | [ローカルインデックス](docs/LOCAL-INDEX.md) | 任意のクロール・BM25インデックス |
+| [Wikipediaの索引](docs/WIKIPEDIA-INDEX.md) | Wikipediaの公式ダンプから作る索引 |
+| [クリーン版](docs/CLEAN-PROFILE.md) | 公開APIと自前のクロールだけの構成 |
 | [rdsh](docs/RDSH.md) | rdshとの連携 |
 | [監査](docs/AUDIT-2026-11-02.md) | 指摘事項・再現ログ・優先順位 |
 | [セキュリティ](SECURITY.md) | 脆弱性の報告方法と依存関係の注意事項 |

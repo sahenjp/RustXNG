@@ -6,7 +6,7 @@
 
 RustXNG is a self-hosted metasearch engine implemented in Rust, based on SearXNG. I started building it because I wanted a lightweight search tool that could run on my own computer or server and help AI agents retrieve information from the web.
 
-It does not crawl the entire web or maintain an independent search index. Instead, RustXNG queries external search providers, combines their results and makes them easier to use. Search terms are sent to the selected external providers, even when RustXNG itself runs on your local network.
+It does not crawl the entire web or maintain an independent search index. Instead, RustXNG queries external search providers, combines their results and makes them easier to use (its own crawler, `rustxng-index`, can add an index of documentation sites you choose). Search terms are sent to the selected external providers, even when RustXNG itself runs on your local network.
 
 This distinction matters when deciding how to use the software. Some providers restrict automated searches, scraping, high-volume requests, storing results, or reusing and redistributing data. Being able to access results without an API key does **not** mean that the provider permits automated use for every purpose. Running the software privately or on a home LAN does not necessarily exempt its requests from those conditions. Before deploying it as a public service or letting agents generate frequent searches, check the applicable terms, permissions, attribution requirements and rate limits for each provider you enable.
 
@@ -82,6 +82,7 @@ Use these existing parameters to narrow the response:
 | `include_raw_content=1` | Fetch page text into `raw_content` for the top results |
 | `engines=wikipedia` | Select a registered engine |
 | `time_range=day` | Request recent results from engines supporting this filter |
+| `language=ja` | Search language. `auto` (default) follows the query's script; `all` applies no language filter |
 
 Page text is optional. With default settings it is fetched for up to five results,
 with a limit of 8,000 characters per page; individual fetches can fail.
@@ -105,7 +106,7 @@ The browser UI is at <http://127.0.0.1:29483/>. JSON, CSV, RSS, and HTML outputs
 
 Image and favicon proxy fetches also require direct connections: configured or environment proxies disable these reads. Private engine endpoints remain available for search and do not grant access to third-party media. `server.image_proxy = false` disables both image and favicon fetches.
 
-Run `rustxng mcp` to serve the read-only `search` and `read_page` tools over
+Run `rustxng mcp` (add `--profile clean` or another profile, or `--config settings.toml`) to serve the read-only `search` and `read_page` tools over
 stdio. Search returns ranked snippets and source metadata; page text is fetched
 only when `read_page` is called with a URL returned by search in that session.
 Search defaults to five results and limits each snippet to 500 characters.
@@ -136,7 +137,7 @@ Pass the returned `next_offset` as `offset` to continue; an absent `next_offset`
 means the available text is exhausted. `source_truncated: true` means extraction
 hit the 200,000-character page limit; continuation cannot recover the discarded tail.
 
-Page reads require direct connections so DNS answers and redirects can be
+Page reads follow the site's robots.txt (RFC 9309). They require direct connections so DNS answers and redirects can be
 checked against public addresses. They fail closed when configured or
 environment outgoing proxies are present. Search continues to use the normal
 outgoing proxy settings. Character and byte limits count the serialized structured JSON payload only,
@@ -345,6 +346,8 @@ Engines that keep returning empty results are automatically rested. Configure wi
 | [Coverage](docs/COVERAGE.md) | Engine coverage |
 | [Profile comparison](docs/COMPARISON-2026-11-04.md) | standard, full and clean profiles against Exa and Tavily (Japanese) |
 | [Local index](docs/LOCAL-INDEX.md) | Optional crawl and BM25 index |
+| [Wikipedia index](docs/WIKIPEDIA-INDEX.md) | Index built from the official Wikipedia dump (Japanese) |
+| [Clean profile](docs/CLEAN-PROFILE.md) | Public APIs and our own crawl only (Japanese) |
 | [rdsh](docs/RDSH.md) | Integration with rdsh |
 | [Audit](docs/AUDIT-2026-11-02.md) | Findings, reproduction logs, and priorities |
 | [Security](SECURITY.md) | Reporting vulnerabilities and dependency advisories |
