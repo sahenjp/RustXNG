@@ -1,0 +1,6591 @@
+{
+  "base": "http://127.0.0.1:19013",
+  "params": {},
+  "questions": 100,
+  "hit@1": 83,
+  "hit@5": 96,
+  "mrr@10": 0.878,
+  "median_ms": 1149.0,
+  "median_bytes": 9842,
+  "errors": 0,
+  "rows": [
+    {
+      "id": "en-py-list",
+      "lang": "en",
+      "query": "python list methods documentation",
+      "gold": [
+        "https://docs.python.org/3/tutorial/datastructures",
+        "https://docs.python.org/3/library/stdtypes"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 2078.0556979998437,
+      "urls": [
+        "https://docs.python.org/3/tutorial/datastructures.html",
+        "https://docs.python.org/3/c-api/list.html",
+        "http://python.org/sf/1215887",
+        "https://docs.python.org/3/builtins/functions.html",
+        "https://www.w3schools.com/python/python_lists_methods.asp",
+        "https://www.python.org/doc/versions/",
+        "https://www.python.org/doc/",
+        "https://www.python.org/dev/peps/pep-0020/",
+        "https://python-reference.readthedocs.io/en/latest/docs/list/",
+        "https://www.python.org/downloads/release/python-3912/"
+      ],
+      "engines": [
+        [
+          "bing",
+          "yahoo",
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "yahoo",
+          "local_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "naver"
+        ],
+        [
+          "bing",
+          "yahoo"
+        ],
+        [
+          "official site"
+        ],
+        [
+          "bing",
+          "yahoo",
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 10807,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-py-dict",
+      "lang": "en",
+      "query": "python dict get method",
+      "gold": [
+        "https://docs.python.org/3/library/stdtypes"
+      ],
+      "category": "doc",
+      "rank": null,
+      "millis": 1429.5032950003588,
+      "urls": [
+        "https://www.geeksforgeeks.org/python/python-dictionary-get-method/",
+        "https://www.w3schools.com/python/ref_dictionary_get.asp",
+        "https://docs.python.org/3/c-api/method.html",
+        "https://docs.python.org/3/c-api/dict.html",
+        "https://docs.python.org/3/tutorial/datastructures.html",
+        "https://www.programiz.com/python-programming/methods/dictionary/get",
+        "https://www.python.org/downloads/release/python-394/",
+        "https://www.python.org/downloads/release/python-3912/",
+        "https://www.python.org/downloads/release/python-397/",
+        "https://www.python.org/downloads/release/python-3910/"
+      ],
+      "engines": [
+        [
+          "naver",
+          "seznam",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "naver",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "yahoo"
+        ],
+        [
+          "naver",
+          "yahoo"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6652,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-py-asyncio",
+      "lang": "en",
+      "query": "python asyncio documentation",
+      "gold": [
+        "https://docs.python.org/3/library/asyncio"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1006.2308120000125,
+      "urls": [
+        "https://docs.python.org/3/library/asyncio.html",
+        "https://docs.python.org/3/library/asyncio-task.html",
+        "https://docs.python.org/3/library/asyncio-dev.html",
+        "https://docs.python.org/3/howto/a-conceptual-overview-of-asyncio.html",
+        "https://docs.python.org/3/library/asyncio-threading.html",
+        "https://docs.python.org/library/asyncio.html",
+        "https://docs.python.org/3/library/asyncio-policy.html",
+        "https://docs.python.org/3/library/asyncio-runner.html",
+        "https://docs.python.org/3/library/asyncio",
+        "https://docs.python.org/3/library/asyncio-stream.html"
+      ],
+      "engines": [
+        [
+          "bing",
+          "mwmbl",
+          "fynd",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "keenable",
+          "local_index"
+        ],
+        [
+          "fynd",
+          "keenable",
+          "local_index"
+        ],
+        [
+          "bing",
+          "yahoo",
+          "local_index"
+        ],
+        [
+          "bing",
+          "yahoo japan",
+          "keenable",
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 27111,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-py-re",
+      "lang": "en",
+      "query": "python re module regular expressions",
+      "gold": [
+        "https://docs.python.org/3/library/re"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1026.906487999895,
+      "urls": [
+        "https://docs.python.org/3/library/re.html",
+        "https://docs.python.org/3/howto/regex.html",
+        "https://docs.python.org/2/howto/regex.html",
+        "https://docs.python.org/library/re",
+        "https://docs.python.org/howto/regex.html",
+        "http://docs.python.org/dev/howto/regex",
+        "http://docs.python.org/2.6/howto/regex.html",
+        "http://docs.python.org/howto/regex",
+        "http://docs.python.org/3.0/howto/regex.html",
+        "https://docs.python.org/3/reference/expressions.html"
+      ],
+      "engines": [
+        [
+          "bing",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "local_index"
+        ],
+        [
+          "bing",
+          "yahoo",
+          "keenable",
+          "local_index"
+        ],
+        [
+          "mwmbl",
+          "fynd"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 19968,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-py-typing",
+      "lang": "en",
+      "query": "python typing generics",
+      "gold": [
+        "https://docs.python.org/3/library/typing"
+      ],
+      "category": "doc",
+      "rank": 2,
+      "millis": 1298.5814069998014,
+      "urls": [
+        "https://typing.python.org/en/latest/reference/generics.html",
+        "https://docs.python.org/3/library/typing.html",
+        "https://python.org/dev/peps/pep-0585",
+        "https://docs.python.org/3/contents.html",
+        "https://www.python.org/downloads/release/python-3116/",
+        "https://www.python.org/downloads/release/python-3119/",
+        "https://www.python.org/downloads/release/python-3115/",
+        "https://www.python.org/downloads/release/python-3118/",
+        "https://www.python.org/downloads/release/python-3113/",
+        "https://www.python.org/downloads/release/python-3114/"
+      ],
+      "engines": [
+        [
+          "naver",
+          "yahoo",
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "seznam",
+          "yahoo",
+          "local_index"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 31544,
+      "unresponsive": 1
+    },
+    {
+      "id": "en-rs-book",
+      "lang": "en",
+      "query": "rust programming language book",
+      "gold": [
+        "https://doc.rust-lang.org/book"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1509.281581000323,
+      "urls": [
+        "https://doc.rust-lang.org/book/",
+        "https://doc.rust-lang.org/stable/book/",
+        "https://doc.rust-lang.org/book/ch00-00-introduction.html",
+        "https://rust-lang.org/learn/",
+        "https://rust-lang.org/",
+        "https://en.wikipedia.org/wiki/Rust_(programming_language)",
+        "https://doc.rust-lang.org/book/ch01-00-getting-started.html",
+        "https://doc.rust-lang.org/book/ch16-00-concurrency.html",
+        "https://doc.rust-lang.org/book/appendix-06-translation.html",
+        "https://doc.rust-lang.org/book/foreword.html"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "naver",
+          "yahoo japan",
+          "local_index"
+        ],
+        [
+          "bing",
+          "wiby"
+        ],
+        [
+          "bing",
+          "seznam",
+          "local_index"
+        ],
+        [
+          "naver",
+          "seznam",
+          "yahoo japan",
+          "local_index"
+        ],
+        [
+          "bing",
+          "mwmbl",
+          "local_index",
+          "official site"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6223,
+      "unresponsive": 2
+    },
+    {
+      "id": "en-rs-vec",
+      "lang": "en",
+      "query": "rust vector documentation",
+      "gold": [
+        "https://doc.rust-lang.org/std/vec"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 907.7513779998299,
+      "urls": [
+        "https://doc.rust-lang.org/std/vec/struct.Vec.html",
+        "https://doc.rust-lang.org/std/vec/index.html",
+        "https://doc.rust-lang.org/beta/std/vec/struct.Vec.html",
+        "https://doc.rust-lang.org/stable/book/second-edition/ch08-01-vectors.html",
+        "https://doc.rust-lang.org/stable/",
+        "https://doc.rust-lang.org/book/ch08-01-vectors.html",
+        "https://doc.rust-lang.org/1.5.0/book/vectors.html",
+        "https://doc.rust-lang.org/1.30.0/book/second-edition/ch08-01-vectors.html",
+        "https://doc.rust-lang.org",
+        "https://doc.rust-lang.org/std/vec"
+      ],
+      "engines": [
+        [
+          "bing",
+          "naver",
+          "yahoo"
+        ],
+        [
+          "bing",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "keenable"
+        ]
+      ],
+      "bytes": 23850,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-rs-trait",
+      "lang": "en",
+      "query": "rust traits documentation",
+      "gold": [
+        "https://doc.rust-lang.org/book/ch10-02-traits.html"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1152.2722519998752,
+      "urls": [
+        "https://doc.rust-lang.org/book/ch10-02-traits.html",
+        "https://doc.rust-lang.org/reference/items/traits.html",
+        "https://doc.rust-lang.org/book/ch20-02-advanced-traits.html",
+        "https://doc.rust-lang.org/1.84.0/reference/items/traits.html",
+        "https://doc.rust-lang.org/book/appendix-03-derivable-traits.html",
+        "https://doc.rust-lang.org/rust-by-example/trait.html",
+        "https://doc.rust-lang.org/book/second-edition/ch17-02-trait-objects.html",
+        "https://doc.rust-lang.org",
+        "https://doc.rust-lang.org/std/ops/index.html",
+        "https://doc.rust-lang.org/std/keyword.trait.html"
+      ],
+      "engines": [
+        [
+          "yahoo",
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "yahoo",
+          "local_index"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "naver"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "keenable"
+        ]
+      ],
+      "bytes": 22388,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-rs-result",
+      "lang": "en",
+      "query": "rust result enum documentation",
+      "gold": [
+        "https://doc.rust-lang.org/std/result"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 904.4025620000866,
+      "urls": [
+        "https://doc.rust-lang.org/std/result/enum.Result.html",
+        "https://doc.rust-lang.org/std/io/type.Result.html",
+        "https://en.wikipedia.org/wiki/Result_type",
+        "https://doc.rust-lang.org/std/result/",
+        "https://doc.rust-lang.org/core/result/enum.Result.html",
+        "https://rust-lang.org/",
+        "https://doc.rust-lang.org/std/result/index.html",
+        "https://doc.rust-lang.org/std/num/enum.FpCategory.html",
+        "https://doc.rust-lang.org/std/fmt/type.Result.html",
+        "https://doc.rust-lang.org/std/thread/type.Result.html"
+      ],
+      "engines": [
+        [
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "local_index"
+        ],
+        [
+          "naver",
+          "local_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "bing",
+          "official site"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6705,
+      "unresponsive": 4
+    },
+    {
+      "id": "en-rs-cargo",
+      "lang": "en",
+      "query": "cargo book manifest format",
+      "gold": [
+        "https://doc.rust-lang.org/cargo/reference/manifest"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1002.4831239998093,
+      "urls": [
+        "https://doc.rust-lang.org/cargo/reference/manifest.html",
+        "https://web.mit.edu/rust-lang_v1.25/arch/amd64_ubuntu1404/share/doc/rust/html/cargo/reference/manifest.html",
+        "https://en.wikipedia.org/wiki/TOML",
+        "https://doc.bccnsoft.com/docs/rust-1.36.0-docs-html/cargo/reference/manifest.html",
+        "https://github.com/rust-lang/cargo/issues/7055",
+        "https://dirname.github.io/rust-std-doc/cargo/reference/manifest.html",
+        "https://rust.uenu.com/cargo/reference/manifest.html",
+        "https://manpage.me/docs/sharedocs/rust/html/cargo/reference/manifest.html",
+        "https://github.com/rust-lang/style-team/issues/188",
+        "https://doc.rust-lang.org/cargo/reference/profiles.html"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "fynd",
+          "naver",
+          "seznam",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "mwmbl",
+          "wikipedia"
+        ],
+        [
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "yahoo"
+        ],
+        [
+          "yahoo"
+        ],
+        [
+          "yahoo"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6881,
+      "unresponsive": 4
+    },
+    {
+      "id": "en-docker-compose",
+      "lang": "en",
+      "query": "docker compose file reference",
+      "gold": [
+        "https://docs.docker.com/reference/compose-file",
+        "https://docs.docker.com/compose/compose-file"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1227.2792539997681,
+      "urls": [
+        "https://docs.docker.com/reference/compose-file/",
+        "https://docs.docker.com/reference/compose-file/services",
+        "https://docs.docker.com/compose",
+        "https://docs.docker.com/reference/cli/docker/compose/",
+        "https://docs.docker.com/reference/compose-file/extension/",
+        "https://docs.docker.com/reference/compose-file/legacy-versions/",
+        "https://docs.docker.com/reference/cli/docker/compose/build/",
+        "https://docs.docker.com/build/bake/compose-file/",
+        "https://docs.docker.com/compose/how-tos/multiple-compose-files/extends/",
+        "https://docs.docker.com/reference/compose-file/build/"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "naver",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "local_index"
+        ],
+        [
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "local_index"
+        ],
+        [
+          "seznam",
+          "yahoo",
+          "local_index"
+        ],
+        [
+          "yahoo",
+          "local_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "fynd",
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6974,
+      "unresponsive": 4
+    },
+    {
+      "id": "en-docker-build",
+      "lang": "en",
+      "query": "dockerfile reference build",
+      "gold": [
+        "https://docs.docker.com/reference/dockerfile"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1174.6227019998514,
+      "urls": [
+        "https://docs.docker.com/reference/dockerfile",
+        "https://docs.docker.com/reference/build-checks/",
+        "https://docs.docker.com/build/concepts/dockerfile/",
+        "https://docs.docker.com/build/buildkit/dockerfile-release-notes/",
+        "https://docs.docker.com/engine/reference/builder/",
+        "https://docs.docker.com/reference/compose-file/build/",
+        "https://docs.docker.com/reference/cli/docker/image/build/",
+        "https://docs.docker.com/reference/cli/docker/buildx/build/",
+        "https://docs.docker.com/reference/cli/docker/compose/build/",
+        "https://docs.docker.com/reference/cli/docker/buildx/dap/build/"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "naver",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "local_index"
+        ],
+        [
+          "fynd",
+          "local_index"
+        ],
+        [
+          "yahoo",
+          "local_index"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 7165,
+      "unresponsive": 4
+    },
+    {
+      "id": "en-docker-run",
+      "lang": "en",
+      "query": "docker run command reference",
+      "gold": [
+        "https://docs.docker.com/reference/cli/docker/container/run"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1268.8645749999523,
+      "urls": [
+        "https://docs.docker.com/reference/cli/docker/container/run/",
+        "https://docs.docker.com/engine/containers/run/",
+        "https://docs.docker.com/reference/cli/docker/compose/run/",
+        "https://docs.docker.com/ai/sandboxes-api/cookbook/run-your-first-command/",
+        "https://docs.docker.com/reference/dockerfile",
+        "https://docs.docker.com/reference/cli/docker/buildx/build/",
+        "https://docs.docker.com/reference/cli/docker/pass/run/",
+        "https://docs.docker.com/reference/cli/docker/model/run/",
+        "https://docs.docker.com/reference/cli/sbx/run/",
+        "https://docs.docker.com/reference/cli/docker/mcp/gateway/run/"
+      ],
+      "engines": [
+        [
+          "bing",
+          "yahoo",
+          "yahoo japan",
+          "local_index"
+        ],
+        [
+          "bing",
+          "naver",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "fynd",
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "seznam",
+          "local_index"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 7236,
+      "unresponsive": 4
+    },
+    {
+      "id": "en-pg-json",
+      "lang": "en",
+      "query": "postgresql json functions",
+      "gold": [
+        "https://www.postgresql.org/docs/current/functions-json",
+        "https://www.postgresql.org/docs/current/datatype-json"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 859.0404169999601,
+      "urls": [
+        "https://www.postgresql.org/docs/current/functions-json.html",
+        "https://www.postgresql.org/docs/9.3/functions-json.html",
+        "https://www.postgresql.org/docs/9.5/functions-json.html",
+        "https://www.postgresql.org/docs/9.4/functions-json.html",
+        "https://www.postgresql.org/",
+        "https://www.postgresql.org/docs/current/datatype-json.html",
+        "https://en.wikipedia.org/wiki/PostgreSQL",
+        "http://www.postgresql.org/docs/9.6/functions-json.html",
+        "http://www.postgresql.org/docs/12/functions-json.html",
+        "http://www.postgresql.org/docs/11/functions-json.html"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "naver",
+          "yahoo",
+          "local_index"
+        ],
+        [
+          "mwmbl",
+          "fynd",
+          "seznam"
+        ],
+        [
+          "mwmbl",
+          "fynd",
+          "yahoo japan"
+        ],
+        [
+          "mwmbl",
+          "seznam"
+        ],
+        [
+          "bing",
+          "official site"
+        ],
+        [
+          "yahoo",
+          "local_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ]
+      ],
+      "bytes": 6369,
+      "unresponsive": 4
+    },
+    {
+      "id": "en-pg-index",
+      "lang": "en",
+      "query": "postgresql create index documentation",
+      "gold": [
+        "https://www.postgresql.org/docs/current/sql-createindex"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1141.8260410000585,
+      "urls": [
+        "https://www.postgresql.org/docs/current/sql-createindex.html",
+        "https://postgresql.org/docs/current/sql-createindex.html?trk=article-ssr-frontend-pulse_little-text-block",
+        "https://www.postgresql.org/docs/current/indexes.html",
+        "https://postgresql.org/docs/7.3/static/sql-createindex.html",
+        "https://postgresql.org/docs/7.2/static/sql-createindex.html",
+        "https://postgresql.org/docs/7.0/static/sql-createindex.htm",
+        "https://postgresql.org/docs/6.5/static/sql-createindex.htm",
+        "https://www.postgresql.org/docs/current/sql-create-access-method.html",
+        "https://www.postgresql.org/docs/8.1/sql-createindex.html",
+        "https://www.postgresql.org/docs/current/sql-createstatistics.html"
+      ],
+      "engines": [
+        [
+          "naver",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "local_index"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 21989,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-pg-window",
+      "lang": "en",
+      "query": "postgresql window functions",
+      "gold": [
+        "https://www.postgresql.org/docs/current/tutorial-window",
+        "https://www.postgresql.org/docs/current/functions-window"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1127.2521460000462,
+      "urls": [
+        "https://www.postgresql.org/docs/current/tutorial-window.html",
+        "https://www.postgresql.org/docs/current/functions-window.html",
+        "http://www.postgresql.org/docs/10/functions-window.html",
+        "https://postgresql.org/docs/15/tutorial-window.html",
+        "http://www.postgresql.org/docs/13/functions-window.html",
+        "https://postgresql.org/docs/15/functions-window.html",
+        "http://www.postgresql.org/docs/17/functions-window.html",
+        "https://www.postgresql.org/docs/15/functions-window.html",
+        "http://www.postgresql.org/docs/12/tutorial-window.html",
+        "https://www.postgresql.org/docs/9.1/tutorial-window.html"
+      ],
+      "engines": [
+        [
+          "fynd",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "local_index"
+        ],
+        [
+          "naver",
+          "seznam",
+          "yahoo",
+          "local_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "fynd"
+        ]
+      ],
+      "bytes": 11128,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-numpy-index",
+      "lang": "en",
+      "query": "numpy indexing arrays",
+      "gold": [
+        "https://numpy.org/doc/stable/user/basics.indexing"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1225.8058690003963,
+      "urls": [
+        "https://numpy.org/doc/stable/user/basics.indexing.html",
+        "https://en.wikipedia.org/wiki/NumPy",
+        "https://numpy.org/doc/2.5/user/basics.indexing.html",
+        "https://numpy.org/doc/stable/reference/routines.indexing.html",
+        "https://numpy.org/doc/1.21/user/basics.indexing.html",
+        "https://numpy.org/doc/1.21/reference/arrays.indexing.html",
+        "https://numpy.org/doc/stable/reference/arrays.nditer.html",
+        "https://numpy.org/doc/stable/reference/arrays.indexing.html",
+        "https://numpy.org/doc/stable/reference/generated/numpy.broadcast_arrays.html",
+        "https://numpy.org/doc/1.16/reference/arrays.indexing.html"
+      ],
+      "engines": [
+        [
+          "naver",
+          "seznam",
+          "yahoo",
+          "local_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "yahoo"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "keenable"
+        ]
+      ],
+      "bytes": 23841,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-numpy-broadcast",
+      "lang": "en",
+      "query": "numpy broadcasting rules",
+      "gold": [
+        "https://numpy.org/doc/stable/user/basics.broadcasting"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 911.7014969997399,
+      "urls": [
+        "https://numpy.org/doc/stable/user/basics.broadcasting.html",
+        "https://numpy.org/doc/stable/reference/generated/numpy.linalg.solve.html",
+        "https://numpy.org/doc/1.22/user/basics.broadcasting.html",
+        "https://numpy.org/doc/2.5/user/basics.broadcasting.html",
+        "https://numpy.org/doc/1.13/reference/generated/numpy.linalg.solve.html",
+        "https://numpy.org/doc/1.18/user/basics.broadcasting.html",
+        "https://numpy.org/doc/1.20/user/theory.broadcasting.html",
+        "https://numpy.org/doc/1.24/reference/generated/numpy.linalg.solve.html",
+        "https://numpy.org/doc/1.25/reference/generated/numpy.linalg.solve.html",
+        "https://numpy.org/doc/1.16/reference/generated/numpy.linalg.solve.html"
+      ],
+      "engines": [
+        [
+          "naver",
+          "seznam",
+          "yahoo",
+          "keenable",
+          "local_index"
+        ],
+        [
+          "mwmbl",
+          "fynd",
+          "local_index"
+        ],
+        [
+          "yahoo",
+          "keenable"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ]
+      ],
+      "bytes": 14349,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-react-hooks",
+      "lang": "en",
+      "query": "react hooks reference",
+      "gold": [
+        "https://react.dev/reference/react"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1158.0747300004077,
+      "urls": [
+        "https://react.dev/reference/react/hooks",
+        "https://legacy.reactjs.org/docs/hooks-reference.html",
+        "https://ja.react.dev/reference/react/hooks",
+        "https://reactjs.org/hooks",
+        "https://reactjs.org/docs/hooks-reference",
+        "https://ja.react.dev/reference/eslint-plugin-react-hooks",
+        "https://react.dev/reference/eslint-plugin-react-hooks",
+        "https://react.dev/reference/react/useState",
+        "http://reactjs.org/docs/hooks-reference.html",
+        "https://react.dev/reference/react"
+      ],
+      "engines": [
+        [
+          "seznam",
+          "yahoo",
+          "keenable"
+        ],
+        [
+          "fynd",
+          "naver",
+          "seznam",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "yahoo japan",
+          "local_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "naver",
+          "yahoo"
+        ]
+      ],
+      "bytes": 15158,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-react-usestate",
+      "lang": "en",
+      "query": "react usestate hook",
+      "gold": [
+        "https://react.dev/reference/react/useState"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1082.095438000124,
+      "urls": [
+        "https://react.dev/reference/react/useState",
+        "https://www.geeksforgeeks.org/reactjs/reactjs-usestate-hook/",
+        "https://ja.react.dev/reference/react/useState",
+        "https://www.w3schools.com/react/react_usestate.asp",
+        "https://www.javascripttutorial.net/react-tutorial/react-usestate-hook/",
+        "https://react.dev/reference/react/useState.md",
+        "http://reactjs.org/docs/hooks-faq.html",
+        "http://reactjs.org/docs/hooks-overview.html",
+        "https://legacy.reactjs.org/docs/hooks-state.html",
+        "http://reactjs.org/docs/hooks-reference.html"
+      ],
+      "engines": [
+        [
+          "bing",
+          "mwmbl",
+          "seznam",
+          "yahoo",
+          "keenable"
+        ],
+        [
+          "bing",
+          "fynd",
+          "naver",
+          "seznam",
+          "yahoo"
+        ],
+        [
+          "bing",
+          "yahoo japan",
+          "local_index"
+        ],
+        [
+          "bing",
+          "mwmbl",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "bing",
+          "fynd",
+          "yahoo"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "bing",
+          "naver",
+          "seznam",
+          "yahoo"
+        ],
+        [
+          "mwmbl"
+        ]
+      ],
+      "bytes": 10377,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-mdn-array",
+      "lang": "en",
+      "query": "mdn javascript array",
+      "gold": [
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1189.2557579999448,
+      "urls": [
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Array",
+        "https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Scripting/Arrays",
+        "https://en.wikipedia.org/wiki/JavaScript",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Indexed_collections?retiredLocale=uk",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array",
+        "https://developer.mozilla.org/en-US/docs/Glossary/Array",
+        "https://developer.mozilla.org/en-US/docs/MDN/Writing_guidelines/Code_style_guide/JavaScript"
+      ],
+      "engines": [
+        [
+          "seznam",
+          "yahoo",
+          "keenable",
+          "local_index"
+        ],
+        [
+          "fynd",
+          "yahoo"
+        ],
+        [
+          "yahoo",
+          "keenable"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "yahoo"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 14253,
+      "unresponsive": 5
+    },
+    {
+      "id": "en-mdn-fetch",
+      "lang": "en",
+      "query": "mdn fetch api",
+      "gold": [
+        "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 929.752279999775,
+      "urls": [
+        "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API",
+        "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch",
+        "https://developer.mozilla.org/en-US/docs/Web/API/Background_Fetch_API",
+        "https://developer.mozilla.org/en-US/docs/Web/API/BackgroundFetchManager/fetch",
+        "https://developer.mozilla.org/en-US/docs/Web/API/Window/fetch",
+        "https://developer.mozilla.org/Web/API/Fetch_API",
+        "https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/cookies/OnChangedCause",
+        "https://developer.mozilla.org/en-US/docs/Glossary/Fetch_directive",
+        "https://developer.mozilla.org/en-US/docs/Glossary/Fetch_metadata_request_header",
+        "https://developer.mozilla.org/en-US/docs/MDN/Writing_guidelines/Howto/Write_an_api_reference/Sidebars"
+      ],
+      "engines": [
+        [
+          "seznam",
+          "yahoo",
+          "keenable",
+          "local_index"
+        ],
+        [
+          "yahoo",
+          "keenable",
+          "local_index"
+        ],
+        [
+          "fynd",
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 14001,
+      "unresponsive": 4
+    },
+    {
+      "id": "en-mdn-promise",
+      "lang": "en",
+      "query": "mdn promise javascript",
+      "gold": [
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1214.3584619998364,
+      "urls": [
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise?retiredLocale=tr",
+        "https://en.wikipedia.org/wiki/JavaScript",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises?retiredLocale=kab",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then",
+        "https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Async_JS/Implementing_a_promise-based_API"
+      ],
+      "engines": [
+        [
+          "seznam",
+          "yahoo",
+          "local_index"
+        ],
+        [
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "yahoo",
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 19537,
+      "unresponsive": 4
+    },
+    {
+      "id": "en-k8s-pod",
+      "lang": "en",
+      "query": "kubernetes pod documentation",
+      "gold": [
+        "https://kubernetes.io/docs/concepts/workloads/pods"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1269.7941360002005,
+      "urls": [
+        "https://kubernetes.io/docs/concepts/workloads/pods/",
+        "https://kubernetes.io/docs/reference/kubernetes-api/core/pod-v1/",
+        "https://kubernetes.io/docs/concepts/workloads/pods/pod-hostname/",
+        "http://kubernetes.io/docs",
+        "https://kubernetes.io/docs/home/",
+        "https://kubernetes.io/docs/tasks/job/job-with-pod-to-pod-communication/",
+        "https://kubernetes.io/docs/concepts/workloads/pods/pod-condition/",
+        "https://kubernetes.io/",
+        "https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/",
+        "https://kubernetes.io/docs/concepts/scheduling-eviction/pod-overhead/"
+      ],
+      "engines": [
+        [
+          "naver",
+          "yahoo"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "yahoo"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "bing",
+          "official site"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6445,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-k8s-deploy",
+      "lang": "en",
+      "query": "kubernetes deployment documentation",
+      "gold": [
+        "https://kubernetes.io/docs/concepts/workloads/controllers/deployment"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 837.9521249999016,
+      "urls": [
+        "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/",
+        "https://kubernetes.io/docs/reference/kubernetes-api/apps/deployment-v1/",
+        "https://kubernetes.io/docs/",
+        "https://kubernetes.io/docs/tutorials/kubernetes-basics/deploy-app/deploy-intro/",
+        "https://kubernetes.io/docs/home/",
+        "https://kubernetes.io/docs/reference/kubectl/generated/kubectl_create/kubectl_create_deployment/",
+        "https://kubernetes.io/docs/tasks/run-application/update-deployment-rolling/",
+        "https://kubernetes.io/docs/tasks/run-application/scale-deployment/",
+        "https://kubernetes.io/docs/tutorials/stateless-application/canary-deployment/",
+        "https://kubernetes.io/docs/tasks/run-application/run-stateless-application-deployment/"
+      ],
+      "engines": [
+        [
+          "bing",
+          "naver",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "keenable",
+          "local_index"
+        ],
+        [
+          "bing",
+          "yahoo",
+          "keenable",
+          "local_index"
+        ],
+        [
+          "mwmbl",
+          "local_index"
+        ],
+        [
+          "keenable",
+          "local_index"
+        ],
+        [
+          "yahoo japan",
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 21307,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-git-rebase",
+      "lang": "en",
+      "query": "git rebase documentation",
+      "gold": [
+        "https://git-scm.com/docs/git-rebase"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 904.7252489999664,
+      "urls": [
+        "https://git-scm.com/docs/git-rebase",
+        "https://git-scm.com/docs/git-rebase/2.18.0",
+        "https://git-scm.com/docs/git-rebase/sv",
+        "https://git-scm.com/docs/git-rebase/uk",
+        "https://git-scm.com/docs/git-rebase/2.15.4",
+        "https://git-scm.com/docs/git-rebase/zh_HANS-CN",
+        "https://git-scm.com/docs/git-rebase/ru",
+        "https://git-scm.com/docs/git-rebase/fr.html",
+        "https://git-scm.com/docs/git-rebase/fr",
+        "https://git-scm.com/docs/git-rebase/2.17.0"
+      ],
+      "engines": [
+        [
+          "bing",
+          "fynd",
+          "naver",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "local_index"
+        ],
+        [
+          "bing",
+          "yahoo",
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6969,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-git-merge",
+      "lang": "en",
+      "query": "git merge documentation",
+      "gold": [
+        "https://git-scm.com/docs/git-merge"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1128.6949619998268,
+      "urls": [
+        "https://git-scm.com/docs/git-merge",
+        "https://git-scm.com/docs/git-merge-base",
+        "https://git-scm.com/docs/git-mergetool",
+        "https://git-scm.com/docs/git-merge/2.27.0",
+        "https://git-scm.com/docs/git-merge/fr",
+        "https://git-scm.com/docs/git-mergetool/2.22.0",
+        "https://git-scm.com/docs/git-merge/uk",
+        "https://git-scm.com/docs/git-merge-file",
+        "http://git-scm.com/docs/git-merge/en",
+        "https://git-scm.com/docs/git-merge/2.33.0"
+      ],
+      "engines": [
+        [
+          "fynd",
+          "naver",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "local_index"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "yahoo"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 13332,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-nginx-conf",
+      "lang": "en",
+      "query": "nginx configuration file reference",
+      "gold": [
+        "https://nginx.org/en/docs",
+        "https://docs.nginx.com/nginx/admin-guide"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 818.1693199999245,
+      "urls": [
+        "https://docs.nginx.com/nginx/admin-guide/basic-functionality/managing-configuration-files/",
+        "https://docs.nginx.com/nginx/admin-guide/basic-functionality/managing-configuration-files/index.md",
+        "https://nginx.org/en/docs/beginners_guide.html",
+        "https://docs.nginx.com/app-delivery/platform/nginx-configuration/",
+        "https://docs.nginx.com/nginx-agent/configuration/health-checks/",
+        "https://docs.nginx.com/app-delivery/aws/deploy/nginx-configuration/",
+        "https://docs.nginx.com/nginx-ingress-controller/configuration/global-configuration/custom-templates/",
+        "http://nginx.org/docs/syntax.html",
+        "https://nginx.org/en/docs/",
+        "https://nginx.org/en/docs/syntax.html"
+      ],
+      "engines": [
+        [
+          "yahoo",
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "yahoo",
+          "keenable"
+        ],
+        [
+          "yahoo",
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "naver"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "yahoo",
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 11474,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-linux-sched",
+      "lang": "en",
+      "query": "linux kernel documentation scheduler",
+      "gold": [
+        "https://docs.kernel.org/scheduler"
+      ],
+      "category": "doc",
+      "rank": 3,
+      "millis": 885.716742999648,
+      "urls": [
+        "https://ubuntu.com/real-time/docs/explanation/schedulers/",
+        "https://www.kernel.org/doc/html/latest/scheduler/index.html",
+        "https://docs.kernel.org/scheduler/index.html",
+        "https://docs.kernel.org/scheduler/sched-ext.html",
+        "https://docs.kernel.org/6.0/scheduler/index.html",
+        "https://docs.kernel.org/scheduler/schedutil.html",
+        "https://docs.kernel.org/scheduler/sched-deadline.html",
+        "https://docs.kernel.org/6.1/scheduler/index.html",
+        "https://docs.kernel.org/scheduler/sched-design-CFS.html",
+        "https://docs.kernel.org/scheduler/sched-capacity.html"
+      ],
+      "engines": [
+        [
+          "naver",
+          "seznam",
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "fynd",
+          "local_index"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "seznam",
+          "keenable"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "keenable"
+        ]
+      ],
+      "bytes": 36200,
+      "unresponsive": 4
+    },
+    {
+      "id": "en-linux-sysctl",
+      "lang": "en",
+      "query": "linux kernel sysctl documentation",
+      "gold": [
+        "https://docs.kernel.org/admin-guide/sysctl"
+      ],
+      "category": "doc",
+      "rank": 3,
+      "millis": 1135.0267269999677,
+      "urls": [
+        "https://docs.kernel.org/networking/ip-sysctl.html",
+        "https://www.kernel.org/doc/html/latest/admin-guide/sysctl/kernel.html",
+        "https://docs.kernel.org/admin-guide/sysctl/index.html",
+        "https://www.kernel.org/doc/html/latest/admin-guide/sysctl/index.html",
+        "https://docs.kernel.org/6.0/admin-guide/sysctl/index.html",
+        "https://docs.kernel.org/6.6/admin-guide/sysctl/index.html",
+        "https://docs.kernel.org/admin-guide/sysctl/vm.html",
+        "https://docs.kernel.org/admin-guide/sysctl/kernel.html",
+        "https://en.wikipedia.org/wiki/Linux_kernel",
+        "https://www.kernel.org/doc/html/latest/admin-guide/sysctl/"
+      ],
+      "engines": [
+        [
+          "fynd",
+          "seznam"
+        ],
+        [
+          "yahoo",
+          "local_index"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "fynd",
+          "local_index"
+        ],
+        [
+          "yahoo"
+        ],
+        [
+          "yahoo"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "yahoo"
+        ]
+      ],
+      "bytes": 14226,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-sql-join",
+      "lang": "en",
+      "query": "sql join types tutorial",
+      "gold": [
+        "https://www.postgresql.org/docs/current/queries-table-expressions"
+      ],
+      "category": "doc",
+      "rank": null,
+      "millis": 1667.2881740000776,
+      "urls": [
+        "https://www.sqlshack.com/sql-join-overview-and-tutorial/",
+        "https://www.coursera.org/articles/sql-join-types",
+        "https://www.w3schools.com/sql/sql_join.asp",
+        "https://en.wikipedia.org/wiki/Join_(SQL)",
+        "https://www.geeksforgeeks.org/sql/sql-join-set-1-inner-left-right-and-full-joins/",
+        "https://learnsql.com/blog/sql-joins-types-explained",
+        "https://www.freecodecamp.org/news/sql-join-types-inner-join-vs-outer-join-example/",
+        "https://www.golinuxcloud.com/sql-tutorial/",
+        "https://www.tutorialspoint.com/sql/sql-using-joins.htm",
+        "https://www.sqlnoir.com/blog/sql-join-types-explained"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "fynd",
+          "naver"
+        ],
+        [
+          "mwmbl",
+          "naver",
+          "yahoo japan"
+        ],
+        [
+          "seznam",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "keenable",
+          "wikipedia_index"
+        ],
+        [
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "yahoo",
+          "yahoo japan"
+        ]
+      ],
+      "bytes": 21080,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-tokio",
+      "lang": "en",
+      "query": "tokio rust async runtime",
+      "gold": [
+        "https://tokio.rs"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1051.481486999819,
+      "urls": [
+        "https://tokio.rs/",
+        "https://tokio.rs/tokio/tutorial/async",
+        "https://tokio.rs/tokio/topics",
+        "https://tokio.rs/tokio/tutorial",
+        "https://tokio.rs/tokio/tutorial/spawning",
+        "https://tokio.rs/tokio/tutorial/hello-tokio",
+        "https://tokio.rs/tokio/glossary",
+        "http://tokio.rs/blog",
+        "https://en.wikipedia.org/wiki/Tokio_(software)",
+        "https://docs.rs/tokio"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "official site"
+        ],
+        [
+          "mwmbl",
+          "fynd",
+          "naver",
+          "seznam",
+          "yahoo",
+          "keenable"
+        ],
+        [
+          "mwmbl",
+          "fynd"
+        ],
+        [
+          "mwmbl",
+          "seznam",
+          "keenable"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "yahoo japan",
+          "keenable"
+        ]
+      ],
+      "bytes": 28872,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-serde",
+      "lang": "en",
+      "query": "serde rust crate serialization",
+      "gold": [
+        "https://serde.rs",
+        "https://crates.io/crates/serde"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 968.2373030000235,
+      "urls": [
+        "https://crates.io/crates/serde",
+        "https://serde.rs/",
+        "https://docs.rs/serde/latest/serde/",
+        "https://en.wikipedia.org/wiki/Serialization",
+        "https://github.com/serde-rs/serde",
+        "https://docs.rs/crate/serde_cbor/0.10.1",
+        "https://docs.rs/crate/serde/1.0.180/source/README.md",
+        "https://docs.rs/serde",
+        "https://crates.io/crates/Serde",
+        "https://docs.rs/crate/serde/1.0.170/source/README.md"
+      ],
+      "engines": [
+        [
+          "bing",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "bing",
+          "naver",
+          "yahoo",
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "bing",
+          "yahoo"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "bing",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "naver"
+        ],
+        [
+          "keenable"
+        ]
+      ],
+      "bytes": 9736,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-fastapi",
+      "lang": "en",
+      "query": "fastapi documentation tutorial",
+      "gold": [
+        "https://fastapi.tiangolo.com"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1218.0590299999494,
+      "urls": [
+        "https://fastapi.tiangolo.com/tutorial/",
+        "https://fastapi.tiangolo.com/",
+        "https://fastapi.tiangolo.com/tutorial/first-steps/",
+        "https://fastapi.tiangolo.com/tutorial?trk=article-ssr-frontend-pulse_little-text-block",
+        "https://fastapi.tiangolo.com/ja/tutorial/",
+        "https://fastapi.tiangolo.com/ja/tutorial/first-steps/",
+        "https://fastapi.tiangolo.com/ja/",
+        "https://www.geeksforgeeks.org/python/fastapi-tutorial/",
+        "https://github.com/fastapi/fastapi/blob/master/docs/en/docs/tutorial/index.md",
+        "https://code.visualstudio.com/docs/python/tutorial-fastapi"
+      ],
+      "engines": [
+        [
+          "naver",
+          "seznam",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "bing",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "seznam",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "naver",
+          "seznam",
+          "yahoo japan",
+          "keenable"
+        ]
+      ],
+      "bytes": 22522,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-django-orm",
+      "lang": "en",
+      "query": "django queryset documentation",
+      "gold": [
+        "https://docs.djangoproject.com/en/stable/topics/db/queries"
+      ],
+      "category": "doc",
+      "rank": 6,
+      "millis": 1151.9778080000833,
+      "urls": [
+        "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
+        "https://docs.djangoproject.com/en/dev/ref/models/querysets/",
+        "https://docs.djangoproject.com/en/4.0/ref/models/querysets",
+        "https://docs.djangoproject.com/en/4.0/topics/pagination/",
+        "https://docs.djangoproject.com/ja/6.1/ref/models/querysets/",
+        "https://docs.djangoproject.com/en/6.1/topics/db/queries/",
+        "https://docs.djangoproject.com/en/5.1/ref/models/querysets/",
+        "https://docs.djangoproject.com/en/6.1/ref/contrib/gis/geoquerysets/",
+        "https://docs.djangoproject.com/en/dev/internals/howto-release-django/",
+        "https://docs.djangoproject.com/en/6.1/ref/django-admin/"
+      ],
+      "engines": [
+        [
+          "naver",
+          "yahoo",
+          "local_index"
+        ],
+        [
+          "mwmbl",
+          "seznam"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "yahoo japan",
+          "local_index"
+        ],
+        [
+          "yahoo",
+          "local_index"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 22340,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-flask",
+      "lang": "en",
+      "query": "flask quickstart documentation",
+      "gold": [
+        "https://flask.palletsprojects.com/en/stable/quickstart"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1176.2234160000844,
+      "urls": [
+        "https://flask.palletsprojects.com/en/stable/quickstart/",
+        "https://flask.palletsprojects.com/en/stable/",
+        "https://flask.palletsprojects.com/en/latest/quickstart/",
+        "https://flask.palletsprojects.com/",
+        "https://flask-sqlalchemy.readthedocs.io/en/stable/quickstart/",
+        "https://flaskx.readthedocs.io/en/latest/",
+        "https://pallet.readthedocs.io/en/stable/quickstart.html",
+        "https://flask-praetorian.readthedocs.io/en/latest/quickstart.html",
+        "https://flask-doc.readthedocs.io/en/latest/quickstart.html",
+        "https://kubernetes.io/docs/contribute/generate-ref-docs/quickstart/"
+      ],
+      "engines": [
+        [
+          "bing",
+          "fynd",
+          "seznam",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "bing",
+          "yahoo"
+        ],
+        [
+          "naver"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "bing",
+          "naver",
+          "seznam",
+          "yahoo"
+        ],
+        [
+          "bing",
+          "yahoo"
+        ],
+        [
+          "bing",
+          "yahoo"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 9940,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-rfc-http",
+      "lang": "en",
+      "query": "http semantics rfc 9110",
+      "gold": [
+        "https://www.rfc-editor.org/rfc/rfc9110"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 866.6418530001465,
+      "urls": [
+        "https://www.rfc-editor.org/rfc/rfc9110.html",
+        "https://www.ietf.org/rfc/rfc9110.html",
+        "https://www.rfc-editor.org/rfc/rfc9110.pdf",
+        "https://www.rfc-editor.org/rfc/rfc9110",
+        "https://www.rfc-editor.org/info/rfc9112/",
+        "https://www.rfc-editor.org/info/std97/",
+        "https://httpwg.org/specs/",
+        "https://en.wikipedia.org/wiki/HTTP",
+        "https://tex2e.github.io/rfc-translater/html/rfc9110.html",
+        "https://www.rfc-editor.org/info/rfc9110/"
+      ],
+      "engines": [
+        [
+          "bing",
+          "fynd",
+          "yahoo"
+        ],
+        [
+          "mwmbl",
+          "naver"
+        ],
+        [
+          "bing",
+          "yahoo"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "wiby",
+          "official site"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "bing",
+          "yahoo japan"
+        ],
+        [
+          "naver",
+          "seznam",
+          "yahoo japan"
+        ]
+      ],
+      "bytes": 6773,
+      "unresponsive": 4
+    },
+    {
+      "id": "en-json-schema",
+      "lang": "en",
+      "query": "json schema specification",
+      "gold": [
+        "https://json-schema.org/specification"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1611.17312999977,
+      "urls": [
+        "https://json-schema.org/specification",
+        "https://json-schema.org/",
+        "https://en.wikipedia.org/wiki/JSON",
+        "https://json-schema.org/draft/2020-12/json-schema-core",
+        "https://json-schema.org/understanding-json-schema/reference",
+        "https://json-schema.org/blog/posts/json-schema-in-5-minutes",
+        "https://json-schema.org/learn/getting-started-step-by-step",
+        "https://json-schema.org/draft/2020-12",
+        "https://json-schema.org/understanding-json-schema/basics",
+        "https://json-schema.org/understanding-json-schema/reference/object"
+      ],
+      "engines": [
+        [
+          "fynd",
+          "seznam",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "fynd",
+          "naver",
+          "yahoo japan"
+        ],
+        [
+          "bing",
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "yahoo"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "keenable"
+        ]
+      ],
+      "bytes": 16193,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-oauth",
+      "lang": "en",
+      "query": "oauth 2.0 rfc 6749",
+      "gold": [
+        "https://www.rfc-editor.org/rfc/rfc6749"
+      ],
+      "category": "doc",
+      "rank": 5,
+      "millis": 1137.6912840000841,
+      "urls": [
+        "https://www.rfc-editor.org/info/rfc6749/",
+        "https://blog.fimbault.com/managing-authorization-grants-beyond-oauth-2",
+        "https://velog.io/@okko8522/OAuth-2.0-rfc-6749",
+        "https://en.wikipedia.org/wiki/OAuth",
+        "https://www.rfc-editor.org/rfc/rfc6749.html",
+        "https://oauth.net/2/",
+        "https://www.rfc-editor.org/info/rfc9101",
+        "https://oauth.net/2/client-authentication/",
+        "https://tools.ietf.org/html/rfc6749",
+        "https://tex2e.github.io/rfc-translater/html/rfc6749.html"
+      ],
+      "engines": [
+        [
+          "bing",
+          "fynd",
+          "naver",
+          "seznam",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "naver"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "bing",
+          "yahoo"
+        ],
+        [
+          "seznam",
+          "yahoo"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl",
+          "naver"
+        ],
+        [
+          "naver",
+          "yahoo japan"
+        ],
+        [
+          "bing",
+          "naver",
+          "yahoo japan"
+        ]
+      ],
+      "bytes": 7698,
+      "unresponsive": 4
+    },
+    {
+      "id": "en-unix-man",
+      "lang": "en",
+      "query": "unix find command manual",
+      "gold": [
+        "https://man7.org/linux/man-pages/man1/find.1"
+      ],
+      "category": "doc",
+      "rank": 3,
+      "millis": 1200.0994289996925,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Find_(Unix)",
+        "https://linux.die.net/man/1/find",
+        "https://man7.org/linux/man-pages/man1/find.1.html",
+        "https://www.man7.org/linux/man-pages/man1/find.1.html",
+        "https://man.openbsd.org/find.1",
+        "https://shapeshed.com/unix-find/",
+        "https://www.deexams.com/technews/unix_find_command",
+        "https://www.man7.org/linux/man-pages/man1/find.1p.html",
+        "https://unix.com/man_page/linux/1/find",
+        "https://www.cyberciti.biz/faq/unix-linux-whereis-command-examples-to-locate-binary/"
+      ],
+      "engines": [
+        [
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "bing",
+          "naver",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "seznam",
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "bing",
+          "yahoo"
+        ],
+        [
+          "fynd",
+          "seznam"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "bing",
+          "yahoo"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "naver"
+        ]
+      ],
+      "bytes": 12073,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-turing",
+      "lang": "en",
+      "query": "alan turing wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Alan_Turing"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 920.6297099999574,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Alan_Turing",
+        "https://en.wikipedia.org/wiki/Alan_Turing_Memorial",
+        "https://en.wikipedia.org/wiki/Alan_Turing_Year",
+        "https://en.wikipedia.org/wiki/Alan_Turing_Institute",
+        "https://en.wikipedia.org/wiki/Alan_Turing_law",
+        "https://en.wikipedia.org/wiki/Alan_Turing:_The_Enigma",
+        "https://en.wikipedia.org/wiki/Legacy_of_Alan_Turing",
+        "https://fr.wikipedia.org/wiki/Alan_Turing",
+        "https://simple.wikipedia.org/wiki/Alan_Turing",
+        "https://en.wikipedia.org/wiki/Alan_Turing_(sculpture)"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "wikipedia",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "fynd",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "yahoo",
+          "keenable",
+          "wikipedia_index"
+        ],
+        [
+          "yahoo",
+          "keenable"
+        ],
+        [
+          "yahoo"
+        ],
+        [
+          "wikipedia_index"
+        ]
+      ],
+      "bytes": 10025,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-shakespeare",
+      "lang": "en",
+      "query": "william shakespeare wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/William_Shakespeare"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 904.0708669999731,
+      "urls": [
+        "https://en.wikipedia.org/wiki/William_Shakespeare",
+        "https://en.wikipedia.org/wiki/Life_of_William_Shakespeare",
+        "https://en.wikipedia.org/wiki/Shakespeare",
+        "https://simple.wikipedia.org/wiki/William_Shakespeare",
+        "https://en.wikipedia.org/wiki/List_of_works_by_William_Shakespeare",
+        "https://en.wikipedia.org/wiki/The_William_Shakespeare",
+        "https://en.wikipedia.org/wiki/Sexuality_of_William_Shakespeare",
+        "https://en.wikipedia.org/wiki/Shakespeare%27s_plays",
+        "https://en.wikipedia.org/wiki/William_Shakespeare_(inventor)",
+        "https://en.wikipedia.org/wiki/William_Shakespeare_(essay)"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "wikipedia",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "yahoo",
+          "yahoo japan",
+          "wikipedia_index"
+        ],
+        [
+          "fynd",
+          "keenable"
+        ],
+        [
+          "seznam",
+          "yahoo"
+        ],
+        [
+          "mwmbl",
+          "wikipedia"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia_index"
+        ]
+      ],
+      "bytes": 7941,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-einstein",
+      "lang": "en",
+      "query": "albert einstein wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Albert_Einstein"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 1605.0891620002403,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Albert_Einstein",
+        "https://en.wikipedia.org/wiki/Hans_Albert_Einstein",
+        "https://en.wikipedia.org/wiki/Albert_Einstein_Medal",
+        "https://en.wikipedia.org/wiki/Albert_Einstien",
+        "https://en.wikipedia.org/wiki/Einstein_family",
+        "https://en.wikipedia.org/wiki/Brain_of_Albert_Einstein",
+        "https://en.wikipedia.org/wiki/Albert_Einstein_in_popular_culture",
+        "https://en.wikipedia.org/wiki/Albert_Einstein_Square",
+        "https://en.wikipedia.org/wiki/Albert_Einstein_College_of_Medicine",
+        "https://en.wikipedia.org/wiki/Albert_Einstein_House"
+      ],
+      "engines": [
+        [
+          "wikipedia",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia_index"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "mwmbl",
+          "wikipedia"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ]
+      ],
+      "bytes": 10729,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-rust-topic",
+      "lang": "en",
+      "query": "rust programming language wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Rust_(programming_language)"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 1277.835839999625,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Rust_(programming_language)",
+        "https://en.wikipedia.org/wiki/Outline_of_the_Rust_programming_language",
+        "https://rust-lang.org/",
+        "https://ja.wikipedia.org/wiki/Rust_(%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E8%A8%80%E8%AA%9E)",
+        "https://simple.wikipedia.org/wiki/Rust_(programming_language)",
+        "https://en.wikipedia.org/wiki/Rust_programming_language",
+        "https://en.wikipedia.org/wiki/List_of_programming_languages_by_type",
+        "https://en.wikipedia.org/wiki/Category:Rust_(programming_language)",
+        "https://en.wikipedia.org/wiki/Rust_syntax",
+        "https://en.wikipedia.org/wiki/Talk:Rust_(programming_language)"
+      ],
+      "engines": [
+        [
+          "bing",
+          "mwmbl",
+          "wikipedia",
+          "fynd",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "seznam",
+          "yahoo",
+          "wikipedia_index"
+        ],
+        [
+          "bing",
+          "mwmbl",
+          "yahoo",
+          "yahoo japan",
+          "local_index"
+        ],
+        [
+          "bing",
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "seznam",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "mwmbl",
+          "wikipedia"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "wikipedia",
+          "keenable"
+        ],
+        [
+          "seznam"
+        ]
+      ],
+      "bytes": 11221,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-transformer",
+      "lang": "en",
+      "query": "transformer deep learning wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)",
+        "https://en.wikipedia.org/wiki/Transformer_(machine_learning_model)"
+      ],
+      "category": "wiki",
+      "rank": 5,
+      "millis": 896.8131100000392,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Transformer_(deep_learning)",
+        "https://en.wikipedia.org/wiki/Deep_learning",
+        "https://en.wikipedia.org/wiki/Outline_of_deep_learning",
+        "https://en.wikipedia.org/wiki/Generative_pre-trained_transformer",
+        "https://en.wikipedia.org/wiki/Transformer_(machine_learning_model)",
+        "https://en.wikipedia.org/wiki/Deep_reinforcement_learning",
+        "https://en.wikipedia.org/wiki/Talk:Transformer_(deep_learning)",
+        "https://en.wikipedia.org/wiki/Mamba_(deep_learning_architecture)",
+        "https://en.wikipedia.org/wiki/Deep_Learning_Super_Sampling",
+        "https://en.wikipedia.org/wiki/DLSS"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "wikipedia",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "keenable",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl"
+        ]
+      ],
+      "bytes": 11577,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-mt-fuji",
+      "lang": "en",
+      "query": "mount fuji wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Mount_Fuji"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 1397.375232000286,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Mount_Fuji",
+        "https://en.wikipedia.org/wiki/Historic_eruptions_of_Mount_Fuji",
+        "https://en.wikipedia.org/wiki/Mount_Fuji_Radar_System",
+        "https://en.wikipedia.org/wiki/Thirty-six_Views_of_Mount_Fuji",
+        "https://simple.wikipedia.org/wiki/Mount_Fuji",
+        "https://en.wikipedia.org/wiki/Mount_%C5%8Cmuro_(Mount_Fuji)",
+        "https://en.wikipedia.org/wiki/Fuji_Five_Lakes",
+        "https://en.wikipedia.org/wiki/Camp_Fuji",
+        "https://en.wikipedia.org/wiki/Thirty-six_Views_of_Mount_Fuji_(Hiroshige)",
+        "https://en.wikipedia.org/wiki/Fuji"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "wikipedia",
+          "fynd",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "yahoo",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "fynd",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl"
+        ]
+      ],
+      "bytes": 6588,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-amazon-river",
+      "lang": "en",
+      "query": "amazon river wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Amazon_River"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 919.731137999861,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Amazon_River",
+        "https://en.wikipedia.org/wiki/Amazon_river_dolphin",
+        "https://en.wikipedia.org/wiki/Amazon_basin",
+        "https://en.wikipedia.org/wiki/Source_of_the_Amazon_River",
+        "https://simple.wikipedia.org/wiki/Amazon_River",
+        "https://en.wikipedia.org/wiki/simple:Amazon%20River",
+        "https://en.wikipedia.org/wiki/Template:Amazon_River_routemap",
+        "https://en.wikipedia.org/wiki/Amazon_River_frog",
+        "https://en.wikipedia.org/wiki/Six-tubercled_Amazon_River_turtle",
+        "https://en.wikipedia.org/wiki/Big-headed_Amazon_River_turtle"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "wikipedia",
+          "fynd",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "fynd",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "yahoo",
+          "yahoo japan",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "seznam",
+          "yahoo"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia_index"
+        ]
+      ],
+      "bytes": 8050,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-tokyo",
+      "lang": "en",
+      "query": "tokyo wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Tokyo"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 1454.4084650001423,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Tokyo",
+        "https://en.wikipedia.org/wiki/TV_Tokyo",
+        "https://en.wikipedia.org/wiki/Tokyo!",
+        "https://en.wikipedia.org/wiki/.tokyo",
+        "https://en.wikipedia.org/wiki/FC_Tokyo",
+        "https://en.wikipedia.org/wiki/Tokyo_Tokyo",
+        "https://simple.wikipedia.org/wiki/Tokyo",
+        "https://en.wikipedia.org/wiki/History_of_Tokyo",
+        "https://en.wikipedia.org/wiki/Kanda_Station_(Tokyo)",
+        "https://en.wikipedia.org/wiki/Portal:Tokyo/Intro"
+      ],
+      "engines": [
+        [
+          "wikipedia",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "seznam",
+          "yahoo"
+        ],
+        [
+          "yahoo"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "keenable"
+        ]
+      ],
+      "bytes": 7152,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-black-hole",
+      "lang": "en",
+      "query": "black hole wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Black_hole"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 886.4503150002747,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Black_hole",
+        "https://en.wikipedia.org/wiki/Supermassive_black_hole",
+        "https://en.wikipedia.org/wiki/Rogue_black_hole",
+        "https://simple.wikipedia.org/wiki/Black_hole",
+        "https://en.wikipedia.org/wiki/simple:Black%20hole",
+        "https://en.wikipedia.org/wiki/Black_hole_cosmology",
+        "https://en.wikipedia.org/wiki/List_of_most_massive_black_holes",
+        "https://en.wikipedia.org/wiki/Intermediate-mass_black_hole",
+        "https://en.wikipedia.org/wiki/Optical_black_hole",
+        "https://en.wikipedia.org/wiki/Hole.io"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "wikipedia",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "yahoo",
+          "wikipedia_index"
+        ],
+        [
+          "fynd",
+          "wikipedia_index"
+        ],
+        [
+          "seznam",
+          "yahoo"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl"
+        ]
+      ],
+      "bytes": 14767,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-internet",
+      "lang": "en",
+      "query": "internet wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Internet"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 889.2256110002563,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Internet",
+        "https://en.wikipedia.org/wiki/History_of_the_Internet",
+        "https://en.wikipedia.org/wiki/Wikipedia",
+        "https://simple.wikipedia.org/wiki/Internet",
+        "https://en.wikipedia.org/wiki/Internet_Archive",
+        "https://en.wikipedia.org/wiki/Internet_geography",
+        "https://en.wikipedia.org/wiki/Internet_pornography",
+        "https://en.wikipedia.org/wiki/Internet_tax",
+        "https://en.wikipedia.org/wiki/The_Last_Best_Place_on_the_Internet",
+        "https://en.wikipedia.org/wiki/Internet_homicide"
+      ],
+      "engines": [
+        [
+          "bing",
+          "wikipedia",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "wikipedia_index"
+        ],
+        [
+          "bing",
+          "wikipedia",
+          "yahoo",
+          "keenable"
+        ],
+        [
+          "bing",
+          "mwmbl"
+        ],
+        [
+          "bing",
+          "yahoo"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "wikipedia_index"
+        ]
+      ],
+      "bytes": 7841,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-photosynthesis",
+      "lang": "en",
+      "query": "photosynthesis wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Photosynthesis"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 815.9425469998496,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Photosynthesis",
+        "https://simple.wikipedia.org/wiki/Photosynthesis",
+        "https://en.wikipedia.org/wiki/Evolution_of_photosynthesis",
+        "https://en.wikipedia.org/wiki/Anoxygenic_photosynthesis",
+        "https://en.wikipedia.org/wiki/Artificial_photosynthesis",
+        "https://en.wikipedia.org/wiki/Photosynthesis_(disambiguation)",
+        "https://en.wikipedia.org/wiki/Aquatic_photosynthesis",
+        "https://en.wikipedia.org/wiki/Photosynthesis_(board_game)",
+        "https://en.wikipedia.org/wiki/Alarm_photosynthesis",
+        "https://en.wikipedia.org/wiki/Photosynthesis_Research"
+      ],
+      "engines": [
+        [
+          "bing",
+          "mwmbl",
+          "wikipedia",
+          "fynd",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "wikipedia_index"
+        ],
+        [
+          "seznam",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "wikipedia",
+          "yahoo",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia_index"
+        ]
+      ],
+      "bytes": 6315,
+      "unresponsive": 4
+    },
+    {
+      "id": "en-roman-empire",
+      "lang": "en",
+      "query": "roman empire wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Roman_Empire"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 1354.8560210001597,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Roman_Empire",
+        "https://en.wikipedia.org/wiki/History_of_the_Roman_Empire",
+        "https://en.wikipedia.org/wiki/Succession_of_the_Roman_Empire",
+        "https://en.wikipedia.org/wiki/Holy_Roman_Empire",
+        "https://simple.wikipedia.org/wiki/Roman_Empire",
+        "https://en.wikipedia.org/wiki/Western_Roman_Empire",
+        "https://en.wikipedia.org/wiki/Fall_of_the_Western_Roman_Empire",
+        "https://en.wikipedia.org/wiki/Ottoman_claim_to_Roman_succession",
+        "https://en.wikipedia.org/wiki/Constitution_of_the_Late_Roman_Empire",
+        "https://en.wikipedia.org/wiki/history_of_the_Roman_Empire"
+      ],
+      "engines": [
+        [
+          "bing",
+          "mwmbl",
+          "wikipedia",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "keenable",
+          "wikipedia_index"
+        ],
+        [
+          "bing",
+          "wikipedia",
+          "seznam",
+          "yahoo"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "yahoo japan",
+          "wikipedia_index"
+        ],
+        [
+          "bing",
+          "seznam",
+          "yahoo"
+        ],
+        [
+          "bing",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "bing",
+          "mwmbl",
+          "wikipedia"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "keenable"
+        ]
+      ],
+      "bytes": 11992,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-tcp-ip",
+      "lang": "en",
+      "query": "tcp ip wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Internet_protocol_suite"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 825.6147510001028,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Internet_protocol_suite",
+        "https://en.wikipedia.org/wiki/Transmission_Control_Protocol",
+        "https://en.wikipedia.org/wiki/TCP/IP_Illustrated",
+        "https://fi.wikipedia.org/wiki/TCP/IP",
+        "https://en.wikipedia.org/wiki/TCP/IP_stack_fingerprinting",
+        "https://simple.wikipedia.org/wiki/TCP/IP_model",
+        "https://en.wikipedia.org/wiki/NetBIOS_over_TCP/IP",
+        "http://en.wikipedia.org/wiki/TCP/IP",
+        "https://en.wikipedia.org/wiki/TCP_offload_engine",
+        "https://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers"
+      ],
+      "engines": [
+        [
+          "bing",
+          "mwmbl",
+          "wikipedia",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "bing",
+          "mwmbl",
+          "wikipedia",
+          "yahoo"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "fynd",
+          "keenable"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "bing",
+          "yahoo"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia"
+        ]
+      ],
+      "bytes": 7492,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-ml",
+      "lang": "en",
+      "query": "machine learning wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Machine_learning"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 1202.0378990000609,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Machine_learning",
+        "https://en.wikipedia.org/wiki/Quantum_machine_learning",
+        "https://en.wikipedia.org/wiki/Adversarial_machine_learning",
+        "https://en.wikipedia.org/wiki/Timeline_of_machine_learning",
+        "https://en.wikipedia.org/wiki/Rule-based_machine_learning",
+        "https://en.wikipedia.org/wiki/Outline_of_machine_learning",
+        "https://en.wikipedia.org/wiki/Machine_Learning_(journal)",
+        "https://en.wikipedia.org/wiki/Attention_(machine_learning)",
+        "https://simple.wikipedia.org/wiki/Machine_learning",
+        "https://en.wikipedia.org/wiki/Automated_machine_learning"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "wikipedia",
+          "seznam",
+          "yahoo",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "fynd",
+          "wikipedia_index"
+        ],
+        [
+          "fynd",
+          "wikipedia_index"
+        ],
+        [
+          "yahoo",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "yahoo"
+        ],
+        [
+          "wikipedia_index"
+        ]
+      ],
+      "bytes": 6331,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-relativity",
+      "lang": "en",
+      "query": "theory of relativity wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Theory_of_relativity"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 1241.9589969999834,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Theory_of_relativity",
+        "https://en.wikipedia.org/wiki/Special_relativity",
+        "https://en.wikipedia.org/wiki/General_relativity",
+        "https://en.wikipedia.org/wiki/The_Einstein_Theory_of_Relativity",
+        "https://en.wikipedia.org/wiki/Criticism_of_the_theory_of_relativity",
+        "https://simple.wikipedia.org/wiki/Theory_of_relativity",
+        "https://en.wikipedia.org/wiki/100_Authors_Against_Einstein",
+        "https://en.wikipedia.org/wiki/Relativity:_The_Special_and_the_General_Theory",
+        "https://en.wikipedia.org/wiki/The_Theory_of_Relativity_(musical)",
+        "https://en.wikipedia.org/wiki/Emission_theory_(relativity)"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "wikipedia",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "keenable",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "yahoo",
+          "yahoo japan",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "yahoo japan",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "seznam",
+          "yahoo"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ]
+      ],
+      "bytes": 13887,
+      "unresponsive": 4
+    },
+    {
+      "id": "en-attention",
+      "lang": "en",
+      "query": "attention is all you need arxiv",
+      "gold": [
+        "https://arxiv.org/abs/1706.03762"
+      ],
+      "category": "paper",
+      "rank": 1,
+      "millis": 1059.5458029997644,
+      "urls": [
+        "https://arxiv.org/abs/1706.03762",
+        "https://arxiv.org/pdf/1706.03762",
+        "https://en.wikipedia.org/wiki/Attention_Is_All_You_Need",
+        "https://arxiv.org/html/1706.03762v7",
+        "https://arxiv.org/abs/2501.09166",
+        "https://arxiv.org/abs/2104.04692",
+        "https://arxiv.org/abs/2501.06425",
+        "https://arxiv.org/abs/2501.05730",
+        "https://arxiv.org/abs/2010.13154",
+        "https://arxiv.org/abs/2510.19861"
+      ],
+      "engines": [
+        [
+          "bing",
+          "fynd",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "arxiv"
+        ],
+        [
+          "bing",
+          "naver",
+          "yahoo"
+        ],
+        [
+          "bing",
+          "mwmbl",
+          "wikipedia",
+          "seznam",
+          "yahoo japan",
+          "wikipedia_index"
+        ],
+        [
+          "seznam",
+          "yahoo japan"
+        ],
+        [
+          "yahoo japan",
+          "arxiv"
+        ],
+        [
+          "arxiv"
+        ],
+        [
+          "arxiv"
+        ],
+        [
+          "arxiv"
+        ],
+        [
+          "arxiv"
+        ],
+        [
+          "arxiv"
+        ]
+      ],
+      "bytes": 15056,
+      "unresponsive": 4
+    },
+    {
+      "id": "en-bert",
+      "lang": "en",
+      "query": "bert pre-training arxiv",
+      "gold": [
+        "https://arxiv.org/abs/1810.04805"
+      ],
+      "category": "paper",
+      "rank": 1,
+      "millis": 1053.2601059999251,
+      "urls": [
+        "https://arxiv.org/abs/1810.04805",
+        "https://arxiv.org/abs/2106.08254",
+        "https://arxiv.org/pdf/1810.04805",
+        "https://arxiv.org/abs/2111.07832",
+        "https://arxiv.org/abs/2610.15028",
+        "https://arxiv.org/abs/2111.07832v3",
+        "https://arxiv.org/abs/2004.09297",
+        "https://arxiv.org/abs/2111.12710",
+        "https://arxiv.org/abs/2111.07832v1",
+        "https://arxiv.org/abs/2111.14819"
+      ],
+      "engines": [
+        [
+          "bing",
+          "yahoo japan",
+          "arxiv",
+          "official site"
+        ],
+        [
+          "mwmbl",
+          "seznam",
+          "arxiv"
+        ],
+        [
+          "seznam",
+          "yahoo japan"
+        ],
+        [
+          "mwmbl",
+          "yahoo japan",
+          "arxiv"
+        ],
+        [
+          "yahoo japan",
+          "arxiv"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "mwmbl",
+          "arxiv"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "fynd"
+        ]
+      ],
+      "bytes": 11915,
+      "unresponsive": 5
+    },
+    {
+      "id": "en-gpt3",
+      "lang": "en",
+      "query": "language models are few shot learners arxiv",
+      "gold": [
+        "https://arxiv.org/abs/2005.14165"
+      ],
+      "category": "paper",
+      "rank": 1,
+      "millis": 1485.9815029999481,
+      "urls": [
+        "https://arxiv.org/abs/2005.14165",
+        "https://arxiv.org/abs/2209.01975",
+        "https://arxiv.org/abs/2205.11916",
+        "https://arxiv.org/pdf/2005.14165v1",
+        "https://arxiv.org/abs/2302.12692",
+        "https://arxiv.org/abs/2012.15723",
+        "https://arxiv.org/abs/2109.07684",
+        "https://arxiv.org/abs/2109.01652",
+        "https://arxiv.org/abs/2512.23808",
+        "https://arxiv.org/pdf/2005.14165"
+      ],
+      "engines": [
+        [
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "arxiv"
+        ],
+        [
+          "fynd",
+          "arxiv"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "yahoo"
+        ],
+        [
+          "arxiv"
+        ],
+        [
+          "arxiv"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "arxiv"
+        ],
+        [
+          "naver",
+          "seznam",
+          "yahoo japan"
+        ]
+      ],
+      "bytes": 14979,
+      "unresponsive": 5
+    },
+    {
+      "id": "en-resnet",
+      "lang": "en",
+      "query": "deep residual learning arxiv",
+      "gold": [
+        "https://arxiv.org/abs/1512.03385"
+      ],
+      "category": "paper",
+      "rank": 1,
+      "millis": 902.2632930000327,
+      "urls": [
+        "https://arxiv.org/abs/1512.03385",
+        "https://arxiv.org/abs/2509.24732",
+        "https://arxiv.org/abs/2102.04159",
+        "https://arxiv.org/abs/1906.09731",
+        "https://github.com/KaimingHe/deep-residual-networks",
+        "https://arxiv.org/abs/1812.11690",
+        "https://arxiv.org/abs/2009.01423v2",
+        "https://arxiv.org/abs/1703.08580",
+        "https://arxiv.org/abs/2202.00676",
+        "https://arxiv.org/pdf/1512.03385"
+      ],
+      "engines": [
+        [
+          "bing",
+          "mwmbl",
+          "fynd",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "arxiv"
+        ],
+        [
+          "seznam",
+          "yahoo japan",
+          "arxiv"
+        ],
+        [
+          "mwmbl",
+          "yahoo japan",
+          "arxiv"
+        ],
+        [
+          "arxiv"
+        ],
+        [
+          "bing",
+          "fynd",
+          "naver",
+          "seznam"
+        ],
+        [
+          "mwmbl",
+          "arxiv"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl",
+          "arxiv"
+        ],
+        [
+          "arxiv"
+        ],
+        [
+          "bing",
+          "naver",
+          "seznam",
+          "yahoo",
+          "yahoo japan"
+        ]
+      ],
+      "bytes": 12336,
+      "unresponsive": 4
+    },
+    {
+      "id": "en-adam",
+      "lang": "en",
+      "query": "adam optimizer arxiv",
+      "gold": [
+        "https://arxiv.org/abs/1412.6980"
+      ],
+      "category": "paper",
+      "rank": 1,
+      "millis": 1118.4560920000877,
+      "urls": [
+        "https://arxiv.org/abs/1412.6980",
+        "https://arxiv.org/pdf/1412.6980",
+        "https://arxiv.org/abs/2111.08162",
+        "https://arxiv.org/abs/2010.07468",
+        "https://arxiv.org/abs/2102.07686",
+        "https://arxiv.org/abs/2407.21078",
+        "https://arxiv.org/abs/2504.19426",
+        "https://arxiv.org/abs/2602.00329",
+        "https://arxiv.org/abs/2507.11005",
+        "https://arxiv.org/abs/1911.00289"
+      ],
+      "engines": [
+        [
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "arxiv"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "mwmbl",
+          "arxiv"
+        ],
+        [
+          "arxiv"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "arxiv"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "arxiv"
+        ]
+      ],
+      "bytes": 11962,
+      "unresponsive": 4
+    },
+    {
+      "id": "en-rust-repo",
+      "lang": "en",
+      "query": "rust-lang rust github",
+      "gold": [
+        "https://github.com/rust-lang/rust"
+      ],
+      "category": "repo",
+      "rank": 1,
+      "millis": 1152.823670000089,
+      "urls": [
+        "https://github.com/rust-lang/rust",
+        "https://rust-lang.org/",
+        "https://doc.rust-lang.org/book/",
+        "https://doc.rust-lang.org/std/intrinsics/index.html",
+        "https://doc.rust-lang.org/book/ch01-01-installation.html",
+        "https://en.wikipedia.org/wiki/Rust_(programming_language)",
+        "https://doc.rust-lang.org/std/boxed/index.html",
+        "https://doc.rust-lang.org/book/appendix-06-translation.html",
+        "https://doc.rust-lang.org/book/appendix-04-useful-development-tools.html",
+        "https://rust-lang.org/governance/teams/moderation"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "official site"
+        ],
+        [
+          "bing",
+          "yahoo",
+          "yahoo japan",
+          "official site"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "fynd",
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "bing",
+          "mwmbl",
+          "wikipedia",
+          "seznam"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6903,
+      "unresponsive": 4
+    },
+    {
+      "id": "en-tokio-repo",
+      "lang": "en",
+      "query": "tokio-rs tokio github",
+      "gold": [
+        "https://github.com/tokio-rs/tokio"
+      ],
+      "category": "repo",
+      "rank": 1,
+      "millis": 1603.432382000392,
+      "urls": [
+        "https://github.com/tokio-rs/tokio",
+        "https://github.com/tokio-rs/tokio/discussions",
+        "https://tokio.rs/",
+        "https://github.com/tokio-rs",
+        "https://tokio.rs/tokio/tutorial",
+        "https://en.wikipedia.org/wiki/Tokio_(software)",
+        "https://tokio.rs/tokio",
+        "https://github.com/tokio-rs/tokio/releases",
+        "https://github.com/tokio-rs/tokio/blob/master/README.md",
+        "https://github.com/tokio-rs/topcoat"
+      ],
+      "engines": [
+        [
+          "bing",
+          "mwmbl",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "bing",
+          "mwmbl",
+          "fynd",
+          "naver",
+          "seznam"
+        ],
+        [
+          "bing",
+          "seznam",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "bing",
+          "mwmbl",
+          "seznam",
+          "yahoo"
+        ],
+        [
+          "bing",
+          "yahoo japan"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing",
+          "yahoo",
+          "keenable"
+        ],
+        [
+          "bing",
+          "keenable"
+        ],
+        [
+          "bing",
+          "mwmbl",
+          "yahoo"
+        ]
+      ],
+      "bytes": 9405,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-ripgrep",
+      "lang": "en",
+      "query": "burntsushi ripgrep github",
+      "gold": [
+        "https://github.com/BurntSushi/ripgrep"
+      ],
+      "category": "repo",
+      "rank": 1,
+      "millis": 733.1356380000216,
+      "urls": [
+        "https://github.com/BurntSushi/ripgrep/releases",
+        "https://github.com/burntsushi/ripgrep",
+        "https://github.com/BurntSushi/ripgrep",
+        "https://raw.githubusercontent.com/BurntSushi/ripgrep/master/README.md",
+        "https://github.com/BurntSushi/ripgrep/tree/master/.github",
+        "https://github.com/BurntSushi/ripgrep/pulls",
+        "https://github.com/BurntSushi/ripgrep/security",
+        "https://github.com/BurntSushi/ripgrep/pull/41",
+        "https://github.com/chinanf-boy/ripgrep-zh",
+        "https://github.com/BurntSushi/ripgrep/discussions"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "seznam",
+          "yahoo",
+          "keenable"
+        ],
+        [
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "mwmbl",
+          "seznam",
+          "yahoo"
+        ],
+        [
+          "yahoo",
+          "keenable"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "mwmbl",
+          "seznam"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "github"
+        ],
+        [
+          "mwmbl",
+          "naver"
+        ]
+      ],
+      "bytes": 11895,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-crates-serde",
+      "lang": "en",
+      "query": "crates.io serde crate",
+      "gold": [
+        "https://crates.io/crates/serde"
+      ],
+      "category": "repo",
+      "rank": 1,
+      "millis": 932.296671000131,
+      "urls": [
+        "https://crates.io/crates/serde",
+        "https://crates.io/crates/serde_with/3.24.0",
+        "https://crates.io/crates/serde_json",
+        "https://crates.io/crates/Serde",
+        "https://docs.rs/crate/serde/latest",
+        "https://docs.rs/serde/latest/serde/",
+        "https://crates.io/api/v1/crates/serde_json",
+        "https://crates.io/keywords/serde",
+        "https://crates.io/api/v1/crates/serde_with",
+        "https://crates.io/crates/serde-saphyr"
+      ],
+      "engines": [
+        [
+          "bing",
+          "yahoo",
+          "yahoo japan",
+          "crates.io"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "yahoo japan",
+          "crates.io"
+        ],
+        [
+          "naver"
+        ],
+        [
+          "bing",
+          "yahoo"
+        ],
+        [
+          "bing",
+          "yahoo"
+        ],
+        [
+          "yahoo",
+          "keenable"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "crates.io"
+        ]
+      ],
+      "bytes": 11547,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-npm-react",
+      "lang": "en",
+      "query": "npm react package",
+      "gold": [
+        "https://www.npmjs.com/package/react"
+      ],
+      "category": "repo",
+      "rank": 1,
+      "millis": 1353.3396459997675,
+      "urls": [
+        "https://www.npmjs.com/package/react",
+        "https://en.wikipedia.org/wiki/Npm",
+        "http://reactjs.org/concurrent",
+        "https://cdn.jsdelivr.net/npm/react",
+        "https://socket.dev/npm/package/react",
+        "https://en.wikipedia.org/wiki/Npm_left-pad_incident",
+        "https://www.npmjs.com/package/react?activeTab=versions",
+        "https://ja.react.dev/blog/2025/12/03/critical-security-vulnerability-in-react-server-components",
+        "https://ja.react.dev/reference/react-compiler/target",
+        "https://ja.react.dev/learn/react-developer-tools"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "naver",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "npm"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl",
+          "fynd"
+        ],
+        [
+          "mwmbl",
+          "seznam"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "seznam",
+          "yahoo"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6696,
+      "unresponsive": 3
+    },
+    {
+      "id": "ja-fuji",
+      "lang": "ja",
+      "query": "富士山 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/富士山"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 1154.9949499999457,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E5%B1%B1",
+        "https://ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E5%B1%B1%E6%9C%AC%E5%AE%AE%E6%B5%85%E9%96%93%E5%A4%A7%E7%A4%BE",
+        "https://ja.wikipedia.org/wiki/Category:%E5%AF%8C%E5%A3%AB%E5%B1%B1",
+        "https://ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E5%B1%B1_(%E3%82%B9%E3%83%AB%E3%83%BC%E3%83%97)",
+        "https://ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E5%B1%B1%E6%9C%89%E6%96%99%E9%81%93%E8%B7%AF",
+        "https://en.wikipedia.org/wiki/Mount_Fuji",
+        "https://ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E5%B1%B1%E9%A7%85",
+        "https://ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E5%B8%82",
+        "https://ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E7%99%BB%E5%B1%B1",
+        "https://ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB"
+      ],
+      "engines": [
+        [
+          "wikipedia",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "yahoo",
+          "keenable"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "yahoo"
+        ]
+      ],
+      "bytes": 8181,
+      "unresponsive": 3
+    },
+    {
+      "id": "ja-genji",
+      "lang": "ja",
+      "query": "源氏物語 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/源氏物語"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 1540.9129140002733,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E",
+        "https://ja.wikipedia.org/wiki/%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E%E5%90%84%E5%B8%96%E3%81%AE%E3%81%82%E3%82%89%E3%81%99%E3%81%98",
+        "https://ja.wikipedia.org/wiki/%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E%E3%81%AE%E7%99%BB%E5%A0%B4%E4%BA%BA%E7%89%A9",
+        "https://ja.wikipedia.org/wiki/%E9%98%BF%E4%BB%8F%E5%B0%BC%E6%9C%AC%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E",
+        "https://ja.wikipedia.org/wiki/%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E%E7%A4%BC%E8%AE%83%E6%AD%8C",
+        "https://ja.wikipedia.org/wiki/%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E60%E5%B7%BB%E8%AA%AC",
+        "https://ja.wikipedia.org/wiki/%E9%A6%96%E6%9B%B8%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E",
+        "https://ja.wikipedia.org/wiki/%E5%B0%91%E5%A5%B3_(%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E)",
+        "https://ja.wikipedia.org/wiki/%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E%E6%8F%90%E8%A6%81",
+        "https://ja.wikipedia.org/wiki/%E8%B0%B7%E5%B4%8E%E6%BD%A4%E4%B8%80%E9%83%8E%E8%A8%B3%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E"
+      ],
+      "engines": [
+        [
+          "wikipedia",
+          "yahoo",
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "wikipedia",
+          "yahoo"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "yahoo"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "yahoo"
+        ],
+        [
+          "wikipedia"
+        ]
+      ],
+      "bytes": 12289,
+      "unresponsive": 3
+    },
+    {
+      "id": "ja-tokyo-station",
+      "lang": "ja",
+      "query": "東京駅 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/東京駅"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 1426.3612730001114,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E4%BA%AC%E9%A7%85",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E4%BA%AC%E9%A7%85%E3%81%AE%E6%AD%B4%E5%8F%B2",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E4%BA%AC%E9%A7%85%E4%B8%80%E7%95%AA%E8%A1%97",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E4%BA%AC%E9%A7%85%E3%81%AE%E3%83%90%E3%82%B9%E4%B9%97%E3%82%8A%E5%A0%B4",
+        "https://ja.wikipedia.org/wiki/Category:%E6%9D%B1%E4%BA%AC%E9%A7%85",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E4%BA%AC%E9%A7%85%E3%81%8A%E5%BF%98%E3%82%8C%E7%89%A9%E9%A0%90%E3%82%8A%E6%89%80",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E4%BA%AC%E9%83%BD",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E6%B5%B7%E9%81%93%E6%96%B0%E5%B9%B9%E7%B7%9A",
+        "https://ja.wikipedia.org/wiki/12%E6%9C%8818%E6%97%A5",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E6%97%A5%E6%9C%AC%E6%97%85%E5%AE%A2%E9%89%84%E9%81%93"
+      ],
+      "engines": [
+        [
+          "bing",
+          "mwmbl",
+          "wikipedia",
+          "yahoo",
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "bing",
+          "yahoo",
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "bing",
+          "yahoo",
+          "keenable"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ]
+      ],
+      "bytes": 28650,
+      "unresponsive": 3
+    },
+    {
+      "id": "ja-momotaro",
+      "lang": "ja",
+      "query": "桃太郎 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/桃太郎"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 3004.0892089996305,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/%E6%A1%83%E5%A4%AA%E9%83%8E",
+        "https://ja.wikipedia.org/wiki/%E6%A1%83%E5%A4%AA%E9%83%8E%E9%9B%BB%E9%89%84%E3%82%B7%E3%83%AA%E3%83%BC%E3%82%BA",
+        "https://ja.wikipedia.org/wiki/%E6%A1%83%E5%A4%AA%E9%83%8E%E4%BC%9D%E8%AA%AC_(%E3%82%A2%E3%83%8B%E3%83%A1)",
+        "https://ja.wikipedia.org/wiki/%E6%A1%83%E5%A4%AA%E9%83%8E%E6%98%A0%E5%83%8F%E5%87%BA%E7%89%88",
+        "https://ja.wikipedia.org/wiki/%E6%A1%83%E5%A4%AA%E9%83%8E%E4%BE%8D",
+        "https://ja.wikipedia.org/wiki/%E3%83%89%E3%83%A9%E3%81%88%E3%82%82%E3%82%93_%E3%81%BC%E3%81%8F%E3%80%81%E6%A1%83%E5%A4%AA%E9%83%8E%E3%81%AE%E3%81%AA%E3%82%93%E3%81%AA%E3%81%AE%E3%81%95",
+        "https://ja.wikipedia.org/wiki/%E6%A1%83%E5%A4%AA%E9%83%8E%E4%BC%9D%E8%AA%AC",
+        "https://ja.wikipedia.org/wiki/%E6%A1%83%E5%A4%AA%E9%83%8E%E4%BC%9D%E8%AA%AC%E3%82%B7%E3%83%AA%E3%83%BC%E3%82%BA",
+        "https://ja.wikipedia.org/wiki/%E6%A1%83%E5%A4%AA%E9%83%8E%E3%81%BE%E3%81%A4%E3%82%8A",
+        "https://ja.wikipedia.org/wiki/%E6%A1%83%E5%A4%AA%E9%83%8E%E9%9B%BB%E9%89%84HAPPY"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "wikipedia",
+          "yahoo japan"
+        ],
+        [
+          "wikipedia",
+          "yahoo japan"
+        ],
+        [
+          "wikipedia",
+          "yahoo japan"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ]
+      ],
+      "bytes": 8386,
+      "unresponsive": 6
+    },
+    {
+      "id": "ja-basho",
+      "lang": "ja",
+      "query": "松尾芭蕉 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/松尾芭蕉"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 1097.6809570001933,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/%E6%9D%BE%E5%B0%BE%E8%8A%AD%E8%95%89",
+        "https://ja.wikipedia.org/wiki/%E3%81%B5%E3%82%89%E3%82%8A%E6%9D%BE%E5%B0%BE%E8%8A%AD%E8%95%89",
+        "https://ja.wikipedia.org/wiki/Category:%E6%9D%BE%E5%B0%BE%E8%8A%AD%E8%95%89",
+        "https://ja.wikipedia.org/wiki/%E8%A9%A9%E4%BA%BA",
+        "https://ja.wikipedia.org/wiki/%E3%81%8A%E3%81%8F%E3%81%AE%E3%81%BB%E3%81%9D%E9%81%93",
+        "https://ja.wikipedia.org/wiki/%E4%BF%B3%E5%8F%A5",
+        "https://ja.wikipedia.org/wiki/%E4%BF%B3%E8%AB%A7",
+        "https://ja.wikipedia.org/wiki/1649%E5%B9%B4",
+        "https://ja.wikipedia.org/wiki/%E9%9A%A0%E5%AF%86%E3%83%BB%E5%A5%A5%E3%81%AE%E7%B4%B0%E9%81%93",
+        "https://ja.wikipedia.org/wiki/%E7%B4%80%E8%A1%8C"
+      ],
+      "engines": [
+        [
+          "wikipedia",
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ]
+      ],
+      "bytes": 8280,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-soseki",
+      "lang": "ja",
+      "query": "夏目漱石 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/夏目漱石"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 3011.3472970001567,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/%E5%A4%8F%E7%9B%AE%E6%BC%B1%E7%9F%B3",
+        "https://ja.wikipedia.org/wiki/%E5%A4%8F%E7%9B%AE%E6%BC%B1%E7%9F%B3%E3%81%AE%E5%A6%BB",
+        "https://ja.wikipedia.org/wiki/Category:%E5%A4%8F%E7%9B%AE%E6%BC%B1%E7%9F%B3",
+        "https://ja.wikipedia.org/wiki/%E5%A4%8F%E7%9B%AE%E6%88%BF%E4%B9%8B%E4%BB%8B",
+        "https://ja.wikipedia.org/?curid=1581400",
+        "https://ja.wikipedia.org/wiki/%E3%81%93%E3%82%9D%E3%82%8D",
+        "https://ja.wikipedia.org/wiki/%E5%A4%8F%E7%9B%AE%E9%8F%A1%E5%AD%90",
+        "https://ja.wikipedia.org/wiki/%E5%B0%8F%E5%AE%AE%E8%B1%8A%E9%9A%86",
+        "https://ja.wikipedia.org/wiki/%E5%A4%8F%E7%9B%AE%E5%8F%8B%E4%BA%BA%E5%B8%B3",
+        "https://ja.wikipedia.org/wiki/%E5%90%BE%E8%BC%A9%E3%81%AF%E7%8C%AB%E3%81%A7%E3%81%82%E3%82%8B"
+      ],
+      "engines": [
+        [
+          "wikipedia",
+          "yahoo japan"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "wikipedia",
+          "yahoo japan"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "wikipedia"
+        ]
+      ],
+      "bytes": 7445,
+      "unresponsive": 5
+    },
+    {
+      "id": "ja-fuji-san",
+      "lang": "ja",
+      "query": "富士山 標高",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/富士山"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 2061.54633999995,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E5%B1%B1",
+        "https://mtfuji-whc.jp/%E5%AF%8C%E5%A3%AB%E5%B1%B1%E4%B8%96%E7%95%8C%E9%81%BA%E7%94%A3%E3%82%B3%E3%83%A9%E3%83%A0%EF%BC%8847%E5%8F%B7%EF%BC%89/",
+        "https://www.gsi.go.jp/WNEW/PRESS-RELEASE/keikaku61003.html",
+        "https://ja-jp.topographic-map.com/map-tbqddn/%E5%AF%8C%E5%A3%AB%E5%B1%B1/",
+        "https://www.mitsubishielectric.co.jp/business/biz-t/contents/3min-column/column063.html",
+        "https://news.tv-asahi.co.jp/news_society/articles/000527763.html",
+        "https://www.fujisan-net.jp/post_detail/2001073",
+        "https://outdoor50life.com/hiking/guide/fujisan-height-3776m-50s/",
+        "https://www.fnn.jp/articles/-/1098258",
+        "https://www.yomiuri.co.jp/science/20241224-OYT1T50119/"
+      ],
+      "engines": [
+        [
+          "bing",
+          "wikipedia",
+          "yahoo japan"
+        ],
+        [
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "bing",
+          "local_index"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "naver"
+        ]
+      ],
+      "bytes": 9715,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-tokaido",
+      "lang": "ja",
+      "query": "東海道新幹線 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/東海道新幹線"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 3003.8156850000632,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E6%B5%B7%E9%81%93%E6%96%B0%E5%B9%B9%E7%B7%9A",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E6%B5%B7%E9%81%93%E3%83%BB%E5%B1%B1%E9%99%BD%E6%96%B0%E5%B9%B9%E7%B7%9A",
+        "https://ja.wikipedia.org/wiki/%E6%96%B0%E5%B9%B9%E7%B7%9A",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E6%B5%B7%E9%81%93%E6%96%B0%E7%B7%9A",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E6%B5%B7%E9%81%93%E6%9C%AC%E7%B7%9A",
+        "https://ja.wikipedia.org/wiki/%E5%B1%B1%E9%99%BD%E6%96%B0%E5%B9%B9%E7%B7%9A",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E5%8C%97%E6%96%B0%E5%B9%B9%E7%B7%9A",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E6%B5%B7%E9%81%93",
+        "https://ja.wikipedia.org/wiki/%E6%96%B0%E5%B9%B9%E7%B7%9A700%E7%B3%BB%E9%9B%BB%E8%BB%8A",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E6%B5%B7%E6%97%85%E5%AE%A2%E9%89%84%E9%81%93"
+      ],
+      "engines": [
+        [
+          "wikipedia",
+          "yahoo japan"
+        ],
+        [
+          "wikipedia",
+          "yahoo japan"
+        ],
+        [
+          "wikipedia",
+          "yahoo japan"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ]
+      ],
+      "bytes": 8315,
+      "unresponsive": 5
+    },
+    {
+      "id": "ja-kimono",
+      "lang": "ja",
+      "query": "着物 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/着物"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 1291.4199179999741,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/%E7%9D%80%E7%89%A9",
+        "https://ja.wikipedia.org/wiki/%E5%92%8C%E6%9C%8D",
+        "https://ja.wikipedia.org/wiki/%E5%B8%AF",
+        "https://ja.wikipedia.org/wiki/%E8%8A%B8%E5%A6%93",
+        "https://ja.wikipedia.org/wiki/%E7%9D%80%E4%BB%98%E3%81%91",
+        "https://ja.wikipedia.org/wiki/%E6%97%A5%E6%9C%AC%E8%88%9E%E8%B8%8A",
+        "https://ja.wikipedia.org/wiki/%E3%82%B9%E3%83%86%E3%83%86%E3%82%B3",
+        "https://ja.wikipedia.org/wiki/%E6%B5%B4%E8%A1%A3",
+        "https://ja.wikipedia.org/wiki/%E5%B1%B1%E6%9C%AC%E3%81%BE%E3%81%95%E3%81%BF",
+        "https://ja.wikipedia.org/wiki/%E7%BE%BD%E7%B9%94"
+      ],
+      "engines": [
+        [
+          "wikipedia",
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "wikipedia",
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ]
+      ],
+      "bytes": 8389,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-sushi",
+      "lang": "ja",
+      "query": "寿司 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/寿司"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 3003.9448180000363,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/%E5%AF%BF%E5%8F%B8",
+        "https://ja.wikipedia.org/wiki/%E6%8F%A1%E3%82%8A%E5%AF%BF%E5%8F%B8",
+        "https://ja.wikipedia.org/wiki/%E5%9B%9E%E8%BB%A2%E5%AF%BF%E5%8F%B8",
+        "https://ja.wikipedia.org/wiki/%E5%AF%BF%E5%8F%B8%E5%B1%8B",
+        "https://ja.wikipedia.org/wiki/%E6%B1%9F%E6%88%B8%E5%89%8D%E5%AF%BF%E5%8F%B8",
+        "https://ja.wikipedia.org/wiki/%E3%81%A1%E3%82%89%E3%81%97%E5%AF%BF%E5%8F%B8",
+        "https://ja.wikipedia.org/wiki/%E5%B0%86%E5%A4%AA%E3%81%AE%E5%AF%BF%E5%8F%B8",
+        "https://ja.wikipedia.org/wiki/%E7%A8%B2%E8%8D%B7%E5%AF%BF%E5%8F%B8",
+        "https://ja.wikipedia.org/wiki/%E5%B7%BB%E3%81%8D%E5%AF%BF%E5%8F%B8",
+        "https://ja.wikipedia.org/wiki/%E3%81%8F%E3%82%89%E5%AF%BF%E5%8F%B8"
+      ],
+      "engines": [
+        [
+          "wikipedia",
+          "yahoo japan"
+        ],
+        [
+          "wikipedia",
+          "yahoo japan"
+        ],
+        [
+          "wikipedia",
+          "yahoo japan"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ]
+      ],
+      "bytes": 7929,
+      "unresponsive": 5
+    },
+    {
+      "id": "ja-py-doc",
+      "lang": "ja",
+      "query": "python 入門 公式",
+      "gold": [
+        "https://docs.python.org/ja/3/tutorial"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1333.454809000159,
+      "urls": [
+        "https://docs.python.org/ja/3/tutorial/",
+        "https://www.python.jp/train/index.html",
+        "https://docs.python.org/ja",
+        "https://docs.python.org/ja/3/",
+        "https://python.org/about",
+        "https://www.python.org/events/python-user-group/2254/",
+        "https://www.python.org/downloads/release/python-3811/",
+        "https://www.python.org/downloads/release/python-31017/",
+        "https://www.python.org/downloads/release/python-31013/",
+        "https://www.python.org/"
+      ],
+      "engines": [
+        [
+          "bing",
+          "yahoo japan"
+        ],
+        [
+          "bing",
+          "naver",
+          "yahoo japan"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "fynd",
+          "seznam",
+          "official site"
+        ]
+      ],
+      "bytes": 7467,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-py-lib",
+      "lang": "ja",
+      "query": "python 標準ライブラリ 日本語",
+      "gold": [
+        "https://docs.python.org/ja/3/library"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1068.8313129999187,
+      "urls": [
+        "https://docs.python.org/ja/3/library/index.html",
+        "https://docs.python.org/ja/3.8/library/index.html",
+        "https://docs.python.org/ja/3.10/library/index.html",
+        "https://docs.python.org/ja/3.13/library/index.html",
+        "https://docs.python.org/ja/3.7/library/index.html",
+        "https://docs.python.org/ja",
+        "https://docs.python.org/ja/3/tutorial/",
+        "https://python.org/downloads",
+        "https://www.ruby-lang.org/ja/libraries/",
+        "https://www.python.org/"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "yahoo japan"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "fynd",
+          "official site"
+        ]
+      ],
+      "bytes": 6055,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-rs-doc",
+      "lang": "ja",
+      "query": "rust プログラミング言語 公式",
+      "gold": [
+        "https://rust-lang.org/ja",
+        "https://www.rust-lang.org/ja",
+        "https://doc.rust-lang.org/ja",
+        "https://rust-jp.rs",
+        "https://doc.rust-lang.org/book/"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1143.247970000175,
+      "urls": [
+        "https://rust-lang.org/ja/",
+        "https://qiita.com/elipmoc101/items/3c8b6d8332a9019e578c",
+        "https://github.com/MrBearing/TheRustProgrammingLanguage",
+        "https://rust-lang.org/",
+        "https://ja.wikipedia.org/wiki/Rust_(%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E8%A8%80%E8%AA%9E)",
+        "https://doc.rust-lang.org/rust-by-example/ja/index.html",
+        "https://doc.rust-lang.org/stable/book",
+        "https://rust-lang.org/learn",
+        "https://prev.rust-lang.org/ja-JP/",
+        "https://doc.rust-lang.org"
+      ],
+      "engines": [
+        [
+          "bing",
+          "naver",
+          "yahoo japan"
+        ],
+        [
+          "naver"
+        ],
+        [
+          "naver"
+        ],
+        [
+          "bing",
+          "keenable",
+          "official site"
+        ],
+        [
+          "bing",
+          "wikipedia",
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "naver"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "keenable"
+        ]
+      ],
+      "bytes": 14219,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-rs-book",
+      "lang": "ja",
+      "query": "rust 日本語 ドキュメント",
+      "gold": [
+        "https://doc.rust-lang.org/book/",
+        "https://rust-lang.org/ja",
+        "https://www.rust-lang.org/ja",
+        "https://rust-jp.rs"
+      ],
+      "category": "doc",
+      "rank": 5,
+      "millis": 928.5496219999914,
+      "urls": [
+        "https://doc.rust-jp.rs/",
+        "https://rust-lang.org/",
+        "https://doc.rust-lang.org/stable/book",
+        "https://doc.rust-lang.org/rust-by-example/ja/index.html",
+        "https://rust-lang.org/ja/learn/",
+        "https://rust-jp.rs/",
+        "https://rust-lang.org/learn",
+        "https://www.ruby-lang.org/ja/documentation/",
+        "https://ja.wikipedia.org/wiki/Rust_(%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E8%A8%80%E8%AA%9E)",
+        "https://rust-lang.org/ja/"
+      ],
+      "engines": [
+        [
+          "naver",
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "bing",
+          "official site"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "naver"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "naver",
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "bing",
+          "wikipedia"
+        ],
+        [
+          "bing",
+          "naver"
+        ]
+      ],
+      "bytes": 9619,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-mdn",
+      "lang": "ja",
+      "query": "mdn javascript 配列",
+      "gold": [
+        "https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Array"
+      ],
+      "category": "doc",
+      "rank": 2,
+      "millis": 981.5780839999206,
+      "urls": [
+        "https://developer.mozilla.org/ja/docs/Learn/JavaScript/First_steps/Test_your_skills:_Arrays",
+        "https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Array",
+        "https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Float32Array",
+        "https://developer.mozilla.org/ja/docs/Web/JavaScript/Guide/Functions",
+        "https://developer.mozilla.org/ja/docs/Learn_web_development/Core/Scripting/Arrays",
+        "https://developer.mozilla.org/ja/docs/Learn/JavaScript/First_steps/Arrays",
+        "https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Array/filter",
+        "https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Array/slice",
+        "https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Array/pop",
+        "https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Array/includes"
+      ],
+      "engines": [
+        [
+          "mwmbl"
+        ],
+        [
+          "naver",
+          "yahoo japan"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "yahoo japan"
+        ]
+      ],
+      "bytes": 6355,
+      "unresponsive": 6
+    },
+    {
+      "id": "ja-nginx",
+      "lang": "ja",
+      "query": "nginx 設定 ドキュメント",
+      "gold": [
+        "https://nginx.org/en/docs"
+      ],
+      "category": "doc",
+      "rank": 4,
+      "millis": 1802.2088949996942,
+      "urls": [
+        "https://nginx.org/",
+        "https://engineering.mercari.com/blog/entry/2017-09-11-150000/",
+        "https://nginx.org/ja/docs/",
+        "https://nginx.org/en/docs/http/request_processing.html",
+        "https://zenn.dev/azunyan/articles/80e79835ba2464",
+        "https://docs.djangoproject.com/ja/6.1/ref/settings/",
+        "https://nginx.org/en/docs/ngx_core_module.html",
+        "https://docs.djangoproject.com/ja/6.1/topics/settings/",
+        "https://docs.djangoproject.com/ja/6.1/",
+        "https://docs.djangoproject.com/ja/6.1/ref/contrib/gis/testing/"
+      ],
+      "engines": [
+        [
+          "fynd",
+          "seznam"
+        ],
+        [
+          "naver"
+        ],
+        [
+          "bing",
+          "yahoo"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "bing",
+          "yahoo"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "naver"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 9929,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-docker",
+      "lang": "ja",
+      "query": "docker compose ファイル リファレンス",
+      "gold": [
+        "https://docs.docker.com/reference/compose-file"
+      ],
+      "category": "doc",
+      "rank": 3,
+      "millis": 766.49650499985,
+      "urls": [
+        "https://docs.docker.com/compose",
+        "https://docs.docker.com/reference/cli/docker/compose/",
+        "https://docs.docker.com/reference/compose-file/",
+        "https://docs.docker.com/compose/intro/compose-application-model",
+        "https://docs.docker.jp/compose/compose-file/compose-file-v3.html",
+        "https://docs.docker.jp/v1.12/compose/compose-file.html",
+        "https://docs.docker.com/reference/compose-file/services",
+        "https://docs.docker.com/reference/compose-file/legacy-versions",
+        "https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-docker-compose",
+        "https://docs.docker.com/compose/gettingstarted"
+      ],
+      "engines": [
+        [
+          "seznam",
+          "local_index"
+        ],
+        [
+          "yahoo",
+          "keenable",
+          "local_index"
+        ],
+        [
+          "naver",
+          "yahoo"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "naver",
+          "yahoo japan"
+        ],
+        [
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "keenable"
+        ]
+      ],
+      "bytes": 13431,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-jma",
+      "lang": "ja",
+      "query": "気象庁 天気予報",
+      "gold": [
+        "https://www.jma.go.jp"
+      ],
+      "category": "official",
+      "rank": 1,
+      "millis": 3003.375584999958,
+      "urls": [
+        "https://www.jma.go.jp/bosai/forecast/",
+        "https://www.jma.go.jp/jma/kishou/know/kurashi/shukan.html",
+        "https://www.jma.go.jp/jma/kishou/know/kurashi/yoho.html",
+        "https://www.jma.go.jp/bosai/map.html#9/34.726/135.455/&contents=forecast",
+        "https://www.jma.go.jp/jma/kishou/know/yougo_hp/saibun.html",
+        "https://www.jma.go.jp/jma/",
+        "https://www.jma.go.jp/bosai/wdist/timeseries.html",
+        "https://www.jma.go.jp/bosai/weather_map/",
+        "https://www.jma.go.jp/jma/index.html",
+        "https://www.jma.go.jp/bosai/kaikotan/"
+      ],
+      "engines": [
+        [
+          "bing",
+          "naver",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "bing",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "bing",
+          "yahoo"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "fynd"
+        ],
+        [
+          "official site"
+        ],
+        [
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "yahoo"
+        ],
+        [
+          "yahoo japan"
+        ]
+      ],
+      "bytes": 5615,
+      "unresponsive": 5
+    },
+    {
+      "id": "ja-ndl",
+      "lang": "ja",
+      "query": "国立国会図書館 サーチ",
+      "gold": [
+        "https://ndlsearch.ndl.go.jp"
+      ],
+      "category": "official",
+      "rank": 1,
+      "millis": 1255.7626450002317,
+      "urls": [
+        "https://ndlsearch.ndl.go.jp/",
+        "https://www.ndl.go.jp/",
+        "https://ndlsearch.ndl.go.jp/renkei",
+        "https://ndlsearch.ndl.go.jp/help/contact",
+        "https://ndlsearch.ndl.go.jp/login?redirect=Lw",
+        "https://ndlsearch.ndl.go.jp/help/api/oai_pmh",
+        "https://ndlsearch.ndl.go.jp/help/about",
+        "https://ndlsearch.ndl.go.jp/bib/ndlcat",
+        "http://ndlsearch.ndl.go.jp/renkei/info",
+        "https://dl.ndl.go.jp/"
+      ],
+      "engines": [
+        [
+          "naver",
+          "yahoo",
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "naver",
+          "yahoo",
+          "official site"
+        ],
+        [
+          "mwmbl",
+          "fynd"
+        ],
+        [
+          "mwmbl",
+          "fynd"
+        ],
+        [
+          "yahoo"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "naver",
+          "yahoo",
+          "yahoo japan",
+          "keenable"
+        ]
+      ],
+      "bytes": 8562,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-tokyo-tourism",
+      "lang": "ja",
+      "query": "東京 観光 公式",
+      "gold": [
+        "https://www.gotokyo.org"
+      ],
+      "category": "official",
+      "rank": 1,
+      "millis": 2230.1150339999367,
+      "urls": [
+        "https://www.gotokyo.org/jp/index.html",
+        "https://skyhopbus.com/ja",
+        "https://www.hatobus.co.jp/feature/tokyo",
+        "https://www.tickets.gotokyo.org/jp/",
+        "https://www.viewhotels.co.jp/asakusa/",
+        "https://visit-chiyoda.tokyo/",
+        "https://www.hankyu-hotel.com/hotel/dh/dhtokyo",
+        "https://x.com/tokyo_kankou",
+        "https://www.tcvb.or.jp/jp/project/hasshin/welcome/",
+        "https://www.gotokyo.org/jp/plan/customs-culture/index.html"
+      ],
+      "engines": [
+        [
+          "bing",
+          "naver",
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "naver"
+        ],
+        [
+          "naver"
+        ],
+        [
+          "naver"
+        ],
+        [
+          "naver"
+        ],
+        [
+          "fynd",
+          "naver"
+        ],
+        [
+          "naver"
+        ],
+        [
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "fynd"
+        ]
+      ],
+      "bytes": 9348,
+      "unresponsive": 5
+    },
+    {
+      "id": "ja-jr",
+      "lang": "ja",
+      "query": "JR東日本 時刻表",
+      "gold": [
+        "https://www.jreast.co.jp"
+      ],
+      "category": "official",
+      "rank": 1,
+      "millis": 1556.9222189997163,
+      "urls": [
+        "https://www.jreast.co.jp/",
+        "https://timetables.jreast.co.jp/",
+        "https://www.jreast.co.jp/railway/",
+        "https://www.jreast.co.jp/estation/",
+        "https://www.navitime.co.jp/diagram/company/00000004/",
+        "https://timetables.jreast.co.jp/timetable/list1039.html",
+        "https://apps.apple.com/cz/app/jr%E6%9D%B1%E6%97%A5%E6%9C%AC%E3%82%A2%E3%83%97%E3%83%AA-%E9%81%8B%E8%A1%8C%E6%83%85%E5%A0%B1-%E4%B9%97%E6%8F%9B%E6%A1%88%E5%86%85-%E6%99%82%E5%88%BB%E8%A1%A8-%E6%A7%8B%E5%86%85%E5%9B%B3/id820004378?l=cs",
+        "https://ekitan.com/transit/railway/company/2",
+        "https://timetables.jreast.co.jp/timetable/list0913.html",
+        "https://ja.wikipedia.org/wiki/%E6%99%82%E5%88%BB%E8%A1%A8"
+      ],
+      "engines": [
+        [
+          "bing",
+          "naver",
+          "yahoo",
+          "yahoo japan",
+          "official site"
+        ],
+        [
+          "bing",
+          "naver",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "bing",
+          "yahoo"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing",
+          "yahoo japan"
+        ],
+        [
+          "bing",
+          "yahoo"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "bing",
+          "yahoo"
+        ],
+        [
+          "wikipedia"
+        ]
+      ],
+      "bytes": 11208,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-gsi",
+      "lang": "ja",
+      "query": "国土地理院 地図",
+      "gold": [
+        "https://www.gsi.go.jp",
+        "https://maps.gsi.go.jp"
+      ],
+      "category": "official",
+      "rank": 1,
+      "millis": 3003.0320190003295,
+      "urls": [
+        "https://maps.gsi.go.jp/",
+        "https://www.gsi.go.jp/tizu-kutyu.html",
+        "https://www.gsi.go.jp/",
+        "https://maps.gsi.go.jp/vector/",
+        "https://www.gsi.go.jp/GSI/CONTACT-g-kotu.html",
+        "https://www.gsi.go.jp/MAP/kounyu.html",
+        "https://www.gsi.go.jp/kibanjoho/mapinfo_what.html",
+        "https://ja.wikipedia.org/wiki/%E5%9C%B0%E7%90%86%E9%99%A2%E5%9C%B0%E5%9B%B3",
+        "https://www.gsi.go.jp/kiban/",
+        "https://www.gsi.go.jp/MAP/index.html"
+      ],
+      "engines": [
+        [
+          "bing",
+          "yahoo",
+          "yahoo japan",
+          "official site"
+        ],
+        [
+          "bing",
+          "mwmbl",
+          "yahoo",
+          "yahoo japan",
+          "local_index"
+        ],
+        [
+          "bing",
+          "naver",
+          "yahoo",
+          "official site"
+        ],
+        [
+          "fynd",
+          "naver"
+        ],
+        [
+          "mwmbl",
+          "local_index"
+        ],
+        [
+          "bing",
+          "yahoo japan",
+          "local_index"
+        ],
+        [
+          "bing",
+          "yahoo japan"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "mwmbl",
+          "yahoo"
+        ],
+        [
+          "mwmbl",
+          "local_index"
+        ]
+      ],
+      "bytes": 9042,
+      "unresponsive": 5
+    },
+    {
+      "id": "ja-e-gov",
+      "lang": "ja",
+      "query": "e-Gov 法令検索",
+      "gold": [
+        "https://elaws.e-gov.go.jp"
+      ],
+      "category": "official",
+      "rank": 2,
+      "millis": 838.5887949998505,
+      "urls": [
+        "https://laws.e-gov.go.jp/",
+        "https://elaws.e-gov.go.jp/",
+        "https://ja.wikipedia.org/wiki/E-Gov%E6%B3%95%E4%BB%A4%E6%A4%9C%E7%B4%A2",
+        "https://elaws.e-gov.go.jp/%E3%82%92%E9%96%8B%E3%81%84%E3%81%A6%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84%E3%80%82%E3%80%80%E6%A4%9C%E7%B4%A2%E3%82%A6%E3%82%A3%E3%83%B3%E3%83%89%E3%82%A6%E3%81%AB%E3%80%8C%E6%AF%8D%E5%AD%90%E3%80%8D%E3%81%A8%E5%85%A5%E5%8A%9B%E3%81%97%E3%81%A6%E3%80%81%E6%A4%9C%E7%B4%A2%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%E3%80%80%E6%A4%9C%E7%B4%A2%E3%81%97%E3%81%9F%E7%B5%90%E6%9E%9C%E3%81%8C%E8%A1%A8%E7%A4%BA%E3%81%95%E3%82%8C%E3%81%BE%E3%81%99%E3%80%82%E3%80%8C%E6%A4%9C%E7%B4%A2%E7%B5%90%E6%9E%9C%E3%80%80%EF%BC%99%E4%BB%B6%E3%80%8D%E3%81%A8%E8%A1%A8%E7%A4%BA%E3%81%95%E3%82%8C%E3%81%A6%E3%81%84%E3%82%8B%E4%B8%80%E7%95%AA%E4%B8%8A%E3%81%AB%E3%80%8C%E6%AF%8D%E5%AD%90%E5%8F%8A%E3%81%B3%E7%88%B6%E5%AD%90%E4%B8%A6%E3%81%B3%E3%81%AB%E5%AF%A1%E5%A9%A6%E7%A6%8F%E7%A5%89%E6%B3%95%E3%80%8D%E3%81%8C%E8%A1%A8%E7%A4%BA%E3%81%95%E3%82%8C%E3%81%A6%E3%81%84%E3%81%BE%E3%81%99%E3%80%82%E3%80%80%E5%85%AC%E5%B8%83%E5%B9%B4%E3%82%92%E8%A6%8B%E3%82%8B%E3%81%A8%E3%80%81%E6%AF%8D%E5%AD%90%E4%BF%9D%E5%81%A5%E6%B3%95%E3%81%AF%E6%98%AD%E5%92%8C39%E5%B9%B4%EF%BC%881964%E5%B9%B4%EF%BC%89%E3%81%AB%E4%BA%A4%E4%BB%98%E3%81%95%E3%82%8C%E3%81%9F%E6%B3%95%E5%BE%8B%E3%81%A7%E3%81%82%E3%82%8B%E3%81%93%E3%81%A8%E3%81%8C%E5%88%86%E3%81%8B%E3%82%8A%E3%81%BE%E3%81%99%E3%80%82%E3%80%80%E6%8E%88%E6%A5%AD%E8%B3%87%E6%96%99%E3%80%8C%E5%85%90%E7%A6%8F%E8%AB%9601-2%E5%85%90%E7%AB%A5%E7%A6%8F%E7%A5%89%E3%81%AE%E6%B3%95%E4%BD%93%E7%B3%BB%E3%80%8D%E3%80%8C%EF%BC%A2%EF%BC%8E%E5%85%90%E7%AB%A5%E7%A6%8F%E7%A5%89%E5%85%AD%E6%B3%95%E3%80%8D%E3%81%AB%E8%A8%98%E3%81%95%E3%82%8C%E3%81%9F%E8%A1%A8%E3%81%AE%E4%B8%8B%E3%81%8B%E3%82%89%EF%BC%93%E8%A1%8C%E7%9B%AE%E3%81%AE%E2%9E%A1%E3%80%80%E5%B7%A6%E7%AB%AF%E3%81%AE%E6%AC%84%E3%81%AB%E3%80%8C%E6%98%AD39%E3%80%8D%E3%81%A8%E8%A8%98%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%E2%9E%A1%E3%80%80%E5%B7%A6%E3%81%8B%E3%82%89%EF%BC%92%E5%88%97%E7%9B%AE%E3%81%AE%E6%AC%84%E3%81%AB%E3%80%8C%E6%AF%8D%E5%AD%90%E5%8F%8A%E3%81%B3%E7%88%B6%E5%AD%90%E4%B8%A6%E3%81%B3%E3%81%AB%E5%AF%A1%E5%A9%A6%E7%A6%8F%E7%A5%89%E6%B3%95%E3%80%8D%E3%81%A8%E8%A8%98%E3%81%97%E3%81%BE%E3%81%99%E3%80%82",
+        "https://elaws.e-gov.go.jp/document?lawid=324AC0000000174_20220617_504AC0000000068",
+        "https://www.e-gov.go.jp/laws-and-secure-life",
+        "https://www.e-gov.go.jp/laws-and-secure-life/law-in-force.html",
+        "https://www.e-gov.go.jp/",
+        "https://e-gov.go.jp",
+        "https://www.digital.go.jp/laws"
+      ],
+      "engines": [
+        [
+          "naver",
+          "yahoo",
+          "yahoo japan",
+          "keenable",
+          "official site"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "wikipedia",
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "yahoo"
+        ],
+        [
+          "naver"
+        ],
+        [
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "naver"
+        ],
+        [
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "fynd",
+          "naver"
+        ]
+      ],
+      "bytes": 9836,
+      "unresponsive": 5
+    },
+    {
+      "id": "ja-python-org",
+      "lang": "ja",
+      "query": "python japan ユーザー会",
+      "gold": [
+        "https://www.python.jp"
+      ],
+      "category": "official",
+      "rank": 1,
+      "millis": 768.8383550002982,
+      "urls": [
+        "https://www.python.jp/pages/community.html",
+        "https://www.python.jp/index.html",
+        "https://python.jp/pages/community.html",
+        "https://www.python.jp/",
+        "https://www.python.org/events/python-user-group/2254/",
+        "https://www.python.org/downloads/release/python-3811/",
+        "https://www.python.org/downloads/release/python-31017/",
+        "https://www.pycon.jp/committee/",
+        "https://ascii.jp/elem/000/000/326/326493/",
+        "https://japan-dev.com/python-jobs-in-japan"
+      ],
+      "engines": [
+        [
+          "bing",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "naver",
+          "yahoo"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "bing",
+          "yahoo japan"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "bing",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "fynd",
+          "seznam"
+        ]
+      ],
+      "bytes": 7018,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-rust-jp",
+      "lang": "ja",
+      "query": "rust japan ユーザー会",
+      "gold": [
+        "https://rust-jp.rs",
+        "https://www.rust-lang.org/ja"
+      ],
+      "category": "official",
+      "rank": 3,
+      "millis": 882.4851220001619,
+      "urls": [
+        "https://rust-lang.org/ja/community/",
+        "https://rust.connpass.com/",
+        "https://rust-jp.rs/",
+        "https://qiita.com/KaiTomotake/items/71634583286578e99a0b",
+        "https://docs.github.com/ja/account-and-profile/concepts/username-changes",
+        "https://kubernetes.io/ja/docs/concepts/workloads/pods/user-namespaces/",
+        "https://docs.github.com/ja/account-and-profile/reference/username-reference",
+        "https://ja.wordpress.org/support/article/users-screen/",
+        "https://ja.wordpress.org/support/article/users-add-new-screen/",
+        "https://kubernetes.io/ja/docs/tasks/configure-pod-container/user-namespaces/"
+      ],
+      "engines": [
+        [
+          "bing",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "bing",
+          "yahoo",
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "bing",
+          "yahoo"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 10177,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-rust-crate",
+      "lang": "ja",
+      "query": "rust crates.io 使い方",
+      "gold": [
+        "https://crates.io",
+        "https://lib.rs",
+        "https://doc.rust-lang.org/cargo/"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1145.967790999748,
+      "urls": [
+        "https://crates.io/crates/creo-ui",
+        "https://crates.io/crates/sakura-ai-rs/0.1.2",
+        "https://crates.io/crates/tracing",
+        "https://docs.rs/crates_io_api",
+        "https://crates.io/me",
+        "https://doc.rust-jp.rs/book-ja/ch14-02-publishing-to-crates-io.html",
+        "https://crates.io/",
+        "https://qiita.com/homhom44/items/c02b3d4513de7dd0b39d",
+        "https://doc.rust-lang.org/cargo/reference/publishing.html",
+        "https://crates.io/crates/hpw-convert-eip681"
+      ],
+      "engines": [
+        [
+          "naver",
+          "crates.io"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "yahoo"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "bing",
+          "yahoo japan",
+          "local_index"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "bing",
+          "yahoo"
+        ],
+        [
+          "yahoo",
+          "local_index"
+        ],
+        [
+          "crates.io"
+        ]
+      ],
+      "bytes": 7240,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-git-doc",
+      "lang": "ja",
+      "query": "git rebase 使い方 公式",
+      "gold": [
+        "https://git-scm.com/docs/git-rebase"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1387.2449670002425,
+      "urls": [
+        "https://git-scm.com/docs/git-rebase",
+        "https://git-scm.com/docs/git-rebase/fr",
+        "https://git-scm.com/docs/git-rebase/zh_HANS-CN",
+        "https://git-scm.com/book/ja/v2/Git-%E3%81%AE%E3%83%96%E3%83%A9%E3%83%B3%E3%83%81%E6%A9%9F%E8%83%BD-%E3%83%AA%E3%83%99%E3%83%BC%E3%82%B9",
+        "https://git-scm.com/docs/git-rebase/2.17.0",
+        "https://git-scm.com/docs/git-rebase/2.16.6",
+        "https://git-scm.com/docs/git-rebase/sv",
+        "https://git-scm.com/docs/git-rebase/2.18.0",
+        "https://git-scm.com/docs/git-rebase/uk",
+        "https://git-scm.com/book/ja/v2/Git-%E3%81%AE%E3%83%96%E3%83%A9%E3%83%B3%E3%83%81%E6%A9%9F%E8%83%BD-%E3%83%AA%E3%83%99%E3%83%BC%E3%82%B9.html"
+      ],
+      "engines": [
+        [
+          "bing",
+          "seznam",
+          "local_index"
+        ],
+        [
+          "keenable",
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "bing"
+        ]
+      ],
+      "bytes": 10977,
+      "unresponsive": 5
+    },
+    {
+      "id": "ja-sql",
+      "lang": "ja",
+      "query": "postgresql 日本語 ドキュメント",
+      "gold": [
+        "https://www.postgresql.jp/document",
+        "https://www.postgresql.org/docs"
+      ],
+      "category": "doc",
+      "rank": 2,
+      "millis": 833.9824909999152,
+      "urls": [
+        "https://www.postgresql.org/",
+        "https://www.postgresql.jp/document/",
+        "https://www.postgresql.org/download/",
+        "https://postgresql.org/docs/current/tutorial.html",
+        "https://www.postgresql.org/docs/",
+        "https://postgresql.org/docs",
+        "https://postgresql.org/docs/current/app-postgres.html",
+        "https://postgresql.org/docs/current",
+        "https://postgresql.org/docs/current/indexes.html",
+        "https://www.postgresql.org/about/press/presskit12/ja/"
+      ],
+      "engines": [
+        [
+          "bing",
+          "fynd",
+          "official site"
+        ],
+        [
+          "naver",
+          "yahoo japan"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "naver"
+        ]
+      ],
+      "bytes": 7998,
+      "unresponsive": 5
+    },
+    {
+      "id": "ja-linux",
+      "lang": "ja",
+      "query": "linux kernel ドキュメント",
+      "gold": [
+        "https://docs.kernel.org"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1082.7090640000279,
+      "urls": [
+        "https://docs.kernel.org/",
+        "https://docs.kernel.org/translations/ja_JP/index.html",
+        "https://www.kernel.org/doc/html/latest/translations/ja_JP/process/howto.html",
+        "https://www.kernel.org/doc/html/v4.13/translations/ja_JP/howto.html",
+        "https://www.kernel.org/doc/html/v5.0/translations/ja_JP/howto.html",
+        "https://www.kernel.org/doc/html/latest/translations/ja_JP/process/submit-checklist.html",
+        "https://kernel.org/doc",
+        "https://docs.djangoproject.com/ja/6.1/",
+        "https://kernel.org/doc/Documentation",
+        "https://www.kernel.org/"
+      ],
+      "engines": [
+        [
+          "naver",
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "naver"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "seznam"
+        ]
+      ],
+      "bytes": 8000,
+      "unresponsive": 5
+    },
+    {
+      "id": "ja-aws",
+      "lang": "ja",
+      "query": "aws ec2 ドキュメント",
+      "gold": [
+        "https://docs.aws.amazon.com",
+        "https://aws.amazon.com/jp/documentation"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1153.4034020000945,
+      "urls": [
+        "https://docs.aws.amazon.com/ja_jp/ec2/?icmpid=docs_homepage_compute",
+        "https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/cli-services-ec2-sg.html",
+        "https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/DocumentHistory.html",
+        "https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/APIReference/Welcome.html",
+        "https://docs.aws.amazon.com/ja_jp/",
+        "https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/concepts.html",
+        "https://docs.aws.amazon.com/firewall-manager/",
+        "https://docs.aws.amazon.com/waf/",
+        "https://docs.aws.amazon.com/ja_jp/awsconsolehelpdocs/latest/gsg/what-is.html",
+        "https://docs.aws.amazon.com/ja_jp/cli/latest/reference/ec2/"
+      ],
+      "engines": [
+        [
+          "yahoo japan"
+        ],
+        [
+          "naver"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 7758,
+      "unresponsive": 5
+    },
+    {
+      "id": "ja-gcp",
+      "lang": "ja",
+      "query": "google cloud ドキュメント",
+      "gold": [
+        "https://cloud.google.com/docs"
+      ],
+      "category": "doc",
+      "rank": 6,
+      "millis": 981.8685519999235,
+      "urls": [
+        "https://cloud.google.com/appengine/docs?hl=ja",
+        "https://cloud.google.com/vision/on-prem?hl=ja",
+        "https://cloud.google.com/dataproc/docs?hl=ja",
+        "https://cloud.google.com/sql/docs?hl=ja",
+        "https://cloud.google.com/pubsub/docs?hl=ja",
+        "https://cloud.google.com/docs/buildpacks?hl=ja",
+        "https://cloud.google.com/docs?hl=ja",
+        "https://cloud.google.com/speech/docs/?hl=ja",
+        "https://cloud.google.com/livestream?hl=ja",
+        "https://cloud.google.com/pubsub/lite?hl=ja"
+      ],
+      "engines": [
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ]
+      ],
+      "bytes": 4301,
+      "unresponsive": 5
+    },
+    {
+      "id": "ja-mdn-js",
+      "lang": "ja",
+      "query": "mdn javascript 入門",
+      "gold": [
+        "https://developer.mozilla.org/ja/docs/Web/JavaScript"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 748.9182650001567,
+      "urls": [
+        "https://developer.mozilla.org/ja/docs/Web/JavaScript/Guide",
+        "https://developer.mozilla.org/ja/docs/Web/JavaScript/Guide/Introduction",
+        "http://developer.mozilla.org/ja/docs/Learn/JavaScript/Asynchronous/Introducing",
+        "https://developer.mozilla.org/ja/docs/Web/JavaScript",
+        "https://developer.mozilla.org/ja/docs/Learn_web_development/Getting_started/Your_first_website/Adding_interactivity",
+        "https://developer.mozilla.org/ja/docs/Learn_web_development/Core/Scripting",
+        "https://developer.mozilla.org/ja/docs/Learn_web_development/Core/Scripting/Events",
+        "http://developer.mozilla.org/ja/docs/Web/XML/Guides/XML_introduction",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Introduction?retiredLocale=it",
+        "https://developer.mozilla.org/ja/docs/Web/HTML/Introduction"
+      ],
+      "engines": [
+        [
+          "seznam",
+          "yahoo japan"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "mwmbl"
+        ]
+      ],
+      "bytes": 9848,
+      "unresponsive": 7
+    },
+    {
+      "id": "ja-react",
+      "lang": "ja",
+      "query": "react 公式 ドキュメント",
+      "gold": [
+        "https://ja.react.dev",
+        "https://react.dev"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 857.0527330002733,
+      "urls": [
+        "https://ja.react.dev/",
+        "https://ja.react.dev/community/docs-contributors",
+        "https://ja.react.dev/community",
+        "https://ja.react.dev/blog/2023/03/16/introducing-react-dev",
+        "https://ja.react.dev/reference/react-dom/components/meta",
+        "https://ja.react.dev/versions",
+        "https://ja.react.dev/community/translations",
+        "https://ja.react.dev/reference/react-dom/components/title",
+        "https://ja.react.dev/reference/react-dom/components/style",
+        "https://ja.react.dev/reference/react"
+      ],
+      "engines": [
+        [
+          "bing",
+          "yahoo japan",
+          "keenable"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "naver",
+          "local_index"
+        ]
+      ],
+      "bytes": 9557,
+      "unresponsive": 5
+    },
+    {
+      "id": "ja-docker-hub",
+      "lang": "ja",
+      "query": "docker hub 公式",
+      "gold": [
+        "https://hub.docker.com"
+      ],
+      "category": "official",
+      "rank": 1,
+      "millis": 1396.986669999933,
+      "urls": [
+        "https://hub.docker.com/",
+        "https://www.docker.com/ja-jp/products/docker-hub/",
+        "https://docs.docker.com/docker-hub/",
+        "https://hub.docker.com/search?type=image&image_filter=official",
+        "https://hub.docker.com/_/registry",
+        "https://matsuand.github.io/docs.docker.jp.onthefly/docker-hub/official_images/",
+        "https://hub.docker.com/search?badges=official",
+        "https://hub.docker.com/r/pytorch/pytorch",
+        "https://www.docker.com",
+        "https://docs.docker.com/docker-hub/quickstart"
+      ],
+      "engines": [
+        [
+          "bing",
+          "mwmbl",
+          "seznam",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "bing",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "bing",
+          "mwmbl",
+          "yahoo",
+          "local_index"
+        ],
+        [
+          "yahoo"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing",
+          "naver",
+          "yahoo japan"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "naver"
+        ],
+        [
+          "mwmbl",
+          "official site"
+        ],
+        [
+          "seznam",
+          "local_index"
+        ]
+      ],
+      "bytes": 6132,
+      "unresponsive": 5
+    },
+    {
+      "id": "ja-npm",
+      "lang": "ja",
+      "query": "npm 公式 パッケージ",
+      "gold": [
+        "https://www.npmjs.com"
+      ],
+      "category": "official",
+      "rank": 1,
+      "millis": 1196.524128999954,
+      "urls": [
+        "https://www.npmjs.com/",
+        "https://ja.wikipedia.org/wiki/Npm_(%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8%E7%AE%A1%E7%90%86%E3%83%84%E3%83%BC%E3%83%AB)",
+        "https://www.npmjs.com/package/npm",
+        "https://npmjs.com/package/npm",
+        "https://npmjs.com/package/node?activeTab=versions",
+        "https://www.npmjs.com/package/@modelcontextprotocol/sdk",
+        "https://docs.djangoproject.com/ja/6.1/ref/contrib/",
+        "https://docs.gitlab.com/ja-jp/user/packages/npm_registry/",
+        "https://techmania.jp/blog/nodejs-npm/",
+        "https://qiita.com/nogataka/items/a9751015d9cb3adf3bea"
+      ],
+      "engines": [
+        [
+          "bing",
+          "seznam",
+          "yahoo",
+          "yahoo japan",
+          "official site"
+        ],
+        [
+          "bing",
+          "wikipedia",
+          "yahoo",
+          "yahoo japan"
+        ],
+        [
+          "bing",
+          "yahoo"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "keenable"
+        ],
+        [
+          "naver"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "yahoo japan"
+        ],
+        [
+          "bing",
+          "yahoo"
+        ],
+        [
+          "bing",
+          "yahoo"
+        ]
+      ],
+      "bytes": 8009,
+      "unresponsive": 4
+    }
+  ]
+}

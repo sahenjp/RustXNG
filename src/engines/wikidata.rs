@@ -42,14 +42,16 @@ impl Engine for Wikidata {
 
     fn build_request(&self, query: &Query, _pageno: u32) -> Result<EngineRequest, EngineError> {
         let language = locale_language(&query.locale);
+        // No language chosen: follow the query's script (Japanese text goes
+        // to the Japanese wiki), as SearXNG's "auto" does.
         let language = if language == "all" {
-            "en".to_string()
+            query.engine_language()
         } else {
             language
         };
         let pairs: Vec<(&str, String)> = vec![
             ("action", "wbsearchentities".to_string()),
-            ("search", query.query_text()),
+            ("search", search_keywords(&query.query_text())),
             ("language", language.clone()),
             ("uselang", language),
             ("limit", "10".to_string()),

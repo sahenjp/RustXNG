@@ -26,7 +26,7 @@ const BASE_URL: &str = "https://nominatim.openstreetmap.org/search";
 const PAGE_SIZE: u32 = 10;
 const RESULT_URL: &str = "https://openstreetmap.org/{osm_type}/{osm_id}";
 /// Nominatim requires an identifying User-Agent.
-const USER_AGENT: &str = "rustxng/0.1 (+https://github.com/searxng/searxng)";
+const USER_AGENT: &str = "rustxng/0.1 (+https://github.com/sahenjp/RustXNG)";
 
 /// OpenStreetMap's Nominatim search API.
 pub struct Openstreetmap {

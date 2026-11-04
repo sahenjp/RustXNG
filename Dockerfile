@@ -2,7 +2,7 @@
 FROM rust:1.99.1-slim AS build
 WORKDIR /app
 COPY Cargo.toml Cargo.lock build.rs ./
-COPY settings.toml ./
+COPY settings.toml settings.full.toml settings.clean.toml ./
 COPY src ./src
 COPY templates ./templates
 COPY static ./static
@@ -13,7 +13,11 @@ FROM debian:bookworm-slim
 RUN useradd --system --uid 10001 --create-home searxng
 WORKDIR /app
 COPY --chmod=755 --from=build /app/target/release/rustxng /usr/local/bin/rustxng
-COPY --chmod=644 --from=build /app/settings.toml /app/settings.toml
+# The defaults and the profiles (--profile) are built into the binary. This
+# file only holds overrides; mount your own over it.
+RUN printf '%s\n' '# Overrides laid over the built-in defaults and the chosen --profile.' \
+    '# Mount your own file here; put only the values you change.' > /app/settings.toml \
+ && chmod 644 /app/settings.toml
 COPY --chmod=644 LICENSE NOTICE /app/
 USER searxng
 ENV SEARXNG_SETTINGS_PATH=/app/settings.toml

@@ -83,6 +83,19 @@ async fn connect_with_page(page: &'static str) -> Fixture {
                 }),
             )
             .route(
+                "/robots.txt",
+                get(|| async {
+                    (
+                        [(header::CONTENT_TYPE, "text/plain")],
+                        "User-agent: *\nDisallow: /rust-book\n",
+                    )
+                }),
+            )
+            .route(
+                "/rust-book",
+                get(move || async move { ([(header::CONTENT_TYPE, "text/html")], page) }),
+            )
+            .route(
                 "/to-loopback",
                 get(move || async move {
                     Redirect::temporary(&format!("http://127.0.0.1:{port}/rust"))
@@ -108,6 +121,10 @@ async fn connect_with_page(page: &'static str) -> Fixture {
     tokio::spawn(async move { axum::serve(listener, app).await.unwrap() });
 
     let mut settings = Settings::defaults();
+
+    settings.search.wikipedia_index_path = String::new();
+
+    settings.search.local_index_path = String::new();
     let mut engine = EngineConfig::new("mwmbl", "mwmbl", "mwm", &["general"]);
     engine.base_url = Some(format!("http://127.0.0.1:{port}/api/v1"));
     engine.timeout = Some(2.0);
@@ -319,6 +336,33 @@ async fn read_page_selects_cjk_passages_within_the_requested_slice() {
 /// addresses directly, through a redirect or through a name that resolves
 /// to one, and a huge page is cut at the byte limit, not read whole.
 #[tokio::test]
+async fn read_page_respects_robots_txt() {
+    let Fixture {
+        client,
+        origin,
+        page_fetches,
+        ..
+    } = connect().await;
+    call(&client, "search", json!({"query": "rust", "limit": 10})).await;
+    let blocked = call(
+        &client,
+        "read_page",
+        json!({"url": format!("{origin}/rust-book")}),
+    )
+    .await;
+    assert!(error_text(&blocked).contains("robots.txt"), "{blocked:?}");
+    let allowed = call(
+        &client,
+        "read_page",
+        json!({"url": format!("{origin}/rust")}),
+    )
+    .await;
+    assert_eq!(structured(&allowed)["text"], PAGE_TEXT);
+    assert_eq!(page_fetches.load(Ordering::SeqCst), 1);
+    client.cancel().await.unwrap();
+}
+
+#[tokio::test]
 async fn read_page_only_reaches_public_addresses_and_bounds_downloads() {
     let Fixture {
         client,
@@ -417,6 +461,12 @@ fn the_binary_serves_mcp_on_stdio() {
         .stderr(Stdio::piped())
         .spawn()
         .expect("start rustxng mcp");
+    // Drain the debug logs so a full stderr pipe cannot block the server.
+    let mut stderr = child.stderr.take().unwrap();
+    let logs = std::thread::spawn(move || {
+        let mut sink = Vec::new();
+        std::io::Read::read_to_end(&mut stderr, &mut sink).ok();
+    });
     let mut stdin = child.stdin.take().unwrap();
     let mut stdout = BufReader::new(child.stdout.take().unwrap());
     let mut send = |message: Value| {
@@ -445,5 +495,6 @@ fn the_binary_serves_mcp_on_stdio() {
     assert_eq!(tools.len(), 2);
     drop(stdin);
     let status = child.wait().unwrap();
+    logs.join().unwrap();
     assert!(status.success(), "exit status {status}");
 }

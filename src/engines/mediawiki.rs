@@ -95,7 +95,7 @@ impl Engine for MediaWiki {
             ("action", "query".to_string()),
             ("list", "search".to_string()),
             ("format", "json".to_string()),
-            ("srsearch", query.query_text()),
+            ("srsearch", search_keywords(&query.query_text())),
             (
                 "sroffset",
                 ((pageno.max(1) - 1) * self.page_size).to_string(),

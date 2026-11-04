@@ -1,0 +1,46 @@
+# RustXNG "full" profile: the default configuration plus the HTML search
+# engines that the default leaves off because of their terms.
+#
+#   rustxng --profile full          (built into the binary)
+#   rustxng --config settings.full.toml
+#
+# The engines below answered automated queries when tested (2026-11-04), but
+# their operators' terms prohibit or do not permit automated access (see
+# docs/PROVIDERS.md). Whether you may use them is between you and each
+# operator: read their terms first. This profile is for your own instance,
+# not for a public one.
+#
+# Engines that answer with a CAPTCHA, "access denied" or 429 (DuckDuckGo,
+# Brave, Mojeek, Qwant, Yandex, ...) stay off here too: they return nothing,
+# and RustXNG does not try to get around such blocks.
+
+[general]
+instance_name = "RustXNG (full)"
+
+# Yahoo (US): terms 2.4(9) prohibit automated access.
+[[engines]]
+name = "yahoo"
+disabled = false
+
+# Yahoo! JAPAN: help page prohibits scraping except for indexing crawls.
+[[engines]]
+name = "yahoo japan"
+disabled = false
+
+# NAVER: consistency with the published terms is unconfirmed.
+[[engines]]
+name = "naver"
+disabled = false
+
+# Keenable: calls the public endpoint without an API key.
+[[engines]]
+name = "keenable"
+disabled = false
+
+# A small HTML engine whose terms were not reviewed.
+[[engines]]
+name = "fynd"
+disabled = false
+
+# Tested and left off: "bing Japan" repeats Bing's results; "reloado" was
+# rate-limited within minutes; "ayo" and "quark" often ran into the timeout.

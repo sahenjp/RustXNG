@@ -301,6 +301,150 @@ pub fn encode(value: &str) -> String {
     percent_encoding::utf8_percent_encode(value, QUERY_ENCODE_SET).to_string()
 }
 
+/// Words that make a question a question but do not name its topic.
+const QUESTION_WORDS: &[&str] = &[
+    "a", "about", "after", "all", "also", "am", "an", "and", "any", "are", "as", "at", "be",
+    "been", "before", "by", "can", "could", "did", "do", "does", "for", "from", "give", "had",
+    "has", "have", "how", "i", "if", "in", "into", "is", "it", "its", "me", "much", "of", "on",
+    "or", "please", "should", "so", "tell", "that", "the", "their", "there", "these", "this",
+    "those", "to", "was", "were", "what", "when", "where", "which", "who", "whom", "whose", "why",
+    "will", "with", "would", "you", "your",
+];
+
+/// The topic words of a long English question, for search APIs that require
+/// every word to match (the MediaWiki family).
+///
+/// "Who holds the all-time record at the Grammys for the most wins in the
+/// album of the year category?" matches no page as a sentence, but
+/// "holds all-time record Grammys wins album year category" does. Short
+/// queries, quoted phrases, operators and non-English text are returned as
+/// typed: dropping words there would change what the user asked for.
+pub fn search_keywords(text: &str) -> String {
+    let text = text.trim();
+    let words: Vec<&str> = text.split_whitespace().collect();
+    let plain = text.is_ascii() && !text.contains(['"', ':', '+', '(', ')']);
+    if words.len() < 6 || !plain || words.iter().any(|word| word.starts_with('-')) {
+        return text.to_string();
+    }
+    let kept: Vec<&str> = words
+        .iter()
+        .map(|word| word.trim_matches(|c: char| !c.is_alphanumeric()))
+        .filter(|word| !word.is_empty())
+        .filter(|word| {
+            let numeric = word.chars().any(|c| c.is_ascii_digit());
+            let capitalised = word.chars().next().is_some_and(char::is_uppercase)
+                && !QUESTION_WORDS.contains(&word.to_lowercase().as_str());
+            numeric || capitalised || !QUESTION_WORDS.contains(&word.to_lowercase().as_str())
+        })
+        .collect();
+    if kept.len() < 2 {
+        return text.to_string();
+    }
+    kept.join(" ")
+}
+
+/// At most `max` topic words of a long English question, for engines that
+/// require every word to match and hold a small index (Mwmbl returns nothing
+/// for a whole sentence, and nothing for eight words either).
+///
+/// Numbers and capitalised words come first (they name the subject), then the
+/// longest remaining words; the original order is kept. Queries that
+/// `search_keywords` leaves alone are returned as typed.
+pub fn search_few_words(text: &str, max: usize) -> String {
+    let keywords = search_keywords(text);
+    if keywords == text.trim() {
+        return keywords;
+    }
+    let words: Vec<&str> = keywords.split_whitespace().collect();
+    if words.len() <= max {
+        return keywords;
+    }
+    let rank = |word: &str| -> usize {
+        let named = word.chars().any(|c| c.is_ascii_digit())
+            || word.chars().next().is_some_and(char::is_uppercase);
+        // Lower is better: named words first, then by length.
+        (usize::from(!named) << 8) | (255 - word.chars().count().min(255))
+    };
+    let mut order: Vec<usize> = (0..words.len()).collect();
+    order.sort_by_key(|&index| (rank(words[index]), index));
+    order.truncate(max);
+    order.sort_unstable();
+    order
+        .into_iter()
+        .map(|index| words[index])
+        .collect::<Vec<_>>()
+        .join(" ")
+}
+
+/// The topic words of a long English question joined with `OR`.
+///
+/// MediaWiki search requires every word by default, so a sentence's worth of
+/// words matches almost nothing. With `OR` it ranks pages by how many of the
+/// words they hold, which is how a person would look for the page.
+/// Returns `None` for short or non-English text, where the query is left alone.
+pub fn search_any_words(text: &str) -> Option<String> {
+    let keywords = search_keywords(text);
+    if keywords == text.trim() {
+        return None;
+    }
+    let words: Vec<&str> = keywords
+        .split_whitespace()
+        .filter(|word| word.chars().count() > 2)
+        .collect();
+    if words.len() < 2 {
+        return None;
+    }
+    Some(words.join(" OR "))
+}
+
+/// The named things in a long English question, as a MediaWiki query of
+/// quoted phrases ("Grammy Award" OR "Album of the Year").
+///
+/// A second, differently shaped query next to [`search_keywords`]: the
+/// keyword form finds pages about the whole question, this one finds the pages
+/// of the entities it mentions. Runs of capitalised words (or numbers next to
+/// them) count; the first word of a sentence does not, because it is
+/// capitalised anyway. Returns `None` when there is nothing to quote.
+pub fn search_entities(text: &str) -> Option<String> {
+    let text = text.trim();
+    let words: Vec<&str> = text.split_whitespace().collect();
+    if words.len() < 6 || !text.is_ascii() || text.contains(['"', ':', '+', '(', ')']) {
+        return None;
+    }
+    let mut runs: Vec<Vec<&str>> = Vec::new();
+    let mut current: Vec<&str> = Vec::new();
+    for (index, word) in words.iter().enumerate() {
+        let word = word.trim_matches(|c: char| !c.is_alphanumeric());
+        let named = word
+            .chars()
+            .next()
+            .is_some_and(|c| c.is_uppercase() || c.is_ascii_digit())
+            && index > 0
+            && !QUESTION_WORDS.contains(&word.to_lowercase().as_str());
+        if named {
+            current.push(word);
+        } else if !current.is_empty() {
+            runs.push(std::mem::take(&mut current));
+        }
+    }
+    if !current.is_empty() {
+        runs.push(current);
+    }
+    let phrases: Vec<String> = runs
+        .into_iter()
+        .filter(|run| run.iter().any(|word| word.chars().any(char::is_alphabetic)))
+        .map(|run| run.join(" "))
+        .filter(|phrase| phrase.len() > 2)
+        .take(3)
+        .map(|phrase| format!("\"{phrase}\""))
+        .collect();
+    if phrases.is_empty() {
+        None
+    } else {
+        Some(phrases.join(" OR "))
+    }
+}
+
 /// Encode key/value pairs as a query string.
 pub fn query_string(pairs: &[(&str, String)]) -> String {
     pairs
@@ -523,6 +667,78 @@ pub fn unwrap_url_parameter(link: &str) -> String {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn few_words_keeps_names_and_long_words_in_order() {
+        let text = "How many movies have surpassed 9 million viewers but not reached 10 million viewers in South Korea";
+        let few = search_few_words(text, 4);
+        assert_eq!(few.split_whitespace().count(), 4);
+        assert!(few.contains("South") && few.contains("Korea"));
+        assert_eq!(search_few_words("rust language", 4), "rust language");
+        assert_eq!(
+            search_few_words("\"exact phrase\" with many other words here", 3),
+            "\"exact phrase\" with many other words here"
+        );
+    }
+
+    #[test]
+    fn any_words_joins_the_topic_words_with_or() {
+        assert_eq!(
+            search_any_words(
+                "How many NBA players have scored 60 or more points in a game since 2023?"
+            ),
+            Some(
+                "many OR NBA OR players OR scored OR more OR points OR game OR since OR 2023"
+                    .to_string()
+            )
+        );
+        assert_eq!(search_any_words("what is rust"), None);
+    }
+
+    #[test]
+    fn entities_are_quoted_phrases_of_capitalised_runs() {
+        assert_eq!(
+            search_entities(
+                "Who holds the all-time record at the Grammys for the most wins in the Album of the Year category?"
+            ),
+            Some("\"Grammys\" OR \"Album\" OR \"Year\"".to_string())
+        );
+        assert_eq!(
+            search_entities(
+                "How many NBA players have scored 60 or more points in a game since 2023?"
+            ),
+            Some("\"NBA\"".to_string())
+        );
+        assert_eq!(search_entities("what is rust"), None);
+        assert_eq!(
+            search_entities("how many points were scored in the game last week by them"),
+            None
+        );
+    }
+
+    #[test]
+    fn long_questions_are_reduced_to_their_topic_words() {
+        assert_eq!(
+            search_keywords(
+                "Who holds the all-time record at the Grammys for the most wins in the album of the year category?"
+            ),
+            "holds all-time record Grammys most wins album year category"
+        );
+        // Short queries, phrases, operators and other languages stay as typed.
+        assert_eq!(search_keywords("what is rust"), "what is rust");
+        assert_eq!(
+            search_keywords("\"who is the president of france\" today"),
+            "\"who is the president of france\" today"
+        );
+        assert_eq!(
+            search_keywords("how to use the tokio runtime in a program site:docs.rs"),
+            "how to use the tokio runtime in a program site:docs.rs"
+        );
+        assert_eq!(
+            search_keywords("東京の今日の天気はどうですか教えてください本当に"),
+            "東京の今日の天気はどうですか教えてください本当に"
+        );
+    }
+
     use super::*;
 
     #[test]

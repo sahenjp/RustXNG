@@ -38,6 +38,8 @@ async fn media_proxies_refuse_remote_dns_proxies_without_connecting() {
     let server = tokio::spawn(async move { axum::serve(listener, upstream).await.unwrap() });
     let origin = format!("http://example.com:{}", address.port());
     let mut settings = Settings::defaults();
+    settings.search.wikipedia_index_path = String::new();
+    settings.search.local_index_path = String::new();
     settings.engines.clear();
     settings.server.image_proxy = true;
     settings.server.secret_key = "media-test".into();

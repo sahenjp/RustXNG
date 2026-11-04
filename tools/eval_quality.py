@@ -44,8 +44,17 @@ def search(base: str, query: str, extra: dict[str, str], timeout: float) -> dict
         payload = json.loads(body)
     except json.JSONDecodeError:
         return {"error": "invalid JSON", "millis": millis, "urls": [], "bytes": len(body)}
-    urls = [str(item.get("url", "")) for item in payload.get("results") or []]
-    return {"millis": millis, "urls": urls, "bytes": len(body), "unresponsive": len(payload.get("unresponsive_engines") or [])}
+    items = payload.get("results") or []
+    urls = [str(item.get("url", "")) for item in items]
+    # Which engines found each result, for per-engine contribution reports.
+    engines = [list(item.get("engines") or [item.get("engine", "")]) for item in items]
+    return {
+        "millis": millis,
+        "urls": urls,
+        "engines": engines,
+        "bytes": len(body),
+        "unresponsive": len(payload.get("unresponsive_engines") or []),
+    }
 
 
 def hit_rank(urls: list[str], gold: list[str]) -> int | None:

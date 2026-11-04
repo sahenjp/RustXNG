@@ -7,6 +7,10 @@ __pycache__/
 
 # Local BM25 index built by rustxng-index crawl (never commit it)
 index-data/
+index-clean/
+index-wikipedia/
+index-docs/
+index-docs-*/
 # Written by the nightly benchmark workflow
 bench/nightly.json
 

@@ -47,10 +47,7 @@ impl Engine for Arxiv {
 
     fn build_request(&self, query: &Query, pageno: u32) -> Result<EngineRequest, EngineError> {
         let mut pairs = vec![
-            (
-                "search_query",
-                format!("{SEARCH_PREFIX}:{}", query.query_text()),
-            ),
+            ("search_query", search_query(&query.query_text())),
             ("start", ((pageno.max(1) - 1) * PAGE_SIZE).to_string()),
             ("max_results", PAGE_SIZE.to_string()),
         ];
@@ -77,7 +74,7 @@ impl Engine for Arxiv {
                 continue;
             }
             results.push(
-                ResultBuilder::new(entry.id, clean(&entry.title))
+                ResultBuilder::new(canonical_abs_url(&entry.id), clean(&entry.title))
                     .content(entry.summary)
                     .author(entry.authors.join(", "))
                     .published_date(entry.published)
@@ -91,6 +88,59 @@ impl Engine for Arxiv {
         }
         Ok(results)
     }
+}
+
+/// The arXiv query for a typed search.
+///
+/// `all:<text>` treats only the first word as a field term, and the API ranks
+/// poorly on loose words. A title phrase, or every word in the title, finds
+/// the paper people usually name ("attention is all you need"). Queries that
+/// already use arXiv field syntax (`ti:`, `au:`, …) are sent as typed.
+fn search_query(text: &str) -> String {
+    let text = text.trim();
+    if text.contains(':') {
+        return text.to_string();
+    }
+    let words: Vec<String> = text
+        .split_whitespace()
+        .map(|word| word.replace(['"', '(', ')'], ""))
+        .filter(|word| !word.is_empty())
+        .collect();
+    match words.len() {
+        0 => format!("{SEARCH_PREFIX}:{text}"),
+        1 => format!("{SEARCH_PREFIX}:{}", words[0]),
+        _ => {
+            let phrase = words.join(" ");
+            let every = words
+                .iter()
+                .map(|word| format!("ti:{word}"))
+                .collect::<Vec<_>>()
+                .join(" AND ");
+            format!("ti:\"{phrase}\" OR ({every})")
+        }
+    }
+}
+
+/// `http://arxiv.org/abs/1706.03762v7` -> `https://arxiv.org/abs/1706.03762`:
+/// the abstract page of the latest version, which is how papers are linked.
+fn canonical_abs_url(id: &str) -> String {
+    let Some(rest) = id
+        .strip_prefix("http://arxiv.org/abs/")
+        .or_else(|| id.strip_prefix("https://arxiv.org/abs/"))
+    else {
+        return id.to_string();
+    };
+    let paper = match rest.rfind('v') {
+        Some(at)
+            if at > 0
+                && rest[at + 1..].chars().all(|c| c.is_ascii_digit())
+                && !rest[at + 1..].is_empty() =>
+        {
+            &rest[..at]
+        }
+        _ => rest,
+    };
+    format!("https://arxiv.org/abs/{paper}")
 }
 
 fn is_http_url(url: &str) -> bool {
@@ -236,6 +286,32 @@ fn apply_attributes(entry: &mut AtomEntry, start: &BytesStart<'_>) {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn named_papers_are_searched_by_title() {
+        assert_eq!(
+            search_query("attention is all you need"),
+            "ti:\"attention is all you need\" OR (ti:attention AND ti:is AND ti:all AND ti:you AND ti:need)"
+        );
+        assert_eq!(search_query("transformers"), "all:transformers");
+        assert_eq!(search_query("au:hinton"), "au:hinton");
+    }
+
+    #[test]
+    fn abstract_urls_drop_the_version() {
+        assert_eq!(
+            canonical_abs_url("http://arxiv.org/abs/1706.03762v7"),
+            "https://arxiv.org/abs/1706.03762"
+        );
+        assert_eq!(
+            canonical_abs_url("http://arxiv.org/abs/hep-th/9901001v2"),
+            "https://arxiv.org/abs/hep-th/9901001"
+        );
+        assert_eq!(
+            canonical_abs_url("https://example.org/x"),
+            "https://example.org/x"
+        );
+    }
+
     use super::*;
 
     const FIXTURE: &str = r#"<?xml version="1.0" encoding="UTF-8"?>
@@ -270,7 +346,7 @@ mod tests {
         match &items[0] {
             EngineItem::Result(result) => {
                 assert_eq!(result.title, "Attention Is All You Need");
-                assert_eq!(result.url, "http://arxiv.org/abs/2401.00001v1");
+                assert_eq!(result.url, "https://arxiv.org/abs/2401.00001");
                 assert_eq!(
                     result.author.as_deref(),
                     Some("Ashish Vaswani, Noam Shazeer")

@@ -406,10 +406,19 @@ impl ResultContainer {
                 let signal = authority(query_text, &result.url) - 0.5;
                 result.score += authority_weight * signal;
             }
-            // A Wikipedia edition in the wrong language is noise for this query.
-            let wiki_penalty = wikipedia_language_penalty(query_text, &result.url);
-            if wiki_penalty != 0.0 {
-                result.score += relevance_weight * wiki_penalty;
+            // A Wikipedia edition or a translated page in the wrong language
+            // is noise for this query; one in the query's language is wanted.
+            // The lift for the query's language scales with how well the page
+            // matches the query, so unrelated translated pages stay down.
+            let adjustment = page_language_adjustment(query_text, &result.url);
+            let adjustment = if adjustment > 0.0 {
+                adjustment * relevance(&result.url, &result.title, &result.content, query_terms)
+            } else {
+                adjustment
+            };
+            let language = wikipedia_language_penalty(query_text, &result.url) + adjustment;
+            if language != 0.0 {
+                result.score += relevance_weight * language;
             }
         }
 
@@ -922,6 +931,78 @@ fn wikipedia_language_penalty(query: &str, url: &str) -> f64 {
     if matches { 0.0 } else { -0.45 }
 }
 
+/// Language codes that documentation sites put in their URLs.
+const PAGE_LANGUAGES: &[&str] = &[
+    "ar", "cs", "de", "en", "es", "fa", "fr", "he", "hu", "id", "it", "ja", "ko", "nl", "pl", "pt",
+    "ru", "sv", "th", "tr", "uk", "vi", "zh",
+];
+
+/// The language a URL marks its page as being in, if any: a leading path
+/// segment (`/ja/`, `/ja-jp/`, `/zh_CN/`), a `translations/<lang>` segment, or
+/// a language subdomain (`ja.react.dev`). Wikipedia is handled on its own.
+pub fn page_language(url: &str) -> Option<&'static str> {
+    let parsed = url::Url::parse(url).ok()?;
+    let host = parsed.host_str()?.to_ascii_lowercase();
+    if host.ends_with(".wikipedia.org") {
+        return None;
+    }
+    let code = |segment: &str| -> Option<&'static str> {
+        let lower = segment.to_ascii_lowercase();
+        let (language, region) = match lower.split_once(['-', '_']) {
+            Some((language, region)) => (language.to_string(), Some(region.to_string())),
+            None => (lower, None),
+        };
+        // A region or script is short ("jp", "hans"); anything longer is a word.
+        if region
+            .as_ref()
+            .is_some_and(|region| !(2..=4).contains(&region.len()))
+        {
+            return None;
+        }
+        PAGE_LANGUAGES
+            .iter()
+            .find(|known| **known == language)
+            .copied()
+    };
+    let segments: Vec<&str> = parsed.path_segments()?.filter(|s| !s.is_empty()).collect();
+    if let Some(found) = segments.first().and_then(|segment| code(segment)) {
+        return Some(found);
+    }
+    if let Some(index) = segments
+        .iter()
+        .position(|segment| *segment == "translations")
+    {
+        if let Some(found) = segments.get(index + 1).and_then(|segment| code(segment)) {
+            return Some(found);
+        }
+    }
+    let labels: Vec<&str> = host.split('.').collect();
+    if labels.len() >= 3 {
+        // "id." and "it." are more often services than languages.
+        if let Some(found) = code(labels[0]).filter(|code| !matches!(*code, "id" | "it")) {
+            return Some(found);
+        }
+    }
+    None
+}
+
+/// Score adjustment for a page whose URL names its language: a page in the
+/// query's language is lifted a little, one in a third language pushed down.
+/// English pages are neutral (the usual fallback for documentation).
+fn page_language_adjustment(query: &str, url: &str) -> f64 {
+    let Some(language) = page_language(url) else {
+        return 0.0;
+    };
+    let wanted = if query_is_japanese(query) { "ja" } else { "en" };
+    if language == wanted {
+        if wanted == "en" { 0.0 } else { 0.3 }
+    } else if language == "en" {
+        0.0
+    } else {
+        -0.45
+    }
+}
+
 /// Match a canonical host.
 ///
 /// Most sites run separate services on subdomains (\`users.rust-lang.org\` is the
@@ -1261,6 +1342,45 @@ pub fn pretty_url(url: &str) -> String {
 
 #[cfg(test)]
 mod tests {
+    use super::{page_language, page_language_adjustment};
+
+    #[test]
+    fn page_languages_are_read_from_urls() {
+        assert_eq!(
+            page_language("https://docs.python.org/ja/3/library/"),
+            Some("ja")
+        );
+        assert_eq!(
+            page_language("https://developer.mozilla.org/en-US/docs/Web"),
+            Some("en")
+        );
+        assert_eq!(
+            page_language("https://learn.microsoft.com/ja-jp/azure/"),
+            Some("ja")
+        );
+        assert_eq!(page_language("https://ja.react.dev/learn"), Some("ja"));
+        assert_eq!(
+            page_language("https://www.kernel.org/doc/html/latest/translations/zh_CN/index.html"),
+            Some("zh")
+        );
+        assert_eq!(page_language("https://docs.python.org/3/library/"), None);
+        assert_eq!(page_language("https://example.org/de-facto-standard"), None);
+        assert_eq!(page_language("https://id.atlassian.com/login"), None);
+        assert_eq!(page_language("https://ja.wikipedia.org/wiki/X"), None);
+    }
+
+    #[test]
+    fn pages_in_the_query_language_are_preferred() {
+        let ja = "https://developer.mozilla.org/ja/docs/Web/JavaScript";
+        let en = "https://developer.mozilla.org/en-US/docs/Web/JavaScript";
+        let fr = "https://developer.mozilla.org/fr/docs/Web/JavaScript";
+        assert!(page_language_adjustment("mdn javascript 入門", ja) > 0.0);
+        assert_eq!(page_language_adjustment("mdn javascript 入門", en), 0.0);
+        assert!(page_language_adjustment("mdn javascript intro", ja) < 0.0);
+        assert!(page_language_adjustment("mdn javascript intro", fr) < 0.0);
+        assert_eq!(page_language_adjustment("mdn javascript intro", en), 0.0);
+    }
+
     use super::*;
     use crate::engine::EngineItem;
 
