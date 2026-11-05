@@ -44,7 +44,7 @@ An agent can retrieve information as it needs it and keep the amount of text sen
 Many engines work without API keys. Optional authenticated providers have their own credentials and billing.
 The server runs locally; **search terms are sent to the upstream engines selected for a request**.
 
-The standard (default) profile leaves out providers whose terms prohibit automated access and providers that refuse it. You can [switch between the standard, full and clean profiles](#profiles-standard-full-clean). See the [provider inventory and migration notes](docs/PROVIDERS.md); other providers remain subject to their own terms and quotas.
+The standard (default) profile disables known restricted or blocked providers, but still includes **Bing and Seznam, whose automation/reuse permissions have not been established**. It is not a list of licensed providers. You can [switch between the standard, full and clean profiles](#profiles-standard-full-clean). See the [provider inventory and migration notes](docs/PROVIDERS.md) and review each provider's terms and quotas.
 
 ## Search from an agent
 
@@ -261,9 +261,9 @@ Pick one of three provider sets at startup. All three are built into the binary;
 
 | Profile | Start | Providers | Docs-100 hit@10 / MRR | SealQA hit@10 | Median latency |
 | --- | --- | --- | ---: | ---: | ---: |
-| **standard** (default) | `rustxng` | keyless providers that do not refuse automated access | 88 / 0.790 | 128–132 | 0.7–1.2 s |
+| **standard** (default) | `rustxng` | selected keyless providers; Bing and Seznam permissions still unverified | 88 / 0.790 | 128–132 | 0.7–1.2 s |
 | full | `rustxng --profile full` | standard + HTML search engines whose terms prohibit or do not permit automated access (Yahoo, Yahoo! JAPAN, NAVER, ...) | 98 / 0.878 | 165 | 1.2–1.9 s |
-| clean | `rustxng --profile clean` | documented public APIs (Wikimedia, GitHub, arXiv, ...) and our own crawl only | 61 / 0.549 | 123 | 1.0–1.2 s |
+| clean | `rustxng --profile clean` | documented public APIs and own crawl; provider-specific reuse terms still apply | 61 / 0.549 | 123 | 1.0–1.2 s |
 
 ```bash
 rustxng --profile full                      # full
@@ -274,9 +274,9 @@ rustxng --profile full --config my.toml     # your settings on top of a profile
 
 Put only the values you change in a file given with `--config`: a complete copy of `settings.toml` on top cancels out the profile.
 
-**The full profile uses providers whose terms prohibit automated access.** Use it only on a private instance, after reading each provider's terms yourself, and never for a public instance. Providers that answer with a CAPTCHA or "access denied" (DuckDuckGo, Brave, ...) stay off even in full; RustXNG does not work around such blocks.
+**The full profile includes providers that prohibit, restrict, or have not authorized the configured automated access.** Running a private, non-commercial or home instance does not waive their terms: do not enable a prohibited integration without the provider's applicable authorization. The full profile is not suitable for a public service. Providers that answer with a CAPTCHA or "access denied" (DuckDuckGo, Brave, ...) stay off even in full; RustXNG does not work around such blocks.
 
-Measured on 2026-11-04 with the `index-docs` crawl index. On the same 100 documentation questions Exa scores hit@10 93 / MRR 0.840 and Tavily 86 / 0.499. See the [profile comparison](docs/COMPARISON-2026-11-04.md) (Japanese) for conditions and caveats.
+Measured on 2026-11-04 with locally prepared `index-docs` and `index-wikipedia` indexes. Exa (hit@10 93 / MRR 0.840) and Tavily (86 / 0.499) were **rescored from earlier saved responses**, not queried at the same time. Results may differ on a fresh install without these indexes. See the [profile comparison](docs/COMPARISON-2026-11-04.md) (Japanese) for conditions and caveats.
 
 ### Settings file
 
