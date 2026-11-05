@@ -5,10 +5,10 @@
 #   rustxng --config settings.full.toml
 #
 # The engines below answered automated queries when tested (2026-11-04), but
-# their operators' terms prohibit or do not permit automated access (see
-# docs/PROVIDERS.md). Whether you may use them is between you and each
-# operator: read their terms first. This profile is for your own instance,
-# not for a public one.
+# their operators' terms prohibit, restrict, or do not establish permission for
+# the configured automated access (see docs/PROVIDERS.md). Private or personal
+# use does not override those terms. Do not enable a prohibited integration
+# without the applicable provider authorization. Not for public deployments.
 #
 # Engines that answer with a CAPTCHA, "access denied" or 429 (DuckDuckGo,
 # Brave, Mojeek, Qwant, Yandex, ...) stay off here too: they return nothing,
