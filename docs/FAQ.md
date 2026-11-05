@@ -41,7 +41,7 @@ Keep errors and misses in the denominator, record cache/local-index settings, an
 The existing measurements do not establish performance for that workload.
 Full error text, a shortened query and quoted exact text can behave differently; language handling and source coverage matter.
 Use the benchmark report form with a public error example and an expected source URL.
-Japanese technical retrieval and broad/current-information collection are tracked separately in the [roadmap](ROADMAP.md).
+Japanese technical retrieval and broad/current-information collection are tracked in [GitHub Issues](https://github.com/sahenjp/RustXNG/issues).
 
 A pinpoint troubleshooting task can prioritize one authoritative matching page and a small result count.
 A broad current-information task needs multiple independent sources, coverage, freshness and missing-source reporting.
@@ -51,16 +51,13 @@ Neither a high hit@1 score nor a large result count alone measures both tasks.
 ## Won't fetched page text fill the model context?
 
 It can. Start with `max_results=5`, relevant domains, and short snippets. Project the fields passed to the model locally
-when appropriate. Page fetching is optional and has known open security/resource findings; consult [the audit](AUDIT-2026-11-02.md).
-Current character limits are not tokenizer-specific budgets. HTTP compression saves transfer bytes, not model tokens.
-Relevant passages and an explicit output-budget contract are roadmap work, not a current guarantee.
+when appropriate. Page fetching is optional; review the [current security policy](../SECURITY.md) and the [historical audit](AUDIT-2026-11-02.md).
+MCP provides character/byte budgets and up to three query-matched passages from the extracted page. These are not tokenizer-specific budgets. HTTP compression saves transfer bytes, not model tokens.
 
 ## Does it support Linux ARM?
 
-Published v0.26.0 native assets include Linux x86_64 and macOS ARM64, not a Linux ARM64 release binary.
-That distribution gap is different from proving that source builds cannot run on ARM.
-Verified Linux ARM64 release artifacts and native startup tests are tracked in the roadmap; ARMv7 is a separate scope.
-Do not download a macOS ARM64 asset for a Linux ARM64 system.
+Linux ARM64 (`aarch64-unknown-linux-gnu`, glibc 2.39+) binaries are available from releases after v0.26.0, including v0.28.0.
+Linux ARMv7 and Linux ARM64 musl are separate, unsupported binary targets. Check the current [release assets](https://github.com/sahenjp/RustXNG/releases) and checksum for your platform; macOS ARM64 binaries do not run on Linux.
 
 ## How can I help or become a maintainer?
 
