@@ -276,7 +276,7 @@ Put only the values you change in a file given with `--config`: a complete copy 
 
 **The full profile includes providers that prohibit, restrict, or have not authorized the configured automated access.** Running a private, non-commercial or home instance does not waive their terms: do not enable a prohibited integration without the provider's applicable authorization. The full profile is not suitable for a public service. Providers that answer with a CAPTCHA or "access denied" (DuckDuckGo, Brave, ...) stay off even in full; RustXNG does not work around such blocks.
 
-Measured on 2026-11-04 with locally prepared `index-docs` and `index-wikipedia` indexes. Exa (hit@10 93 / MRR 0.840) and Tavily (86 / 0.499) were **rescored from earlier saved responses**, not queried at the same time. Results may differ on a fresh install without these indexes. See the [profile comparison](docs/COMPARISON-2026-11-04.md) (Japanese) for conditions and caveats.
+Measured on 2026-11-04 with locally prepared `index-docs` and `index-wikipedia` indexes. Exa (hit@10 93 / MRR 0.840) and Tavily (86 / 0.499) were **rescored from earlier saved responses**, not queried at the same time. Results may differ on a fresh install without these indexes. The archived benchmark's recorded source commit also predates the v0.28.0 release, so these are **development-run observations, not verified measurements of the published binary**. See the [profile comparison](docs/COMPARISON-2026-11-04.md) (Japanese) for conditions and caveats.
 
 ### Settings file
 
