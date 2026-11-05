@@ -18,7 +18,7 @@ Small documentation fixes can go straight to a PR. Follow [CODE_OF_CONDUCT.md](C
 ## Development setup
 
 Use stable Rust (minimum 1.88 for the current lockfile) and a C build toolchain.
-PDF tests also require [Poppler and its Japanese CMap data](README.md#pdf-page-text).
+PDF tests also require Poppler (`pdftotext`) and Japanese CMap data; see [page extraction requirements](README.md#use-from-an-ai-agent).
 
 ```bash
 git clone https://github.com/sahenjp/RustXNG.git
