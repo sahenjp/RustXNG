@@ -564,17 +564,17 @@ pub fn parse_rss(xml: &str) -> Result<Vec<RssItem>, EngineError> {
         match event {
             quick_xml::events::Event::Start(start) => {
                 let name = start.local_name().as_ref().to_ascii_lowercase();
-                field = match name.as_slice() {
-                    b"item" => {
+                field = match name.as_str() {
+                    "item" => {
                         item = Some(RssItem::default());
                         None
                     }
-                    b"title" if item.is_some() => Some("title"),
-                    b"link" if item.is_some() => Some("link"),
-                    b"description" | b"summary" if item.is_some() => Some("description"),
-                    b"pubdate" | b"published" | b"updated" if item.is_some() => Some("pubdate"),
-                    b"source" if item.is_some() => Some("source"),
-                    b"category" if item.is_some() => Some("category"),
+                    "title" if item.is_some() => Some("title"),
+                    "link" if item.is_some() => Some("link"),
+                    "description" | "summary" if item.is_some() => Some("description"),
+                    "pubdate" | "published" | "updated" if item.is_some() => Some("pubdate"),
+                    "source" if item.is_some() => Some("source"),
+                    "category" if item.is_some() => Some("category"),
                     _ => None,
                 };
                 if field.is_some() {
@@ -584,7 +584,7 @@ pub fn parse_rss(xml: &str) -> Result<Vec<RssItem>, EngineError> {
             quick_xml::events::Event::CData(text) => {
                 // CDATA sections carry raw HTML ("<br>") in many feeds.
                 if field.is_some() {
-                    let raw = String::from_utf8_lossy(&text.into_inner()).to_string();
+                    let raw = text.into_inner().to_string();
                     captured.push_str(&decode_entities(&raw));
                 }
             }
@@ -592,7 +592,7 @@ pub fn parse_rss(xml: &str) -> Result<Vec<RssItem>, EngineError> {
                 if field.is_some() {
                     // Feeds use HTML entities (&nbsp;, &#8217;) that the XML
                     // unescaper refuses, so decode the raw text ourselves.
-                    let raw = String::from_utf8_lossy(&text.into_inner()).to_string();
+                    let raw = text.into_inner().to_string();
                     captured.push_str(&decode_entities(&raw));
                 }
             }
@@ -602,7 +602,7 @@ pub fn parse_rss(xml: &str) -> Result<Vec<RssItem>, EngineError> {
                 }
             }
             quick_xml::events::Event::End(end) => {
-                if end.local_name().as_ref().eq_ignore_ascii_case(b"item") {
+                if end.local_name().as_ref().eq_ignore_ascii_case("item") {
                     if let Some(entry) = item.take() {
                         items.push(entry);
                     }
@@ -644,12 +644,10 @@ fn resolve_reference(reference: &quick_xml::events::BytesRef<'_>) -> String {
     if let Ok(Some(character)) = reference.resolve_char_ref() {
         return character.to_string();
     }
-    match reference.decode() {
-        Ok(name) => match quick_xml::escape::resolve_predefined_entity(&name) {
-            Some(value) => value.to_string(),
-            None => decode_entities(&format!("&{name};")),
-        },
-        Err(_) => format!("&{};", String::from_utf8_lossy(&reference[..])),
+    let name: &str = reference;
+    match quick_xml::escape::resolve_predefined_entity(name) {
+        Some(value) => value.to_string(),
+        None => decode_entities(&format!("&{name};")),
     }
 }
 

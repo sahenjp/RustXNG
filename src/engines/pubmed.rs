@@ -173,7 +173,7 @@ fn parse_records(xml: &str) -> Vec<EngineItem> {
     loop {
         match reader.read_event() {
             Ok(Event::Start(start)) => {
-                let name = String::from_utf8_lossy(start.local_name().as_ref()).to_string();
+                let name = start.local_name().as_ref().to_string();
                 if name == "PubmedArticle" {
                     current = Some(Record::default());
                 }
@@ -184,8 +184,8 @@ fn parse_records(xml: &str) -> Vec<EngineItem> {
                 }
                 if name == "PubMedPubDate" {
                     let accepted = start.attributes().flatten().any(|attribute| {
-                        attribute.key.as_ref() == b"PubStatus"
-                            && attribute.value.as_ref() == b"accepted"
+                        attribute.key.as_ref() == "PubStatus"
+                            && attribute.value.as_ref() == "accepted"
                     });
                     if accepted {
                         accepted_depth = stack.len() + 1;
@@ -196,13 +196,13 @@ fn parse_records(xml: &str) -> Vec<EngineItem> {
                 stack.push(name);
             }
             Ok(Event::Text(value)) => {
-                text.push_str(&String::from_utf8_lossy(&value.into_inner()));
+                text.push_str(&value.into_inner());
             }
             Ok(Event::CData(value)) => {
-                text.push_str(&String::from_utf8_lossy(&value.into_inner()));
+                text.push_str(&value.into_inner());
             }
             Ok(Event::End(end)) => {
-                let name = String::from_utf8_lossy(end.local_name().as_ref()).to_string();
+                let name = end.local_name().as_ref().to_string();
                 stack.pop();
                 let value = text.trim().to_string();
                 if let Some(record) = current.as_mut() {

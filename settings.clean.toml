@@ -9,9 +9,10 @@
 #   rustxng --profile clean         (built into the binary)
 #   rustxng --config settings.clean.toml
 #
-# "Clean" here means: a documented API, an identifiable client and a request
-# rate that stays inside the published etiquette. It is NOT a legal opinion and
-# does not replace reading each provider's terms for your own use.
+# "Clean" here means: selected documented public APIs, an identifiable client
+# and conservative request pacing. It is NOT a certification of compliance:
+# API access may be permitted while storing, commercial use, redistribution or
+# derived data use is restricted. Confirm provider-specific permissions.
 
 [general]
 instance_name = "RustXNG (clean)"

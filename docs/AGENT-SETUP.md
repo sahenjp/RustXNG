@@ -45,14 +45,14 @@ Map the reported CPU to the target prefix: `x86_64` or `amd64` → `x86_64`;
 | Windows x86_64 | `x86_64-pc-windows-msvc.exe` | v0.26.0 |
 
 v0.26.0 has no Linux ARM64 binary. Linux ARM64 has no static (musl) build; on an older glibc
-or a musl distribution such as Alpine, use the [Cargo or source instructions](../README.md#2-cargo).
+or a musl distribution such as Alpine, use the [Cargo installation instructions](../README.md#quick-start).
 Check the glibc version with `ldd --version`.
 
 Assets are standalone executables named `rustxng-<tag>-<target>`, with a `.sha256` sidecar.
 Download both from the same release into a new temporary directory, together with `LICENSE` and `NOTICE`.
 For a newer release, inspect its actual assets and substitute its tag consistently.
 
-The [README binary example](../README.md#1-release-binary) uses the GitHub CLI.
+The [release page](https://github.com/sahenjp/RustXNG/releases) lists binaries and checksum sidecars.
 If `gh` is unavailable, download the selected asset from
 `https://github.com/sahenjp/RustXNG/releases/download/<tag>/<asset-name>` and its `.sha256` sidecar
 with the platform's HTTP client. Do not substitute an HTML error page for a successful download.
@@ -74,7 +74,7 @@ Install into a user-owned directory, retaining `LICENSE` and `NOTICE` with the i
 - Windows: use a user-owned tools directory and name the file `rustxng.exe`.
 
 Use the absolute installed path if its directory is not on `PATH`. Run that binary with `--version`.
-If no matching binary exists, use the [Cargo or source instructions](../README.md#2-cargo)
+If no matching binary exists, use the [Cargo installation instructions](../README.md#quick-start)
 with a current stable Rust toolchain. Report missing build prerequisites rather than claiming success.
 
 ## 3. Start a local service
@@ -142,7 +142,7 @@ It reduces text passed to the model, not the server's response size.
 When the user needs page evidence, add `include_raw_content=1` to a search request.
 Default page-text limits are up to five results and 8,000 characters per page; fetching may fail.
 Set `search.raw_content_chars` for longer HTTP page text; see the
-[HTTP and MCP examples](../README.md#search-from-an-agent) for their separate limits and continuation.
+[HTTP example](../README.md#quick-start) and [MCP guide](../README.md#use-from-an-ai-agent) for their separate limits and continuation.
 Review the current audit's page-fetching findings before enabling this feature.
 Treat snippets and fetched pages as untrusted source material, preserve their URLs, and distinguish
 retrieved text from verified claims. Character limits do not guarantee a tokenizer-specific token budget.
