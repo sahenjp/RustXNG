@@ -289,8 +289,8 @@ impl McpServer {
         let text = page.text;
         // Find relevant evidence across the extracted page, not only within
         // the text slice returned for this offset. The page is already cached.
-        let passages = (!args.query.trim().is_empty())
-            .then(|| relevant_passages(&text, &args.query));
+        let passages =
+            (!args.query.trim().is_empty()).then(|| relevant_passages(&text, &args.query));
         let (text, next_offset) = slice_page_text(&text, offset, end)?;
         let mut output = ReadPageOutput {
             url: args.url,
