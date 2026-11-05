@@ -63,9 +63,7 @@ class DocumentationConsistencyTests(unittest.TestCase):
             (ROOT / "bench/results/profiles-2026-11-04/clean/sealqa/summary.json").read_text(encoding="utf-8")
         )["splits"]["seal_hard"]
         docs = (ROOT / "docs/CLEAN-PROFILE.md").read_text(encoding="utf-8")
-        self.assertIn(f"123/254", docs) if summary["reference_hit@10"] == 123 else self.assertIn(
-            f'{summary["reference_hit@10"]}/{summary["questions"]}', docs
-        )
+        self.assertIn(f'{summary["reference_hit@10"]}/{summary["questions"]}', docs)
         self.assertIn("結果ゼロの質問 | 0", docs)
         self.assertNotIn("結果ゼロが 33 問あります", docs)
 
