@@ -306,21 +306,47 @@ impl LocalIndex {
         // Most of the content words must match. With plain OR matching a long
         // question matches any page that contains "the" or "of", and an index
         // of a few thousand pages would then crowd every answer.
-        let content_words = content_words(trimmed);
-        if !has_cjk(trimmed) && content_words.len() >= 2 {
+        let cjk = has_cjk(trimmed);
+        // In a mixed documentation query such as "nginxの設定", generic
+        // Japanese words must not retrieve a different product's manual. The
+        // ASCII terms can also match an English manual with no CJK text.
+        // Keep loose encyclopedia searches broad: a translated article need
+        // not repeat the name of its topic in Latin characters.
+        let ascii = if cjk && !loose {
+            trimmed
+                .chars()
+                .map(|c| if c.is_ascii() { c } else { ' ' })
+                .collect::<String>()
+        } else {
+            String::new()
+        };
+        let mixed_words: Vec<_> = content_words(&ascii)
+            .into_iter()
+            .filter(|word| word.chars().any(|c| c.is_ascii_alphabetic()))
+            .collect();
+        let mixed = !mixed_words.is_empty();
+        let content_words = if mixed {
+            mixed_words
+        } else {
+            content_words(trimmed)
+        };
+        if mixed || (!cjk && content_words.len() >= 2) {
             let per_word: Vec<(Occur, Box<dyn Query>)> = content_words
                 .iter()
                 .filter_map(|word| parser.parse_query(word).ok())
                 .map(|query| (Occur::Should, query))
                 .collect();
-            let needed = if loose {
+            // A brand alias need not appear in the document itself. Requiring
+            // at least one Latin term removes unrelated CJK-only matches
+            // without requiring every spelling of a product/site name.
+            let needed = if loose || mixed {
                 1
             } else {
                 required_matches(per_word.len())
             };
             if !per_word.is_empty() {
                 clauses.push((
-                    Occur::Should,
+                    if mixed { Occur::Must } else { Occur::Should },
                     Box::new(BooleanQuery::with_minimum_required_clauses(
                         per_word, needed,
                     )),
@@ -594,6 +620,69 @@ mod tests {
         index.commit().unwrap();
         let hits = index.search("tantivy indexing", 5).unwrap();
         assert_eq!(hits[0].url, "https://b.example/title");
+    }
+
+    #[test]
+    fn mixed_documentation_queries_require_the_named_product() {
+        let (_dir, index) = temp_index();
+        index
+            .add(&page(
+                "https://manual.example/nginx/",
+                "nginx configuration guide",
+                "Configure nginx using this English reference.",
+            ))
+            .unwrap();
+        index
+            .add(&page(
+                "https://manual.example/other/",
+                "別製品の設定ドキュメント",
+                "設定ドキュメントを参照してください。設定ドキュメントの説明です。",
+            ))
+            .unwrap();
+        index.commit().unwrap();
+        for query in [
+            "nginx 設定 ドキュメント",
+            "nginxの設定",
+            "ManualBrand nginxの設定",
+        ] {
+            let hits = index.search(query, 5).unwrap();
+            assert_eq!(hits.len(), 1, "{query}: {hits:?}");
+            assert_eq!(hits[0].url, "https://manual.example/nginx/");
+        }
+    }
+
+    #[test]
+    fn a_year_does_not_become_a_required_product_name() {
+        let (_dir, index) = temp_index();
+        index
+            .add(&page(
+                "https://city.example/",
+                "東京の観光",
+                "東京の案内です。",
+            ))
+            .unwrap();
+        index.commit().unwrap();
+        assert_eq!(index.search("東京2026", 5).unwrap().len(), 1);
+    }
+
+    #[test]
+    fn loose_translated_articles_need_not_repeat_the_latin_name() {
+        let (_dir, index) = temp_index();
+        index
+            .add(&page(
+                "https://encyclopedia.example/",
+                "マイクロソフト",
+                "ソフトウェアの企業です。",
+            ))
+            .unwrap();
+        index.commit().unwrap();
+        assert_eq!(
+            index
+                .search_loose("Microsoft ソフトウェア", 5)
+                .unwrap()
+                .len(),
+            1
+        );
     }
 
     #[test]

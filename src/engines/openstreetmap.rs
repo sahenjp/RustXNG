@@ -25,8 +25,6 @@ const DEFAULTS: EngineDefaults = EngineDefaults {
 const BASE_URL: &str = "https://nominatim.openstreetmap.org/search";
 const PAGE_SIZE: u32 = 10;
 const RESULT_URL: &str = "https://openstreetmap.org/{osm_type}/{osm_id}";
-/// Nominatim requires an identifying User-Agent.
-const USER_AGENT: &str = "rustxng/0.1 (+https://github.com/sahenjp/RustXNG)";
 
 /// OpenStreetMap's Nominatim search API.
 pub struct Openstreetmap {
@@ -53,8 +51,11 @@ impl Engine for Openstreetmap {
             ("addressdetails", "1".to_string()),
             ("limit", PAGE_SIZE.to_string()),
         ];
-        let mut request = EngineRequest::get(format!("{BASE_URL}?{}", query_string(&pairs)))
-            .header("User-Agent", USER_AGENT)
+        // The network layer supplies the current version and instance contact.
+        // A configurable endpoint lets operators switch to a self-hosted or
+        // contracted service without a binary update.
+        let base = self.meta.base_url.as_deref().unwrap_or(BASE_URL);
+        let mut request = EngineRequest::get(format!("{base}?{}", query_string(&pairs)))
             .header("Accept", "application/json");
         let language = locale_language(&query.locale);
         if language != "all" {
@@ -92,7 +93,7 @@ impl Engine for Openstreetmap {
             let display_name = json_str(item, "display_name");
             results.push(
                 ResultBuilder::new(url, title)
-                    .content(display_name.clone())
+                    .content(format!("{display_name} · © OpenStreetMap contributors"))
                     .template(Template::Map)
                     .metadata("latitude", json_str(item, "lat"))
                     .metadata("longitude", json_str(item, "lon"))
@@ -103,6 +104,9 @@ impl Engine for Openstreetmap {
                     .metadata("type", json_str(item, "type"))
                     .metadata("place_id", json_str(item, "place_id"))
                     .metadata("boundingbox", boundingbox(item))
+                    .metadata("attribution", "© OpenStreetMap contributors")
+                    .metadata("attribution_url", "https://www.openstreetmap.org/copyright")
+                    .metadata("license", "ODbL-1.0")
                     .build(),
             );
         }
@@ -207,17 +211,22 @@ mod tests {
     }
 
     #[test]
-    fn sets_the_user_agent_and_does_not_page() {
+    fn leaves_instance_identification_to_the_network_and_does_not_page() {
         let query = Query::parse("paris", &crate::engine::EngineRegistry::default(), &[]);
         let request = engine().build_request(&query, 4).unwrap();
-        assert_eq!(
-            request
-                .headers
-                .get("user-agent")
-                .and_then(|value| value.to_str().ok()),
-            Some(USER_AGENT)
-        );
+        assert!(request.headers.get("user-agent").is_none());
         assert!(!request.url.contains("page="));
         assert!(request.url.contains("limit=10"));
+    }
+
+    #[test]
+    fn a_self_hosted_endpoint_can_replace_the_public_service() {
+        let mut config = EngineConfig::new("osm", "openstreetmap", "osm", &["map"]);
+        config.base_url = Some("https://maps.example.org/search".into());
+        let engine = Openstreetmap::from_config(&config).unwrap();
+        let query = Query::parse("paris", &crate::engine::EngineRegistry::default(), &[]);
+        let request = engine.build_request(&query, 1).unwrap();
+        assert!(request.url.starts_with("https://maps.example.org/search?"));
+        assert!(!request.url.contains("nominatim.openstreetmap.org"));
     }
 }

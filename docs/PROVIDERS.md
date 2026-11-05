@@ -5,13 +5,66 @@ RustXNGは外部プロバイダーの検索結果を統合します。RustXNGの
 APIキーの要否、取得方式、認証、クォータ、利用目的、再配布条件はプロバイダーごとに確認してください。
 公開APIやRSSであることだけでも、無制限の自動利用を意味しません。
 
+## 2026-11-05のStandard設定と監査
+
+Bing（検索・ニュース・画像・動画）、Seznam、eBay、Pinterest、IMDb、Rotten Tomatoes、
+Flickrの非API経路、Unsplashの内部API経路を既定無効にしました。
+これらの変更は許諾の確認状況に基づく保守上の判断です。
+特にSeznamとRotten Tomatoesは、禁止の断定ではなく適用範囲の確認待ちです。
+Fullにも自動では追加しません。既存のユーザー設定での明示的な有効化は引き続き優先します。
+
+[監査台帳](provider-policy.json)には取得先・方式・一次資料・個別の確認日・条件を記録します。
+新たに確認した一次資料は、[eBayの利用規約](https://www.ebay.com/help/policies/member-behavior-policies/user-agreement?id=4259)、
+[Pinterestの利用規約](https://policy.pinterest.com/en/terms-of-service)、
+[IMDbのデータ利用案内](https://help.imdb.com/article/imdb/general-information/can-i-use-imdb-data-in-my-software/G5JTRESSHJBBHTGX)、
+[Flickrの利用規約](https://www.flickr.com/help/terms)、
+[Rotten Tomatoesの規約案内](https://www.rottentomatoes.com/policies/terms-and-policies)、
+[Unsplashの公式API文書](https://unsplash.com/documentation)です。
+[従来のBing Search APIは2025-08-11に終了](https://learn.microsoft.com/en-us/lifecycle/announcements/bing-search-api-retirement)しており、
+そのAPIへの単純な置き換えは行いません。
+
+[Nominatimの公開サーバー方針](https://operations.osmfoundation.org/policies/nominatim/)と
+[MwmblのAPI規約](https://developer.mwmbl.org/terms/)に合わせ、該当ホストだけ送信間隔を1,100msに設定しました。
+キャッシュヒットは送信枠を消費せず、同一リクエストの同時キャッシュミスは1回にまとめます。
+他ホストの既定間隔は0msのままで、並列検索を維持します。
+間隔制御と同時リクエストの集約はプロセス内の機能です。
+複数プロセス・複数台で運用する場合は全体の送信量を別途調整してください。
+
+Nominatimではハードコードした古いUAを削除し、現行バージョンと`[outgoing] contact`を使います。
+結果の本文とメタデータにOpenStreetMapの帰属を含めます。
+公開サーバーは少量の利用者による検索向けです。自動補完・体系的取得・汎用の再販売に使えません。
+運用者自身による用途の判断と方針への対応が必要です。
+`[[engines]] name = "openstreetmap"` の `base_url` に検索エンドポイント全体を指定すれば、
+自前または契約済みのサービスへ切り替えられます。
+
+Mwmblの匿名枠は月1,000回・毎秒1回です。月間枠は上流で適用され、RustXNGは残量を推定しません。
+APIへのアクセス条件と返却データのCC BY-NC-SA 4.0は別です。
+商用アプリからAPIに接続できても、結果の商用再利用まで許可されたとは扱えません。
+保存・再配布時は帰属、非営利条件、継承条件、原著作物の権利を確認してください。
+公開APIの結果には`source_license`・`source_license_url`・`source_terms_url`を付けます。
+自前のMwmblエンドポイントには、この公開サービスのライセンスを自動適用しません。
+
+Hacker NewsとEurope PMCも台帳に記録しました。
+[HN Algoliaの実装とAPI案内](https://github.com/algolia/hn-search)は検索経路の資料であり、
+投稿内容の無制限な再利用許諾ではありません。
+[EMBL-EBIの規約](https://www.ebi.ac.uk/about/terms-of-use/)は2026-10-14改訂版を確認し、
+第三者の抄録・本文の権利は別に残ることを記録しています。
+
+CIの`python tools/check_provider_policy.py`は、既定無効にしたモジュールの再有効化、
+対象ホストの間隔短縮、監査を伴わない検索先の追加・エンドポイント変更を検出します。
+**有効108件のうち104件は引き続き未確認**で、[確認待ち一覧](provider-review-pending.json)に明示しました。
+この一覧は既存の未確認範囲が増えるのを防ぐ基準であり、利用許諾や全体の監査完了を意味しません。
+
+速度と検索品質の検証は[変更前後の測定記録](PERFORMANCE-2026-11-05.md)に分けて記載します。
+2026-11-04以前の結果は当時の構成の履歴であり、新しいStandardの実測値ではありません。
+
 ## 2026-11-03の既定設定の変更
 
 | エンジン | 実装の取得方式 | 一次資料で確認した制約 | 判断 |
 | --- | --- | --- | --- |
 | Yahoo! JAPAN | `search.yahoo.co.jp/search` のHTML解析 | [公式ヘルプ](https://support.yahoo-net.jp/PccSearch/s/article/H000015794)は、インデックス作成目的のクロール等の例外を除き、スクレイピング等の機械的な情報収集・利用を禁止 | 許諾未確認のため既定無効 |
 | Mojeek | `www.mojeek.com/search` のHTML解析 | [Terms §3(5)](https://www.mojeek.com/about/terms.html)は認可API利用者を除く自動アクセスと、事前同意のないスクレイピングを禁止 | 許諾未確認のため既定無効 |
-| Bing | `www.bing.com/search` のHTML解析 | [Microsoftサービス規約「BingおよびMSN」](https://www.microsoft.com/ja-jp/servicesagreement)には利用・再配布・独自製品での利用の制約がある | 適用される許諾と用途の確認を継続 |
+| Bing | `www.bing.com/search` のHTML解析 | [Microsoftサービス規約「BingおよびMSN」](https://www.microsoft.com/ja-jp/servicesagreement)には利用・再配布・独自製品での利用の制約がある | 2026-11-05に既定無効へ変更 |
 
 これは個別利用の違法性の判断ではありません。許諾を確認できていないHTML経路を標準利用から外す保守上の判断です。
 Yahoo! JAPANとMojeekのアダプターは残します。利用者が明示的に有効化する場合は、先に必要な許可・契約を確認してください。
@@ -49,7 +102,8 @@ Yahoo! JAPANとMojeekのアダプターは残します。利用者が明示的�
 | 自前の文書索引 | `local_index_path = "index-docs"` | 自前クローラーで作る（`docs/LOCAL-INDEX.md`）。ディレクトリが無ければ使わない |
 | 公式サイトの補完 | Wikidata Query Service | 見つかった Wikipedia 記事の公式サイト・リポジトリ・arXiv を 1 回の SPARQL で引く（`src/official.rs`） |
 
-Seznam と Bing は有効のまま残しました。Seznam の検索ページの自動取得について適用条件を確認できておらず、Bing も上の表のとおり利用・再配布範囲の確認が必要です。**`standard` は許諾済み検索先だけの構成ではありません。** 許諾が必要な用途ではこれらの経路を有効にしないでください。
+この時点では Seznam と Bing を有効のまま残しましたが、2026-11-05の変更で既定無効にしました。
+**`standard` は許諾済み検索先だけの構成ではありません。** 残る未確認の検索先も用途に応じて確認してください。
 
 Hacker News（Algolia）と Europe PMC も、自動利用についての規定を確認できませんでした。HN の API ページは規約を載せておらず、Europe PMC の規約ページは 403 を返しました。EMBL-EBI の一般規約は、他の利用者を妨げない範囲での利用を認めています。
 
@@ -81,8 +135,8 @@ Hacker News（Algolia）と Europe PMC も、自動利用についての規定�
 
 ## 全設定エントリの台帳
 
-[機械可読CSV](providers.csv)は v0.28.0 の同梱設定の全273エントリ（設定上有効119、無効154）を列挙します。[一次資料の確認記録](provider-policy.json)から、
-接続方式・規約URL・確認日・判断を載せます。**273件中266件は `unreviewed` のまま**です。残り7件も「利用許諾済み」を意味せず、制限や適用範囲の確認状況を示しています。
+[機械可読CSV](providers.csv)は同梱設定の全273エントリ（設定上有効108、無効165）を列挙します。[一次資料の確認記録](provider-policy.json)から、
+接続方式・規約URL・確認日・判断を載せます。**273件中252件は `unreviewed` のまま**です。残り21件も「利用許諾済み」を意味せず、制限や適用範囲の確認状況を示しています。
 `clean` の許可リストに載っていても、台帳上の確認状態が自動的に更新されるわけではありません。公開APIの存在と、RustXNGでの自動取得・保存・再配布についての許諾を区別してください。全件の監査が済んだわけではありません。
 
 `enabled_in_config` は `Settings::enabled_engines` と同じ設定上の条件です。初期化成功・認証の充足・

@@ -1,0 +1,6066 @@
+{
+  "base": "http://127.0.0.1:29836",
+  "params": {},
+  "questions": 100,
+  "hit@1": 70,
+  "hit@5": 84,
+  "mrr@10": 0.762,
+  "median_ms": 981.3,
+  "median_bytes": 6353,
+  "errors": 0,
+  "rows": [
+    {
+      "id": "en-py-list",
+      "lang": "en",
+      "query": "python list methods documentation",
+      "gold": [
+        "https://docs.python.org/3/tutorial/datastructures",
+        "https://docs.python.org/3/library/stdtypes"
+      ],
+      "category": "doc",
+      "rank": null,
+      "millis": 2195.094403999974,
+      "urls": [
+        "https://docs.python.org/3/c-api/list.html",
+        "http://python.org/sf/1215887",
+        "https://www.python.org/dev/peps/pep-0020/",
+        "https://www.python.org/downloads/",
+        "https://www.python.org/downloads/release/python-3912/",
+        "https://www.python.org/downloads/release/python-397/",
+        "https://www.python.org/downloads/release/python-3910/",
+        "https://www.python.org/downloads/release/python-395/",
+        "https://www.python.org/downloads/release/python-394/",
+        "https://www.python.org/downloads/release/python-398/"
+      ],
+      "engines": [
+        [
+          "local_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "official site"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 5913,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-py-dict",
+      "lang": "en",
+      "query": "python dict get method",
+      "gold": [
+        "https://docs.python.org/3/library/stdtypes"
+      ],
+      "category": "doc",
+      "rank": null,
+      "millis": 864.3189009999332,
+      "urls": [
+        "https://docs.python.org/3/c-api/method.html",
+        "https://docs.python.org/3/c-api/dict.html",
+        "https://www.python.org/",
+        "https://www.python.org/downloads/release/python-394/",
+        "https://www.python.org/downloads/",
+        "https://www.python.org/downloads/release/python-3912/",
+        "https://www.python.org/downloads/release/python-397/",
+        "https://www.python.org/downloads/release/python-3910/",
+        "https://www.python.org/downloads/release/python-395/",
+        "https://www.python.org/downloads/release/python-398/"
+      ],
+      "engines": [
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "bing",
+          "official site"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6050,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-py-asyncio",
+      "lang": "en",
+      "query": "python asyncio documentation",
+      "gold": [
+        "https://docs.python.org/3/library/asyncio"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 813.1977350003581,
+      "urls": [
+        "https://docs.python.org/3/library/asyncio.html",
+        "https://docs.python.org/3/library/asyncio-threading.html",
+        "https://docs.python.org/3/library/asyncio-dev.html",
+        "https://docs.python.org/library/asyncio.html",
+        "https://docs.python.org/3/howto/a-conceptual-overview-of-asyncio.html",
+        "https://docs.python.org/3/library/asyncio-policy.html",
+        "https://docs.python.org/3/library/asyncio-runner.html",
+        "https://docs.python.org/3/library/asyncio",
+        "https://docs.python.org/3/library/asyncio-stream.html",
+        "https://docs.python.org/3/library/asyncio-extending.html"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "seznam",
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6001,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-py-re",
+      "lang": "en",
+      "query": "python re module regular expressions",
+      "gold": [
+        "https://docs.python.org/3/library/re"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1170.91001100016,
+      "urls": [
+        "https://docs.python.org/3/library/re.html",
+        "https://docs.python.org/3/howto/regex.html",
+        "https://docs.python.org/howto/regex.html",
+        "https://www.python.org/",
+        "http://docs.python.org/dev/howto/regex",
+        "http://docs.python.org/2.6/howto/regex.html",
+        "http://docs.python.org/howto/regex",
+        "http://docs.python.org/3.0/howto/regex.html",
+        "http://docs.python.org/2/howto/regex.html",
+        "https://docs.python.org/3/reference/expressions.html"
+      ],
+      "engines": [
+        [
+          "seznam",
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "bing",
+          "official site"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 5536,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-py-typing",
+      "lang": "en",
+      "query": "python typing generics",
+      "gold": [
+        "https://docs.python.org/3/library/typing"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1067.4611069989624,
+      "urls": [
+        "https://docs.python.org/3/library/typing.html",
+        "https://www.python.org/",
+        "https://docs.python.org/3/contents.html",
+        "https://www.python.org/downloads/release/python-3116/",
+        "https://www.python.org/downloads/",
+        "https://www.python.org/downloads/release/python-3119/",
+        "https://www.python.org/downloads/release/python-3115/",
+        "https://www.python.org/downloads/release/python-3118/",
+        "https://www.python.org/downloads/release/python-3113/",
+        "https://www.python.org/downloads/release/python-3114/"
+      ],
+      "engines": [
+        [
+          "seznam",
+          "local_index"
+        ],
+        [
+          "bing",
+          "official site"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6378,
+      "unresponsive": 1
+    },
+    {
+      "id": "en-rs-book",
+      "lang": "en",
+      "query": "rust programming language book",
+      "gold": [
+        "https://doc.rust-lang.org/book"
+      ],
+      "category": "doc",
+      "rank": 2,
+      "millis": 1758.7575770012336,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Rust_(programming_language)",
+        "https://doc.rust-lang.org/book/",
+        "https://rust-lang.org/",
+        "https://doc.rust-lang.org/book/foreword.html",
+        "https://doc.rust-lang.org/stable/book/",
+        "https://doc.rust-lang.org/book/appendix-06-translation.html",
+        "https://doc.rust-lang.org/book/ch00-00-introduction.html",
+        "http://doc.rust-lang.org/book/README.html",
+        "https://doc.rust-lang.org/book/appendix-05-editions.html",
+        "https://doc.rust-lang.org/book/ch01-01-installation.html"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "local_index"
+        ],
+        [
+          "bing",
+          "mwmbl",
+          "local_index"
+        ],
+        [
+          "seznam",
+          "local_index"
+        ],
+        [
+          "wiby"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6014,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-rs-vec",
+      "lang": "en",
+      "query": "rust vector documentation",
+      "gold": [
+        "https://doc.rust-lang.org/std/vec"
+      ],
+      "category": "doc",
+      "rank": null,
+      "millis": 845.7812690012361,
+      "urls": [
+        "https://doc.rust-lang.org/stable/",
+        "https://doc.rust-lang.org",
+        "https://doc.rust-lang.org/std/prelude/rust_2021/index.html",
+        "https://doc.rust-lang.org/std/prelude/rust_2024/index.html",
+        "https://doc.rust-lang.org/std/",
+        "https://doc.rust-lang.org/std/prelude/index.html",
+        "https://rust-lang.org/",
+        "https://doc.rust-lang.org/std/keyword.unsafe.html",
+        "https://rust-lang.org/learn",
+        "https://rust-lang.org/tools/install"
+      ],
+      "engines": [
+        [
+          "seznam"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "bing",
+          "seznam"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6088,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-rs-trait",
+      "lang": "en",
+      "query": "rust traits documentation",
+      "gold": [
+        "https://doc.rust-lang.org/book/ch10-02-traits.html"
+      ],
+      "category": "doc",
+      "rank": null,
+      "millis": 1156.6573380005138,
+      "urls": [
+        "https://doc.rust-lang.org/book/ch20-02-advanced-traits.html",
+        "https://doc.rust-lang.org/reference/items/traits.html",
+        "https://doc.rust-lang.org/book/appendix-03-derivable-traits.html",
+        "https://doc.rust-lang.org",
+        "https://doc.rust-lang.org/std/ops/index.html",
+        "https://rust-lang.org/",
+        "https://doc.rust-lang.org/std/",
+        "https://doc.rust-lang.org/std/convert/index.html",
+        "https://doc.rust-lang.org/std/prelude/index.html",
+        "https://doc.rust-lang.org/std/primitive.fn.html"
+      ],
+      "engines": [
+        [
+          "seznam"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "bing",
+          "official site"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 5896,
+      "unresponsive": 0
+    },
+    {
+      "id": "en-rs-result",
+      "lang": "en",
+      "query": "rust result enum documentation",
+      "gold": [
+        "https://doc.rust-lang.org/std/result"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 913.7966420003067,
+      "urls": [
+        "https://doc.rust-lang.org/std/result/enum.Result.html",
+        "https://en.wikipedia.org/wiki/Result_type",
+        "https://doc.rust-lang.org/std/result/index.html",
+        "https://doc.rust-lang.org/std/num/enum.FpCategory.html",
+        "https://doc.rust-lang.org/std/io/type.Result.html",
+        "https://doc.rust-lang.org/std/fmt/type.Result.html",
+        "https://doc.rust-lang.org/std/thread/type.Result.html",
+        "https://doc.rust-lang.org/book/ch09-02-recoverable-errors-with-result.html",
+        "https://doc.rust-lang.org/std/mem/type_info/struct.Enum.html",
+        "https://doc.rust-lang.org/std/result/struct.Iter.html"
+      ],
+      "engines": [
+        [
+          "seznam",
+          "local_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6353,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-rs-cargo",
+      "lang": "en",
+      "query": "cargo book manifest format",
+      "gold": [
+        "https://doc.rust-lang.org/cargo/reference/manifest"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 857.4231250004232,
+      "urls": [
+        "https://doc.rust-lang.org/cargo/reference/manifest.html",
+        "https://en.wikipedia.org/wiki/TOML",
+        "https://github.com/rust-lang/cargo/issues/7055",
+        "https://doc.rust-lang.org/cargo/reference/profiles.html",
+        "http://doc.rust-lang.org/cargo/commands/cargo-build.html",
+        "http://doc.rust-lang.org/cargo/commands/cargo-new.html",
+        "https://doc.rust-lang.org/cargo/commands/cargo-metadata.html",
+        "https://en.wikipedia.org/wiki/Manifest_(transportation)",
+        "https://www.vizionapi.com/blog/cargo-manifest-meaning-shipping",
+        "https://en.wikipedia.org/wiki/XMDF_(e-book_format)"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "seznam"
+        ],
+        [
+          "mwmbl",
+          "wikipedia"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "wikipedia_index"
+        ]
+      ],
+      "bytes": 5631,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-docker-compose",
+      "lang": "en",
+      "query": "docker compose file reference",
+      "gold": [
+        "https://docs.docker.com/reference/compose-file",
+        "https://docs.docker.com/compose/compose-file"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 911.3859619992581,
+      "urls": [
+        "https://docs.docker.com/reference/compose-file",
+        "https://docs.docker.com/reference/compose-file/extension/",
+        "https://docs.docker.com/reference/compose-file/services",
+        "https://docs.docker.com/compose",
+        "https://docs.docker.com/build/bake/compose-file/",
+        "https://docs.docker.com/compose/how-tos/multiple-compose-files/extends/",
+        "https://docs.docker.com/reference/compose-file/build/",
+        "https://docs.docker.com/reference/compose-file/merge/",
+        "https://docs.docker.com/compose/extends/",
+        "https://docs.docker.com/reference/compose-file/develop/"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "seznam",
+          "local_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "seznam",
+          "local_index"
+        ],
+        [
+          "seznam",
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6565,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-docker-build",
+      "lang": "en",
+      "query": "dockerfile reference build",
+      "gold": [
+        "https://docs.docker.com/reference/dockerfile"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1033.9594630004285,
+      "urls": [
+        "https://docs.docker.com/reference/dockerfile",
+        "https://docs.docker.com/engine/reference/builder/",
+        "https://docs.docker.com/reference/build-checks/",
+        "https://docs.docker.com/reference/compose-file/build/",
+        "https://docs.docker.com/reference/cli/docker/image/build/",
+        "https://docs.docker.com/build/concepts/dockerfile/",
+        "https://docs.docker.com/reference/cli/docker/buildx/build/",
+        "https://docs.docker.com/reference/cli/docker/compose/build/",
+        "https://docs.docker.com/reference/cli/docker/buildx/dap/build/",
+        "https://docs.docker.com/get-started/docker-concepts/building-images/writing-a-dockerfile/"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "seznam",
+          "local_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6772,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-docker-run",
+      "lang": "en",
+      "query": "docker run command reference",
+      "gold": [
+        "https://docs.docker.com/reference/cli/docker/container/run"
+      ],
+      "category": "doc",
+      "rank": 5,
+      "millis": 1145.2749620002578,
+      "urls": [
+        "https://docs.docker.com/ai/sandboxes-api/cookbook/run-your-first-command/",
+        "https://docs.docker.com/reference/dockerfile",
+        "https://docs.docker.com/reference/cli/docker/compose/run/",
+        "https://docs.docker.com/reference/cli/docker/pass/run/",
+        "https://docs.docker.com/reference/cli/docker/container/run/",
+        "https://docs.docker.com/reference/cli/docker/model/run/",
+        "https://docs.docker.com/reference/cli/sbx/run/",
+        "https://docs.docker.com/reference/cli/docker/mcp/gateway/run/",
+        "https://docs.docker.com/reference/cli/docker/compose/alpha/dry-run/",
+        "https://docs.docker.com/reference/cli/sbx/env/run/"
+      ],
+      "engines": [
+        [
+          "local_index"
+        ],
+        [
+          "seznam",
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6841,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-pg-json",
+      "lang": "en",
+      "query": "postgresql json functions",
+      "gold": [
+        "https://www.postgresql.org/docs/current/functions-json",
+        "https://www.postgresql.org/docs/current/datatype-json"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 892.2340730005089,
+      "urls": [
+        "https://www.postgresql.org/docs/current/functions-json.html",
+        "https://www.postgresql.org/docs/9.3/functions-json.html",
+        "https://www.postgresql.org/docs/9.4/functions-json.html",
+        "https://www.postgresql.org/",
+        "https://en.wikipedia.org/wiki/PostgreSQL",
+        "http://www.postgresql.org/docs/9.6/functions-json.html",
+        "http://www.postgresql.org/docs/9.5/functions-json.html",
+        "http://www.postgresql.org/docs/12/functions-json.html",
+        "http://www.postgresql.org/docs/11/functions-json.html",
+        "http://www.postgresql.org/docs/17/functions-json.html"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "local_index"
+        ],
+        [
+          "mwmbl",
+          "seznam"
+        ],
+        [
+          "mwmbl",
+          "seznam"
+        ],
+        [
+          "bing",
+          "official site"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ]
+      ],
+      "bytes": 5823,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-pg-index",
+      "lang": "en",
+      "query": "postgresql create index documentation",
+      "gold": [
+        "https://www.postgresql.org/docs/current/sql-createindex"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1236.6994000003615,
+      "urls": [
+        "https://www.postgresql.org/docs/current/sql-createindex.html",
+        "https://www.postgresql.org/",
+        "https://www.postgresql.org/docs/current/sql-create-access-method.html",
+        "https://www.postgresql.org/docs/8.1/sql-createindex.html",
+        "https://www.postgresql.org/docs/current/sql-createstatistics.html",
+        "https://www.postgresql.org/docs/current/bookindex.html",
+        "https://www.postgresql.org/docs/current/sql-createtablespace.html",
+        "https://www.postgresql.org/docs/current/sql-creategroup.html",
+        "https://www.postgresql.org/docs/current/sql-alterindex.html",
+        "https://www.postgresql.org/docs/current/sql-dropindex.html"
+      ],
+      "engines": [
+        [
+          "seznam",
+          "local_index"
+        ],
+        [
+          "bing",
+          "official site"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6777,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-pg-window",
+      "lang": "en",
+      "query": "postgresql window functions",
+      "gold": [
+        "https://www.postgresql.org/docs/current/tutorial-window",
+        "https://www.postgresql.org/docs/current/functions-window"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1194.1005950011458,
+      "urls": [
+        "https://www.postgresql.org/docs/current/tutorial-window.html",
+        "https://www.postgresql.org/docs/current/functions-window.html",
+        "http://www.postgresql.org/docs/10/functions-window.html",
+        "https://en.wikipedia.org/wiki/Window_function_(SQL)",
+        "http://www.postgresql.org/docs/13/functions-window.html",
+        "http://www.postgresql.org/docs/17/functions-window.html",
+        "https://www.postgresql.org/docs/15/functions-window.html",
+        "http://www.postgresql.org/docs/12/tutorial-window.html",
+        "https://www.postgresql.org/docs/16/functions-window.html",
+        "http://www.postgresql.org/docs/15/tutorial-window.html"
+      ],
+      "engines": [
+        [
+          "bing",
+          "seznam",
+          "local_index"
+        ],
+        [
+          "bing",
+          "seznam",
+          "local_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ]
+      ],
+      "bytes": 6004,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-numpy-index",
+      "lang": "en",
+      "query": "numpy indexing arrays",
+      "gold": [
+        "https://numpy.org/doc/stable/user/basics.indexing"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 834.454308000204,
+      "urls": [
+        "https://numpy.org/doc/stable/user/basics.indexing.html",
+        "https://en.wikipedia.org/wiki/NumPy",
+        "https://numpy.org/doc/stable/reference/routines.indexing.html",
+        "https://numpy.org/doc/1.21/reference/arrays.indexing.html",
+        "https://numpy.org/doc/stable/reference/arrays.nditer.html",
+        "https://numpy.org/doc/stable/reference/generated/numpy.broadcast_arrays.html",
+        "https://numpy.org/doc/stable/reference/maskedarray.html",
+        "https://numpy.org/doc/stable/dev/internals.html",
+        "https://numpy.org/doc/stable/user/basics.rec.html",
+        "https://numpy.org/doc/stable/user/how-to-print.html"
+      ],
+      "engines": [
+        [
+          "bing",
+          "seznam",
+          "local_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6536,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-numpy-broadcast",
+      "lang": "en",
+      "query": "numpy broadcasting rules",
+      "gold": [
+        "https://numpy.org/doc/stable/user/basics.broadcasting"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 863.2614800008014,
+      "urls": [
+        "https://numpy.org/doc/stable/user/basics.broadcasting.html",
+        "https://numpy.org/doc/1.13/reference/generated/numpy.linalg.solve.html",
+        "https://numpy.org/doc/1.24/reference/generated/numpy.linalg.solve.html",
+        "https://numpy.org/doc/1.25/reference/generated/numpy.linalg.solve.html",
+        "https://numpy.org/doc/1.16/reference/generated/numpy.linalg.solve.html",
+        "https://numpy.org/devdocs/reference/generated/numpy.linalg.solve.html",
+        "https://numpy.org/doc/2.0/reference/generated/numpy.linalg.solve.html",
+        "https://numpy.org/doc/2.1/reference/generated/numpy.linalg.solve.html",
+        "https://numpy.org/doc/1.25/reference/generated/numpy.linalg.eigvals.html",
+        "https://numpy.org/doc/2.2/reference/generated/numpy.linalg.solve.html"
+      ],
+      "engines": [
+        [
+          "seznam",
+          "local_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ]
+      ],
+      "bytes": 5633,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-react-hooks",
+      "lang": "en",
+      "query": "react hooks reference",
+      "gold": [
+        "https://react.dev/reference/react"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1211.8438100005733,
+      "urls": [
+        "https://react.dev/reference/react/hooks",
+        "https://reactjs.org/hooks",
+        "https://ja.react.dev/reference/eslint-plugin-react-hooks",
+        "http://reactjs.org/docs/hooks-reference.html",
+        "https://ja.react.dev/reference/eslint-plugin-react-hooks/lints/rules-of-hooks",
+        "https://ja.react.dev/reference/rules/react-calls-components-and-hooks",
+        "https://ja.react.dev/reference/react/hooks",
+        "http://reactjs.org/docs/hooks-faq.html",
+        "https://ja.react.dev/reference/react-dom/hooks",
+        "http://reactjs.org/docs/hooks-overview.html"
+      ],
+      "engines": [
+        [
+          "seznam"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "mwmbl"
+        ]
+      ],
+      "bytes": 7164,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-react-usestate",
+      "lang": "en",
+      "query": "react usestate hook",
+      "gold": [
+        "https://react.dev/reference/react/useState"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 943.7865609997971,
+      "urls": [
+        "https://react.dev/reference/react/useState",
+        "https://react.dev/",
+        "http://reactjs.org/docs/hooks-faq.html",
+        "https://ja.react.dev/reference/react/useState",
+        "http://reactjs.org/docs/hooks-overview.html",
+        "http://reactjs.org/docs/hooks-reference.html",
+        "https://ja.react.dev/learn/reusing-logic-with-custom-hooks",
+        "https://ja.react.dev/reference/eslint-plugin-react-hooks/lints/component-hook-factories",
+        "https://ja.react.dev/reference/rules/rules-of-hooks",
+        "https://ja.react.dev/reference/eslint-plugin-react-hooks/lints/rules-of-hooks"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "seznam"
+        ],
+        [
+          "bing",
+          "official site"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 7088,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-mdn-array",
+      "lang": "en",
+      "query": "mdn javascript array",
+      "gold": [
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 822.3072109994973,
+      "urls": [
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
+        "https://en.wikipedia.org/wiki/JavaScript",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array",
+        "https://developer.mozilla.org/en-US/docs/Glossary/Array",
+        "https://developer.mozilla.org/en-US/docs/MDN/Writing_guidelines/Code_style_guide/JavaScript",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide",
+        "https://developer.mozilla.org/en-US/docs/MDN/Writing_guidelines/Page_structures/Page_types/JavaScript_constructor_page_template"
+      ],
+      "engines": [
+        [
+          "seznam",
+          "local_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6820,
+      "unresponsive": 4
+    },
+    {
+      "id": "en-mdn-fetch",
+      "lang": "en",
+      "query": "mdn fetch api",
+      "gold": [
+        "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 871.361715000603,
+      "urls": [
+        "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API",
+        "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch",
+        "https://developer.mozilla.org/en-US/docs/Web/API/Background_Fetch_API",
+        "https://developer.mozilla.org/en-US/docs/Web/API/BackgroundFetchManager/fetch",
+        "https://developer.mozilla.org/en-US/docs/Web/API/Window/fetch",
+        "https://developer.mozilla.org/Web/API/Fetch_API",
+        "https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/cookies/OnChangedCause",
+        "https://developer.mozilla.org/en-US/docs/Glossary/Fetch_directive",
+        "https://developer.mozilla.org/en-US/docs/Glossary/Fetch_metadata_request_header",
+        "https://developer.mozilla.org/en-US/docs/MDN/Writing_guidelines/Howto/Write_an_api_reference/Sidebars"
+      ],
+      "engines": [
+        [
+          "bing",
+          "seznam",
+          "local_index"
+        ],
+        [
+          "bing",
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6032,
+      "unresponsive": 4
+    },
+    {
+      "id": "en-mdn-promise",
+      "lang": "en",
+      "query": "mdn promise javascript",
+      "gold": [
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 783.0941409993102,
+      "urls": [
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
+        "https://en.wikipedia.org/wiki/JavaScript",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then",
+        "https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Async_JS/Implementing_a_promise-based_API",
+        "https://developer.mozilla.org/en-US/docs/Glossary/Promise",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide",
+        "https://developer.mozilla.org/en-US/docs/MDN/Writing_guidelines/Page_structures/Page_types/JavaScript_function_page_template"
+      ],
+      "engines": [
+        [
+          "seznam",
+          "local_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6867,
+      "unresponsive": 4
+    },
+    {
+      "id": "en-k8s-pod",
+      "lang": "en",
+      "query": "kubernetes pod documentation",
+      "gold": [
+        "https://kubernetes.io/docs/concepts/workloads/pods"
+      ],
+      "category": "doc",
+      "rank": 2,
+      "millis": 1489.6545479987253,
+      "urls": [
+        "https://kubernetes.io/docs/reference/kubernetes-api/core/pod-v1/",
+        "https://kubernetes.io/docs/concepts/workloads/pods/pod-hostname/",
+        "http://kubernetes.io/docs",
+        "https://kubernetes.io/docs/tasks/job/job-with-pod-to-pod-communication/",
+        "https://kubernetes.io/docs/concepts/workloads/pods/pod-condition/",
+        "https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/",
+        "https://kubernetes.io/docs/concepts/scheduling-eviction/pod-overhead/",
+        "https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-initialization/",
+        "https://kubernetes.io/docs/concepts/security/pod-security-admission/",
+        "https://kubernetes.io/docs/concepts/security/pod-security-policy/"
+      ],
+      "engines": [
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6178,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-k8s-deploy",
+      "lang": "en",
+      "query": "kubernetes deployment documentation",
+      "gold": [
+        "https://kubernetes.io/docs/concepts/workloads/controllers/deployment"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1187.2536999999284,
+      "urls": [
+        "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/",
+        "https://kubernetes.io/docs/",
+        "https://kubernetes.io/docs/reference/kubernetes-api/apps/deployment-v1/",
+        "https://kubernetes.io/docs/reference/kubectl/generated/kubectl_create/kubectl_create_deployment/",
+        "https://kubernetes.io/docs/tasks/run-application/update-deployment-rolling/",
+        "https://kubernetes.io/docs/tasks/run-application/scale-deployment/",
+        "https://kubernetes.io/docs/tutorials/stateless-application/canary-deployment/",
+        "https://kubernetes.io/docs/tasks/run-application/run-stateless-application-deployment/",
+        "https://kubernetes.io/docs/setup/production-environment/tools/",
+        "https://kubernetes.io/docs/tutorials/kubernetes-basics/deploy-app/deploy-intro/"
+      ],
+      "engines": [
+        [
+          "seznam",
+          "local_index"
+        ],
+        [
+          "mwmbl",
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6649,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-git-rebase",
+      "lang": "en",
+      "query": "git rebase documentation",
+      "gold": [
+        "https://git-scm.com/docs/git-rebase"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1202.929992999998,
+      "urls": [
+        "https://git-scm.com/docs/git-rebase",
+        "https://git-scm.com/",
+        "https://git-scm.com/docs/git-rebase/sv",
+        "https://git-scm.com/docs/git-rebase/uk",
+        "https://git-scm.com/docs/git-rebase/zh_HANS-CN",
+        "https://git-scm.com/docs/git-rebase/ru",
+        "https://git-scm.com/docs/git-rebase/2.18.0",
+        "https://git-scm.com/docs/git-rebase/fr",
+        "https://git-scm.com/docs/git-rebase/2.17.0",
+        "https://git-scm.com/docs/git-rebase/2.16.6"
+      ],
+      "engines": [
+        [
+          "seznam",
+          "local_index"
+        ],
+        [
+          "bing",
+          "official site"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6876,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-git-merge",
+      "lang": "en",
+      "query": "git merge documentation",
+      "gold": [
+        "https://git-scm.com/docs/git-merge"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1203.9051499996276,
+      "urls": [
+        "https://git-scm.com/docs/git-merge",
+        "https://git-scm.com/",
+        "https://git-scm.com/docs/git-mergetool",
+        "https://git-scm.com/docs/git-merge/fr",
+        "https://git-scm.com/docs/git-mergetool/2.22.0",
+        "https://git-scm.com/docs/git-merge/uk",
+        "https://git-scm.com/docs/git-merge-file",
+        "https://git-scm.com/docs/git-merge/2.33.0",
+        "https://git-scm.com/docs/git-merge/2.30.0",
+        "https://git-scm.com/docs/git-merge/ru"
+      ],
+      "engines": [
+        [
+          "seznam",
+          "local_index"
+        ],
+        [
+          "bing",
+          "official site"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6353,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-nginx-conf",
+      "lang": "en",
+      "query": "nginx configuration file reference",
+      "gold": [
+        "https://nginx.org/en/docs",
+        "https://docs.nginx.com/nginx/admin-guide"
+      ],
+      "category": "doc",
+      "rank": 3,
+      "millis": 968.2969720015535,
+      "urls": [
+        "https://docs.nginx.com/app-delivery/platform/nginx-configuration/",
+        "http://nginx.org/docs/syntax.html",
+        "https://nginx.org/en/docs/syntax.html",
+        "https://nginx.org/en/docs/example.html",
+        "http://nginx.org/en/docs/dev/development_guide.html",
+        "https://nginx.org/en/docs/njs/reference.html",
+        "https://nginx.org/en/",
+        "https://nginx.org/en/docs/control.html",
+        "https://nginx.org/en/docs/",
+        "https://nginx.org/en/docs/windows.html"
+      ],
+      "engines": [
+        [
+          "seznam"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 5570,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-linux-sched",
+      "lang": "en",
+      "query": "linux kernel documentation scheduler",
+      "gold": [
+        "https://docs.kernel.org/scheduler"
+      ],
+      "category": "doc",
+      "rank": 3,
+      "millis": 907.6589129999775,
+      "urls": [
+        "https://docs.kernel.org/6.0/scheduler/index.html",
+        "https://docs.kernel.org/6.3/scheduler/index.html",
+        "https://docs.kernel.org/scheduler/sched-ext.html",
+        "https://www.kernel.org/doc/html/latest/scheduler/",
+        "https://www.kernel.org/doc/html/latest/scheduler/sched-stats.html",
+        "https://www.kernel.org/doc/html/latest/scheduler/sched-eevdf.html",
+        "https://www.kernel.org/doc/html/next",
+        "https://www.kernel.org/doc/html/latest/scheduler/sched-preemption.html",
+        "https://www.kernel.org/doc/html/latest/scheduler/sched-energy.html",
+        "https://www.kernel.org/doc/html/latest/scheduler/sched-design-CFS.html"
+      ],
+      "engines": [
+        [
+          "bing"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 5885,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-linux-sysctl",
+      "lang": "en",
+      "query": "linux kernel sysctl documentation",
+      "gold": [
+        "https://docs.kernel.org/admin-guide/sysctl"
+      ],
+      "category": "doc",
+      "rank": null,
+      "millis": 1024.379530999795,
+      "urls": [
+        "https://docs.kernel.org/networking/ip-sysctl.html",
+        "https://en.wikipedia.org/wiki/Linux_kernel",
+        "https://www.kernel.org/doc/html/latest/admin-guide/sysctl/kernel.html",
+        "https://www.kernel.org/doc/html/latest/admin-guide/sysctl/index.html",
+        "https://www.kernel.org/doc/html/latest/admin-guide/sysctl/net.html",
+        "https://www.kernel.org/doc/html/latest/",
+        "https://www.kernel.org/doc/html/latest/admin-guide/quickly-build-trimmed-linux.html",
+        "https://www.kernel.org/doc/html/latest/process/threat-model.html",
+        "https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt",
+        "https://www.kernel.org/doc/html/latest/driver-api/cxl/linux/early-boot.html"
+      ],
+      "engines": [
+        [
+          "seznam"
+        ],
+        [
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "wiby"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6501,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-sql-join",
+      "lang": "en",
+      "query": "sql join types tutorial",
+      "gold": [
+        "https://www.postgresql.org/docs/current/queries-table-expressions"
+      ],
+      "category": "doc",
+      "rank": null,
+      "millis": 909.8816779987828,
+      "urls": [
+        "https://learnsql.com/blog/sql-joins-types-explained",
+        "https://www.freecodecamp.org/news/sql-join-types-inner-join-vs-outer-join-example/",
+        "https://www.golinuxcloud.com/sql-tutorial/",
+        "https://en.wikipedia.org/wiki/SQL_syntax",
+        "http://www.sqlshack.com/sql-join-overview-and-tutorial/",
+        "https://www.mssqltips.com/sqlservertip/1667/sql-server-join-example/",
+        "http://www.sql-tutorial.com/sql-join-sql-tutorial/",
+        "https://en.wikipedia.org/wiki/Join_(SQL)",
+        "http://www.mssqltips.com/sqlservertip/7073/sql-join-types-quick-reference-guide/",
+        "http://www.devart.com/dbforge/sql/sqlcomplete/sql-join-statements.html"
+      ],
+      "engines": [
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ]
+      ],
+      "bytes": 5613,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-tokio",
+      "lang": "en",
+      "query": "tokio rust async runtime",
+      "gold": [
+        "https://tokio.rs"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 745.0982640002621,
+      "urls": [
+        "https://tokio.rs/",
+        "https://tokio.rs/tokio/tutorial/async",
+        "http://tokio.rs/tokio/topics",
+        "https://tokio.rs/tokio/tutorial",
+        "https://tokio.rs/tokio/tutorial/spawning",
+        "https://tokio.rs/tokio/glossary",
+        "http://tokio.rs/blog",
+        "https://en.wikipedia.org/wiki/Tokio_(software)",
+        "https://www.infoworld.com/article/3602776/tokio-rust-runtime-reaches-10-status.html",
+        "https://github.com/rustls/tokio-rustls"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "seznam",
+          "official site"
+        ],
+        [
+          "mwmbl",
+          "seznam"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl",
+          "seznam"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "seznam"
+        ]
+      ],
+      "bytes": 5320,
+      "unresponsive": 4
+    },
+    {
+      "id": "en-serde",
+      "lang": "en",
+      "query": "serde rust crate serialization",
+      "gold": [
+        "https://serde.rs",
+        "https://crates.io/crates/serde"
+      ],
+      "category": "doc",
+      "rank": null,
+      "millis": 985.2068280015374,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Serialization",
+        "https://en.wikipedia.org/wiki/Outline_of_the_Rust_programming_language",
+        "https://codeberg.org/jplatte/serde_html_form",
+        "https://en.wikipedia.org/wiki/List_of_Rust_software_and_tools",
+        "https://magiclen.org/rust-serde/",
+        "https://burntsushi.net/csv/",
+        "https://en.wikipedia.org/wiki/Crate",
+        "https://rustsec.org/advisories/",
+        "https://en.wikipedia.org/wiki/Japan_Crate",
+        "https://en.wikipedia.org/wiki/Crate_training"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "mwmbl",
+          "wikipedia"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia_index"
+        ]
+      ],
+      "bytes": 5591,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-fastapi",
+      "lang": "en",
+      "query": "fastapi documentation tutorial",
+      "gold": [
+        "https://fastapi.tiangolo.com"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 913.1521679992147,
+      "urls": [
+        "https://fastapi.tiangolo.com/tutorial/",
+        "https://code.visualstudio.com/docs/python/tutorial-fastapi",
+        "https://github.com/hasssan-hasssan/FastAPI-Tutorial-From-Zero-Quick-Start",
+        "http://www.mcxtrace.org/documentation/tutorial/",
+        "https://testdriven.io/blog/topics/fastapi/",
+        "https://en.wikipedia.org/wiki/FastAPI",
+        "http://dojotoolkit.org/documentation/tutorials/1.8/",
+        "https://docs.plone.org/documentation/tutorial/richdocument",
+        "https://redis.io/tutorials/develop/python/fastapi/",
+        "https://www.postgresql.org/docs/current/tutorial.html"
+      ],
+      "engines": [
+        [
+          "seznam"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 5613,
+      "unresponsive": 4
+    },
+    {
+      "id": "en-django-orm",
+      "lang": "en",
+      "query": "django queryset documentation",
+      "gold": [
+        "https://docs.djangoproject.com/en/stable/topics/db/queries"
+      ],
+      "category": "doc",
+      "rank": 3,
+      "millis": 919.8853790003341,
+      "urls": [
+        "https://docs.djangoproject.com/en/6.1/ref/models/querysets/",
+        "https://docs.djangoproject.com/en/dev/ref/models/querysets/",
+        "https://docs.djangoproject.com/en/6.1/topics/db/queries/",
+        "https://docs.djangoproject.com/en/6.1/",
+        "https://docs.djangoproject.com/en/6.1/ref/contrib/gis/geoquerysets/",
+        "https://docs.djangoproject.com/en/dev/internals/howto-release-django/",
+        "https://docs.djangoproject.com/en/6.1/ref/django-admin/",
+        "https://docs.djangoproject.com/en/6.1/topics/db/fetch-modes/",
+        "https://docs.djangoproject.com/en/6.1/topics/http/shortcuts/",
+        "https://docs.djangoproject.com/en/6.1/ref/contrib/admin/actions/"
+      ],
+      "engines": [
+        [
+          "bing",
+          "local_index"
+        ],
+        [
+          "mwmbl",
+          "seznam"
+        ],
+        [
+          "bing",
+          "seznam",
+          "local_index"
+        ],
+        [
+          "seznam",
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6831,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-flask",
+      "lang": "en",
+      "query": "flask quickstart documentation",
+      "gold": [
+        "https://flask.palletsprojects.com/en/stable/quickstart"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 914.7134680006275,
+      "urls": [
+        "https://flask.palletsprojects.com/en/stable/quickstart/",
+        "https://flask.palletsprojects.com/",
+        "https://kubernetes.io/docs/contribute/generate-ref-docs/quickstart/",
+        "http://flask.pocoo.org/",
+        "https://flask-wtf.readthedocs.io/en/1.2.x/quickstart/",
+        "https://en.wikipedia.org/wiki/FreeBSD",
+        "http://flask.pocoo.org/quickstart/",
+        "https://flask-sqlalchemy.readthedocs.io/en/stable/quickstart/",
+        "https://www.scribd.com/document/852424161/flask-docs-ja-readthedocs-io-en-latest",
+        "https://docs.djangoproject.com/en/dev/internals/contributing/sprint-quickstart/"
+      ],
+      "engines": [
+        [
+          "seznam"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "mwmbl",
+          "wikipedia"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 5851,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-rfc-http",
+      "lang": "en",
+      "query": "http semantics rfc 9110",
+      "gold": [
+        "https://www.rfc-editor.org/rfc/rfc9110"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1255.0340299985692,
+      "urls": [
+        "https://www.rfc-editor.org/rfc/rfc9110",
+        "https://www.rfc-editor.org/info/rfc9110/",
+        "https://www.ietf.org/rfc/rfc9110.html",
+        "https://www.rfc-editor.org/info/rfc9112/",
+        "https://en.wikipedia.org/wiki/HTTP_403",
+        "https://www.rfc-editor.org/info/std97/",
+        "https://httpwg.org/specs/",
+        "https://docs.python.org/3/library/http.html",
+        "https://en.wikipedia.org/wiki/List_of_HTTP_status_codes",
+        "https://wikidata.org/wiki/Q112263735"
+      ],
+      "engines": [
+        [
+          "mwmbl"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "wiby",
+          "official site"
+        ],
+        [
+          "seznam",
+          "local_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia"
+        ],
+        [
+          "mwmbl"
+        ]
+      ],
+      "bytes": 5463,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-json-schema",
+      "lang": "en",
+      "query": "json schema specification",
+      "gold": [
+        "https://json-schema.org/specification"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1132.345512000029,
+      "urls": [
+        "https://json-schema.org/specification",
+        "https://json-schema.org/specification-links",
+        "https://json-schema.org/draft/2020-12/json-schema-core",
+        "https://json-schema.org/tools",
+        "https://json-schema.org/draft/2020-12",
+        "https://json-schema.org/understanding-json-schema/reference",
+        "https://json-schema.org/docs",
+        "https://json-schema.org/blog",
+        "https://en.wikipedia.org/wiki/JSON",
+        "https://en.wikipedia.org/wiki/Schema.org"
+      ],
+      "engines": [
+        [
+          "bing",
+          "seznam"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ]
+      ],
+      "bytes": 4929,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-oauth",
+      "lang": "en",
+      "query": "oauth 2.0 rfc 6749",
+      "gold": [
+        "https://www.rfc-editor.org/rfc/rfc6749"
+      ],
+      "category": "doc",
+      "rank": null,
+      "millis": 982.9161140005453,
+      "urls": [
+        "https://en.wikipedia.org/wiki/OAuth",
+        "https://www.rfc-editor.org/info/rfc6749/",
+        "https://www.rfc-editor.org/info/rfc6819/",
+        "https://www.rfc-editor.org/info/rfc9101",
+        "http://oauth.net/2/client-authentication",
+        "https://oauth.net/",
+        "http://www.faqs.org/rfcs/rfc6749.html",
+        "https://datatracker.ietf.org/doc/rfc6749",
+        "https://mailarchive.ietf.org/arch/msg/oauth-ext-review/4WaM6n6JetFsLI6_T9S8wNVqP74",
+        "http://www.postgresql.org/docs/18/auth-oauth.html"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "official site"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ]
+      ],
+      "bytes": 5502,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-unix-man",
+      "lang": "en",
+      "query": "unix find command manual",
+      "gold": [
+        "https://man7.org/linux/man-pages/man1/find.1"
+      ],
+      "category": "doc",
+      "rank": null,
+      "millis": 1052.35170099877,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Find_(Unix)",
+        "https://shapeshed.com/unix-find/",
+        "https://www.deexams.com/technews/unix_find_command",
+        "https://www.adminschoice.com/tag/find-command-unix",
+        "https://kb.iu.edu/d/admm",
+        "http://xed.ch/h/find",
+        "https://www.adminschoice.com/tag/unix-find-command",
+        "http://technosophos.com/2009/08/03/using-unix-find-command.html",
+        "http://stackoverflow.com/a/6285197",
+        "https://www.scribd.com/doc/43697702/Unix-Lab-Manual"
+      ],
+      "engines": [
+        [
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "seznam"
+        ]
+      ],
+      "bytes": 5134,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-turing",
+      "lang": "en",
+      "query": "alan turing wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Alan_Turing"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 1068.9673029992264,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Alan_Turing",
+        "https://en.wikipedia.org/wiki/Alan_Turing_Memorial",
+        "https://en.wikipedia.org/wiki/Alan_Turing_Institute",
+        "https://en.wikipedia.org/wiki/Alan_Turing_law",
+        "https://en.wikipedia.org/wiki/Alan_Turing:_The_Enigma",
+        "https://en.wikipedia.org/wiki/Alan_Turing_Year",
+        "https://en.wikipedia.org/wiki/Alan_Turing_(sculpture)",
+        "https://en.wikipedia.org/wiki/Alan_Turing_Building",
+        "https://en.wikipedia.org/wiki/Statue_of_Alan_Turing",
+        "https://en.wikipedia.org/wiki/Alan_Turing_Centenary_Conference"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia_index"
+        ]
+      ],
+      "bytes": 5999,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-shakespeare",
+      "lang": "en",
+      "query": "william shakespeare wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/William_Shakespeare"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 1163.9280919989687,
+      "urls": [
+        "https://en.wikipedia.org/wiki/William_Shakespeare",
+        "https://en.wikipedia.org/wiki/Life_of_William_Shakespeare",
+        "https://en.wikipedia.org/wiki/List_of_works_by_William_Shakespeare",
+        "https://en.wikipedia.org/wiki/The_William_Shakespeare",
+        "https://en.wikipedia.org/wiki/Sexuality_of_William_Shakespeare",
+        "https://en.wikipedia.org/wiki/Shakespeare%27s_plays",
+        "https://simple.wikipedia.org/wiki/William_Shakespeare",
+        "https://en.wikipedia.org/wiki/William_Shakespeare_(inventor)",
+        "https://en.wikipedia.org/wiki/William_Shakespeare_(essay)",
+        "https://en.wikipedia.org/wiki/William_Shakespeare_Hays"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia_index"
+        ]
+      ],
+      "bytes": 6151,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-einstein",
+      "lang": "en",
+      "query": "albert einstein wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Albert_Einstein"
+      ],
+      "category": "wiki",
+      "rank": 2,
+      "millis": 1355.4115199985972,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Hans_Albert_Einstein",
+        "https://en.wikipedia.org/wiki/Albert_Einstein",
+        "https://en.wikipedia.org/wiki/Albert_Einstein_Medal",
+        "https://en.wikipedia.org/wiki/Einstein_family",
+        "https://en.wikipedia.org/wiki/Brain_of_Albert_Einstein",
+        "https://en.wikipedia.org/wiki/Albert_Einstein_Square",
+        "https://en.wikipedia.org/wiki/Albert_Einstein_College_of_Medicine",
+        "https://en.wikipedia.org/wiki/Albert_Einstein_House",
+        "https://en.wikipedia.org/wiki/Albert_Einstein_Archives",
+        "https://en.wikipedia.org/wiki/Albert_Einstein_Institution"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia_index"
+        ]
+      ],
+      "bytes": 5978,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-rust-topic",
+      "lang": "en",
+      "query": "rust programming language wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Rust_(programming_language)"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 1279.5517340000515,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Rust_(programming_language)",
+        "https://en.wikipedia.org/wiki/Outline_of_the_Rust_programming_language",
+        "https://rust-lang.org/",
+        "https://en.wikipedia.org/wiki/List_of_programming_languages_by_type",
+        "https://en.wikipedia.org/wiki/Category:Rust_(programming_language)",
+        "https://en.wikipedia.org/wiki/Talk:Rust_(programming_language)",
+        "https://en.wikipedia.org/wiki/Comparison_of_functional_programming_languages",
+        "https://en.wikipedia.org/wiki/Wikipedia:Peer_review/Rust_(programming_language)/archive2",
+        "https://simple.wikipedia.org/wiki/Rust_(programming_language)",
+        "https://en.wikipedia.org/wiki/Comparison_of_multi-paradigm_programming_languages"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "bing",
+          "mwmbl",
+          "local_index",
+          "official site"
+        ],
+        [
+          "mwmbl",
+          "wikipedia"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "mwmbl"
+        ]
+      ],
+      "bytes": 5929,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-transformer",
+      "lang": "en",
+      "query": "transformer deep learning wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)",
+        "https://en.wikipedia.org/wiki/Transformer_(machine_learning_model)"
+      ],
+      "category": "wiki",
+      "rank": null,
+      "millis": 872.3930180003663,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Transformer_(deep_learning)",
+        "https://en.wikipedia.org/wiki/Deep_learning",
+        "https://en.wikipedia.org/wiki/Outline_of_deep_learning",
+        "https://en.wikipedia.org/wiki/Generative_pre-trained_transformer",
+        "https://en.wikipedia.org/wiki/Deep_reinforcement_learning",
+        "https://en.wikipedia.org/wiki/Talk:Transformer_(deep_learning)",
+        "https://en.wikipedia.org/wiki/Mamba_(deep_learning_architecture)",
+        "https://en.wikipedia.org/wiki/Deep_Learning_Super_Sampling",
+        "https://en.wikipedia.org/wiki/DLSS",
+        "https://en.wikipedia.org/wiki/Talk:Transformer_(deep_learning)/GA1"
+      ],
+      "engines": [
+        [
+          "bing",
+          "mwmbl",
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia"
+        ],
+        [
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "seznam"
+        ]
+      ],
+      "bytes": 6090,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-mt-fuji",
+      "lang": "en",
+      "query": "mount fuji wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Mount_Fuji"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 874.9683469995944,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Mount_Fuji",
+        "https://en.wikipedia.org/wiki/Mount_Fuji_Radar_System",
+        "https://en.wikipedia.org/wiki/Thirty-six_Views_of_Mount_Fuji",
+        "https://en.wikipedia.org/wiki/Mount_%C5%8Cmuro_(Mount_Fuji)",
+        "https://en.wikipedia.org/wiki/Historic_eruptions_of_Mount_Fuji",
+        "https://en.wikipedia.org/wiki/Camp_Fuji",
+        "https://en.wikipedia.org/wiki/Thirty-six_Views_of_Mount_Fuji_(Hiroshige)",
+        "https://en.wikipedia.org/wiki/Fuji",
+        "https://en.wikipedia.org/wiki/Mount_Hōei",
+        "https://en.wikipedia.org/wiki/Mount_Fuji_Jazz_Festival"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl",
+          "wikipedia"
+        ],
+        [
+          "wikipedia_index"
+        ]
+      ],
+      "bytes": 6255,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-amazon-river",
+      "lang": "en",
+      "query": "amazon river wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Amazon_River"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 1035.7635810014472,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Amazon_River",
+        "https://en.wikipedia.org/wiki/Amazon_river_dolphin",
+        "https://en.wikipedia.org/wiki/Source_of_the_Amazon_River",
+        "https://en.wikipedia.org/wiki/Amazon_basin",
+        "https://en.wikipedia.org/wiki/Template:Amazon_River_routemap",
+        "https://en.wikipedia.org/wiki/Amazon_River_frog",
+        "https://en.wikipedia.org/wiki/Rio_Negro_(Amazon)",
+        "https://simple.wikipedia.org/wiki/Amazon_River",
+        "https://en.wikipedia.org/wiki/Six-tubercled_Amazon_River_turtle",
+        "https://en.wikipedia.org/wiki/Amazon_Delta"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ]
+      ],
+      "bytes": 5885,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-tokyo",
+      "lang": "en",
+      "query": "tokyo wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Tokyo"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 1130.6345190005231,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Tokyo",
+        "https://en.wikipedia.org/wiki/TV_Tokyo",
+        "https://en.wikipedia.org/wiki/Tokyo!",
+        "https://en.wikipedia.org/wiki/.tokyo",
+        "https://en.wikipedia.org/wiki/Tokyo_Tokyo",
+        "https://simple.wikipedia.org/wiki/Tokyo",
+        "https://en.wikipedia.org/wiki/Zipair_Tokyo",
+        "https://en.wikipedia.org/wiki/Tokyo_Godfathers",
+        "https://en.wikipedia.org/wiki/Tokyo_City",
+        "https://en.wikipedia.org/wiki/Tokyo_Ghoul"
+      ],
+      "engines": [
+        [
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia"
+        ]
+      ],
+      "bytes": 5867,
+      "unresponsive": 4
+    },
+    {
+      "id": "en-black-hole",
+      "lang": "en",
+      "query": "black hole wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Black_hole"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 1067.0987039993634,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Black_hole",
+        "https://en.wikipedia.org/wiki/Supermassive_black_hole",
+        "https://en.wikipedia.org/wiki/Black_hole_cosmology",
+        "https://en.wikipedia.org/wiki/List_of_most_massive_black_holes",
+        "https://en.wikipedia.org/wiki/Primordial_black_hole",
+        "https://en.wikipedia.org/wiki/Optical_black_hole",
+        "https://en.wikipedia.org/wiki/Hole.io",
+        "https://en.wikipedia.org/wiki/Stellar_black_hole",
+        "https://en.wikipedia.org/wiki/Micro_black_hole",
+        "https://simple.wikipedia.org/wiki/Black_hole"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia"
+        ],
+        [
+          "mwmbl",
+          "wikipedia"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "seznam"
+        ]
+      ],
+      "bytes": 5853,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-internet",
+      "lang": "en",
+      "query": "internet wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Internet"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 924.2122270006803,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Internet",
+        "https://en.wikipedia.org/wiki/Wikipedia",
+        "https://en.wikipedia.org/wiki/History_of_the_Internet",
+        "https://en.wikipedia.org/wiki/Internet_Archive",
+        "https://en.wikipedia.org/wiki/Internet_geography",
+        "https://simple.wikipedia.org/wiki/Internet",
+        "https://en.wikipedia.org/wiki/Internet_Draft",
+        "https://en.wikipedia.org/wiki/Internet_tax",
+        "https://en.wikipedia.org/wiki/The_Last_Best_Place_on_the_Internet",
+        "https://en.wikipedia.org/wiki/Internet_pornography"
+      ],
+      "engines": [
+        [
+          "bing",
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "bing",
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "wikipedia"
+        ]
+      ],
+      "bytes": 5430,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-photosynthesis",
+      "lang": "en",
+      "query": "photosynthesis wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Photosynthesis"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 921.9804540007317,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Photosynthesis",
+        "https://en.wikipedia.org/wiki/Photosynthesis_(disambiguation)",
+        "https://en.wikipedia.org/wiki/Artificial_photosynthesis",
+        "https://en.wikipedia.org/wiki/Anoxygenic_photosynthesis",
+        "https://en.wikipedia.org/wiki/Evolution_of_photosynthesis",
+        "https://simple.wikipedia.org/wiki/Photosynthesis",
+        "https://en.wikipedia.org/wiki/Aquatic_photosynthesis",
+        "https://en.wikipedia.org/wiki/Photosynthesis_(board_game)",
+        "https://en.wikipedia.org/wiki/Category:Photosynthesis",
+        "https://en.wikipedia.org/wiki/Alarm_photosynthesis"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "seznam"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "wikipedia_index"
+        ]
+      ],
+      "bytes": 6171,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-roman-empire",
+      "lang": "en",
+      "query": "roman empire wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Roman_Empire"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 1194.9921440009348,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Roman_Empire",
+        "https://en.wikipedia.org/wiki/Succession_of_the_Roman_Empire",
+        "https://en.wikipedia.org/wiki/Holy_Roman_Empire",
+        "https://en.wikipedia.org/wiki/Western_Roman_Empire",
+        "https://en.wikipedia.org/wiki/Fall_of_the_Western_Roman_Empire",
+        "https://en.wikipedia.org/wiki/History_of_the_Roman_Empire",
+        "https://en.wikipedia.org/wiki/Later_Roman_Empire",
+        "https://en.wikipedia.org/wiki/Byzantine_Empire",
+        "https://en.wikipedia.org/wiki/Roman_Empire_(TV_series)",
+        "https://en.wikipedia.org/wiki/Legacy_of_the_Roman_Empire"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia"
+        ],
+        [
+          "wikipedia",
+          "seznam"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia"
+        ],
+        [
+          "mwmbl",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ]
+      ],
+      "bytes": 6252,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-tcp-ip",
+      "lang": "en",
+      "query": "tcp ip wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Internet_protocol_suite"
+      ],
+      "category": "wiki",
+      "rank": 2,
+      "millis": 885.6422990011197,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Transmission_Control_Protocol",
+        "https://en.wikipedia.org/wiki/Internet_protocol_suite",
+        "https://en.wikipedia.org/wiki/TCP/IP_Illustrated",
+        "https://en.wikipedia.org/wiki/TCP/IP_stack_fingerprinting",
+        "https://en.wikipedia.org/wiki/NetBIOS_over_TCP/IP",
+        "http://en.wikipedia.org/wiki/TCP/IP",
+        "https://en.wikipedia.org/wiki/TCP_offload_engine",
+        "https://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers",
+        "https://en.wikipedia.org/wiki/TCP_Gender_Changer",
+        "https://simple.wikipedia.org/wiki/TCP/IP_model"
+      ],
+      "engines": [
+        [
+          "bing",
+          "mwmbl",
+          "wikipedia"
+        ],
+        [
+          "bing",
+          "mwmbl",
+          "wikipedia"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "bing"
+        ]
+      ],
+      "bytes": 5740,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-ml",
+      "lang": "en",
+      "query": "machine learning wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Machine_learning"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 970.4398469984881,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Machine_learning",
+        "https://en.wikipedia.org/wiki/Quantum_machine_learning",
+        "https://en.wikipedia.org/wiki/Adversarial_machine_learning",
+        "https://en.wikipedia.org/wiki/Outline_of_machine_learning",
+        "https://en.wikipedia.org/wiki/Machine_Learning_(journal)",
+        "https://en.wikipedia.org/wiki/Attention_(machine_learning)",
+        "https://en.wikipedia.org/wiki/Timeline_of_machine_learning",
+        "https://simple.wikipedia.org/wiki/Machine_learning",
+        "https://en.wikipedia.org/wiki/Automated_machine_learning",
+        "https://en.wikipedia.org/wiki/Neural_network_(machine_learning)"
+      ],
+      "engines": [
+        [
+          "bing",
+          "mwmbl",
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "bing",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "mwmbl",
+          "wikipedia_index"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia"
+        ]
+      ],
+      "bytes": 6130,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-relativity",
+      "lang": "en",
+      "query": "theory of relativity wikipedia",
+      "gold": [
+        "https://en.wikipedia.org/wiki/Theory_of_relativity"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 1216.2153939989366,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Theory_of_relativity",
+        "https://en.wikipedia.org/wiki/General_relativity",
+        "https://en.wikipedia.org/wiki/Special_relativity",
+        "https://en.wikipedia.org/wiki/Criticism_of_the_theory_of_relativity",
+        "https://en.wikipedia.org/wiki/The_Einstein_Theory_of_Relativity",
+        "https://simple.wikipedia.org/wiki/Theory_of_relativity",
+        "https://en.wikipedia.org/wiki/Relativity:_The_Special_and_the_General_Theory",
+        "https://en.wikipedia.org/wiki/The_Theory_of_Relativity_(musical)",
+        "https://en.wikipedia.org/wiki/Emission_theory_(relativity)",
+        "https://en.wikipedia.org/wiki/Introduction_to_general_relativity"
+      ],
+      "engines": [
+        [
+          "bing",
+          "mwmbl",
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "bing",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "bing",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "bing",
+          "seznam"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "bing",
+          "wikipedia"
+        ]
+      ],
+      "bytes": 6437,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-attention",
+      "lang": "en",
+      "query": "attention is all you need arxiv",
+      "gold": [
+        "https://arxiv.org/abs/1706.03762"
+      ],
+      "category": "paper",
+      "rank": 2,
+      "millis": 1047.278707001169,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Attention_Is_All_You_Need",
+        "https://arxiv.org/abs/1706.03762",
+        "https://arxiv.org/abs/2104.04692",
+        "https://arxiv.org/abs/2501.06425",
+        "https://arxiv.org/abs/2501.05730",
+        "https://arxiv.org/abs/2010.13154",
+        "https://arxiv.org/abs/2510.19861",
+        "https://arxiv.org/abs/2509.03683",
+        "https://arxiv.org/html/1706.03762v7",
+        "https://arxiv.org/abs/2606.02332"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "wikipedia",
+          "seznam",
+          "wikipedia_index"
+        ],
+        [
+          "seznam",
+          "arxiv"
+        ],
+        [
+          "arxiv"
+        ],
+        [
+          "arxiv"
+        ],
+        [
+          "arxiv"
+        ],
+        [
+          "arxiv"
+        ],
+        [
+          "arxiv"
+        ],
+        [
+          "arxiv"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "arxiv"
+        ]
+      ],
+      "bytes": 14914,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-bert",
+      "lang": "en",
+      "query": "bert pre-training arxiv",
+      "gold": [
+        "https://arxiv.org/abs/1810.04805"
+      ],
+      "category": "paper",
+      "rank": 1,
+      "millis": 884.9114420008846,
+      "urls": [
+        "https://arxiv.org/abs/2106.08254",
+        "https://arxiv.org/abs/1810.04805",
+        "https://arxiv.org/abs/2111.07832",
+        "https://arxiv.org/abs/2111.07832v3",
+        "https://arxiv.org/pdf/1810.04805",
+        "https://arxiv.org/abs/2111.12710",
+        "https://arxiv.org/abs/2111.07832v1",
+        "https://arxiv.org/html/1810.04805v2",
+        "https://arxiv.org/abs/2111.04198",
+        "https://arxiv.org/abs/2111.04198v2"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "seznam",
+          "arxiv"
+        ],
+        [
+          "arxiv",
+          "official site"
+        ],
+        [
+          "mwmbl",
+          "arxiv"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "mwmbl",
+          "arxiv"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "mwmbl",
+          "arxiv"
+        ],
+        [
+          "mwmbl"
+        ]
+      ],
+      "bytes": 11461,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-gpt3",
+      "lang": "en",
+      "query": "language models are few shot learners arxiv",
+      "gold": [
+        "https://arxiv.org/abs/2005.14165"
+      ],
+      "category": "paper",
+      "rank": 1,
+      "millis": 1031.9037520002894,
+      "urls": [
+        "https://arxiv.org/abs/2005.14165",
+        "https://arxiv.org/pdf/2005.14165",
+        "https://arxiv.org/pdf/2005.14165v1",
+        "https://arxiv.org/abs/2302.12692",
+        "https://arxiv.org/abs/2012.15723",
+        "https://arxiv.org/abs/2109.07684",
+        "https://arxiv.org/abs/2209.01975",
+        "https://arxiv.org/abs/2109.01652",
+        "https://arxiv.org/abs/2512.23808",
+        "https://arxiv.org/abs/2108.13161"
+      ],
+      "engines": [
+        [
+          "bing",
+          "seznam",
+          "arxiv"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "arxiv"
+        ],
+        [
+          "arxiv"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "arxiv"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "arxiv"
+        ],
+        [
+          "arxiv"
+        ]
+      ],
+      "bytes": 15431,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-resnet",
+      "lang": "en",
+      "query": "deep residual learning arxiv",
+      "gold": [
+        "https://arxiv.org/abs/1512.03385"
+      ],
+      "category": "paper",
+      "rank": 1,
+      "millis": 880.7334550001542,
+      "urls": [
+        "https://arxiv.org/abs/2509.24732",
+        "https://arxiv.org/abs/1512.03385",
+        "https://arxiv.org/pdf/1512.03385",
+        "https://arxiv.org/abs/1906.09731",
+        "https://arxiv.org/abs/1812.11690",
+        "https://arxiv.org/abs/2009.01423v2",
+        "https://arxiv.org/abs/2102.04159",
+        "https://arxiv.org/abs/1703.08580",
+        "https://arxiv.org/abs/2202.00676",
+        "http://arxiv.org/abs/1611.06391v2"
+      ],
+      "engines": [
+        [
+          "seznam",
+          "arxiv"
+        ],
+        [
+          "mwmbl",
+          "seznam",
+          "arxiv"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "arxiv"
+        ],
+        [
+          "mwmbl",
+          "arxiv"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl",
+          "arxiv"
+        ],
+        [
+          "mwmbl",
+          "arxiv"
+        ],
+        [
+          "arxiv"
+        ],
+        [
+          "mwmbl"
+        ]
+      ],
+      "bytes": 11644,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-adam",
+      "lang": "en",
+      "query": "adam optimizer arxiv",
+      "gold": [
+        "https://arxiv.org/abs/1412.6980"
+      ],
+      "category": "paper",
+      "rank": 1,
+      "millis": 1219.806316001268,
+      "urls": [
+        "https://arxiv.org/abs/2111.08162",
+        "https://arxiv.org/abs/2102.07686",
+        "https://arxiv.org/abs/2407.21078",
+        "https://arxiv.org/abs/1412.6980",
+        "https://arxiv.org/abs/2602.00329",
+        "https://arxiv.org/abs/2507.11005",
+        "https://arxiv.org/abs/1911.00289",
+        "https://arxiv.org/abs/2606.21433",
+        "https://arxiv.org/abs/2102.07686v4",
+        "https://arxiv.org/abs/2511.06675"
+      ],
+      "engines": [
+        [
+          "arxiv"
+        ],
+        [
+          "mwmbl",
+          "arxiv"
+        ],
+        [
+          "arxiv"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "arxiv"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "arxiv"
+        ],
+        [
+          "arxiv"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "arxiv"
+        ]
+      ],
+      "bytes": 14038,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-rust-repo",
+      "lang": "en",
+      "query": "rust-lang rust github",
+      "gold": [
+        "https://github.com/rust-lang/rust"
+      ],
+      "category": "repo",
+      "rank": 1,
+      "millis": 1147.2707110006013,
+      "urls": [
+        "https://github.com/rust-lang/rust",
+        "https://doc.rust-lang.org/book/",
+        "https://doc.rust-lang.org/book/ch01-01-installation.html",
+        "https://doc.rust-lang.org/std/boxed/index.html",
+        "https://doc.rust-lang.org/book/appendix-06-translation.html",
+        "https://doc.rust-lang.org/book/appendix-04-useful-development-tools.html",
+        "https://rust-lang.org/governance/teams/moderation",
+        "https://doc.rust-lang.org/std/intrinsics/index.html",
+        "https://rust-lang.org/policies/security",
+        "https://doc.rust-lang.org/std/intrinsics/fn.float_to_int_unchecked.html"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "seznam",
+          "official site"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6446,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-tokio-repo",
+      "lang": "en",
+      "query": "tokio-rs tokio github",
+      "gold": [
+        "https://github.com/tokio-rs/tokio"
+      ],
+      "category": "repo",
+      "rank": 1,
+      "millis": 1112.4253670004691,
+      "urls": [
+        "https://github.com/tokio-rs/tokio",
+        "https://tokio.rs/",
+        "https://en.wikipedia.org/wiki/Tokio_(software)",
+        "https://github.com/tokio-rs/tokio/pull/6418",
+        "https://github.com/tokio-rs/mini-redis/",
+        "https://github.com/tokio-rs/tokio/issues/4941",
+        "https://github.com/tokio-rs/tokio/discussions",
+        "https://github.com/sponsors/tokio-rs",
+        "https://ryhl.io/blog/actors-with-tokio/",
+        "https://en.wikipedia.org/wiki/GitHub"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "seznam",
+          "official site"
+        ],
+        [
+          "seznam",
+          "official site"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl",
+          "seznam"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl",
+          "seznam"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "wiby"
+        ],
+        [
+          "wikipedia_index"
+        ]
+      ],
+      "bytes": 5602,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-ripgrep",
+      "lang": "en",
+      "query": "burntsushi ripgrep github",
+      "gold": [
+        "https://github.com/BurntSushi/ripgrep"
+      ],
+      "category": "repo",
+      "rank": 1,
+      "millis": 862.5648480010568,
+      "urls": [
+        "https://github.com/BurntSushi/ripgrep",
+        "https://github.com/BurntSushi/ripgrep/releases",
+        "https://github.com/BurntSushi/ripgrep/pull/41",
+        "https://github.com/chinanf-boy/ripgrep-zh",
+        "https://github.com/BurntSushi/ripgrep/discussions",
+        "https://github.com/carlwgeorge/ripgrep-rpm",
+        "https://github.com/BurntSushi/ripgrep/issues/94",
+        "https://berkayturanci.github.io/awesome-weekend-repos/repos/BurntSushi/ripgrep/",
+        "https://github.com/redox-unofficial-mirrors/ripgrep",
+        "https://github.com/BurntSushi/ripgrep/issues/231"
+      ],
+      "engines": [
+        [
+          "bing",
+          "mwmbl",
+          "seznam"
+        ],
+        [
+          "bing",
+          "mwmbl",
+          "seznam"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "github"
+        ],
+        [
+          "mwmbl",
+          "seznam"
+        ],
+        [
+          "github"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "github"
+        ],
+        [
+          "mwmbl"
+        ]
+      ],
+      "bytes": 5381,
+      "unresponsive": 3
+    },
+    {
+      "id": "en-crates-serde",
+      "lang": "en",
+      "query": "crates.io serde crate",
+      "gold": [
+        "https://crates.io/crates/serde"
+      ],
+      "category": "repo",
+      "rank": 1,
+      "millis": 981.1417820001225,
+      "urls": [
+        "https://crates.io/crates/serde",
+        "https://crates.io/crates/serde-saphyr",
+        "https://crates.io/crates/serde_yml",
+        "https://crates.io/crates/serde_valid",
+        "https://crates.io/crates/serde_toon_format",
+        "https://crates.io/crates/yaml_serde",
+        "https://crates.io/crates/serde_json",
+        "https://crates.io/crates/serde_json_borrow",
+        "https://crates.io/crates/clickhouse",
+        "http://docs.rs/crate/serde/^1.0.60"
+      ],
+      "engines": [
+        [
+          "crates.io"
+        ],
+        [
+          "crates.io"
+        ],
+        [
+          "crates.io"
+        ],
+        [
+          "crates.io"
+        ],
+        [
+          "crates.io"
+        ],
+        [
+          "crates.io"
+        ],
+        [
+          "crates.io"
+        ],
+        [
+          "crates.io"
+        ],
+        [
+          "crates.io"
+        ],
+        [
+          "mwmbl"
+        ]
+      ],
+      "bytes": 5155,
+      "unresponsive": 4
+    },
+    {
+      "id": "en-npm-react",
+      "lang": "en",
+      "query": "npm react package",
+      "gold": [
+        "https://www.npmjs.com/package/react"
+      ],
+      "category": "repo",
+      "rank": 2,
+      "millis": 1088.2416929998726,
+      "urls": [
+        "https://en.wikipedia.org/wiki/Npm",
+        "https://www.npmjs.com/package/react",
+        "http://reactjs.org/concurrent",
+        "https://socket.dev/npm/package/react",
+        "https://en.wikipedia.org/wiki/Npm_left-pad_incident",
+        "https://ja.react.dev/blog/2025/12/03/critical-security-vulnerability-in-react-server-components",
+        "https://ja.react.dev/reference/react-compiler/target",
+        "https://ja.react.dev/learn/react-developer-tools",
+        "https://ja.react.dev/reference/react-compiler/configuration",
+        "https://www.npmjs.com/"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "mwmbl",
+          "seznam",
+          "npm"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl",
+          "seznam"
+        ],
+        [
+          "mwmbl",
+          "wikipedia",
+          "wikipedia_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "bing",
+          "official site"
+        ]
+      ],
+      "bytes": 6539,
+      "unresponsive": 3
+    },
+    {
+      "id": "ja-fuji",
+      "lang": "ja",
+      "query": "富士山 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/富士山"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 983.5793330003071,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E5%B1%B1",
+        "https://ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E5%B1%B1%E6%9C%AC%E5%AE%AE%E6%B5%85%E9%96%93%E5%A4%A7%E7%A4%BE",
+        "https://ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E5%B1%B1_(%E3%82%B9%E3%83%AB%E3%83%BC%E3%83%97)",
+        "https://ja.wikipedia.org/wiki/Category:%E5%AF%8C%E5%A3%AB%E5%B1%B1",
+        "https://ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E5%B1%B1%E3%81%AE%E5%99%B4%E7%81%AB%E5%8F%B2",
+        "https://ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E5%B1%B1%E6%9C%89%E6%96%99%E9%81%93%E8%B7%AF",
+        "https://ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E5%B1%B1%E9%A7%85",
+        "https://ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB",
+        "https://ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E5%B8%82",
+        "https://ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E5%AE%AE%E5%B8%82"
+      ],
+      "engines": [
+        [
+          "bing",
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ]
+      ],
+      "bytes": 7330,
+      "unresponsive": 3
+    },
+    {
+      "id": "ja-genji",
+      "lang": "ja",
+      "query": "源氏物語 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/源氏物語"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 1073.7821410002653,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E",
+        "https://ja.wikipedia.org/wiki/%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E%E3%81%AE%E7%99%BB%E5%A0%B4%E4%BA%BA%E7%89%A9",
+        "https://ja.wikipedia.org/wiki/%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E%E5%90%84%E5%B8%96%E3%81%AE%E3%81%82%E3%82%89%E3%81%99%E3%81%98",
+        "https://ja.wikipedia.org/wiki/%E9%98%BF%E4%BB%8F%E5%B0%BC%E6%9C%AC%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E",
+        "https://ja.wikipedia.org/wiki/%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E%E7%A4%BC%E8%AE%83%E6%AD%8C",
+        "https://ja.wikipedia.org/wiki/%E8%B0%B7%E5%B4%8E%E6%BD%A4%E4%B8%80%E9%83%8E%E8%A8%B3%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E",
+        "https://ja.wikipedia.org/wiki/%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E60%E5%B7%BB%E8%AA%AC",
+        "https://ja.wikipedia.org/wiki/%E5%B0%91%E5%A5%B3_(%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E)",
+        "https://ja.wikipedia.org/wiki/%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E%E5%B7%BB%E5%90%8D%E6%AD%8C",
+        "https://ja.wikipedia.org/wiki/%E6%BA%90%E6%B0%8F%E7%89%A9%E8%AA%9E%E3%81%AE%E3%81%8A%E3%81%93%E3%82%8A"
+      ],
+      "engines": [
+        [
+          "bing",
+          "wikipedia"
+        ],
+        [
+          "bing",
+          "wikipedia"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "bing"
+        ]
+      ],
+      "bytes": 8065,
+      "unresponsive": 3
+    },
+    {
+      "id": "ja-tokyo-station",
+      "lang": "ja",
+      "query": "東京駅 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/東京駅"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 918.5489819992654,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/東京駅",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E4%BA%AC%E9%A7%85%E3%81%AE%E3%83%90%E3%82%B9%E4%B9%97%E3%82%8A%E5%A0%B4",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E4%BA%AC%E9%83%BD",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E6%B5%B7%E9%81%93%E6%96%B0%E5%B9%B9%E7%B7%9A",
+        "https://ja.wikipedia.org/wiki/12%E6%9C%8818%E6%97%A5",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E6%97%A5%E6%9C%AC%E6%97%85%E5%AE%A2%E9%89%84%E9%81%93",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E4%BA%AC",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E6%B5%B7%E9%81%93%E6%9C%AC%E7%B7%9A",
+        "https://ja.wikipedia.org/wiki/%E5%8D%83%E4%BB%A3%E7%94%B0%E5%8C%BA",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E5%8C%97%E6%96%B0%E5%B9%B9%E7%B7%9A"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ]
+      ],
+      "bytes": 7340,
+      "unresponsive": 3
+    },
+    {
+      "id": "ja-momotaro",
+      "lang": "ja",
+      "query": "桃太郎 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/桃太郎"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 995.401166001102,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/%E6%A1%83%E5%A4%AA%E9%83%8E",
+        "https://ja.wikipedia.org/wiki/%E6%A1%83%E5%A4%AA%E9%83%8E%E6%98%A0%E5%83%8F%E5%87%BA%E7%89%88",
+        "https://ja.wikipedia.org/wiki/%E6%A1%83%E5%A4%AA%E9%83%8E%E9%9B%BB%E9%89%84%E3%82%B7%E3%83%AA%E3%83%BC%E3%82%BA",
+        "https://ja.wikipedia.org/wiki/%E6%A1%83%E5%A4%AA%E9%83%8E%E4%BE%8D",
+        "https://ja.wikipedia.org/wiki/%E3%83%89%E3%83%A9%E3%81%88%E3%82%82%E3%82%93_%E3%81%BC%E3%81%8F%E3%80%81%E6%A1%83%E5%A4%AA%E9%83%8E%E3%81%AE%E3%81%AA%E3%82%93%E3%81%AA%E3%81%AE%E3%81%95",
+        "https://ja.wikipedia.org/wiki/%E6%A1%83%E5%A4%AA%E9%83%8E%E4%BC%9D%E8%AA%AC",
+        "https://ja.wikipedia.org/wiki/%E6%A1%83%E5%A4%AA%E9%83%8E%E4%BC%9D%E8%AA%AC_(%E3%82%A2%E3%83%8B%E3%83%A1)",
+        "https://ja.wikipedia.org/wiki/%E6%A1%83%E5%A4%AA%E9%83%8E%E4%BC%9D%E8%AA%AC%E3%82%B7%E3%83%AA%E3%83%BC%E3%82%BA",
+        "https://ja.wikipedia.org/wiki/%E6%A1%83%E5%A4%AA%E9%83%8E%E9%9B%BB%E9%89%84HAPPY",
+        "https://ja.wikipedia.org/wiki/%E6%A1%83%E5%A4%AA%E9%83%8E%E3%81%BE%E3%81%A4%E3%82%8A"
+      ],
+      "engines": [
+        [
+          "bing",
+          "mwmbl",
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ]
+      ],
+      "bytes": 8266,
+      "unresponsive": 3
+    },
+    {
+      "id": "ja-basho",
+      "lang": "ja",
+      "query": "松尾芭蕉 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/松尾芭蕉"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 820.8296189986868,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/%E6%9D%BE%E5%B0%BE%E8%8A%AD%E8%95%89",
+        "https://ja.wikipedia.org/wiki/%E3%81%B5%E3%82%89%E3%82%8A%E6%9D%BE%E5%B0%BE%E8%8A%AD%E8%95%89",
+        "https://ja.wikipedia.org/wiki/%E6%9D%BE%E5%B0%BE",
+        "https://ja.wikipedia.org/wiki/%E8%A9%A9%E4%BA%BA",
+        "https://ja.wikipedia.org/wiki/%E6%9D%BE%E5%B0%BE%E8%AB%AD",
+        "https://ja.wikipedia.org/wiki/%E3%81%8A%E3%81%8F%E3%81%AE%E3%81%BB%E3%81%9D%E9%81%93",
+        "https://ja.wikipedia.org/wiki/%E4%BF%B3%E5%8F%A5",
+        "https://ja.wikipedia.org/wiki/%E4%BF%B3%E8%AB%A7",
+        "https://ja.wikipedia.org/wiki/1649%E5%B9%B4",
+        "https://ja.wikipedia.org/wiki/%E9%9A%A0%E5%AF%86%E3%83%BB%E5%A5%A5%E3%81%AE%E7%B4%B0%E9%81%93"
+      ],
+      "engines": [
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ]
+      ],
+      "bytes": 7199,
+      "unresponsive": 3
+    },
+    {
+      "id": "ja-soseki",
+      "lang": "ja",
+      "query": "夏目漱石 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/夏目漱石"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 875.7922289987619,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/%E5%A4%8F%E7%9B%AE%E6%BC%B1%E7%9F%B3",
+        "https://ja.wikipedia.org/wiki/%E5%A4%8F%E7%9B%AE%E6%BC%B1%E7%9F%B3%E3%81%AE%E5%A6%BB",
+        "https://ja.wikipedia.org/wiki/%E6%9C%A8%E6%9B%9C%E4%BC%9A_(%E5%A4%8F%E7%9B%AE%E6%BC%B1%E7%9F%B3)",
+        "https://ja.wikipedia.org/wiki/%E5%90%BE%E8%BC%A9%E3%81%AF%E7%8C%AB%E3%81%A7%E3%81%82%E3%82%8B",
+        "https://ja.wikipedia.org/wiki/%E3%81%93%E3%82%9D%E3%82%8D",
+        "https://ja.wikipedia.org/wiki/%E5%A4%8F%E7%9B%AE%E6%88%BF%E4%B9%8B%E4%BB%8B",
+        "https://ja.wikipedia.org/wiki/%E5%9D%8A%E3%81%A4%E3%81%A1%E3%82%84%E3%82%93",
+        "https://ja.wikipedia.org/?curid=1581400",
+        "https://ja.wikipedia.org/wiki/%E5%A4%8F%E7%9B%AE%E9%8F%A1%E5%AD%90",
+        "https://en.wikipedia.org/wiki/Natsume_S%C5%8Dseki"
+      ],
+      "engines": [
+        [
+          "bing",
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing",
+          "wikipedia"
+        ],
+        [
+          "bing",
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "bing",
+          "wikipedia"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "bing",
+          "wikipedia_index"
+        ]
+      ],
+      "bytes": 7556,
+      "unresponsive": 3
+    },
+    {
+      "id": "ja-fuji-san",
+      "lang": "ja",
+      "query": "富士山 標高",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/富士山"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 860.4075750008633,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E5%B1%B1",
+        "https://www.gsi.go.jp/WNEW/PRESS-RELEASE/keikaku61003.html",
+        "https://ja-jp.topographic-map.com/map-tbqddn/%E5%AF%8C%E5%A3%AB%E5%B1%B1/",
+        "https://outdoor50life.com/hiking/guide/fujisan-height-3776m-50s/",
+        "https://ja.wikipedia.org/wiki/%E5%AF%8C%E5%A3%AB%E5%B1%B1%E6%9C%89%E6%96%99%E9%81%93%E8%B7%AF",
+        "https://gmp.y42u.net/2026/07/09/mt-fuji-elevation-history-measurement/",
+        "https://www.gsi.go.jp/sokuchi/fuji_videos/index.html",
+        "https://www.pref.shizuoka.jp/kensei/information/myshizuoka/1040975/1011196.html",
+        "https://u2elab.com/2025/12/10/%E6%97%A5%E6%9C%AC%E4%B8%80%E9%AB%98%E3%81%84%E5%B1%B1%E3%80%81%E3%80%8E%E5%AF%8C%E5%A3%AB%E5%B1%B1%E3%80%8F%E3%81%AF%E4%B8%96%E7%95%8C%E3%81%A7%E8%A6%8B%E3%81%9F%E3%82%89%E4%BD%95%E4%BD%8D%EF%BC%9F/",
+        "https://ja.wikipedia.org/wiki/%E5%89%A3%E3%83%B6%E5%B3%B0_(%E5%AF%8C%E5%A3%AB%E5%B1%B1)"
+      ],
+      "engines": [
+        [
+          "bing",
+          "wikipedia"
+        ],
+        [
+          "bing",
+          "local_index"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "wikipedia"
+        ]
+      ],
+      "bytes": 8119,
+      "unresponsive": 3
+    },
+    {
+      "id": "ja-tokaido",
+      "lang": "ja",
+      "query": "東海道新幹線 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/東海道新幹線"
+      ],
+      "category": "wiki",
+      "rank": 2,
+      "millis": 1184.31617799979,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E6%B5%B7%E9%81%93",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E6%B5%B7%E9%81%93%E6%96%B0%E5%B9%B9%E7%B7%9A",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E6%B5%B7%E9%81%93%E3%83%BB%E5%B1%B1%E9%99%BD%E6%96%B0%E5%B9%B9%E7%B7%9A",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E6%B5%B7%E9%81%93%E6%96%B0%E7%B7%9A",
+        "https://ja.wikipedia.org/wiki/%E6%96%B0%E5%B9%B9%E7%B7%9A",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E6%B5%B7%E9%81%93%E6%9C%AC%E7%B7%9A",
+        "https://ja.wikipedia.org/wiki/%E5%B1%B1%E9%99%BD%E6%96%B0%E5%B9%B9%E7%B7%9A",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E5%8C%97%E6%96%B0%E5%B9%B9%E7%B7%9A",
+        "https://ja.wikipedia.org/wiki/%E6%96%B0%E5%B9%B9%E7%B7%9A700%E7%B3%BB%E9%9B%BB%E8%BB%8A",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E6%B5%B7%E9%81%93%E4%BA%94%E5%8D%81%E4%B8%89%E6%AC%A1"
+      ],
+      "engines": [
+        [
+          "bing",
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "bing"
+        ]
+      ],
+      "bytes": 8008,
+      "unresponsive": 3
+    },
+    {
+      "id": "ja-kimono",
+      "lang": "ja",
+      "query": "着物 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/着物"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 822.4922900008096,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/%E7%9D%80%E7%89%A9",
+        "https://ja.wikipedia.org/wiki/%E5%92%8C%E6%9C%8D",
+        "https://ja.wikipedia.org/wiki/%E5%B8%AF",
+        "https://ja.wikipedia.org/wiki/%E8%8A%B8%E5%A6%93",
+        "https://ja.wikipedia.org/wiki/%E7%9D%80%E4%BB%98%E3%81%91",
+        "https://ja.wikipedia.org/wiki/%E6%97%A5%E6%9C%AC%E8%88%9E%E8%B8%8A",
+        "https://ja.wikipedia.org/wiki/%E3%82%B9%E3%83%86%E3%83%86%E3%82%B3",
+        "https://ja.wikipedia.org/wiki/%E6%B5%B4%E8%A1%A3",
+        "https://ja.wikipedia.org/wiki/%E5%B1%B1%E6%9C%AC%E3%81%BE%E3%81%95%E3%81%BF",
+        "https://ja.wikipedia.org/wiki/%E7%BE%BD%E7%B9%94"
+      ],
+      "engines": [
+        [
+          "bing",
+          "wikipedia"
+        ],
+        [
+          "bing",
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ]
+      ],
+      "bytes": 7729,
+      "unresponsive": 3
+    },
+    {
+      "id": "ja-sushi",
+      "lang": "ja",
+      "query": "寿司 wikipedia",
+      "gold": [
+        "https://ja.wikipedia.org/wiki/寿司"
+      ],
+      "category": "wiki",
+      "rank": 1,
+      "millis": 994.6944359999179,
+      "urls": [
+        "https://ja.wikipedia.org/wiki/%E5%AF%BF%E5%8F%B8",
+        "https://ja.wikipedia.org/wiki/%E5%AF%BF%E5%8F%B8%E5%B1%8B",
+        "https://ja.wikipedia.org/wiki/%E5%9B%9E%E8%BB%A2%E5%AF%BF%E5%8F%B8",
+        "https://ja.wikipedia.org/wiki/%E3%81%A1%E3%82%89%E3%81%97%E5%AF%BF%E5%8F%B8",
+        "https://ja.wikipedia.org/wiki/%E5%B0%86%E5%A4%AA%E3%81%AE%E5%AF%BF%E5%8F%B8",
+        "https://ja.wikipedia.org/wiki/%E7%A8%B2%E8%8D%B7%E5%AF%BF%E5%8F%B8",
+        "https://ja.wikipedia.org/wiki/%E6%8F%A1%E3%82%8A%E5%AF%BF%E5%8F%B8",
+        "https://ja.wikipedia.org/wiki/%E5%B7%BB%E3%81%8D%E5%AF%BF%E5%8F%B8",
+        "https://ja.wikipedia.org/wiki/%E3%81%8F%E3%82%89%E5%AF%BF%E5%8F%B8",
+        "https://ja.wikipedia.org/wiki/%E5%B3%B6%E5%AF%BF%E5%8F%B8"
+      ],
+      "engines": [
+        [
+          "bing",
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ]
+      ],
+      "bytes": 8014,
+      "unresponsive": 3
+    },
+    {
+      "id": "ja-py-doc",
+      "lang": "ja",
+      "query": "python 入門 公式",
+      "gold": [
+        "https://docs.python.org/ja/3/tutorial"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1023.0531230008637,
+      "urls": [
+        "https://docs.python.org/ja/3/tutorial/",
+        "https://docs.python.org/ja/3/",
+        "https://www.python.org/",
+        "https://www.python.org/events/python-user-group/2254/",
+        "https://www.python.org/downloads/release/python-3811/",
+        "https://www.python.org/downloads/release/python-31017/",
+        "https://www.python.org/downloads/release/python-31013/",
+        "https://www.python.org/downloads/release/python-3918/",
+        "https://www.python.org/downloads/release/python-3922/",
+        "https://www.python.org/downloads/release/python-3812/"
+      ],
+      "engines": [
+        [
+          "bing"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "seznam",
+          "official site"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6226,
+      "unresponsive": 3
+    },
+    {
+      "id": "ja-py-lib",
+      "lang": "ja",
+      "query": "python 標準ライブラリ 日本語",
+      "gold": [
+        "https://docs.python.org/ja/3/library"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1078.8209999991523,
+      "urls": [
+        "https://docs.python.org/ja/3.10/library/index.html",
+        "https://docs.python.org/ja/3.13/library/index.html",
+        "https://docs.python.org/ja/3.7/library/index.html",
+        "https://docs.python.org/ja/3/library/index.html",
+        "https://docs.python.org/ja/3/tutorial/",
+        "https://www.python.org/",
+        "https://www.python.org/downloads/",
+        "https://ja.wikipedia.org/wiki/Python",
+        "https://www.ruby-lang.org/ja/libraries/",
+        "https://ja.wordpress.org/support/article/media-library-screen/"
+      ],
+      "engines": [
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing",
+          "official site"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing",
+          "wikipedia"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6371,
+      "unresponsive": 3
+    },
+    {
+      "id": "ja-rs-doc",
+      "lang": "ja",
+      "query": "rust プログラミング言語 公式",
+      "gold": [
+        "https://rust-lang.org/ja",
+        "https://www.rust-lang.org/ja",
+        "https://doc.rust-lang.org/ja",
+        "https://rust-jp.rs",
+        "https://doc.rust-lang.org/book/"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1062.8694589995575,
+      "urls": [
+        "https://rust-lang.org/ja/",
+        "https://ja.wikipedia.org/wiki/Rust_(%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E8%A8%80%E8%AA%9E)",
+        "https://rust-lang.org/",
+        "https://prev.rust-lang.org/ja-JP/",
+        "https://www.ruby-lang.org/ja/",
+        "https://ja.wikipedia.org/wiki/Go_(%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E8%A8%80%E8%AA%9E)",
+        "https://ja.wikipedia.org/wiki/Swift_(%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E8%A8%80%E8%AA%9E)",
+        "https://ja.wikipedia.org/wiki/Zig_(%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E8%A8%80%E8%AA%9E)",
+        "https://doc.rust-jp.rs/book-ja/ch03-00-common-programming-concepts.html",
+        "https://ja.wikipedia.org/wiki/%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E8%A8%80%E8%AA%9E%E5%B9%B4%E8%A1%A8"
+      ],
+      "engines": [
+        [
+          "bing"
+        ],
+        [
+          "bing",
+          "wikipedia"
+        ],
+        [
+          "bing",
+          "official site"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "wikipedia"
+        ]
+      ],
+      "bytes": 7525,
+      "unresponsive": 3
+    },
+    {
+      "id": "ja-rs-book",
+      "lang": "ja",
+      "query": "rust 日本語 ドキュメント",
+      "gold": [
+        "https://doc.rust-lang.org/book/",
+        "https://rust-lang.org/ja",
+        "https://www.rust-lang.org/ja",
+        "https://rust-jp.rs"
+      ],
+      "category": "doc",
+      "rank": 3,
+      "millis": 981.4198849999229,
+      "urls": [
+        "https://rust-lang.org/",
+        "https://ja.wikipedia.org/wiki/Rust_(%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E8%A8%80%E8%AA%9E)",
+        "https://rust-lang.org/ja/",
+        "https://www.ruby-lang.org/ja/documentation/",
+        "https://docs.djangoproject.com/ja/6.1/",
+        "https://docs.github.com/ja/webhooks",
+        "https://docs.djangoproject.com/ja/6.1/ref/contrib/",
+        "https://docs.djangoproject.com/ja/6.1/ref/contrib/admin/admindocs/",
+        "https://docs.djangoproject.com/ja/6.1/intro/",
+        "https://docs.github.com/ja/support"
+      ],
+      "engines": [
+        [
+          "bing",
+          "official site"
+        ],
+        [
+          "bing",
+          "wikipedia"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 8376,
+      "unresponsive": 3
+    },
+    {
+      "id": "ja-mdn",
+      "lang": "ja",
+      "query": "mdn javascript 配列",
+      "gold": [
+        "https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Array"
+      ],
+      "category": "doc",
+      "rank": null,
+      "millis": 791.6753230001632,
+      "urls": [
+        "https://developer.mozilla.org/ja/docs/Learn/JavaScript/First_steps/Test_your_skills:_Arrays",
+        "https://developer.mozilla.org/ja/docs/Web/JavaScript/Guide/Functions",
+        "https://developer.mozilla.org/ja/docs/Learn/JavaScript/First_steps/Arrays",
+        "https://developer.mozilla.org/ja/",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference",
+        "https://developer.mozilla.org/en-US/docs/Glossary/JavaScript",
+        "https://developer.mozilla.org/en-US/docs/MDN/Writing_guidelines/Page_structures/Page_types/JavaScript_error_page_template",
+        "https://developer.mozilla.org/en-US/docs/MDN/Writing_guidelines/Page_structures/Page_types/JavaScript_statement_page_template"
+      ],
+      "engines": [
+        [
+          "mwmbl"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6393,
+      "unresponsive": 5
+    },
+    {
+      "id": "ja-nginx",
+      "lang": "ja",
+      "query": "nginx 設定 ドキュメント",
+      "gold": [
+        "https://nginx.org/en/docs"
+      ],
+      "category": "doc",
+      "rank": null,
+      "millis": 884.3367800000124,
+      "urls": [
+        "https://nginx.org/ja/docs/",
+        "https://docs.djangoproject.com/ja/6.1/ref/settings/",
+        "https://docs.djangoproject.com/ja/6.1/topics/settings/",
+        "https://docs.djangoproject.com/ja/6.1/",
+        "https://docs.djangoproject.com/ja/6.1/ref/contrib/gis/testing/",
+        "https://docs.djangoproject.com/ja/6.1/contents/",
+        "https://docs.djangoproject.com/ja/6.1/ref/contrib/gis/",
+        "https://docs.djangoproject.com/ja/6.1/ref/contrib/",
+        "https://docs.djangoproject.com/ja/6.1/ref/",
+        "https://docs.djangoproject.com/ja/6.1/ref/contrib/admin/admindocs/"
+      ],
+      "engines": [
+        [
+          "bing"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 8304,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-docker",
+      "lang": "ja",
+      "query": "docker compose ファイル リファレンス",
+      "gold": [
+        "https://docs.docker.com/reference/compose-file"
+      ],
+      "category": "doc",
+      "rank": 2,
+      "millis": 779.7653729994636,
+      "urls": [
+        "https://docs.docker.com/compose",
+        "https://docs.docker.com/reference/compose-file/legacy-versions",
+        "https://docs.docker.com/reference/cli/docker/compose/",
+        "https://www.docker.com/ja-jp/products/docker-sandboxes/",
+        "https://kubernetes.io/ja/docs/reference/",
+        "https://docs.djangoproject.com/ja/6.1/ref/",
+        "https://docs.djangoproject.com/ja/6.1/ref/models/lookups/",
+        "https://docs.github.com/ja/account-and-profile/reference/profile-contributions-reference",
+        "https://docs.djangoproject.com/ja/6.1/ref/models/indexes/",
+        "https://ja.react.dev/reference/react"
+      ],
+      "engines": [
+        [
+          "seznam",
+          "local_index"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 8144,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-jma",
+      "lang": "ja",
+      "query": "気象庁 天気予報",
+      "gold": [
+        "https://www.jma.go.jp"
+      ],
+      "category": "official",
+      "rank": 1,
+      "millis": 821.6356560005806,
+      "urls": [
+        "https://www.jma.go.jp/bosai/forecast/",
+        "https://www.jma.go.jp/jma/kishou/know/kurashi/shukan.html",
+        "https://www.jma.go.jp/jma/kishou/know/kurashi/yoho.html",
+        "https://www.jma.go.jp/jma/",
+        "https://www.jma.go.jp/jma/index.html",
+        "https://www.jma.go.jp/bosai/warning/",
+        "https://ja.wikipedia.org/wiki/%E5%A4%A9%E6%B0%97%E4%BA%88%E5%A0%B1",
+        "https://www.data.jma.go.jp/multi/yoho/index.html?lang=jp",
+        "https://ja.wikipedia.org/wiki/%E6%B0%97%E8%B1%A1%E5%BA%81",
+        "https://ja.wikipedia.org/wiki/%E8%AD%A6%E5%A0%B1_(%E6%B0%97%E8%B1%A1%E5%BA%81)"
+      ],
+      "engines": [
+        [
+          "bing"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "official site"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ]
+      ],
+      "bytes": 5797,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-ndl",
+      "lang": "ja",
+      "query": "国立国会図書館 サーチ",
+      "gold": [
+        "https://ndlsearch.ndl.go.jp"
+      ],
+      "category": "official",
+      "rank": 1,
+      "millis": 821.4605569992273,
+      "urls": [
+        "https://ndlsearch.ndl.go.jp/help/api/oai_pmh",
+        "https://ndlsearch.ndl.go.jp/help/contact",
+        "https://ndlsearch.ndl.go.jp/help/about",
+        "http://ndlsearch.ndl.go.jp/renkei",
+        "https://ndlsearch.ndl.go.jp/bib/ndlcat",
+        "http://ndlsearch.ndl.go.jp/renkei/info",
+        "https://www.ndl.go.jp/",
+        "https://ja.wikipedia.org/wiki/%E5%9B%BD%E7%AB%8B%E5%9B%BD%E4%BC%9A%E5%9B%B3%E6%9B%B8%E9%A4%A8",
+        "http://iss.ndl.go.jp/somoku/",
+        "http://id.ndl.go.jp/bib/000001948535"
+      ],
+      "engines": [
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "bing",
+          "official site"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ]
+      ],
+      "bytes": 5115,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-tokyo-tourism",
+      "lang": "ja",
+      "query": "東京 観光 公式",
+      "gold": [
+        "https://www.gotokyo.org"
+      ],
+      "category": "official",
+      "rank": 1,
+      "millis": 834.0600749997975,
+      "urls": [
+        "https://www.gotokyo.org/jp/index.html",
+        "https://www.gotokyo.org/jp/see-and-do/attractions/index.html",
+        "https://www.tcvb.or.jp/jp/project/hasshin/welcome/",
+        "https://www.hatobus.co.jp/feature/tokyo",
+        "https://www.tickets.gotokyo.org/jp/facilities/",
+        "https://ja.wikipedia.org/wiki/%E8%A6%B3%E5%85%89",
+        "https://www.hatobus.co.jp/tokyo",
+        "https://www.metro.tokyo.lg.jp/kyoiku/kanko/kanko",
+        "https://ja.wikipedia.org/wiki/%E5%BA%9C%E4%B8%AD%E5%B8%82_(%E6%9D%B1%E4%BA%AC%E9%83%BD)",
+        "https://ja.wikipedia.org/wiki/%E6%9D%B1%E4%BA%AC"
+      ],
+      "engines": [
+        [
+          "bing"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "wikipedia"
+        ]
+      ],
+      "bytes": 6407,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-jr",
+      "lang": "ja",
+      "query": "JR東日本 時刻表",
+      "gold": [
+        "https://www.jreast.co.jp"
+      ],
+      "category": "official",
+      "rank": 1,
+      "millis": 1210.8313440003258,
+      "urls": [
+        "https://www.jreast.co.jp/",
+        "https://www.jreast.co.jp/railway/",
+        "https://timetables.jreast.co.jp/timetable/list1039.html",
+        "https://ja.wikipedia.org/wiki/%E6%99%82%E5%88%BB%E8%A1%A8",
+        "https://www.navitime.co.jp/diagram/company/00000004/",
+        "https://timetables.jreast.co.jp/",
+        "https://ekitan.com/transit/railway/company/2",
+        "https://www.navitime.co.jp/diagram/company/00000199",
+        "https://ja.wikipedia.org/wiki/JR%E6%9D%B1%E6%97%A5%E6%9C%AC%E3%82%A2%E3%82%A4%E3%82%B9%E3%83%86%E3%82%A4%E3%82%B7%E3%83%A7%E3%83%B3%E3%82%BA",
+        "https://www.gsi.go.jp/kohokocho/bus-jikokuhyo.html"
+      ],
+      "engines": [
+        [
+          "bing",
+          "official site"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6438,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-gsi",
+      "lang": "ja",
+      "query": "国土地理院 地図",
+      "gold": [
+        "https://www.gsi.go.jp",
+        "https://maps.gsi.go.jp"
+      ],
+      "category": "official",
+      "rank": 1,
+      "millis": 863.4226230005879,
+      "urls": [
+        "https://maps.gsi.go.jp/",
+        "https://www.gsi.go.jp/tizu-kutyu.html",
+        "https://www.gsi.go.jp/GSI/CONTACT-g-kotu.html",
+        "https://ja.wikipedia.org/wiki/%E5%9C%B0%E7%90%86%E9%99%A2%E5%9C%B0%E5%9B%B3",
+        "https://www.gsi.go.jp/MAP/index.html",
+        "https://maps.gsi.go.jp/help/intro/municipality/renkei.html",
+        "https://www.gsi.go.jp/MAP/kounyu.html",
+        "https://ja.wikipedia.org/wiki/%E5%9B%BD%E5%9C%9F%E5%9C%B0%E7%90%86%E9%99%A2",
+        "https://www.gsi.go.jp/hokuriku/chizu-joho.html",
+        "https://www.gsi.go.jp/kibanjoho/mapinfo_what.html"
+      ],
+      "engines": [
+        [
+          "bing",
+          "official site"
+        ],
+        [
+          "bing",
+          "mwmbl",
+          "local_index"
+        ],
+        [
+          "mwmbl",
+          "local_index"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "mwmbl",
+          "local_index"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "bing",
+          "local_index"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "bing"
+        ]
+      ],
+      "bytes": 9014,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-e-gov",
+      "lang": "ja",
+      "query": "e-Gov 法令検索",
+      "gold": [
+        "https://elaws.e-gov.go.jp"
+      ],
+      "category": "official",
+      "rank": 1,
+      "millis": 879.6761040011916,
+      "urls": [
+        "https://elaws.e-gov.go.jp/",
+        "https://elaws.e-gov.go.jp/を開いてください。　検索ウィンドウに「母子」と入力して、検索します。　検索した結果が表示されます。「検索結果　９件」と表示されている一番上に「母子及び父子並びに寡婦福祉法」が表示されています。　公布年を見ると、母子保健法は昭和39年（1964年）に交付された法律であることが分かります。　授業資料「児福論01-2児童福祉の法体系」「Ｂ．児童福祉六法」に記された表の下から３行目の➡　左端の欄に「昭39」と記します。➡　左から２列目の欄に「母子及び父子並びに寡婦福祉法」と記します。",
+        "https://elaws.e-gov.go.jp/document?lawid=335AC0000000105第一条　この法律は、・・・、その他交通の安全と円滑を図り、及び道路の交通に起因する障害の防止に資することを目的とする。27条２　車両（・・）は、・・、最高速度が高い車両に追いつかれ、かつ、道路の中央（・・）との間にその追いついた車両が通行するのに十分な余地がない場合においては、・・・、できる限り道路の左側端に寄つてこれに進路を譲らなければならない。という事で、何ら問題が無いのに低速走行する事は1、27条違反ですから110番。ｗする前に、良い場所があれば追い越しますけど。",
+        "https://laws.e-gov.go.jp/",
+        "https://www.e-gov.go.jp/laws-and-secure-life",
+        "https://ja.wikipedia.org/wiki/E-Gov%E6%B3%95%E4%BB%A4%E6%A4%9C%E7%B4%A2",
+        "https://www.e-gov.go.jp/",
+        "https://laws.e-gov.go.jp/bibu/",
+        "https://laws.e-gov.go.jp/help/",
+        "https://laws.e-gov.go.jp/update/"
+      ],
+      "engines": [
+        [
+          "mwmbl"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing",
+          "official site"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing",
+          "wikipedia"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing"
+        ]
+      ],
+      "bytes": 6343,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-python-org",
+      "lang": "ja",
+      "query": "python japan ユーザー会",
+      "gold": [
+        "https://www.python.jp"
+      ],
+      "category": "official",
+      "rank": 1,
+      "millis": 810.56695100051,
+      "urls": [
+        "https://www.python.jp/pages/community.html",
+        "https://www.python.org/events/python-user-group/2254/",
+        "https://www.python.org/downloads/release/python-3811/",
+        "https://www.python.org/downloads/release/python-31017/",
+        "https://www.python.jp/",
+        "https://docs.github.com/ja/account-and-profile/concepts/username-changes",
+        "https://kubernetes.io/ja/docs/concepts/workloads/pods/user-namespaces/",
+        "https://docs.github.com/ja/account-and-profile/reference/username-reference",
+        "https://ja.wordpress.org/support/article/users-screen/",
+        "https://ja.wordpress.org/support/article/users-add-new-screen/"
+      ],
+      "engines": [
+        [
+          "bing"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 8533,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-rust-jp",
+      "lang": "ja",
+      "query": "rust japan ユーザー会",
+      "gold": [
+        "https://rust-jp.rs",
+        "https://www.rust-lang.org/ja"
+      ],
+      "category": "official",
+      "rank": null,
+      "millis": 1008.6098629999469,
+      "urls": [
+        "https://docs.github.com/ja/account-and-profile/concepts/username-changes",
+        "https://kubernetes.io/ja/docs/concepts/workloads/pods/user-namespaces/",
+        "https://docs.github.com/ja/account-and-profile/reference/username-reference",
+        "https://ja.wordpress.org/support/article/users-screen/",
+        "https://ja.wordpress.org/support/article/users-add-new-screen/",
+        "https://kubernetes.io/ja/docs/tasks/configure-pod-container/user-namespaces/",
+        "https://docs.github.com/ja/migrations/overview/mannequins-and-user-activity",
+        "https://docs.github.com/ja/account-and-profile/how-tos/email-preferences/remembering-your-github-username-or-email",
+        "https://docs.djangoproject.com/ja/6.1/topics/auth/",
+        "https://ja.wordpress.org/support/article/users-your-profile-screen/"
+      ],
+      "engines": [
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 10576,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-rust-crate",
+      "lang": "ja",
+      "query": "rust crates.io 使い方",
+      "gold": [
+        "https://crates.io",
+        "https://lib.rs",
+        "https://doc.rust-lang.org/cargo/"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 874.3731160011521,
+      "urls": [
+        "https://crates.io/crates/hpw-convert-eip681",
+        "https://crates.io/crates/ojichat",
+        "https://crates.io/crates/creo-ui",
+        "https://crates.io/crates/shiguredo_vmaf",
+        "https://crates.io/crates/rokeeru-core",
+        "https://crates.io/crates/shiguredo_rtsp",
+        "https://crates.io/crates/chiba-s-siki",
+        "https://crates.io/crates/nautilus-schwab",
+        "https://crates.io/crates/shiguredo_ngtcp2_tokio",
+        "https://crates.io/crates/kabosu"
+      ],
+      "engines": [
+        [
+          "crates.io"
+        ],
+        [
+          "crates.io"
+        ],
+        [
+          "crates.io"
+        ],
+        [
+          "crates.io"
+        ],
+        [
+          "crates.io"
+        ],
+        [
+          "crates.io"
+        ],
+        [
+          "crates.io"
+        ],
+        [
+          "crates.io"
+        ],
+        [
+          "crates.io"
+        ],
+        [
+          "crates.io"
+        ]
+      ],
+      "bytes": 5202,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-git-doc",
+      "lang": "ja",
+      "query": "git rebase 使い方 公式",
+      "gold": [
+        "https://git-scm.com/docs/git-rebase"
+      ],
+      "category": "doc",
+      "rank": 2,
+      "millis": 969.6014389992342,
+      "urls": [
+        "https://git-scm.com/",
+        "https://git-scm.com/docs/git-rebase",
+        "https://git-scm.com/docs/git-rebase/zh_HANS-CN",
+        "https://git-scm.com/docs/git-rebase/2.17.0",
+        "https://git-scm.com/docs/git-rebase/2.16.6",
+        "https://git-scm.com/docs/git-rebase/sv",
+        "https://git-scm.com/docs/git-rebase/2.18.0",
+        "https://git-scm.com/docs/git-rebase/uk",
+        "https://git-scm.com/docs/git-rebase/ru",
+        "https://git-scm.com/docs/git-rebase/fr"
+      ],
+      "engines": [
+        [
+          "bing",
+          "official site"
+        ],
+        [
+          "seznam",
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 6925,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-sql",
+      "lang": "ja",
+      "query": "postgresql 日本語 ドキュメント",
+      "gold": [
+        "https://www.postgresql.jp/document",
+        "https://www.postgresql.org/docs"
+      ],
+      "category": "doc",
+      "rank": null,
+      "millis": 906.9840920001297,
+      "urls": [
+        "https://www.postgresql.org/",
+        "https://www.postgresql.org/download/",
+        "https://www.ruby-lang.org/ja/documentation/",
+        "https://ja.wikipedia.org/wiki/PostgreSQL",
+        "https://docs.djangoproject.com/ja/6.1/",
+        "https://docs.djangoproject.com/ja/6.1/ref/contrib/postgres/functions/",
+        "https://docs.djangoproject.com/ja/6.1/ref/contrib/",
+        "https://docs.github.com/ja/webhooks",
+        "https://docs.djangoproject.com/ja/6.1/ref/contrib/admin/admindocs/",
+        "https://docs.djangoproject.com/ja/6.1/intro/"
+      ],
+      "engines": [
+        [
+          "bing",
+          "official site"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "bing",
+          "wikipedia"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 7988,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-linux",
+      "lang": "ja",
+      "query": "linux kernel ドキュメント",
+      "gold": [
+        "https://docs.kernel.org"
+      ],
+      "category": "doc",
+      "rank": null,
+      "millis": 1020.771326000613,
+      "urls": [
+        "https://www.kernel.org/doc/html/latest/translations/ja_JP/process/howto.html",
+        "https://www.kernel.org/doc/html/latest/translations/ja_JP/process/submit-checklist.html",
+        "https://docs.djangoproject.com/ja/6.1/",
+        "https://www.kernel.org/",
+        "http://openwrt.org/ja/docs/start",
+        "https://www.ruby-lang.org/ja/documentation/",
+        "https://docs.djangoproject.com/ja/6.1/ref/contrib/",
+        "https://docs.djangoproject.com/ja/6.1/ref/contrib/admin/admindocs/",
+        "https://docs.github.com/ja/webhooks",
+        "https://docs.djangoproject.com/ja/6.1/intro/"
+      ],
+      "engines": [
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "seznam"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 8462,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-aws",
+      "lang": "ja",
+      "query": "aws ec2 ドキュメント",
+      "gold": [
+        "https://docs.aws.amazon.com",
+        "https://aws.amazon.com/jp/documentation"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 1102.5916979997419,
+      "urls": [
+        "https://docs.aws.amazon.com/ja_jp/ec2/?id=docs_gateway",
+        "https://docs.aws.amazon.com/ja_jp/",
+        "https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/concepts.html",
+        "https://docs.aws.amazon.com/firewall-manager/",
+        "https://docs.aws.amazon.com/waf/",
+        "https://docs.aws.amazon.com/ja_jp/awsconsolehelpdocs/latest/gsg/what-is.html",
+        "https://docs.aws.amazon.com/ja_jp/cli/latest/reference/ec2/",
+        "https://docs.aws.amazon.com/mediaconvert/",
+        "https://docs.aws.amazon.com/personalize/",
+        "https://docs.aws.amazon.com/ja_jp/general/latest/gr/aws-service-information.html"
+      ],
+      "engines": [
+        [
+          "bing"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 8363,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-gcp",
+      "lang": "ja",
+      "query": "google cloud ドキュメント",
+      "gold": [
+        "https://cloud.google.com/docs"
+      ],
+      "category": "doc",
+      "rank": 7,
+      "millis": 1115.3588910001417,
+      "urls": [
+        "https://cloud.google.com/",
+        "https://cloud.google.com/dataproc/docs?hl=ja",
+        "https://cloud.google.com/vision/on-prem?hl=ja",
+        "https://cloud.google.com/appengine/docs?hl=ja",
+        "https://cloud.google.com/sql/docs?hl=ja",
+        "https://cloud.google.com/pubsub/docs?hl=ja",
+        "https://cloud.google.com/docs/buildpacks?hl=ja",
+        "https://cloud.google.com/docs?hl=ja",
+        "https://cloud.google.com/speech/docs/?hl=ja",
+        "https://cloud.google.com/livestream?hl=ja"
+      ],
+      "engines": [
+        [
+          "mwmbl",
+          "seznam",
+          "official site"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ]
+      ],
+      "bytes": 4407,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-mdn-js",
+      "lang": "ja",
+      "query": "mdn javascript 入門",
+      "gold": [
+        "https://developer.mozilla.org/ja/docs/Web/JavaScript"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 731.2667259993759,
+      "urls": [
+        "https://developer.mozilla.org/ja/docs/Web/JavaScript/Guide",
+        "http://developer.mozilla.org/ja/docs/Learn/JavaScript/Asynchronous/Introducing",
+        "https://developer.mozilla.org/ja/",
+        "http://developer.mozilla.org/ja/docs/Web/XML/Guides/XML_introduction",
+        "https://developer.mozilla.org/ja/docs/Web/HTML/Introduction",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference",
+        "https://developer.mozilla.org/en-US/docs/Glossary/JavaScript",
+        "https://developer.mozilla.org/en-US/docs/MDN/Writing_guidelines/Page_structures/Page_types/JavaScript_error_page_template"
+      ],
+      "engines": [
+        [
+          "seznam"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "mwmbl"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 5905,
+      "unresponsive": 5
+    },
+    {
+      "id": "ja-react",
+      "lang": "ja",
+      "query": "react 公式 ドキュメント",
+      "gold": [
+        "https://ja.react.dev",
+        "https://react.dev"
+      ],
+      "category": "doc",
+      "rank": 1,
+      "millis": 897.5690009992832,
+      "urls": [
+        "https://ja.react.dev/community/docs-contributors",
+        "https://ja.react.dev/reference/react",
+        "https://ja.react.dev/community",
+        "https://ja.react.dev/blog/2023/03/16/introducing-react-dev",
+        "https://ja.react.dev/reference/react-dom/components/meta",
+        "https://ja.react.dev/versions",
+        "https://ja.react.dev/community/translations",
+        "https://ja.react.dev/reference/react-dom/components/title",
+        "https://ja.react.dev/reference/react-dom/components/style",
+        "https://ja.react.dev/reference/react-dom/components/script"
+      ],
+      "engines": [
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ]
+      ],
+      "bytes": 8516,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-docker-hub",
+      "lang": "ja",
+      "query": "docker hub 公式",
+      "gold": [
+        "https://hub.docker.com"
+      ],
+      "category": "official",
+      "rank": 1,
+      "millis": 852.2537789995113,
+      "urls": [
+        "https://hub.docker.com/",
+        "https://hub.docker.com/_/python",
+        "https://docs.docker.com/docker-hub/",
+        "https://www.docker.com/ja-jp/products/docker-hub/",
+        "https://docs.docker.com/docker-hub/quickstart",
+        "https://www.docker.com",
+        "https://docs.docker.jp/docker-hub/official_repos.html",
+        "https://matsuand.github.io/docs.docker.jp.onthefly/docker-hub/official_images/",
+        "https://docs.docker.jp/sample/library-references.html",
+        "https://www.docker.com/ja-jp/get-started/"
+      ],
+      "engines": [
+        [
+          "bing",
+          "mwmbl",
+          "seznam"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing",
+          "mwmbl",
+          "local_index"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "seznam",
+          "local_index"
+        ],
+        [
+          "mwmbl",
+          "official site"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing"
+        ]
+      ],
+      "bytes": 5829,
+      "unresponsive": 4
+    },
+    {
+      "id": "ja-npm",
+      "lang": "ja",
+      "query": "npm 公式 パッケージ",
+      "gold": [
+        "https://www.npmjs.com"
+      ],
+      "category": "official",
+      "rank": 1,
+      "millis": 1243.9138879999518,
+      "urls": [
+        "https://www.npmjs.com/",
+        "https://www.npmjs.com/package/npm",
+        "https://ja.wikipedia.org/wiki/Npm_(%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8%E7%AE%A1%E7%90%86%E3%83%84%E3%83%BC%E3%83%AB)",
+        "https://docs.djangoproject.com/ja/6.1/ref/contrib/",
+        "https://techmania.jp/blog/nodejs-npm/",
+        "https://ja.wikipedia.org/wiki/%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8%E7%AE%A1%E7%90%86%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0",
+        "https://docs.oracle.com/javase/jp/21/jpackage/basic-packaging.html",
+        "https://docs.oracle.com/javase/jp/21/jpackage/packaging-overview.html",
+        "https://doc.rust-jp.rs/book-ja/ch07-01-packages-and-crates.html",
+        "https://qiita.com/shun198/items/06f50d2121bf51f0d33a"
+      ],
+      "engines": [
+        [
+          "bing",
+          "seznam"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "bing",
+          "wikipedia"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "bing"
+        ],
+        [
+          "wikipedia"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "local_index"
+        ],
+        [
+          "bing"
+        ]
+      ],
+      "bytes": 7852,
+      "unresponsive": 4
+    }
+  ]
+}

@@ -22,7 +22,7 @@ def inventory() -> str:
     writer = csv.writer(output, lineterminator='\n')
     writer.writerow(['name', 'module', 'disabled_in_config', 'inactive_in_config', 'enabled_in_config', 'source', 'configured_endpoint',
                      'source_url_literals_unverified', 'reviewed_request_url', 'access_method',
-                     'terms_url', 'review_status', 'review_date', 'decision'])
+                     'terms_url', 'review_status', 'review_date', 'decision', 'standard_allowed', 'conditions'])
     for engine in settings['engines']:
         module = engine.get('engine', engine['name'])
         source = ROOT / 'src/engines' / f'{module}.rs'
@@ -37,7 +37,9 @@ def inventory() -> str:
                          ' | '.join(sorted(set(re.findall(r'https?://[^\s"<>]+', production)))),
                          entry.get('request_url', ''), entry.get('access_method', 'unreviewed'),
                          entry.get('terms_url', ''), entry.get('status', 'unreviewed'),
-                         policy['checked_at'] if entry else '', entry.get('decision', 'provider_review_needed')])
+                         entry.get('review_date', '') if entry else '', entry.get('decision', 'provider_review_needed'),
+                         str(entry['standard_allowed']).lower() if 'standard_allowed' in entry else 'unreviewed',
+                         ' | '.join(entry.get('conditions', []))])
     return output.getvalue()
 
 

@@ -57,6 +57,7 @@ jobs:
         run: |
           python -m unittest discover -s tools -p "test_*.py"
           python tools/provider_inventory.py --check
+          python tools/check_provider_policy.py
       - name: Build the server binary
         run: cargo build --locked --bin rustxng
       - name: Agent setup smoke test (offline)

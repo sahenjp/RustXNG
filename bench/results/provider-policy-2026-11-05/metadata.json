@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-05",
+  "base_commit": "b986b79ed93e6d09a2562502bb3ade3c80fe8df3",
+  "version": "0.28.0",
+  "profile": "release",
+  "query_file": "bench/quality-questions-100.json",
+  "query_sha256": "b3cda086dd3497764243068f615f0ffb0ee9130e7421df9d417a47033ced214c",
+  "upstream_spacing_seconds": 1.1,
+  "local_indexes": {
+    "index-docs": 41144,
+    "index-wikipedia": 6185457
+  },
+  "warning": "Historical 2026-11-04 results are not a paired A/B baseline: upstream state and local index contents may differ. No excluded providers were requested for this evaluation.",
+  "final_change": "Final run includes mixed CJK/ASCII documentation-query filtering and public Mwmbl source-license metadata. Initial run before these changes retained in docs100-initial.json.",
+  "working_tree_changes": true,
+  "source_files_sha256": {
+    "Cargo.toml": "d2d5f6fc8d9261be06cc645f727d448aefe23809121fdb30f9b6a6c7076791c4",
+    "Cargo.lock": "1e0fa816abd111517a7df53db2148937befa3de41b7e5b207cc17e8bcef13c07",
+    "settings.toml": "6e143ef941eb51df841bbee6f83128eb4e7019a14e813620ba4c4e23b3945abc",
+    "src/network.rs": "f2f74152aa07b0e63444ea7f9d22b7de8cfb26c2f085593cb7c883a91095d351",
+    "src/cache.rs": "a79cacd839eaf8858d91e4717da7380bcce246bf20b26350ec78d86ce905ca25",
+    "src/localindex.rs": "8dfef6996ab5c6ea0989a1771679b6e3fa437716ad1f33ad0013e13bb73fff43",
+    "src/engines/openstreetmap.rs": "d078a307a957475c1ab665076b866824c17718a47ea19de335ad4a2354c7533c",
+    "src/engines/mwmbl.rs": "53b686f07874c3bc3491656ea044af5da3cc1625df39a4df7e8bb7f129a9e88a"
+  },
+  "index_metadata_sha256": {
+    "index-docs/meta.json": "05f3a9202f5c45f73e32920fd6159e475e330e8080ba077a1e955b9661bfc04d",
+    "index-wikipedia/meta.json": "11315cf0a742a7cbb9ae919f97c4381d72868009ceb9ac2a1acca701a26434fa"
+  },
+  "same_day_provider_baseline": {
+    "source": "docs/audit/2026-11-05/rustxng-standard-quality-before.json",
+    "source_sha256": "7790a0eb4c7f6fb37245e4763d3542f6e74717b2219d6bc24d2efc2377f1f676",
+    "method_record": "docs/audit/2026-11-05/standard-baseline-2026-11-05.md",
+    "config_sha256": "e4f6ed6dd2cdbe282be57c5efce768eb064a78e09f083bc955cd955cdc873d9c",
+    "verified_configuration_difference": "Only the 11 engine disabled flags differ from shipped settings; 119 enabled versus 108.",
+    "comparison_limit": "Same-day records are sequential, not simultaneous A/B. Upstream variation and later mixed-query code change also affect comparisons. Historical 2026-11-04 results are retained separately."
+  }
+}

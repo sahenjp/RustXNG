@@ -189,7 +189,7 @@ mod tests {
     #[test]
     fn configured_markets_are_opt_in_in_the_default_registry() {
         let registry = EngineRegistry::from_settings(&Settings::defaults()).unwrap();
-        assert!(registry.get("bing").is_some());
+        assert!(registry.get("bing").is_none());
         assert!(registry.by_shortcut("buk").is_none());
         assert!(registry.by_shortcut("bde").is_none());
         assert!(registry.by_shortcut("bjp").is_none());

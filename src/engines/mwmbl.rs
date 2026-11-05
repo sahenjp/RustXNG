@@ -87,6 +87,9 @@ impl Engine for Mwmbl {
             .as_array()
             .or_else(|| json.get("results").and_then(|value| value.as_array()))
             .ok_or_else(|| EngineError::Parse("expected a JSON array".into()))?;
+        let public_api = url::Url::parse(&response.final_url)
+            .ok()
+            .is_some_and(|url| url.host_str() == Some("api.mwmbl.org"));
         let mut results = Vec::new();
         for item in items {
             let url = json_str(item, "url");
@@ -97,11 +100,18 @@ impl Engine for Mwmbl {
                 Some(_) => join_fragments(item, "extract"),
                 None => join_fragments(item, "content"),
             };
-            results.push(
-                ResultBuilder::new(url, join_fragments(item, "title"))
-                    .content(content)
-                    .build(),
-            );
+            let mut result =
+                ResultBuilder::new(url, join_fragments(item, "title")).content(content);
+            if public_api {
+                result = result
+                    .metadata("source_license", "CC BY-NC-SA 4.0")
+                    .metadata(
+                        "source_license_url",
+                        "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+                    )
+                    .metadata("source_terms_url", "https://developer.mwmbl.org/terms/");
+            }
+            results.push(result.build());
         }
         Ok(results)
     }
@@ -177,6 +187,10 @@ mod tests {
         );
         let items = engine(None, None).parse(&v2, &query).unwrap();
         assert_eq!(items.len(), 1);
+        let EngineItem::Result(result) = &items[0] else {
+            panic!("expected result");
+        };
+        assert_eq!(result.metadata["source_license"], "CC BY-NC-SA 4.0");
         let v1 = EngineResponse::new(
             200,
             API_URL,
@@ -185,5 +199,22 @@ mod tests {
                 .to_vec(),
         );
         assert_eq!(engine(None, None).parse(&v1, &query).unwrap().len(), 1);
+    }
+
+    #[test]
+    fn a_custom_instance_does_not_inherit_the_public_apis_license() {
+        let response = EngineResponse::new(
+            200,
+            "https://private.example/api/v2/search/",
+            br#"{"results":[{"url":"https://a.example/","title":"A","content":"about a"}]}"#
+                .to_vec(),
+        );
+        let items = engine(Some("https://private.example/api/v2"), None)
+            .parse(&response, &query("rust"))
+            .unwrap();
+        let EngineItem::Result(result) = &items[0] else {
+            panic!("expected result");
+        };
+        assert!(!result.metadata.contains_key("source_license"));
     }
 }

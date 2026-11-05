@@ -1,0 +1,526 @@
+{
+  "recorded_at": "2026-11-05",
+  "scope": "Existing, unreviewed Standard entries. This snapshot prevents unaudited expansion; it does not grant permission or assert compliance.",
+  "engines": {
+    "wikipedia": {
+      "module": "wikipedia",
+      "base_url": "",
+      "search_url": ""
+    },
+    "wikipedia entities": {
+      "module": "wikipedia_entities",
+      "base_url": "",
+      "search_url": ""
+    },
+    "wikipedia any words": {
+      "module": "wikipedia_any",
+      "base_url": "",
+      "search_url": ""
+    },
+    "wikidata": {
+      "module": "wikidata",
+      "base_url": "",
+      "search_url": ""
+    },
+    "github": {
+      "module": "github",
+      "base_url": "",
+      "search_url": ""
+    },
+    "stack overflow": {
+      "module": "stackexchange",
+      "base_url": "",
+      "search_url": ""
+    },
+    "crates.io": {
+      "module": "crates",
+      "base_url": "",
+      "search_url": ""
+    },
+    "npm": {
+      "module": "npm",
+      "base_url": "",
+      "search_url": ""
+    },
+    "pypi": {
+      "module": "pypi",
+      "base_url": "",
+      "search_url": ""
+    },
+    "docker hub": {
+      "module": "docker_hub",
+      "base_url": "",
+      "search_url": ""
+    },
+    "arxiv": {
+      "module": "arxiv",
+      "base_url": "",
+      "search_url": ""
+    },
+    "crossref": {
+      "module": "crossref",
+      "base_url": "",
+      "search_url": ""
+    },
+    "cinii": {
+      "module": "cinii",
+      "base_url": "",
+      "search_url": ""
+    },
+    "semantic scholar": {
+      "module": "semantic_scholar",
+      "base_url": "",
+      "search_url": ""
+    },
+    "photon": {
+      "module": "photon",
+      "base_url": "",
+      "search_url": ""
+    },
+    "dailymotion": {
+      "module": "dailymotion",
+      "base_url": "",
+      "search_url": ""
+    },
+    "deezer": {
+      "module": "deezer",
+      "base_url": "",
+      "search_url": ""
+    },
+    "openverse": {
+      "module": "openverse",
+      "base_url": "",
+      "search_url": ""
+    },
+    "wikicommons": {
+      "module": "wikicommons",
+      "base_url": "",
+      "search_url": ""
+    },
+    "nixos wiki": {
+      "module": "mediawiki",
+      "base_url": "https://wiki.nixos.org/",
+      "search_url": ""
+    },
+    "bitbucket": {
+      "module": "xpath",
+      "base_url": "",
+      "search_url": "https://bitbucket.org/repo/all/{pageno}?name={query}"
+    },
+    "etymonline": {
+      "module": "xpath",
+      "base_url": "",
+      "search_url": "https://etymonline.com/search?page={pageno}&q={query}"
+    },
+    "free software directory": {
+      "module": "mediawiki",
+      "base_url": "https://directory.fsf.org/",
+      "search_url": ""
+    },
+    "gentoo": {
+      "module": "mediawiki",
+      "base_url": "https://wiki.gentoo.org/",
+      "search_url": ""
+    },
+    "hoogle": {
+      "module": "xpath",
+      "base_url": "",
+      "search_url": "https://hoogle.haskell.org/?hoogle={query}"
+    },
+    "mdn": {
+      "module": "json_engine",
+      "base_url": "",
+      "search_url": "https://developer.mozilla.org/api/v1/search?q={query}&page={pageno}"
+    },
+    "packagist": {
+      "module": "json_engine",
+      "base_url": "",
+      "search_url": "https://packagist.org/search.json?q={query}&page={pageno}"
+    },
+    "pub.dev": {
+      "module": "xpath",
+      "base_url": "",
+      "search_url": "https://pub.dev/packages?q={query}&page={pageno}"
+    },
+    "wiby": {
+      "module": "json_engine",
+      "base_url": "",
+      "search_url": "https://wiby.me/json/?q={query}&p={pageno}"
+    },
+    "wikibooks": {
+      "module": "mediawiki",
+      "base_url": "https://{language}.wikibooks.org/",
+      "search_url": ""
+    },
+    "wikinews": {
+      "module": "mediawiki",
+      "base_url": "https://{language}.wikinews.org/",
+      "search_url": ""
+    },
+    "wikiquote": {
+      "module": "mediawiki",
+      "base_url": "https://{language}.wikiquote.org/",
+      "search_url": ""
+    },
+    "wikisource": {
+      "module": "mediawiki",
+      "base_url": "https://{language}.wikisource.org/",
+      "search_url": ""
+    },
+    "wikispecies": {
+      "module": "mediawiki",
+      "base_url": "https://species.wikimedia.org/",
+      "search_url": ""
+    },
+    "wiktionary": {
+      "module": "mediawiki",
+      "base_url": "https://{language}.wiktionary.org/",
+      "search_url": ""
+    },
+    "wikiversity": {
+      "module": "mediawiki",
+      "base_url": "https://{language}.wikiversity.org/",
+      "search_url": ""
+    },
+    "wikivoyage": {
+      "module": "mediawiki",
+      "base_url": "https://{language}.wikivoyage.org/",
+      "search_url": ""
+    },
+    "rubygems": {
+      "module": "xpath",
+      "base_url": "",
+      "search_url": "https://rubygems.org/search?page={pageno}&query={query}"
+    },
+    "woxikon.de synonyme": {
+      "module": "xpath",
+      "base_url": "",
+      "search_url": "https://synonyme.woxikon.de/synonyme/{query}.php"
+    },
+    "minecraft wiki": {
+      "module": "mediawiki",
+      "base_url": "https://minecraft.wiki/",
+      "search_url": ""
+    },
+    "apple_app_store": {
+      "module": "apple_app_store",
+      "base_url": "",
+      "search_url": ""
+    },
+    "openclipart": {
+      "module": "openclipart",
+      "base_url": "",
+      "search_url": ""
+    },
+    "lemmy": {
+      "module": "lemmy",
+      "base_url": "",
+      "search_url": ""
+    },
+    "mastodon": {
+      "module": "mastodon",
+      "base_url": "",
+      "search_url": ""
+    },
+    "apkmirror": {
+      "module": "apkmirror",
+      "base_url": "",
+      "search_url": ""
+    },
+    "genius": {
+      "module": "genius",
+      "base_url": "",
+      "search_url": ""
+    },
+    "mixcloud": {
+      "module": "mixcloud",
+      "base_url": "",
+      "search_url": ""
+    },
+    "wallhaven": {
+      "module": "wallhaven",
+      "base_url": "",
+      "search_url": ""
+    },
+    "500px": {
+      "module": "500px",
+      "base_url": "",
+      "search_url": ""
+    },
+    "9gag": {
+      "module": "9gag",
+      "base_url": "",
+      "search_url": ""
+    },
+    "findfiles": {
+      "module": "findfiles",
+      "base_url": "",
+      "search_url": ""
+    },
+    "peertube": {
+      "module": "peertube",
+      "base_url": "",
+      "search_url": ""
+    },
+    "pexels": {
+      "module": "pexels",
+      "base_url": "",
+      "search_url": ""
+    },
+    "sepiasearch": {
+      "module": "sepiasearch",
+      "base_url": "",
+      "search_url": ""
+    },
+    "tootfinder": {
+      "module": "tootfinder",
+      "base_url": "",
+      "search_url": ""
+    },
+    "deviantart": {
+      "module": "deviantart",
+      "base_url": "",
+      "search_url": ""
+    },
+    "imgur": {
+      "module": "imgur",
+      "base_url": "",
+      "search_url": ""
+    },
+    "alpinelinux": {
+      "module": "alpinelinux",
+      "base_url": "",
+      "search_url": ""
+    },
+    "r1337x": {
+      "module": "1337x",
+      "base_url": "",
+      "search_url": ""
+    },
+    "artic": {
+      "module": "artic",
+      "base_url": "",
+      "search_url": ""
+    },
+    "bitchute": {
+      "module": "bitchute",
+      "base_url": "",
+      "search_url": ""
+    },
+    "bpb": {
+      "module": "bpb",
+      "base_url": "",
+      "search_url": ""
+    },
+    "cachy_os": {
+      "module": "cachy_os",
+      "base_url": "",
+      "search_url": ""
+    },
+    "ccc_media": {
+      "module": "ccc_media",
+      "base_url": "",
+      "search_url": ""
+    },
+    "core": {
+      "module": "core",
+      "base_url": "",
+      "search_url": ""
+    },
+    "r360search_videos": {
+      "module": "360search_videos",
+      "base_url": "",
+      "search_url": ""
+    },
+    "iqiyi": {
+      "module": "iqiyi",
+      "base_url": "",
+      "search_url": ""
+    },
+    "niconico": {
+      "module": "niconico",
+      "base_url": "",
+      "search_url": ""
+    },
+    "odysee": {
+      "module": "odysee",
+      "base_url": "",
+      "search_url": ""
+    },
+    "rumble": {
+      "module": "rumble",
+      "base_url": "",
+      "search_url": ""
+    },
+    "vimeo": {
+      "module": "vimeo",
+      "base_url": "",
+      "search_url": ""
+    },
+    "github_code": {
+      "module": "github_code",
+      "base_url": "",
+      "search_url": ""
+    },
+    "gitlab": {
+      "module": "gitlab",
+      "base_url": "",
+      "search_url": ""
+    },
+    "geizhals": {
+      "module": "geizhals",
+      "base_url": "",
+      "search_url": ""
+    },
+    "gitea": {
+      "module": "gitea",
+      "base_url": "",
+      "search_url": ""
+    },
+    "hex": {
+      "module": "hex",
+      "base_url": "",
+      "search_url": ""
+    },
+    "openalex": {
+      "module": "openalex",
+      "base_url": "",
+      "search_url": ""
+    },
+    "pkg_go_dev": {
+      "module": "pkg_go_dev",
+      "base_url": "",
+      "search_url": ""
+    },
+    "sogou_images": {
+      "module": "sogou_images",
+      "base_url": "",
+      "search_url": ""
+    },
+    "sogou_videos": {
+      "module": "sogou_videos",
+      "base_url": "",
+      "search_url": ""
+    },
+    "sourcehut": {
+      "module": "sourcehut",
+      "base_url": "",
+      "search_url": ""
+    },
+    "steam": {
+      "module": "steam",
+      "base_url": "",
+      "search_url": ""
+    },
+    "www1x": {
+      "module": "www1x",
+      "base_url": "",
+      "search_url": ""
+    },
+    "duden": {
+      "module": "duden",
+      "base_url": "",
+      "search_url": ""
+    },
+    "fdroid": {
+      "module": "fdroid",
+      "base_url": "",
+      "search_url": ""
+    },
+    "flaticon": {
+      "module": "flaticon",
+      "base_url": "",
+      "search_url": ""
+    },
+    "iconify": {
+      "module": "iconify",
+      "base_url": "",
+      "search_url": ""
+    },
+    "jisho": {
+      "module": "jisho",
+      "base_url": "",
+      "search_url": ""
+    },
+    "pixiv": {
+      "module": "pixiv",
+      "base_url": "",
+      "search_url": ""
+    },
+    "pubmed": {
+      "module": "pubmed",
+      "base_url": "",
+      "search_url": ""
+    },
+    "repology": {
+      "module": "repology",
+      "base_url": "",
+      "search_url": ""
+    },
+    "shopify_stock": {
+      "module": "shopify_stock",
+      "base_url": "",
+      "search_url": ""
+    },
+    "wordnik": {
+      "module": "wordnik",
+      "base_url": "",
+      "search_url": ""
+    },
+    "emojipedia": {
+      "module": "emojipedia",
+      "base_url": "",
+      "search_url": ""
+    },
+    "currency_convert": {
+      "module": "currency_convert",
+      "base_url": "",
+      "search_url": ""
+    },
+    "dictzone": {
+      "module": "dictzone",
+      "base_url": "",
+      "search_url": ""
+    },
+    "kickass": {
+      "module": "kickass",
+      "base_url": "",
+      "search_url": ""
+    },
+    "nyaa": {
+      "module": "nyaa",
+      "base_url": "",
+      "search_url": ""
+    },
+    "open_meteo": {
+      "module": "open_meteo",
+      "base_url": "",
+      "search_url": ""
+    },
+    "piratebay": {
+      "module": "piratebay",
+      "base_url": "",
+      "search_url": ""
+    },
+    "solidtorrents": {
+      "module": "solidtorrents",
+      "base_url": "",
+      "search_url": ""
+    },
+    "tokyotoshokan": {
+      "module": "tokyotoshokan",
+      "base_url": "",
+      "search_url": ""
+    },
+    "lib_rs": {
+      "module": "lib_rs",
+      "base_url": "",
+      "search_url": ""
+    },
+    "microsoft_learn": {
+      "module": "microsoft_learn",
+      "base_url": "",
+      "search_url": ""
+    }
+  }
+}

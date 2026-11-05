@@ -103,6 +103,8 @@ search_on_category_select = true
 hotkeys = "default"
 
 [outgoing]
+# Public services with published per-host limits. Other hosts remain parallel.
+host_spacing_overrides = { "nominatim.openstreetmap.org" = 1100, "api.mwmbl.org" = 1100 }
 # Additional trusted CA bundle for TLS-intercepting proxies (PEM).
 # ca_bundle = "/path/to/proxy-ca.pem"
 request_timeout = 4.0
@@ -182,6 +184,7 @@ disabled = true  # the site blocks automated queries (CAPTCHA / access denied / 
 [[engines]]
 name = "bing"
 engine = "bing"
+disabled = true # Permission/reuse scope pending; see docs/PROVIDERS.md.
 shortcut = "bi"
 categories = ["general", "web"]
 
@@ -347,6 +350,7 @@ categories = ["images"]
 [[engines]]
 name = "bing news"
 engine = "bing_news"
+disabled = true
 shortcut = "bnews"
 categories = ["news"]
 
@@ -933,6 +937,7 @@ disabled = true  # always times out and returns nothing; costs every search its 
 [[engines]]
 name = "imdb"
 engine = "imdb"
+disabled = true
 shortcut = "imdb"
 categories = ["movies"]
 
@@ -1062,6 +1067,7 @@ disabled = true  # the site blocks automated queries (CAPTCHA / access denied / 
 [[engines]]
 name = "unsplash"
 engine = "unsplash"
+disabled = true # Internal endpoint; official API migration needs attribution review.
 shortcut = "us"
 categories = ["stock images"]
 paging = true
@@ -1081,6 +1087,7 @@ categories = ["images"]
 [[engines]]
 name = "flickr"
 engine = "flickr_noapi"
+disabled = true
 shortcut = "fl"
 categories = ["images"]
 
@@ -1156,6 +1163,7 @@ paging = true
 [[engines]]
 name = "bing_images"
 engine = "bing_images"
+disabled = true
 shortcut = "bii"
 categories = ["images", "web"]
 paging = true
@@ -1164,6 +1172,7 @@ time_range_support = true
 [[engines]]
 name = "bing_videos"
 engine = "bing_videos"
+disabled = true
 shortcut = "biv"
 categories = ["videos", "web"]
 paging = true
@@ -1297,6 +1306,7 @@ disabled = true  # needs credentials or an instance URL
 [[engines]]
 name = "seznam"
 engine = "seznam"
+disabled = true
 shortcut = "szn"
 categories = ["general", "web"]
 
@@ -1329,6 +1339,7 @@ disabled = true  # the site blocks automated queries (CAPTCHA / access denied / 
 [[engines]]
 name = "ebay"
 engine = "ebay"
+disabled = true
 shortcut = "eb"
 categories = ["shopping"]
 paging = true
@@ -1484,6 +1495,7 @@ categories = ["dictionaries"]
 [[engines]]
 name = "pinterest"
 engine = "pinterest"
+disabled = true
 shortcut = "pin"
 categories = ["images"]
 paging = true
@@ -1864,6 +1876,7 @@ disabled = true  # unverified; remove when confirmed working
 [[engines]]
 name = "rottentomatoes"
 engine = "rottentomatoes"
+disabled = true
 shortcut = "rt"
 categories = ["movies"]
 # verified working (results observed in the engine sweep)

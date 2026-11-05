@@ -1,7 +1,10 @@
 {
-  "checked_at": "2026-11-03",
+  "checked_at": "2026-11-05",
+  "scope": "Shipped Standard defaults. Pending entries are not permission approvals; new enablements require a recorded review.",
   "providers": {
     "yahoo_japan": {
+      "review_date": "2026-11-03",
+      "standard_allowed": false,
       "request_url": "https://search.yahoo.co.jp/search",
       "access_method": "HTML",
       "terms_url": "https://support.yahoo-net.jp/PccSearch/s/article/H000015794",
@@ -9,6 +12,8 @@
       "decision": "disabled_by_default_pending_permission"
     },
     "mojeek": {
+      "review_date": "2026-11-03",
+      "standard_allowed": false,
       "request_url": "https://www.mojeek.com/search",
       "access_method": "HTML",
       "terms_url": "https://www.mojeek.com/about/terms.html",
@@ -16,18 +21,160 @@
       "decision": "disabled_by_default_pending_permission"
     },
     "bing": {
+      "review_date": "2026-11-05",
+      "standard_allowed": false,
       "request_url": "https://www.bing.com/search",
       "access_method": "HTML",
       "terms_url": "https://www.microsoft.com/ja-jp/servicesagreement",
       "status": "scope_review_required",
-      "decision": "review_applicable_permissions_and_reuse_scope"
+      "decision": "disabled_by_default_pending_permission"
     },
     "deepseek": {
+      "review_date": "2026-11-03",
+      "standard_allowed": false,
       "request_url": "https://api.deepseek.com/v1/tools/search",
       "access_method": "JSON API with bearer token",
       "terms_url": "https://api-docs.deepseek.com/guides/search",
       "status": "api_key_required",
       "decision": "disabled_by_default_requires_api_key"
+    },
+    "bing_news": {
+      "request_url": "https://www.bing.com/news/search",
+      "access_method": "HTML",
+      "terms_url": "https://www.microsoft.com/en-us/servicesagreement",
+      "review_date": "2026-11-05",
+      "status": "scope_review_required",
+      "standard_allowed": false,
+      "decision": "disabled_by_default_pending_permission"
+    },
+    "bing_images": {
+      "request_url": "https://www.bing.com/images/async",
+      "access_method": "HTML",
+      "terms_url": "https://www.microsoft.com/en-us/servicesagreement",
+      "review_date": "2026-11-05",
+      "status": "scope_review_required",
+      "standard_allowed": false,
+      "decision": "disabled_by_default_pending_permission"
+    },
+    "bing_videos": {
+      "request_url": "https://www.bing.com/videos/asyncv2",
+      "access_method": "HTML",
+      "terms_url": "https://www.microsoft.com/en-us/servicesagreement",
+      "review_date": "2026-11-05",
+      "status": "scope_review_required",
+      "standard_allowed": false,
+      "decision": "disabled_by_default_pending_permission"
+    },
+    "seznam": {
+      "request_url": "https://search.seznam.cz/",
+      "access_method": "HTML",
+      "terms_url": "https://o-seznam.cz/pravni-informace/",
+      "review_date": "2026-11-05",
+      "status": "scope_review_required",
+      "standard_allowed": false,
+      "decision": "disabled_by_default_pending_permission_not_a_finding_of_prohibition"
+    },
+    "ebay": {
+      "request_url": "https://www.ebay.com/sch/i.html",
+      "access_method": "HTML",
+      "terms_url": "https://www.ebay.com/help/policies/member-behavior-policies/user-agreement?id=4259",
+      "review_date": "2026-11-05",
+      "status": "restricted_html",
+      "standard_allowed": false,
+      "decision": "disabled_by_default_pending_permission"
+    },
+    "pinterest": {
+      "request_url": "https://www.pinterest.com/resource/BaseSearchResource/get/",
+      "access_method": "Internal JSON endpoint",
+      "terms_url": "https://policy.pinterest.com/en/terms-of-service",
+      "review_date": "2026-11-05",
+      "status": "restricted_internal_endpoint",
+      "standard_allowed": false,
+      "decision": "disabled_by_default_pending_permission"
+    },
+    "imdb": {
+      "request_url": "https://v2.sg.media-imdb.com/suggestion/",
+      "access_method": "Suggestion JSON endpoint",
+      "terms_url": "https://help.imdb.com/article/imdb/general-information/can-i-use-imdb-data-in-my-software/G5JTRESSHJBBHTGX",
+      "review_date": "2026-11-05",
+      "status": "restricted_automated_access",
+      "standard_allowed": false,
+      "decision": "disabled_by_default_pending_permission"
+    },
+    "rottentomatoes": {
+      "request_url": "https://www.rottentomatoes.com/search",
+      "access_method": "HTML",
+      "terms_url": "https://www.rottentomatoes.com/policies/terms-and-policies",
+      "review_date": "2026-11-05",
+      "status": "scope_review_required",
+      "standard_allowed": false,
+      "decision": "disabled_by_default_pending_permission"
+    },
+    "flickr_noapi": {
+      "request_url": "https://www.flickr.com/search/",
+      "access_method": "HTML with embedded JSON",
+      "terms_url": "https://www.flickr.com/help/terms",
+      "review_date": "2026-11-05",
+      "status": "restricted_automated_access",
+      "standard_allowed": false,
+      "decision": "disabled_by_default_use_official_api_after_review"
+    },
+    "unsplash": {
+      "request_url": "https://unsplash.com/napi/search/photos",
+      "access_method": "Internal JSON endpoint",
+      "terms_url": "https://unsplash.com/api-terms",
+      "documentation_url": "https://unsplash.com/documentation",
+      "review_date": "2026-11-05",
+      "status": "official_api_migration_required",
+      "standard_allowed": false,
+      "decision": "disabled_by_default_review_api_key_attribution_hotlinking_and_download_events"
+    },
+    "openstreetmap": {
+      "request_url": "https://nominatim.openstreetmap.org/search",
+      "access_method": "Documented JSON API",
+      "terms_url": "https://operations.osmfoundation.org/policies/nominatim/",
+      "review_date": "2026-11-05",
+      "status": "conditional_api",
+      "standard_allowed": true,
+      "decision": "low_volume_user_search_only_no_autocomplete_or_bulk_geocoding",
+      "minimum_spacing_ms": 1000,
+      "rate_limit_host": "nominatim.openstreetmap.org",
+      "conditions": ["Identifying User-Agent and cache", "Display OpenStreetMap attribution; ODbL applies", "Operator must deliberately choose this service and comply with its usage policy", "Multiple processes or machines must coordinate their aggregate traffic", "Use base_url to select a self-hosted or contracted search endpoint"]
+    },
+    "mwmbl": {
+      "request_url": "https://api.mwmbl.org/api/v2/search/",
+      "access_method": "Documented JSON API; optional X-API-Key",
+      "terms_url": "https://developer.mwmbl.org/terms/",
+      "documentation_url": "https://developer.mwmbl.org/",
+      "review_date": "2026-11-05",
+      "status": "conditional_api",
+      "standard_allowed": true,
+      "decision": "anonymous_quota_1000_per_month_1_per_second_results_license_separate",
+      "minimum_spacing_ms": 1000,
+      "rate_limit_host": "api.mwmbl.org",
+      "conditions": ["Anonymous quota: 1000 requests per calendar month; upstream enforces the quota", "API access permits commercial applications, but returned data has separate CC BY-NC-SA 4.0 and third-party rights", "Review attribution, sharing and commercial reuse of returned content separately"]
+    },
+    "hackernews": {
+      "request_url": "https://hn.algolia.com/api/v1/search",
+      "access_method": "Documented JSON API",
+      "terms_url": "https://hn.algolia.com/api",
+      "documentation_url": "https://github.com/algolia/hn-search",
+      "review_date": "2026-11-05",
+      "status": "api_documented_reuse_review_pending",
+      "standard_allowed": true,
+      "decision": "documented_search_interface_does_not_grant_unlimited_content_reuse",
+      "conditions": ["Content rights remain with the original authors", "Check deployment volume and caching/republication rights; no unlimited quota is asserted"]
+    },
+    "europepmc": {
+      "request_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search",
+      "access_method": "Documented JSON API",
+      "terms_url": "https://www.ebi.ac.uk/about/terms-of-use/",
+      "documentation_url": "https://europepmc.org/RestfulWebService",
+      "review_date": "2026-11-05",
+      "status": "conditional_api",
+      "standard_allowed": true,
+      "decision": "use_service_interfaces_respect_capacity_and_original_content_rights",
+      "conditions": ["EMBL-EBI terms revised 2026-10-14", "Service access grants no additional rights in third-party abstracts/full text", "Check the specific source license before storing or redistributing; do not degrade service for others"]
     }
   }
 }

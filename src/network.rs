@@ -363,40 +363,33 @@ impl Network {
         } else {
             self.client_for(proxy)?
         };
-        let mut headers: Vec<_> = request
-            .headers
-            .iter()
-            .map(|(name, value)| (name.as_str(), value.as_bytes()))
-            .collect();
-        headers.sort_by_key(|(name, _)| *name);
-        let identity = serde_json::to_vec(&(
-            request.method,
-            &request.url,
-            headers,
-            &request.cookies,
-            &request.form,
-            &request.json,
-            proxy.map(str::trim),
-        ))
-        .map_err(|error| NetworkError::Build(error.to_string()))?;
-        let cache_key: String = Sha256::digest(identity)
-            .iter()
-            .map(|byte| format!("{byte:02x}"))
-            .collect();
-        if let Some(cache) = cache {
-            if let Some(cached) = tokio::time::timeout_at(deadline, cache.get(&cache_key))
+        let cache_key = cache
+            .map(|_| request_cache_key(&request, proxy))
+            .transpose()?;
+        // The fast path needs no request lock. On a miss, only one caller for
+        // this cache and full request identity contacts the origin at a time.
+        let _request_guard = if let (Some(cache), Some(key)) = (cache, cache_key.as_deref()) {
+            if let Some(cached) = tokio::time::timeout_at(deadline, cache.get(key))
+                .await
+                .map_err(|_| NetworkError::Timeout)?
+            {
+                return Ok(cached_response(cached));
+            }
+            let guard = tokio::time::timeout_at(deadline, cache.request_lock(key).lock_owned())
+                .await
+                .map_err(|_| NetworkError::Timeout)?;
+            // A previous caller may have populated the cache while we waited.
+            if let Some(cached) = tokio::time::timeout_at(deadline, cache.get(key))
                 .await
                 .map_err(|_| NetworkError::Timeout)?
             {
                 debug!(url = %request.url, "cache hit");
-                return Ok(EngineResponse {
-                    status: cached.status,
-                    final_url: cached.final_url,
-                    headers: cached.headers,
-                    body: cached.body.as_ref().clone(),
-                });
+                return Ok(cached_response(cached));
             }
-        }
+            Some(guard)
+        } else {
+            None
+        };
 
         let mut attempt = 0;
         loop {
@@ -405,18 +398,24 @@ impl Network {
             if remaining.is_zero() {
                 return Err(NetworkError::Timeout);
             }
-            let outcome = self
-                .send(client.clone(), &request, remaining, max_bytes)
-                .await;
+            let outcome = match tokio::time::timeout_at(
+                deadline,
+                self.send(client.clone(), &request, remaining, max_bytes),
+            )
+            .await
+            {
+                Ok(outcome) => outcome,
+                Err(_) => return Err(NetworkError::Timeout),
+            };
             match outcome {
                 Ok(response) => {
-                    if let Some(cache) = cache {
+                    if let (Some(cache), Some(key)) = (cache, cache_key.as_deref()) {
                         if response.status == 200
                             && !response.body.is_empty()
                             && tokio::time::timeout_at(
                                 deadline,
                                 cache.set(
-                                    &cache_key,
+                                    key,
                                     CachedResponse {
                                         status: response.status,
                                         final_url: response.final_url.clone(),
@@ -562,6 +561,40 @@ impl Network {
             Err(_) => Err(NetworkError::Timeout),
         }
     }
+}
+
+fn cached_response(cached: CachedResponse) -> EngineResponse {
+    EngineResponse {
+        status: cached.status,
+        final_url: cached.final_url,
+        headers: cached.headers,
+        body: cached.body.as_ref().clone(),
+    }
+}
+
+fn request_cache_key(request: &EngineRequest, proxy: Option<&str>) -> Result<String, NetworkError> {
+    let mut headers: Vec<_> = request
+        .headers
+        .iter()
+        .map(|(name, value)| (name.as_str(), value.as_bytes()))
+        .collect();
+    headers.sort_by_key(|(name, _)| *name);
+    let identity = serde_json::to_vec(&(
+        request.method,
+        &request.url,
+        headers,
+        &request.cookies,
+        &request.form,
+        &request.json,
+        proxy.map(str::trim),
+    ))
+    .map_err(|error| NetworkError::Build(error.to_string()))?;
+    use std::fmt::Write;
+    let mut key = String::with_capacity(64);
+    for byte in Sha256::digest(identity) {
+        write!(&mut key, "{byte:02x}").expect("writing to a String cannot fail");
+    }
+    Ok(key)
 }
 
 fn is_retryable(error: &NetworkError) -> bool {

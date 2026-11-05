@@ -584,8 +584,8 @@ mod tests {
 
     #[test]
     fn shortcut_bang_selects_engine() {
-        let query = Query::parse("!bi async rust", &registry(), &[]);
-        assert_eq!(query.engine_ref_names(), vec!["bing".to_string()]);
+        let query = Query::parse("!wp async rust", &registry(), &[]);
+        assert_eq!(query.engine_ref_names(), vec!["wikipedia".to_string()]);
     }
 
     #[test]
@@ -738,8 +738,8 @@ mod tests {
 
     #[test]
     fn autocomplete_lists_bangs_and_languages() {
-        let query = Query::parse("!bin", &registry(), &[]);
-        assert!(query.autocomplete_list.contains(&"!bing".to_string()));
+        let query = Query::parse("!wikip", &registry(), &[]);
+        assert!(query.autocomplete_list.contains(&"!wikipedia".to_string()));
         // ":jap" is a valid language code, so it is parsed instead of being
         // autocompleted; ":engl" is not.
         let query = Query::parse(":engl", &registry(), &[]);

@@ -4,8 +4,8 @@
 //! `cache.max_bytes` (default 8 MB); the cache is a bounded LRU with a TTL.
 
 use std::collections::{HashMap, VecDeque};
-use std::sync::Mutex;
 use std::sync::atomic::{AtomicU64, Ordering};
+use std::sync::{Arc, Mutex, Weak};
 use std::time::{Duration, Instant};
 
 use serde::{Deserialize, Serialize};
@@ -226,12 +226,14 @@ pub enum CacheBackend {
 /// Cache facade used by the network layer and the HTTP handlers.
 pub struct Cache {
     backend: CacheBackend,
+    requests: Mutex<HashMap<String, Weak<tokio::sync::Mutex<()>>>>,
 }
 
 impl Default for Cache {
     fn default() -> Self {
         Self {
             backend: CacheBackend::Memory(ResponseCache::default()),
+            requests: Mutex::default(),
         }
     }
 }
@@ -240,6 +242,7 @@ impl Cache {
     pub fn memory(ttl: Duration, max_bytes: usize) -> Self {
         Self {
             backend: CacheBackend::Memory(ResponseCache::new(ttl, max_bytes)),
+            requests: Mutex::default(),
         }
     }
 
@@ -248,11 +251,29 @@ impl Cache {
     pub fn valkey(url: &str, ttl: Duration) -> Self {
         Self {
             backend: CacheBackend::Valkey(ValkeyCache::new(url, ttl)),
+            requests: Mutex::default(),
         }
     }
 
     pub fn is_valkey(&self) -> bool {
         matches!(self.backend, CacheBackend::Valkey(_))
+    }
+
+    /// Coordinate cache misses without serializing unrelated requests. Weak
+    /// entries do not keep completed requests alive; prune them on the next miss.
+    /// Dropping a cancelled fetch also releases its lock for the next caller.
+    pub(crate) fn request_lock(&self, key: &str) -> Arc<tokio::sync::Mutex<()>> {
+        let mut requests = self
+            .requests
+            .lock()
+            .unwrap_or_else(|poisoned| poisoned.into_inner());
+        requests.retain(|_, lock| lock.strong_count() > 0);
+        if let Some(lock) = requests.get(key).and_then(Weak::upgrade) {
+            return lock;
+        }
+        let lock = Arc::new(tokio::sync::Mutex::new(()));
+        requests.insert(key.to_owned(), Arc::downgrade(&lock));
+        lock
     }
 
     pub fn key(method: &str, url: &str, body: &str) -> String {
