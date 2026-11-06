@@ -3,6 +3,13 @@
 
 このファイルの形式は [Keep a Changelog](https://keepachangelog.com/ja/1.1.0/) に従います。バージョニング方針は本文末尾の「セマンティックバージョニング」を参照してください。
 
+## [0.30.1](https://github.com/sahenjp/RustXNG/compare/v0.30.0...v0.30.1) (2026-11-06)
+
+
+### Bug Fixes
+
+* **release:** recover image publishing for already-published releases ([#117](https://github.com/sahenjp/RustXNG/issues/117)) ([5535a15](https://github.com/sahenjp/RustXNG/commit/5535a153cff10a36d3ef0617f87a6cf1b40dc2c9))
+
 ## [0.30.0](https://github.com/sahenjp/RustXNG/compare/v0.29.0...v0.30.0) (2026-11-06)
 
 
