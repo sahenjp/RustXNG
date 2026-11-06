@@ -55,6 +55,28 @@ class DocumentationConsistencyTests(unittest.TestCase):
         self.assertNotIn("engines", clean)
         docs = (ROOT / "docs/CLEAN-PROFILE.md").read_text(encoding="utf-8")
         self.assertIn("外部エンジン 0", docs)
+    def test_readmes_track_current_profiles_and_mcp_budgets(self) -> None:
+        for filename in ("README.md", "README.ja.md", "README.ko.md"):
+            with self.subTest(filename=filename):
+                readme = (ROOT / filename).read_text(encoding="utf-8")
+                self.assertIn("strict_engines=1", readme)
+                self.assertIn("max_payload_tokens", readme)
+                self.assertIn("structuredContent", readme)
+                self.assertIn("docs/ISSUE-RESOLUTION-2026-11-05.md", readme)
+                self.assertNotIn("`--profile api`", readme)
+                self.assertIn("docs/CLEAN-PROFILE.md", readme)
+
+        clean = (ROOT / "docs/CLEAN-PROFILE.md").read_text(encoding="utf-8")
+        self.assertIn("rustxng-wikidump", clean)
+        self.assertNotIn("rustxng-index wiki", clean)
+        self.assertIn("外部エンジン 0", clean)
+
+    def test_compatibility_does_not_advertise_old_default_engine_count(self) -> None:
+        compatibility = (ROOT / "docs/COMPATIBILITY.md").read_text(encoding="utf-8")
+        self.assertNotIn("既定で有効なのは約 170", compatibility)
+        self.assertIn("273エントリ中34件", compatibility)
+        self.assertIn("現在の構成ではない", compatibility)
+
     def test_latest_sealqa_reference_is_not_old_run(self) -> None:
         summary = json.loads(
             (ROOT / "bench/results/profiles-2026-11-05/clean/sealqa/summary.json").read_text(encoding="utf-8")
