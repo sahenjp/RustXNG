@@ -1125,13 +1125,13 @@ impl Settings {
 /// A set of built-in settings to start from (`--profile`).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum Profile {
-    /// `settings.toml`: keyless providers that do not refuse automated use.
+    /// `settings.toml`: reviewed keyless default entries, subject to their recorded conditions.
     #[default]
     Standard,
-    /// `settings.full.toml`: the standard set plus HTML search engines whose
-    /// terms prohibit or do not permit automated access. Private use only.
+    /// `settings.full.toml`: opt-in sources that may require additional permissions.
+    /// Private or personal use does not override any provider's terms.
     Full,
-    /// `settings.clean.toml`: documented public APIs and our own crawl only.
+    /// `settings.clean.toml`: search only locally prebuilt crawl and dump indexes.
     Clean,
 }
 
