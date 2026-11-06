@@ -32,7 +32,7 @@ curl --fail --get 'http://127.0.0.1:29483/search' \
   --data 'format=json' --data 'max_results=5'
 ```
 
-Results contain a title, URL, snippet and source metadata. Useful optional parameters include `language=ja`, `engines=wikipedia`, `include_domains=docs.rs`, `exclude_domains=example.com`, `time_range=day`, and `include_raw_content=1`. Time filtering depends on provider support.
+Results contain a title, URL, snippet and source metadata. For automated clients that need errors for unknown engine names, add `strict_engines=1` (the default preserves SearXNG-compatible fallback behavior). Useful optional parameters include `language=ja`, `engines=wikipedia`, `include_domains=docs.rs`, `exclude_domains=example.com`, `time_range=day`, and `include_raw_content=1`. Time filtering depends on provider support.
 
 The web interface is at <http://127.0.0.1:29483/>. The search endpoint also supports CSV, RSS and HTML output.
 
@@ -49,7 +49,7 @@ MCP exposes two read-only tools:
 - `search` returns up to 10 ranked results. The default is 5, with snippets limited to 500 characters.
 - `read_page` retrieves text from a URL returned by `search` in the same session. It can return up to three passages relevant to an optional `query`, selected from the extracted page.
 
-`read_page` returns 4,000 characters by default and allows `max_chars` up to 20,000. Use `offset` and `next_offset` to continue. `truncated` and `source_truncated` indicate limits. MCP enforces serialized character and byte budgets. Supply `tokenizer` and `max_payload_tokens` to apply an exact encoding-specific limit. [Output contract](docs/AGENT-OUTPUT.md)
+`read_page` returns 4,000 characters by default and allows `max_chars` up to 20,000. Use `offset` and `next_offset` to continue. `truncated` and `source_truncated` indicate limits. MCP enforces serialized character and byte budgets. Supply both `tokenizer` (`cl100k_base` or `o200k_base`) and `max_payload_tokens` for an exact budget on serialized MCP `structuredContent`; this does **not** include the JSON-RPC envelope or client/model framing. [Output contract](docs/AGENT-OUTPUT.md)
 
 Page fetching checks destinations and redirects for non-public addresses and follows robots.txt (RFC 9309). It does not accept arbitrary URLs through MCP. Treat all returned web text as untrusted content.
 
@@ -64,14 +64,14 @@ Choose a provider configuration with `--profile`. The default is `standard`.
 | Profile | Command | Sources |
 | --- | --- | --- |
 | Standard | `rustxng` | 34 keyless entries with recorded endpoint/use conditions, plus local indexes |
-| Clean | `rustxng --profile clean` | No external search at all: only our own indexes (the crawl index and the Wikipedia dump index) |
+| Clean | `rustxng --profile clean` | Search only prebuilt local crawl and Wikipedia-dump indexes; no external search-provider requests |
 | Full | `rustxng --profile full` | Additional HTML providers, including sources with restrictive or unverified automation terms, plus billed Exa Search (skipped at startup when `EXA_API_KEY` is absent) |
 
 **Full is not a permission bypass.** Do not enable a provider without the permissions required for your use. A private instance does not override provider terms. Clean is a configuration choice, not a certification of legal compliance.
 
-The selected profile also works with MCP, for example `rustxng mcp --profile clean`. Optional API-backed providers may require keys and incur charges. Search queries are sent to the enabled external providers even when RustXNG runs locally.
+The selected profile also works with MCP, for example `rustxng mcp --profile clean`. Standard and Full send queries to their enabled external providers even when RustXNG runs locally. Clean searches local indexes only, but explicitly requested raw page fetching or other network-backed features can still make outbound requests. Full's Exa integration is opt-in and billed; an API key alone does not enable Exa in Standard.
 
-Standard now excludes every unreviewed enabled source. Reviews cover the recorded retrieval scope; source licences, quotas and deployment purposes still apply. The API profile never activates merely because a key exists. See the [current measurements and setup](docs/ISSUE-RESOLUTION-2026-11-05.md).
+Standard excludes unreviewed providers from its defaults. Reviews apply to the documented retrieval scope, **not** every commercial use, content licence, storage policy or redistribution scenario. See [provider conditions](docs/PROVIDERS.md) and [dated measurements](docs/ISSUE-RESOLUTION-2026-11-05.md).
 
 ## Installation and configuration
 
@@ -85,21 +85,26 @@ docker run --rm -p 127.0.0.1:29483:29483 \
 
 By default, the service binds to loopback. Exposing it to another network requires appropriate access controls.
 
-Settings are embedded. Provide only overrides in a TOML file:
+Settings are embedded. To override a value, create a small `my-settings.toml`, for example:
 
-```bash
-rustxng --config settings.toml
+```toml
+[server]
+idle_timeout = 600
 ```
 
-An explicit settings file overrides the chosen profile, so avoid copying the entire default file unless that is intentional. Use `rustxng --check-update` to check for a release or `rustxng --update` for a supported binary installation. For managed packages and containers, use the original installation method.
+```bash
+rustxng --config my-settings.toml
+```
+
+A custom settings file is layered over the selected profile; avoid copying all shipped settings or adding an unintended engine override. Use `rustxng --check-update` to check for a release or `rustxng --update` for a supported binary installation. For managed packages and containers, use the original installation method.
 
 The `/healthz` endpoint checks the process, not the availability of upstream providers. Use a real JSON search to verify that results are returned. Runtime metrics are exposed at `/stats` and `/metrics`.
 
 ## Search quality and limitations
 
-The [November 4, 2026 comparison](docs/COMPARISON-2026-11-04.md) measures Standard, Clean and Full on 100 documentation questions and 254 SealQA questions. For example, the documentation set measured Hit@10 of 88, 61 and 98 respectively, with the local index used in the recorded environment.
+The [November 4 comparison](docs/COMPARISON-2026-11-04.md) covers **older** search profiles and is not a benchmark of v0.30.0. After provider permission changes, the [November 5 Standard runs](docs/ISSUE-RESOLUTION-2026-11-05.md) recorded Hit@5 of **67–69/100**, down from the earlier configuration's 84/100 on the same documentation question set. The newer *offline-only* Clean profile reached **85/254 Hit@10** on SealQA with a 42.7 ms median in its [recorded run](docs/CLEAN-PROFILE.md). These are different datasets and cannot be ranked against each other.
 
-These are reference-page retrieval results, **not the accuracy of generated AI answers**. The benchmark sets informed development, the local index overlaps with tested documentation sites, and stored Exa/Tavily results were not collected at the same time. Do not treat those scores as universal rankings or current guarantees.
+All figures measure whether a reference page was retrieved, **not the accuracy of generated AI answers**. The question sets informed development, some indexes cover relevant documentation sites, and comparisons to stored commercial API results were not simultaneous or held out. These dated experiments are not guaranteed v0.30.0 performance. Do not infer general superiority over Exa or Tavily.
 
 ## Documentation
 
