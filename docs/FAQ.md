@@ -19,7 +19,7 @@ RustXNG returns search evidence; a language model's answer accuracy is a separat
 ## Does local hosting remove all search costs and rate limits?
 
 No. RustXNG itself does not charge per search request, but servers, networking and optional paid providers still have costs.
-Queries go to external engines, which can rate-limit, block, require credentials or change their response formats.
+Standard and Full send queries to external engines, which can rate-limit, block, require credentials or change their response formats. Clean searches prebuilt local indexes only; explicitly enabled raw-page retrieval or other network-backed features are separate.
 Many parallel agents can increase those problems. Caching, bounded concurrency and suitable engine selection help;
 local hosting does not bypass provider limits.
 
@@ -38,7 +38,7 @@ Keep errors and misses in the denominator, record cache/local-index settings, an
 
 ## What about full Japanese error messages?
 
-The existing measurements do not establish performance for that workload.
+The [November 5 Japanese troubleshooting observations](../bench/results/issue-resolution-2026-11-05/japanese/baseline/summary.json) show poor reference-page recall in a specific older API-backed test configuration. They do not establish the current v0.30.0 performance for that workload.
 Full error text, a shortened query and quoted exact text can behave differently; language handling and source coverage matter.
 Use the benchmark report form with a public error example and an expected source URL.
 Japanese technical retrieval and broad/current-information collection are tracked in [GitHub Issues](https://github.com/sahenjp/RustXNG/issues).
@@ -52,7 +52,7 @@ Neither a high hit@1 score nor a large result count alone measures both tasks.
 
 It can. Start with `max_results=5`, relevant domains, and short snippets. Project the fields passed to the model locally
 when appropriate. Page fetching is optional; review the [current security policy](../SECURITY.md) and the [historical audit](AUDIT-2026-11-02.md).
-MCP provides character/byte budgets and up to three query-matched passages from the extracted page. These are not tokenizer-specific budgets. HTTP compression saves transfer bytes, not model tokens.
+MCP provides character/byte budgets and up to three query-matched passages from the extracted page. An explicit `tokenizer` (`cl100k_base` or `o200k_base`) together with `max_payload_tokens` also limits serialized `structuredContent`, but does not include the JSON-RPC envelope or the caller's prompt. See [the MCP budget contract](AGENT-OUTPUT.md). HTTP compression saves transfer bytes, not model tokens.
 
 ## Does it support Linux ARM?
 
