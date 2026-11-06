@@ -52,7 +52,7 @@ concurrency:
 jobs:
   plan:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     outputs:
       sha: ${{ steps.plan.outputs.sha }}
       matrix: ${{ steps.plan.outputs.matrix }}
@@ -79,8 +79,25 @@ jobs:
           fi
           if [ "$DRY_RUN" != true ]; then
             git merge-base --is-ancestor "$sha" origin/main
-            gh api "repos/$GITHUB_REPOSITORY/actions/runs?head_sha=$sha&event=push&per_page=100" > "$RUNNER_TEMP/ci-runs.json"
-            python3 tools/release_tools.py ci-gate --tag "$RELEASE_TAG" --sha "$sha" --repository "$GITHUB_REPOSITORY" --runs "$RUNNER_TEMP/ci-runs.json"
+            # A dispatch can outrun the main CI run for the release commit
+            # (CI needs several minutes); wait for it instead of failing.
+            deadline=$(( $(date +%s) + 900 ))
+            while :; do
+              gh api "repos/$GITHUB_REPOSITORY/actions/runs?head_sha=$sha&event=push&per_page=100" > "$RUNNER_TEMP/ci-runs.json"
+              if python3 tools/release_tools.py ci-gate --tag "$RELEASE_TAG" --sha "$sha" --repository "$GITHUB_REPOSITORY" --runs "$RUNNER_TEMP/ci-runs.json"; then
+                break
+              fi
+              if jq -e '[.workflow_runs[] | select(.name == "ci" and .head_branch == "main" and .event == "push" and .status == "completed" and .conclusion != "success")] | length > 0' "$RUNNER_TEMP/ci-runs.json" > /dev/null; then
+                echo 'main CI for the release commit completed without success' >&2
+                exit 1
+              fi
+              if [ "$(date +%s)" -ge "$deadline" ]; then
+                echo 'timed out waiting for main CI for the release commit' >&2
+                exit 1
+              fi
+              echo 'Waiting for main CI for the release commit to succeed...'
+              sleep 30
+            done
           fi
           echo "sha=$sha" >> "$GITHUB_OUTPUT"
           python3 - <<'PY'
@@ -249,13 +266,20 @@ jobs:
           if gh release view "$RELEASE_TAG" --json isDraft > "$RUNNER_TEMP/release.json" 2>/dev/null; then
             if [ "$(jq -r .isDraft "$RUNNER_TEMP/release.json")" = false ]; then
               mkdir -p "$RUNNER_TEMP/published"
-              gh release download "$RELEASE_TAG" --dir "$RUNNER_TEMP/published"
-              read -r -a targets <<< "$TARGETS"
-              python3 tools/release_tools.py verify --tag "$RELEASE_TAG" --dist "$RUNNER_TEMP/published" --sha "$SOURCE_SHA" --targets "${targets[@]}"
-              rm -f dist/release-manifest.json
-              cp "$RUNNER_TEMP/published/"* dist/
-              echo 'published=true' >> "$GITHUB_OUTPUT"
-              exit 0
+              gh release download "$RELEASE_TAG" --dir "$RUNNER_TEMP/published" 2>/dev/null || true
+              if [ -n "$(find "$RUNNER_TEMP/published" -type f -print -quit)" ]; then
+                read -r -a targets <<< "$TARGETS"
+                python3 tools/release_tools.py verify --tag "$RELEASE_TAG" --dist "$RUNNER_TEMP/published" --sha "$SOURCE_SHA" --targets "${targets[@]}"
+                rm -f dist/release-manifest.json
+                cp "$RUNNER_TEMP/published/"* dist/
+                echo 'published=true' >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+              # release-please publishes the release before this job runs,
+              # so a first pass can find it published but still assetless.
+              # No published bytes exist to protect yet: fall through and
+              # stage the built assets instead of failing the release.
+              echo 'Release is published but has no assets; staging the built assets.' >&2
             fi
           else
             gh release create "$RELEASE_TAG" --draft --target "$SOURCE_SHA" --title "RustXNG $RELEASE_TAG" --notes-file "$RUNNER_TEMP/notes.md"
@@ -280,7 +304,6 @@ jobs:
 
   container:
     needs: [plan, stage]
-    if: needs.stage.outputs.published != 'true'
     permissions:
       contents: read
       packages: write
