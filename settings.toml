@@ -40,7 +40,7 @@ local_index_path = "index-docs"
 # Wikipedia の公式ダンプから作る索引（rustxng-wikidump、docs/WIKIPEDIA-INDEX.md）。
 # 外部への問い合わせは増えない。ディレクトリが無ければ黙って使わない。
 wikipedia_index_path = "index-wikipedia"
-# インデックスのヒットを上流の結果に足す（精度が上がる）
+# インデックスのヒットを上流の結果に加える。品質は収録内容や検索語に左右される。
 local_index_merge = true
 
 # 結果を返さないエンジンを自動で休ませる（連続して空の応答が続いたとき）
@@ -121,7 +121,7 @@ keepalive_expiry = 5.0
 using_tor_proxy = false
 
 # 上流へ出るときのプロキシ。指定した scheme のリクエストがこのプロキシを通る。
-# ブロックされているエンジン（Google / Bing など）を復活させる用途で使う。
+# 認可された社内・運用ネットワークに接続する場合の設定。検索元の制限・規約を回避するために使わない。
 # 注意: 現状は全エンジン共通で、エンジン個別の指定には未対応。
 # [outgoing.proxies]
 # https = "socks5h://127.0.0.1:9050"
