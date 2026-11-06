@@ -3,6 +3,19 @@
 
 このファイルの形式は [Keep a Changelog](https://keepachangelog.com/ja/1.1.0/) に従います。バージョニング方針は本文末尾の「セマンティックバージョニング」を参照してください。
 
+## [0.30.0](https://github.com/sahenjp/RustXNG/compare/v0.29.0...v0.30.0) (2026-11-06)
+
+
+### Features
+
+* three-profile design — offline clean, compliant standard, everything full ([87518cd](https://github.com/sahenjp/RustXNG/commit/87518cdc7fb2d671e53ba40dc58372ea3a52e1a8))
+
+
+### Bug Fixes
+
+* integrate pending retrieval, fetch and maintenance changes ([#113](https://github.com/sahenjp/RustXNG/issues/113)) ([856ba22](https://github.com/sahenjp/RustXNG/commit/856ba228f728909042452ccb8f0b6a5b5487994b))
+* strict engine names, quieter default logs, renderer render budget ([81d21cc](https://github.com/sahenjp/RustXNG/commit/81d21cc90c16e10b04df99147335e1a8f141544b))
+
 ## [0.29.0](https://github.com/sahenjp/RustXNG/compare/v0.28.0...v0.29.0) (2026-11-05)
 
 
