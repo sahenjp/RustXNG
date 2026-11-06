@@ -1,6 +1,8 @@
 # 構成ごとの比較（2026-11-04）：通常版・フル版・クリーン版・Exa・Tavily
 
-同じ質問集・同じ採点で、RustXNG の 3 つの構成と Exa・Tavily を並べました。
+**履歴資料です。** これは2026年11月4日の旧プロファイル（v0.28.0開発時点）を使った観測であり、**v0.30.0のStandard・ローカル索引専用Clean・現在のFullの性能ではありません**。検索元・既定設定・許可条件は変更されています。現在の構成は[README](../README.ja.md)と[監査記録](PROVIDERS.md)、11月5日の[Standard測定](ISSUE-RESOLUTION-2026-11-05.md)、[現在のCleanの保存測定](CLEAN-PROFILE.md)を参照してください。
+
+同じ質問集・同じ採点で、当時のRustXNGの3構成とExa・Tavilyを並べました。
 
 構成は起動時に `--profile` で切り替えます（環境変数 `RUSTXNG_PROFILE` でも可）。
 
