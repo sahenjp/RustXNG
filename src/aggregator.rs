@@ -1382,10 +1382,7 @@ impl Searcher {
         &self,
         url: &str,
         language: &crate::fetch::AcceptLanguage,
-    ) -> (
-        Option<crate::fetch::PageContent>,
-        Option<String>,
-    ) {
+    ) -> (Option<crate::fetch::PageContent>, Option<String>) {
         match self
             .page_reader
             .read_with_language(url, self.settings.search.raw_content_chars.max(1), language)
@@ -2061,7 +2058,10 @@ mod orchestration_tests {
             .await;
         assert!(results[0].raw_content.is_none());
         assert!(results[0].raw_content_truncated.is_none());
-        assert_eq!(results[0].raw_content_status.as_deref(), Some("fetch_failed"));
+        assert_eq!(
+            results[0].raw_content_status.as_deref(),
+            Some("fetch_failed")
+        );
     }
 
     #[tokio::test]
@@ -2111,14 +2111,19 @@ mod orchestration_tests {
             SearchResult::new("http://example.org/first", "fixture"),
             SearchResult::new("http://example.org/second", "fixture"),
         ];
-        Arc::make_mut(&mut searcher.settings).search.raw_content_limit = 1;
+        Arc::make_mut(&mut searcher.settings)
+            .search
+            .raw_content_limit = 1;
         searcher
             .attach_raw_content(&mut results, &crate::fetch::AcceptLanguage::default())
             .await;
         assert_eq!(results[0].raw_content_status.as_deref(), Some("ok"));
         assert!(results[0].raw_content.is_some());
         assert!(results[0].raw_content_error.is_none());
-        assert_eq!(results[1].raw_content_status.as_deref(), Some("not_requested"));
+        assert_eq!(
+            results[1].raw_content_status.as_deref(),
+            Some("not_requested")
+        );
         assert!(results[1].raw_content.is_none());
         assert!(results[1].raw_content_truncated.is_none());
         server.abort();

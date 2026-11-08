@@ -82,13 +82,36 @@ mod tests {
 
     #[test]
     fn fetch_errors_are_classified_for_raw_content_status() {
-        assert_eq!(classify_fetch_error("page exceeds the 4 MiB decoded body limit"), "too_large");
-        assert_eq!(classify_fetch_error("the site's robots.txt asks automated tools not to read this page"), "robots_blocked");
-        assert_eq!(classify_fetch_error("page rendering exceeded 15 seconds"), "render_failed");
-        assert_eq!(classify_fetch_error("the page has no readable text"), "extract_failed");
-        assert_eq!(classify_fetch_error("the page answered 403 Forbidden"), "fetch_failed");
-        assert_eq!(classify_fetch_error("the page took too long to load"), "fetch_failed");
-        assert_eq!(classify_fetch_error("only public http(s) pages can be read"), "fetch_failed");
+        assert_eq!(
+            classify_fetch_error("page exceeds the 4 MiB decoded body limit"),
+            "too_large"
+        );
+        assert_eq!(
+            classify_fetch_error(
+                "the site's robots.txt asks automated tools not to read this page"
+            ),
+            "robots_blocked"
+        );
+        assert_eq!(
+            classify_fetch_error("page rendering exceeded 15 seconds"),
+            "render_failed"
+        );
+        assert_eq!(
+            classify_fetch_error("the page has no readable text"),
+            "extract_failed"
+        );
+        assert_eq!(
+            classify_fetch_error("the page answered 403 Forbidden"),
+            "fetch_failed"
+        );
+        assert_eq!(
+            classify_fetch_error("the page took too long to load"),
+            "fetch_failed"
+        );
+        assert_eq!(
+            classify_fetch_error("only public http(s) pages can be read"),
+            "fetch_failed"
+        );
         assert_eq!(classify_fetch_error("something else entirely"), "unknown");
     }
 

@@ -21,3 +21,4 @@ bench/content-ollama.json
 
 # Full benchmark observations are kept as compressed evidence.
 /bench/results/**/observations.jsonl
+/dist

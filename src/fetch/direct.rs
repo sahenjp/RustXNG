@@ -893,9 +893,12 @@ mod tests {
             }
         });
 
-        let reader = PageReader::new(&crate::settings::Outgoing::default(), &[("example.org".into(), address)])
-            .unwrap()
-            .with_max_body_bytes(100);
+        let reader = PageReader::new(
+            &crate::settings::Outgoing::default(),
+            &[("example.org".into(), address)],
+        )
+        .unwrap()
+        .with_max_body_bytes(100);
         let error = reader
             .read(&format!("http://example.org/page"), 100)
             .await
@@ -934,26 +937,37 @@ mod tests {
             }
         });
 
-        let reader = PageReader::new(&crate::settings::Outgoing::default(), &[("example.org".into(), address)])
-            .unwrap()
-            .with_renderer(
-                vec!["/nonexistent-renderer".into()],
-                crate::settings::PageRendererFallback::Static,
-            );
+        let reader = PageReader::new(
+            &crate::settings::Outgoing::default(),
+            &[("example.org".into(), address)],
+        )
+        .unwrap()
+        .with_renderer(
+            vec!["/nonexistent-renderer".into()],
+            crate::settings::PageRendererFallback::Static,
+        );
         let page = reader
             .read("http://example.org/article", 100)
             .await
             .unwrap();
         assert!(page.text.contains("static fixture text"), "{}", page.text);
         assert_eq!(page.status.as_deref(), Some("render_failed"));
-        assert!(page.error.as_deref().is_some_and(|e| e.contains("renderer")), "{page:?}");
+        assert!(
+            page.error
+                .as_deref()
+                .is_some_and(|e| e.contains("renderer")),
+            "{page:?}"
+        );
 
-        let strict = PageReader::new(&crate::settings::Outgoing::default(), &[("example.org".into(), address)])
-            .unwrap()
-            .with_renderer(
-                vec!["/nonexistent-renderer".into()],
-                crate::settings::PageRendererFallback::None,
-            );
+        let strict = PageReader::new(
+            &crate::settings::Outgoing::default(),
+            &[("example.org".into(), address)],
+        )
+        .unwrap()
+        .with_renderer(
+            vec!["/nonexistent-renderer".into()],
+            crate::settings::PageRendererFallback::None,
+        );
         let error = strict
             .read("http://example.org/article", 100)
             .await
