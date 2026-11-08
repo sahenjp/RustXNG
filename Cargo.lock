@@ -2703,7 +2703,7 @@ version = "0.30.0"
 dependencies = [
  "askama",
  "axum",
- "base64 0.22.1",
+ "base64 0.23.1",
  "bson",
  "chrono",
  "futures",
