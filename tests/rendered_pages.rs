@@ -72,13 +72,16 @@ async fn javascript_pages_keep_guarded_fetches_limits_and_cached_text() {
         PageReader::new(&Outgoing::default(), &[("example.test".into(), address)]).unwrap();
     let url = format!("{origin}/start");
     assert_eq!(&*reader.read(&url, 20000).await.unwrap().text, "Loading");
-    let reader = reader.with_renderer(vec![
-        "node".into(),
-        format!(
-            "{}/tools/page-renderer/render.cjs",
-            env!("CARGO_MANIFEST_DIR")
-        ),
-    ]);
+    let reader = reader.with_renderer(
+        vec![
+            "node".into(),
+            format!(
+                "{}/tools/page-renderer/render.cjs",
+                env!("CARGO_MANIFEST_DIR")
+            ),
+        ],
+        rustxng::settings::PageRendererFallback::Static,
+    );
     let page = reader.read(&url, 20000).await.unwrap();
     assert_eq!(&*page.text, text);
     assert!(!page.source_truncated);
@@ -92,13 +95,34 @@ async fn javascript_pages_keep_guarded_fetches_limits_and_cached_text() {
             .text,
         "日本語のXHTML本文"
     );
+    let strict = reader.clone().with_renderer(
+        vec![
+            "node".into(),
+            format!(
+                "{}/tools/page-renderer/render.cjs",
+                env!("CARGO_MANIFEST_DIR")
+            ),
+        ],
+        rustxng::settings::PageRendererFallback::None,
+    );
     for (path, expected) in [
         ("private", "only public http(s) rendering resources"),
         ("redirected-resource", "redirected rendering resources"),
         ("large-resource", "decoded resource byte limit"),
         ("large-dom", "rendered HTML"),
     ] {
-        let error = reader
+        // The default "static" fallback keeps the text that was already
+        // extracted and reports the reason through the status fields.
+        let page = reader
+            .read(&format!("{origin}/{path}"), 20000)
+            .await
+            .unwrap();
+        assert_eq!(page.status.as_deref(), Some("render_failed"), "{path}");
+        assert!(
+            page.error.as_deref().is_some_and(|e| e.contains(expected)),
+            "{path}: {page:?}"
+        );
+        let error = strict
             .read(&format!("{origin}/{path}"), 20000)
             .await
             .unwrap_err();
@@ -130,13 +154,16 @@ async fn missing_renderer_is_an_error_for_html_only() {
     let directory = tempfile::tempdir().unwrap();
     let reader = PageReader::new(&Outgoing::default(), &[("example.test".into(), address)])
         .unwrap()
-        .with_renderer(vec![
-            directory
-                .path()
-                .join("missing-renderer")
-                .to_string_lossy()
-                .into_owned(),
-        ]);
+        .with_renderer(
+            vec![
+                directory
+                    .path()
+                    .join("missing-renderer")
+                    .to_string_lossy()
+                    .into_owned(),
+            ],
+            rustxng::settings::PageRendererFallback::None,
+        );
     let origin = format!("http://example.test:{}", address.port());
     assert_eq!(
         &*reader
@@ -185,13 +212,16 @@ async fn cancelling_a_render_removes_the_browser_profile() {
     let marker = directory.path().join("profile-root");
     let reader = PageReader::new(&Outgoing::default(), &[("example.test".into(), address)])
         .unwrap()
-        .with_renderer(vec![
-            "node".into(),
-            "-e".into(),
-            "require('node:fs').writeFileSync(process.argv[1], require('node:os').tmpdir()); require(process.argv[2]);".into(),
-            marker.to_string_lossy().into_owned(),
-            format!("{}/tools/page-renderer/render.cjs", env!("CARGO_MANIFEST_DIR")),
-        ]);
+        .with_renderer(
+            vec![
+                "node".into(),
+                "-e".into(),
+                "require('node:fs').writeFileSync(process.argv[1], require('node:os').tmpdir()); require(process.argv[2]);".into(),
+                marker.to_string_lossy().into_owned(),
+                format!("{}/tools/page-renderer/render.cjs", env!("CARGO_MANIFEST_DIR")),
+            ],
+            rustxng::settings::PageRendererFallback::Static,
+        );
     let task = tokio::spawn(async move {
         reader
             .read(

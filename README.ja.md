@@ -53,7 +53,7 @@ MCPには、読み取り専用のツールが2つあります。
 
 本文の取得時には接続先とリダイレクトを確認し、プライベートIPへの接続を拒否します。robots.txtにも従います。取得したWebページは、AIへの指示ではなく外部の情報として扱ってください。
 
-HTTP APIでも`include_raw_content=1`で本文を取得できます。PDFの文字抽出にはPopplerが必要です。スキャン画像のOCRには別のツールが必要です。JavaScriptで表示されるページには、必要に応じて[Firefoxレンダラー](tools/page-renderer/README.md)を設定します。
+HTTP APIでも`include_raw_content=1`で本文を取得できます。PDFの文字抽出にはPopplerが必要です。スキャン画像のOCRには別のツールが必要です。このとき各結果に`raw_content_status`（`ok` / `not_requested` / `too_large` / `fetch_failed` / `robots_blocked` / `extract_failed` / `render_failed` / `unknown`）と、取得できた理由を示す短い`raw_content_error`が付きます。本文上限は`raw_content_max_bytes`で変更でき（既定4MiB、上限32MiB）、レンダラー失敗時は既定で静的HTMLの本文を保持します（`page_renderer_fallback = "static"`）。JavaScriptで表示されるページには、必要に応じて[Firefoxレンダラー](tools/page-renderer/README.md)を設定します。
 
 ## 検索先の構成
 

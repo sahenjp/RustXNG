@@ -134,7 +134,10 @@ impl EngineResponse {
 }
 
 /// What an engine can return (upstream engine results).
+/// Result carries the dominant payload by design; boxing it would touch
+/// every engine parser for no real gain, so the size difference is intended.
 #[derive(Debug, Clone)]
+#[allow(clippy::large_enum_variant)]
 pub enum EngineItem {
     Result(SearchResult),
     Suggestion(String),

@@ -14,7 +14,8 @@ pub(crate) use direct::public_client;
 #[cfg(test)]
 pub(crate) use direct::test_public_client;
 pub use direct::{
-    MAX_BODY_BYTES, PageContent, PageReader, is_fetchable, is_global, public_blocking_client,
+    MAX_BODY_BYTES, PageContent, PageReader, classify_fetch_error, is_fetchable, is_global,
+    public_blocking_client,
 };
 pub use language::AcceptLanguage;
 
@@ -25,10 +26,15 @@ use futures::future::BoxFuture;
 use crate::settings::{FetchProvider, FetchSettings, Outgoing};
 
 /// A page returned by an external fetching backend.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct FetchedPage {
     pub text: Arc<str>,
     pub source_truncated: bool,
+    /// Optional status behind a degraded answer, e.g. a static fallback after
+    /// a failed page rendering. `None` means the page read went plainly right.
+    pub status: Option<String>,
+    /// Optional short reader message behind [`FetchedPage::status`].
+    pub error: Option<String>,
 }
 
 /// An object-safe page source. The direct fetcher lives in [`direct`]; this
@@ -72,6 +78,41 @@ mod tests {
                 .unwrap()
                 .is_none()
         );
+    }
+
+    #[test]
+    fn fetch_errors_are_classified_for_raw_content_status() {
+        assert_eq!(
+            classify_fetch_error("page exceeds the 4 MiB decoded body limit"),
+            "too_large"
+        );
+        assert_eq!(
+            classify_fetch_error(
+                "the site's robots.txt asks automated tools not to read this page"
+            ),
+            "robots_blocked"
+        );
+        assert_eq!(
+            classify_fetch_error("page rendering exceeded 15 seconds"),
+            "render_failed"
+        );
+        assert_eq!(
+            classify_fetch_error("the page has no readable text"),
+            "extract_failed"
+        );
+        assert_eq!(
+            classify_fetch_error("the page answered 403 Forbidden"),
+            "fetch_failed"
+        );
+        assert_eq!(
+            classify_fetch_error("the page took too long to load"),
+            "fetch_failed"
+        );
+        assert_eq!(
+            classify_fetch_error("only public http(s) pages can be read"),
+            "fetch_failed"
+        );
+        assert_eq!(classify_fetch_error("something else entirely"), "unknown");
     }
 
     #[test]

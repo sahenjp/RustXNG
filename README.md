@@ -57,6 +57,8 @@ Use `accept_language`, for example `"ko-KR,ko;q=0.9,en;q=0.8"`, to request a pag
 
 For page text, `include_raw_content=1` uses the HTTP API. PDF text extraction requires Poppler (`pdftotext`); scanned PDFs require a separate OCR tool. JavaScript-rendered pages need the optional [Firefox renderer](tools/page-renderer/README.md). Neither is enabled automatically by a standalone release binary.
 
+With `include_raw_content=1`, every result reports `raw_content_status` (`ok`, `not_requested`, `too_large`, `fetch_failed`, `robots_blocked`, `extract_failed`, `render_failed`, or `unknown`) and, where available, a short `raw_content_error` message, so a client can decide whether to retry or give up from the response alone. The page body limit is configurable through `raw_content_max_bytes` (default 4 MiB, bounded at 32 MiB), and a failed page renderer keeps the static text by default (`page_renderer_fallback = "static"`).
+
 ## Search profiles
 
 Choose a provider configuration with `--profile`. The default is `standard`.

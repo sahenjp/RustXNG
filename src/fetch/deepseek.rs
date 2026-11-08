@@ -177,6 +177,7 @@ impl DeepSeekSource {
         Ok(FetchedPage {
             text: Arc::from(crate::content::truncate(content, max_chars)),
             source_truncated,
+            ..Default::default()
         })
     }
 

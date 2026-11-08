@@ -246,7 +246,11 @@ impl McpServer {
             &searcher.settings.fetch,
             overrides,
         )?
-        .with_renderer(searcher.settings.search.page_renderer_command.clone());
+        .with_max_body_bytes(searcher.settings.search.raw_content_max_bytes)
+        .with_renderer(
+            searcher.settings.search.page_renderer_command.clone(),
+            searcher.settings.search.page_renderer_fallback,
+        );
         Ok(Self {
             searcher,
             seen: Arc::new(Mutex::new(VecDeque::new())),

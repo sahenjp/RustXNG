@@ -28,6 +28,45 @@ use super::AcceptLanguage;
 
 /// Decoded body bytes read from one page at most.
 pub const MAX_BODY_BYTES: usize = 4 * 1024 * 1024;
+/// Hard upper bound for the configured decoded body limit (32 MiB).
+pub const MAX_BODY_BYTES_MAX: usize = 32 * 1024 * 1024;
+
+/// Format a byte count the way readers and settings mention it.
+pub(crate) fn body_limit_label(bytes: usize) -> String {
+    format!("{} MiB", bytes / (1024 * 1024))
+}
+
+/// Classify a page-read error for the `raw_content_status` field. Returns
+/// one of `too_large`, `robots_blocked`, `render_failed`, `extract_failed`,
+/// `fetch_failed` or `unknown`.
+pub fn classify_fetch_error(error: &str) -> &'static str {
+    if error.contains("decoded body limit") || error.contains("body limit") {
+        "too_large"
+    } else if error.contains("robots.txt") {
+        "robots_blocked"
+    } else if error.contains("page rendering") || error.contains("page renderer") {
+        "render_failed"
+    } else if error.contains("no readable text") {
+        "extract_failed"
+    } else if [
+        "answered",
+        "could not be fetched",
+        "could not be read",
+        "took too long",
+        "not a text page",
+        "not a valid URL",
+        "only public",
+        "not a PDF",
+    ]
+    .iter()
+    .any(|needle| error.contains(needle))
+    {
+        "fetch_failed"
+    } else {
+        "unknown"
+    }
+}
+
 /// Pages fetched and parsed at the same time at most.
 const MAX_CONCURRENT: usize = 4;
 /// Extracted pages kept per session for paging.
@@ -270,6 +309,9 @@ pub struct PageReader {
     /// direct fetcher.
     source: Option<Arc<dyn crate::fetch::PageSource>>,
     renderer_command: Arc<[String]>,
+    renderer_fallback: crate::settings::PageRendererFallback,
+    /// Decoded body bytes read from one page at most (configurable).
+    max_body_bytes: usize,
 }
 
 impl PageReader {
@@ -302,6 +344,8 @@ impl PageReader {
             pages: Arc::new(Mutex::new(VecDeque::new())),
             robots: Arc::new(Mutex::new(HashMap::new())),
             source: None,
+            renderer_fallback: crate::settings::PageRendererFallback::default(),
+            max_body_bytes: MAX_BODY_BYTES,
         })
     }
 
@@ -330,9 +374,22 @@ impl PageReader {
     }
 
     /// Empty commands keep static HTML extraction.
-    pub fn with_renderer(mut self, command: Vec<String>) -> Self {
+    pub fn with_renderer(
+        mut self,
+        command: Vec<String>,
+        fallback: crate::settings::PageRendererFallback,
+    ) -> Self {
         self.renderer_command = command.into();
+        self.renderer_fallback = fallback;
         self.pages = Arc::new(Mutex::new(VecDeque::new()));
+        self
+    }
+
+    /// Cap the decoded body bytes read from one page. Values are bounded
+    /// between 1 byte and [`MAX_BODY_BYTES_MAX`]; the default is
+    /// [`MAX_BODY_BYTES`].
+    pub fn with_max_body_bytes(mut self, bytes: usize) -> Self {
+        self.max_body_bytes = bytes.clamp(1, MAX_BODY_BYTES_MAX);
         self
     }
 
@@ -387,6 +444,7 @@ impl PageReader {
         let body = tokio::time::timeout(FETCH_TIMEOUT, self.fetch(parsed, language))
             .await
             .map_err(|_| "the page took too long to load".to_string())??;
+        let mut degraded: Option<(Option<String>, Option<String>)> = None;
         let text = match body {
             PageBody::Text {
                 url,
@@ -396,15 +454,32 @@ impl PageReader {
                 if let Some(media_type) = html_media_type
                     && !self.renderer_command.is_empty()
                 {
-                    content = super::render::render(
+                    match super::render::render(
                         &self.client,
                         &self.renderer_command,
                         url,
                         media_type,
-                        content,
+                        content.clone(),
                         language,
+                        self.max_body_bytes,
                     )
-                    .await?;
+                    .await
+                    {
+                        Ok(rendered) => content = rendered,
+                        Err(error)
+                            if self.renderer_fallback
+                                == crate::settings::PageRendererFallback::Static =>
+                        {
+                            // Keep the text already extracted from the static
+                            // HTML instead of throwing the page away; the
+                            // failure is reported through the status fields.
+                            degraded = Some((
+                                Some("render_failed".into()),
+                                Some(error.chars().take(200).collect()),
+                            ));
+                        }
+                        Err(error) => return Err(error),
+                    }
                 }
                 tokio::task::spawn_blocking(move || {
                     let document = scraper::Html::parse_document(&content);
@@ -422,6 +497,8 @@ impl PageReader {
         let content = PageContent {
             source_truncated: text.chars().count() > max_chars,
             text,
+            status: degraded.as_ref().and_then(|(status, _)| status.clone()),
+            error: degraded.as_ref().and_then(|(_, error)| error.clone()),
         };
         self.remember(url, max_chars, language, content.clone());
         Ok(content)
@@ -518,16 +595,20 @@ impl PageReader {
             "application/xhtml+xml" => Some("application/xhtml+xml"),
             _ => None,
         };
-        // Read at most MAX_BODY_BYTES decoded bytes, whatever Content-Length says.
+        // Read at most the configured decoded bytes, whatever Content-Length says.
+        let max_bytes = self.max_body_bytes;
         let mut body = Vec::new();
         while let Some(chunk) = response
             .chunk()
             .await
             .map_err(|error| format!("the page could not be read: {error}"))?
         {
-            let room = MAX_BODY_BYTES - body.len();
+            let room = max_bytes.saturating_sub(body.len());
             if chunk.len() > room {
-                return Err("page exceeds the 4 MiB decoded body limit".into());
+                return Err(format!(
+                    "page exceeds the {} decoded body limit",
+                    body_limit_label(max_bytes)
+                ));
             }
             body.extend_from_slice(&chunk);
         }
@@ -622,6 +703,7 @@ mod tests {
         let content = PageContent {
             text: Arc::from("old page"),
             source_truncated: false,
+            ..Default::default()
         };
         let session = PageReader::new(&crate::settings::Outgoing::default(), &[]).unwrap();
         let language = AcceptLanguage::default();
@@ -744,6 +826,7 @@ mod tests {
                     Ok(FetchedPage {
                         text: Arc::from("from an external source"),
                         source_truncated: false,
+                        ..Default::default()
                     })
                 })
             }
@@ -770,6 +853,127 @@ mod tests {
             error.contains("requires the direct page fetch provider"),
             "{error}"
         );
+    }
+
+    #[tokio::test]
+    async fn configured_body_limit_is_enforced_and_classified() {
+        use tokio::io::{AsyncReadExt, AsyncWriteExt};
+
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let address = listener.local_addr().unwrap();
+        tokio::spawn(async move {
+            loop {
+                let (mut stream, _) = listener.accept().await.unwrap();
+                let mut buffer = [0u8; 1024];
+                loop {
+                    let count = stream.read(&mut buffer).await.unwrap();
+                    if count == 0 || buffer[..count].windows(4).any(|w| w == b"\r\n\r\n") {
+                        break;
+                    }
+                }
+                let request = String::from_utf8_lossy(&buffer).into_owned();
+                let is_robots = request.starts_with("GET /robots.txt ");
+                let body: Vec<u8> = if is_robots {
+                    Vec::new()
+                } else {
+                    vec![b'a'; 200]
+                };
+                let status = if is_robots { "404 Not Found" } else { "200 OK" };
+                stream
+                    .write_all(
+                        format!(
+                            "HTTP/1.1 {status}\r\nContent-Type: text/html\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
+                            body.len()
+                        )
+                        .as_bytes(),
+                    )
+                    .await
+                    .unwrap();
+                stream.write_all(&body).await.unwrap();
+            }
+        });
+
+        let reader = PageReader::new(
+            &crate::settings::Outgoing::default(),
+            &[("example.org".into(), address)],
+        )
+        .unwrap()
+        .with_max_body_bytes(100);
+        let error = reader
+            .read("http://example.org/page", 100)
+            .await
+            .unwrap_err();
+        assert!(error.contains("decoded body limit"), "{error}");
+        assert_eq!(crate::fetch::classify_fetch_error(&error), "too_large");
+    }
+
+    #[tokio::test]
+    async fn renderer_fallback_static_keeps_the_extracted_text() {
+        use tokio::io::{AsyncReadExt, AsyncWriteExt};
+
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let address = listener.local_addr().unwrap();
+        tokio::spawn(async move {
+            loop {
+                let (mut stream, _) = listener.accept().await.unwrap();
+                let mut buffer = [0u8; 1024];
+                loop {
+                    let count = stream.read(&mut buffer).await.unwrap();
+                    if count == 0 || buffer[..count].windows(4).any(|w| w == b"\r\n\r\n") {
+                        break;
+                    }
+                }
+                let body = "<html><body>static fixture text</body></html>";
+                stream
+                    .write_all(
+                        format!(
+                            "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
+                            body.len()
+                        )
+                        .as_bytes(),
+                    )
+                    .await
+                    .unwrap();
+            }
+        });
+
+        let reader = PageReader::new(
+            &crate::settings::Outgoing::default(),
+            &[("example.org".into(), address)],
+        )
+        .unwrap()
+        .with_renderer(
+            vec!["/nonexistent-renderer".into()],
+            crate::settings::PageRendererFallback::Static,
+        );
+        let page = reader
+            .read("http://example.org/article", 100)
+            .await
+            .unwrap();
+        assert!(page.text.contains("static fixture text"), "{}", page.text);
+        assert_eq!(page.status.as_deref(), Some("render_failed"));
+        assert!(
+            page.error
+                .as_deref()
+                .is_some_and(|e| e.contains("renderer")),
+            "{page:?}"
+        );
+
+        let strict = PageReader::new(
+            &crate::settings::Outgoing::default(),
+            &[("example.org".into(), address)],
+        )
+        .unwrap()
+        .with_renderer(
+            vec!["/nonexistent-renderer".into()],
+            crate::settings::PageRendererFallback::None,
+        );
+        let error = strict
+            .read("http://example.org/article", 100)
+            .await
+            .unwrap_err();
+        assert!(error.contains("renderer"), "{error}");
+        assert_eq!(crate::fetch::classify_fetch_error(&error), "render_failed");
     }
 
     #[tokio::test]

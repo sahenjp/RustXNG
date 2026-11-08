@@ -16,7 +16,6 @@ use super::direct::{MAX_BODY_BYTES, is_fetchable};
 const RENDER_TIMEOUT: Duration = Duration::from_secs(15);
 const MAX_REQUESTS: usize = 64;
 const MAX_RESOURCE_BYTES: usize = 16 * 1024 * 1024;
-const MAX_PROTOCOL_BYTES: u64 = (MAX_BODY_BYTES * 2) as u64;
 static RENDERERS: tokio::sync::Semaphore = tokio::sync::Semaphore::const_new(4);
 
 #[derive(Deserialize)]
@@ -42,10 +41,17 @@ pub(super) async fn render(
     media_type: &'static str,
     html: String,
     language: &AcceptLanguage,
+    max_bytes: usize,
 ) -> Result<String, String> {
-    let client = client.clone();
-    let command = command.to_vec();
-    let language = language.clone();
+    let job = RenderJob {
+        client: client.clone(),
+        command: command.to_vec(),
+        url,
+        media_type,
+        html,
+        language: language.clone(),
+        max_bytes,
+    };
     let (cancel, mut cancelled) = tokio::sync::oneshot::channel::<()>();
     // Keep cleanup alive after caller cancellation.
     let result = tokio::spawn(async move {
@@ -53,16 +59,7 @@ pub(super) async fn render(
             permit = RENDERERS.acquire() => permit.map_err(|error| error.to_string())?,
             _ = &mut cancelled => return Err("page rendering cancelled".into()),
         };
-        run(
-            &client,
-            &command,
-            url,
-            media_type,
-            html,
-            &language,
-            &mut cancelled,
-        )
-        .await
+        run(job, &mut cancelled).await
     })
     .await
     .map_err(|error| format!("page renderer task failed: {error}"))?;
@@ -70,15 +67,30 @@ pub(super) async fn render(
     result
 }
 
-async fn run(
-    client: &reqwest::Client,
-    command: &[String],
+/// Everything one render pass needs; [`run`] stays under Clippy's 7-arg limit.
+struct RenderJob {
+    client: reqwest::Client,
+    command: Vec<String>,
     url: reqwest::Url,
-    media_type: &str,
+    media_type: &'static str,
     html: String,
-    language: &AcceptLanguage,
+    language: AcceptLanguage,
+    max_bytes: usize,
+}
+
+async fn run(
+    job: RenderJob,
     cancelled: &mut tokio::sync::oneshot::Receiver<()>,
 ) -> Result<String, String> {
+    let RenderJob {
+        client,
+        command,
+        url,
+        media_type,
+        html,
+        language,
+        max_bytes,
+    } = job;
     let directory = tempfile::tempdir().map_err(|error| error.to_string())?;
     let mut child = tokio::process::Command::new(&command[0])
         .args(&command[1..])
@@ -93,12 +105,12 @@ async fn run(
         .map_err(|error| format!("cannot start page renderer: {error}"))?;
     let mut input = child.stdin.take().ok_or("page renderer has no stdin")?;
     let output = child.stdout.take().ok_or("page renderer has no stdout")?;
-    let mut lines = BufReader::new(output.take(MAX_PROTOCOL_BYTES)).lines();
+    let mut lines = BufReader::new(output.take((max_bytes * 2) as u64)).lines();
     let rendering = async {
         write_message(
             &mut input,
             &json!({"url": url.as_str(), "html": html,
-                "content_type": media_type, "max_bytes": MAX_BODY_BYTES}),
+                "content_type": media_type, "max_bytes": max_bytes}),
         )
         .await?;
         let mut requests = 0;
@@ -118,7 +130,7 @@ async fn run(
                         return Err("page rendering exceeds 64 resource requests".into());
                     }
                     let (status, headers, body) =
-                        resource(client, &url, &method, remaining, language).await?;
+                        resource(&client, &url, &method, remaining, &language).await?;
                     remaining -= body.len();
                     write_message(
                         &mut input,
@@ -131,8 +143,11 @@ async fn run(
                     let bytes = STANDARD
                         .decode(body)
                         .map_err(|_| "invalid rendered HTML encoding")?;
-                    if bytes.len() > MAX_BODY_BYTES {
-                        return Err("rendered HTML exceeds the 4 MiB body limit".into());
+                    if bytes.len() > max_bytes {
+                        return Err(format!(
+                            "rendered HTML exceeds the {} body limit",
+                            super::direct::body_limit_label(max_bytes)
+                        ));
                     }
                     break String::from_utf8(bytes).map_err(|_| "rendered HTML is not UTF-8")?;
                 }
