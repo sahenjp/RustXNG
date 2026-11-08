@@ -2699,7 +2699,7 @@ checksum = "cf54715a573b99ac80df0bc206da022bcd442c974952c7b9720069370852e21f"
 
 [[package]]
 name = "rustxng"
-version = "0.30.0"
+version = "0.31.0"
 dependencies = [
  "askama",
  "axum",
