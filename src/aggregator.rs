@@ -353,7 +353,11 @@ impl Searcher {
         };
         let page_reader =
             crate::fetch::PageReader::from_settings(&settings.outgoing, &settings.fetch, &[])?
-                .with_renderer(settings.search.page_renderer_command.clone())
+                .with_max_body_bytes(settings.search.raw_content_max_bytes)
+                .with_renderer(
+                    settings.search.page_renderer_command.clone(),
+                    settings.search.page_renderer_fallback,
+                )
                 .with_cache_ttl(Duration::from_secs(settings.cache.ttl.max(1)));
         Ok(Self {
             page_reader,
@@ -1339,9 +1343,6 @@ impl Searcher {
     ) {
         let limit = self.settings.search.raw_content_limit.max(1);
         let count = results.len().min(limit);
-        if count == 0 {
-            return;
-        }
         let texts = futures::future::join_all(
             results
                 .iter()
@@ -1349,30 +1350,51 @@ impl Searcher {
                 .map(|result| self.page_text(&result.url, language)),
         )
         .await;
-        for (result, page) in results.iter_mut().take(count).zip(texts) {
-            if let Some(page) = page {
-                result.raw_content = Some(page.text.to_string());
-                result.raw_content_truncated = Some(page.source_truncated);
+        for (result, (page, error)) in results.iter_mut().zip(texts) {
+            match (page, error) {
+                (Some(page), _) => {
+                    result.raw_content = Some(page.text.to_string());
+                    result.raw_content_truncated = Some(page.source_truncated);
+                    result.raw_content_status =
+                        Some(page.status.unwrap_or_else(|| "ok".to_string()));
+                    result.raw_content_error = page.error;
+                }
+                (None, Some(error)) => {
+                    result.raw_content_status =
+                        Some(crate::fetch::classify_fetch_error(&error).to_string());
+                    result.raw_content_error = Some(error);
+                }
+                (None, None) => {
+                    result.raw_content_status = Some("unknown".into());
+                }
             }
+        }
+        for result in results.iter_mut().skip(count) {
+            result.raw_content_status = Some("not_requested".into());
         }
     }
 
     /// Optional page reads use the same DNS, redirect, body and concurrency
     /// checks as MCP. Unchecked engine-response cache entries are not reused.
+    /// Returns the extracted page or the reader's error so callers can report
+    /// why a body is missing.
     async fn page_text(
         &self,
         url: &str,
         language: &crate::fetch::AcceptLanguage,
-    ) -> Option<crate::fetch::PageContent> {
+    ) -> (
+        Option<crate::fetch::PageContent>,
+        Option<String>,
+    ) {
         match self
             .page_reader
             .read_with_language(url, self.settings.search.raw_content_chars.max(1), language)
             .await
         {
-            Ok(page) => Some(page),
+            Ok(page) => (Some(page), None),
             Err(error) => {
                 tracing::debug!(url, %error, "raw content unavailable");
-                None
+                (None, Some(error))
             }
         }
     }
@@ -2039,6 +2061,67 @@ mod orchestration_tests {
             .await;
         assert!(results[0].raw_content.is_none());
         assert!(results[0].raw_content_truncated.is_none());
+        assert_eq!(results[0].raw_content_status.as_deref(), Some("fetch_failed"));
+    }
+
+    #[tokio::test]
+    async fn raw_content_statuses_report_success_and_limit() {
+        use tokio::io::{AsyncReadExt, AsyncWriteExt};
+
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let address = listener.local_addr().unwrap();
+        let server = tokio::spawn(async move {
+            loop {
+                let (mut stream, _) = listener.accept().await.unwrap();
+                let mut buffer = [0u8; 1024];
+                loop {
+                    let count = stream.read(&mut buffer).await.unwrap();
+                    if count == 0 || buffer[..count].windows(4).any(|w| w == b"\r\n\r\n") {
+                        break;
+                    }
+                }
+                let request = String::from_utf8_lossy(&buffer).into_owned();
+                let is_robots = request.starts_with("GET /robots.txt ");
+                let body = if is_robots {
+                    ""
+                } else {
+                    "<html><body>fixture body text</body></html>"
+                };
+                let status = if is_robots { "404 Not Found" } else { "200 OK" };
+                stream
+                    .write_all(
+                        format!(
+                            "HTTP/1.1 {status}\r\nContent-Type: text/html\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
+                            body.len()
+                        )
+                        .as_bytes(),
+                    )
+                    .await
+                    .unwrap();
+            }
+        });
+
+        let mut searcher = searcher(vec![]);
+        searcher.page_reader = crate::fetch::PageReader::new(
+            &searcher.settings.outgoing,
+            &[("example.org".into(), address)],
+        )
+        .unwrap();
+        let mut results = vec![
+            SearchResult::new("http://example.org/first", "fixture"),
+            SearchResult::new("http://example.org/second", "fixture"),
+        ];
+        Arc::make_mut(&mut searcher.settings).search.raw_content_limit = 1;
+        searcher
+            .attach_raw_content(&mut results, &crate::fetch::AcceptLanguage::default())
+            .await;
+        assert_eq!(results[0].raw_content_status.as_deref(), Some("ok"));
+        assert!(results[0].raw_content.is_some());
+        assert!(results[0].raw_content_error.is_none());
+        assert_eq!(results[1].raw_content_status.as_deref(), Some("not_requested"));
+        assert!(results[1].raw_content.is_none());
+        assert!(results[1].raw_content_truncated.is_none());
+        server.abort();
     }
 
     #[tokio::test]

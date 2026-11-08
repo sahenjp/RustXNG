@@ -434,6 +434,13 @@ pub struct Search {
     pub raw_content_chars: usize,
     /// Optional command for JavaScript page rendering.
     pub page_renderer_command: Vec<String>,
+    /// What happens when the page renderer fails: "static" keeps the text
+    /// extracted from the original HTML, "none" discards it (empty body).
+    pub page_renderer_fallback: PageRendererFallback,
+    /// Decoded page body bytes read at most for raw content and MCP page
+    /// reads. Values are clamped between 1 byte and 32 MiB; the default
+    /// 4 MiB keeps the previous behaviour.
+    pub raw_content_max_bytes: usize,
     /// How many extra result pages of the paging engines to merge into the
     /// answer. 0 (the default) only uses page 1; 1 adds page 2, and so on.
     pub deep_pages: u32,
@@ -448,6 +455,17 @@ pub struct Search {
     pub embedding_weight: f64,
     /// How many of the top results are re-ranked by embedding similarity.
     pub embedding_topk: usize,
+}
+
+/// Behaviour of the JavaScript page renderer when rendering fails.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Deserialize, Serialize)]
+#[serde(rename_all = "lowercase")]
+pub enum PageRendererFallback {
+    /// Keep the text extracted from the original static HTML (default).
+    #[default]
+    Static,
+    /// Discard the page text and report an empty body (previous behaviour).
+    None,
 }
 
 /// Search execution strategy, upstream's default is "parallel".
@@ -502,6 +520,8 @@ impl Default for Search {
             engine_allowlist: Vec::new(),
             raw_content_chars: 8_000,
             page_renderer_command: Vec::new(),
+            page_renderer_fallback: PageRendererFallback::default(),
+            raw_content_max_bytes: crate::fetch::MAX_BODY_BYTES,
             deep_pages: 0,
             site_scoped_retry: false,
             authority_weight: 8.0,

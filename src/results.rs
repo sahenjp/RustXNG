@@ -119,6 +119,14 @@ pub struct SearchResult {
     /// Whether optional raw content was cut at the configured character limit.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub raw_content_truncated: Option<bool>,
+    /// Why the body is missing or degraded, only when the request asked for
+    /// raw content: `ok`, `not_requested`, `too_large`, `fetch_failed`,
+    /// `robots_blocked`, `extract_failed`, `render_failed` or `unknown`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub raw_content_status: Option<String>,
+    /// Short reader message behind `raw_content_status`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub raw_content_error: Option<String>,
     /// Whether the result belongs to the group of the previous one (UI only).
     #[serde(skip)]
     pub open_group: bool,

@@ -49,13 +49,16 @@ async fn pdf_pages_preserve_japanese_text_limits_and_cached_reads() {
     let directory = tempfile::tempdir().unwrap();
     let reader = PageReader::new(&Outgoing::default(), &[("example.test".into(), address)])
         .unwrap()
-        .with_renderer(vec![
-            directory
-                .path()
-                .join("missing-renderer")
-                .to_string_lossy()
-                .into_owned(),
-        ]);
+        .with_renderer(
+            vec![
+                directory
+                    .path()
+                    .join("missing-renderer")
+                    .to_string_lossy()
+                    .into_owned(),
+            ],
+            rustxng::settings::PageRendererFallback::Static,
+        );
     let expected = "日本語の政策資料 本文抽出を検証します。";
     for path in ["pdf", "binary", "mislabelled", "missing"] {
         let url = format!("http://example.test:{}/{path}", address.port());

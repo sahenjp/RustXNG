@@ -64,8 +64,15 @@ staged_min_results = 10
 raw_content_limit = 5
 # 本文の文字数上限。8,000文字を超える指定も可能。
 raw_content_chars = 8000
+# 1ページあたりの読み込み上限（デコード後バイト数、1〜32MiB）。既定は4MiB。
+# 超えたページは raw_content_status="too_large" で報告される。
+raw_content_max_bytes = 4194304
 # Optional JavaScript renderer; see tools/page-renderer/README.md.
 page_renderer_command = []
+# レンダリングに失敗したときの動作。"static" は元のHTMLから抽出した本文を
+# 返し（既定）、raw_content_status="render_failed" に理由を添える。
+# "none" は空の本文のまま（0.31 以前の挙動）。
+page_renderer_fallback = "static"
 # URL/タイトルにクエリ語が含まれる結果をどれだけ押し上げるか（0=上流の位置融合のみ）。
 # 公式ドキュメントのように URL・タイトルにクエリ語が現れるページを上げる。
 # 20 問ベンチで 4.0 が最良だった（MRR 0.838）。
