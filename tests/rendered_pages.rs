@@ -95,13 +95,34 @@ async fn javascript_pages_keep_guarded_fetches_limits_and_cached_text() {
             .text,
         "日本語のXHTML本文"
     );
+    let strict = reader.clone().with_renderer(
+        vec![
+            "node".into(),
+            format!(
+                "{}/tools/page-renderer/render.cjs",
+                env!("CARGO_MANIFEST_DIR")
+            ),
+        ],
+        rustxng::settings::PageRendererFallback::None,
+    );
     for (path, expected) in [
         ("private", "only public http(s) rendering resources"),
         ("redirected-resource", "redirected rendering resources"),
         ("large-resource", "decoded resource byte limit"),
         ("large-dom", "rendered HTML"),
     ] {
-        let error = reader
+        // The default "static" fallback keeps the text that was already
+        // extracted and reports the reason through the status fields.
+        let page = reader
+            .read(&format!("{origin}/{path}"), 20000)
+            .await
+            .unwrap();
+        assert_eq!(page.status.as_deref(), Some("render_failed"), "{path}");
+        assert!(
+            page.error.as_deref().is_some_and(|e| e.contains(expected)),
+            "{path}: {page:?}"
+        );
+        let error = strict
             .read(&format!("{origin}/{path}"), 20000)
             .await
             .unwrap_err();
