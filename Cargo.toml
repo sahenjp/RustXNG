@@ -16,7 +16,7 @@ tokio = { version = "1", features = ["io-std", "io-util", "macros", "rt-multi-th
 reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "rustls-tls-native-roots", "http2", "json", "gzip", "brotli", "deflate", "cookies", "blocking"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-toml = "0.8"
+toml = "1.2"
 yaml_serde = "0.10.7"
 askama = { version = "0.16", default-features = false, features = ["derive", "std", "urlencode"] }
 scraper = "0.29"
