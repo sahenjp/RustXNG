@@ -43,9 +43,15 @@ pub(super) async fn render(
     language: &AcceptLanguage,
     max_bytes: usize,
 ) -> Result<String, String> {
-    let client = client.clone();
-    let command = command.to_vec();
-    let language = language.clone();
+    let job = RenderJob {
+        client: client.clone(),
+        command: command.to_vec(),
+        url,
+        media_type,
+        html,
+        language: language.clone(),
+        max_bytes,
+    };
     let (cancel, mut cancelled) = tokio::sync::oneshot::channel::<()>();
     // Keep cleanup alive after caller cancellation.
     let result = tokio::spawn(async move {
@@ -53,17 +59,7 @@ pub(super) async fn render(
             permit = RENDERERS.acquire() => permit.map_err(|error| error.to_string())?,
             _ = &mut cancelled => return Err("page rendering cancelled".into()),
         };
-        run(
-            &client,
-            &command,
-            url,
-            media_type,
-            html,
-            &language,
-            &mut cancelled,
-            max_bytes,
-        )
-        .await
+        run(job, &mut cancelled).await
     })
     .await
     .map_err(|error| format!("page renderer task failed: {error}"))?;
@@ -71,16 +67,30 @@ pub(super) async fn render(
     result
 }
 
-async fn run(
-    client: &reqwest::Client,
-    command: &[String],
+/// Everything one render pass needs; [`run`] stays under Clippy's 7-arg limit.
+struct RenderJob {
+    client: reqwest::Client,
+    command: Vec<String>,
     url: reqwest::Url,
-    media_type: &str,
+    media_type: &'static str,
     html: String,
-    language: &AcceptLanguage,
-    cancelled: &mut tokio::sync::oneshot::Receiver<()>,
+    language: AcceptLanguage,
     max_bytes: usize,
+}
+
+async fn run(
+    job: RenderJob,
+    cancelled: &mut tokio::sync::oneshot::Receiver<()>,
 ) -> Result<String, String> {
+    let RenderJob {
+        client,
+        command,
+        url,
+        media_type,
+        html,
+        language,
+        max_bytes,
+    } = job;
     let directory = tempfile::tempdir().map_err(|error| error.to_string())?;
     let mut child = tokio::process::Command::new(&command[0])
         .args(&command[1..])
@@ -120,7 +130,7 @@ async fn run(
                         return Err("page rendering exceeds 64 resource requests".into());
                     }
                     let (status, headers, body) =
-                        resource(client, &url, &method, remaining, language).await?;
+                        resource(&client, &url, &method, remaining, &language).await?;
                     remaining -= body.len();
                     write_message(
                         &mut input,

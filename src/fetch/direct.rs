@@ -900,7 +900,7 @@ mod tests {
         .unwrap()
         .with_max_body_bytes(100);
         let error = reader
-            .read(&format!("http://example.org/page"), 100)
+            .read("http://example.org/page", 100)
             .await
             .unwrap_err();
         assert!(error.contains("decoded body limit"), "{error}");
