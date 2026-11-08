@@ -3,6 +3,18 @@
 
 このファイルの形式は [Keep a Changelog](https://keepachangelog.com/ja/1.1.0/) に従います。バージョニング方針は本文末尾の「セマンティックバージョニング」を参照してください。
 
+## [0.31.0](https://github.com/sahenjp/RustXNG/compare/v0.30.0...v0.31.0) (2026-11-08)
+
+
+### Features
+
+* raw content statuses, renderer fallback and configurable body limit ([#128](https://github.com/sahenjp/RustXNG/issues/128)) ([b893f1d](https://github.com/sahenjp/RustXNG/commit/b893f1d1996b8dd99d9334433a5f653bedfd3e3d))
+
+
+### Bug Fixes
+
+* **release:** recover image publishing for already-published releases ([#117](https://github.com/sahenjp/RustXNG/issues/117)) ([5535a15](https://github.com/sahenjp/RustXNG/commit/5535a153cff10a36d3ef0617f87a6cf1b40dc2c9))
+
 ## [0.30.0](https://github.com/sahenjp/RustXNG/compare/v0.29.0...v0.30.0) (2026-11-06)
 
 
