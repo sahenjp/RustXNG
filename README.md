@@ -65,6 +65,8 @@ With `include_raw_content=1`, every result reports `raw_content_status` (`ok`, `
 
 Choose a provider configuration with `--profile`. The default is `standard`.
 
+Standard's shipped entries are documented APIs, RSS or JSON endpoints — no human-facing search-result HTML pages are fetched by default — and each entry's reviewed conditions are recorded in [docs/PROVIDERS.md](docs/PROVIDERS.md). Full adds HTML providers, including sources whose terms forbid automated access; starting it now prints a terms reminder at startup.
+
 | Profile | Command | Sources |
 | --- | --- | --- |
 | Standard | `rustxng` | 34 keyless entries with recorded endpoint/use conditions, plus local indexes |
@@ -109,6 +111,10 @@ The `/healthz` endpoint checks the process, not the availability of upstream pro
 The [November 4 comparison](docs/COMPARISON-2026-11-04.md) covers **older** search profiles and is not a benchmark of v0.30.0. After provider permission changes, the [November 5 Standard runs](docs/ISSUE-RESOLUTION-2026-11-05.md) recorded Hit@5 of **67–69/100**, down from the earlier configuration's 84/100 on the same documentation question set. The newer *offline-only* Clean profile reached **85/254 Hit@10** on SealQA with a 42.7 ms median in its [recorded run](docs/CLEAN-PROFILE.md). These are different datasets and cannot be ranked against each other.
 
 All figures measure whether a reference page was retrieved, **not the accuracy of generated AI answers**. The question sets informed development, some indexes cover relevant documentation sites, and comparisons to stored commercial API results were not simultaneous or held out. These dated experiments are not guaranteed v0.30.0 performance. Do not infer general superiority over Exa or Tavily.
+
+Every number is self-reported: one maintainer, one machine, one network. Reproduce them yourself with the commands in [docs/BENCHMARK.md](docs/BENCHMARK.md) before relying on any figure.
+
+Also note the structural difference behind any comparison to Exa or Tavily: RustXNG merges many independent sources into one ranked list, while those APIs return results from a single index. Merging itself raises hit rates, so the measured gap is not a like-for-like measure of per-source quality. Read the figures as an engineering record, not a head-to-head win.
 
 ## Documentation
 
