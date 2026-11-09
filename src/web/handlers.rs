@@ -223,7 +223,23 @@ async fn run_search(
     query.pageno = params.pageno.unwrap_or(1).max(1);
     query.time_range = params.time_range.as_deref().and_then(TimeRange::parse);
     query.safesearch = params.safesearch.unwrap_or(preferences.safesearch).min(2);
-    query.timeout_limit = params.timeout_limit;
+    if let Some(timeout_limit) = params.timeout_limit {
+        if !crate::aggregator::is_valid_timeout_limit(timeout_limit) {
+            let message = format!(
+                "timeout_limit must be a finite number of seconds greater than 0 and at most {}",
+                crate::aggregator::MAX_TIMEOUT_LIMIT
+            );
+            if format == "json" {
+                return (
+                    StatusCode::BAD_REQUEST,
+                    axum::Json(serde_json::json!({"error": message})),
+                )
+                    .into_response();
+            }
+            return error_page(&state, StatusCode::BAD_REQUEST, &message);
+        }
+        query.timeout_limit = Some(timeout_limit);
+    }
 
     let categories = split_param(params.categories.as_deref())
         .or_else(|| split_param(params.category.as_deref()))
