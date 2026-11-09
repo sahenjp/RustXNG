@@ -3,6 +3,14 @@
 
 このファイルの形式は [Keep a Changelog](https://keepachangelog.com/ja/1.1.0/) に従います。バージョニング方針は本文末尾の「セマンティックバージョニング」を参照してください。
 
+## [0.31.1](https://github.com/sahenjp/RustXNG/compare/v0.31.0...v0.31.1) (2026-11-09)
+
+
+### Bug Fixes
+
+* address X feedback — terms notice for full, honest benchmark framing ([de1afa5](https://github.com/sahenjp/RustXNG/commit/de1afa5f9df661e765fdacc26ec7db80556118f4))
+* clear RUSTSEC-2026-0459 and RUSTSEC-2026-0462; raise MSRV to 1.89 ([3fa85f0](https://github.com/sahenjp/RustXNG/commit/3fa85f076fcfae04738e1df0e458b4e43e840555))
+
 ## [0.31.0](https://github.com/sahenjp/RustXNG/compare/v0.30.0...v0.31.0) (2026-11-08)
 
 
