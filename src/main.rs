@@ -183,6 +183,7 @@ async fn main() -> ExitCode {
             return ExitCode::FAILURE;
         }
     };
+    print_profile_notice(profile);
     if args.mcp {
         return match rustxng::mcp::serve_stdio(searcher).await {
             Ok(()) => ExitCode::SUCCESS,
@@ -308,6 +309,29 @@ async fn shutdown_signal() {
     tracing::info!("shutting down");
 }
 
+/// A one-time startup notice for the selected profile. `None` means no extra
+/// notice: Standard ships only reviewed keyless entries and Clean makes no
+/// external provider requests.
+fn profile_notice(profile: Profile) -> Option<&'static str> {
+    match profile {
+        Profile::Full => Some(
+            "NOTICE: the `full` profile enables HTML providers whose terms may forbid \
+             automated access, in addition to the standard set. Review each provider's \
+             conditions in docs/PROVIDERS.md before sending queries; personal use does \
+             not override provider terms.",
+        ),
+        Profile::Standard | Profile::Clean => None,
+    }
+}
+
+/// Print the profile notice once, to stderr so MCP stdio transport stays clean.
+fn print_profile_notice(profile: Profile) {
+    if let Some(notice) = profile_notice(profile) {
+        eprintln!("{notice}");
+        tracing::warn!("{}", notice);
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -360,5 +384,15 @@ mod tests {
         let mut settings = settings_on("127.0.0.1", 29483, None);
         let error = apply_listener(&mut settings, Some("not an ip".into()), None).unwrap_err();
         assert!(error.contains("not an ip:29483"), "{error}");
+    }
+
+    #[test]
+    fn full_profile_notice_warns_about_provider_terms() {
+        let notice = profile_notice(Profile::Full).expect("full prints a notice");
+        assert!(notice.contains("HTML providers"), "{notice}");
+        assert!(notice.contains("docs/PROVIDERS.md"), "{notice}");
+        assert!(notice.contains("terms"), "{notice}");
+        assert!(profile_notice(Profile::Standard).is_none());
+        assert!(profile_notice(Profile::Clean).is_none());
     }
 }

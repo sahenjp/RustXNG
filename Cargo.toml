@@ -2,7 +2,7 @@
 name = "rustxng"
 version = "0.31.0"
 edition = "2024"
-rust-version = "1.88"
+rust-version = "1.89"
 license = "AGPL-3.0-or-later"
 description = "SearXNG を Rust で書き直したメタ検索エンジン (AGPL-3.0-or-later)"
 repository = "https://github.com/sahenjp/rustxng"
@@ -36,7 +36,7 @@ chrono = { version = "0.4", default-features = false, features = ["clock", "std"
 base64 = "0.23"
 postgres = { version = "0.19", optional = true }
 mysql = { version = "28.0.3", default-features = false, features = ["minimal"], optional = true }
-rusqlite = { version = "0.40", features = ["bundled"], optional = true }
+rusqlite = { version = "0.41", features = ["bundled"], optional = true }
 mongodb = { version = "3", default-features = false, features = ["bson-3", "compat-3-3-0", "rustls-tls"], optional = true }
 bson = { version = "3", optional = true }
 tantivy = "0.27"

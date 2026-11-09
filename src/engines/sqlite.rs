@@ -92,11 +92,7 @@ impl Engine for Sqlite {
         let mut prepared = connection.prepare(&statement).map_err(|error| {
             EngineError::Message(format!("sqlite: cannot prepare the query: {error}"))
         })?;
-        let columns: Vec<String> = prepared
-            .column_names()
-            .into_iter()
-            .map(str::to_string)
-            .collect();
+        let columns: Vec<String> = prepared.column_names().map(str::to_string).collect();
         let mut rows = prepared
             .query(rusqlite::named_params! {
                 ":query": query.query_text(),
