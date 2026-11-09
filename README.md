@@ -38,6 +38,8 @@ The web interface is at <http://127.0.0.1:29483/>. The search endpoint also supp
 
 ## Use from an AI agent
 
+If the agent is expected to install RustXNG itself, the [agent setup guide](docs/AGENT-SETUP.md) is written for exactly that: it covers release-binary selection and checksum verification, starting a loopback service, verifying a small search, and the record to report back.
+
 Start the built-in MCP server:
 
 ```bash
