@@ -70,6 +70,34 @@ jobs:
           $json3 = '{"jsonrpc":"2.0","id":2,"method":"tools/list"}'
           $json1, $json2, $json3 | & .\target\debug\rustxng.exe mcp 2>&1 | ForEach-Object { "$_" } | Out-String | Write-Output
 
+      - name: Repro F - stdout goes to the console, not a file, 10 repeats
+        shell: bash
+        run: |
+          ok=0; bad=0
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            out=$(printf '%s\n' \
+              '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"t","version":"1"}}}' \
+              '{"jsonrpc":"2.0","method":"notifications/initialized"}' \
+              '{"jsonrpc":"2.0","id":2,"method":"tools/list"}' \
+              | timeout 20 ./target/debug/rustxng.exe mcp 2>/dev/null | wc -l)
+            if [ "$out" -ge 2 ]; then ok=$((ok+1)); else bad=$((bad+1)); echo "run $i: only $out lines"; fi
+          done
+          echo "console-stdout repeats: ok=$ok bad=$bad"
+
+      - name: Repro G - official binary, console stdout, 10 repeats
+        shell: bash
+        run: |
+          ok=0; bad=0
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            out=$(printf '%s\n' \
+              '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"t","version":"1"}}}' \
+              '{"jsonrpc":"2.0","method":"notifications/initialized"}' \
+              '{"jsonrpc":"2.0","id":2,"method":"tools/list"}' \
+              | timeout 20 ./rustxng-official.exe mcp 2>/dev/null | wc -l)
+            if [ "$out" -ge 2 ]; then ok=$((ok+1)); else bad=$((bad+1)); echo "run $i: only $out lines"; fi
+          done
+          echo "official console-stdout repeats: ok=$ok bad=$bad"
+
       - name: Repro E - Node MCP SDK client (as DSH does), source build
         shell: bash
         run: |
