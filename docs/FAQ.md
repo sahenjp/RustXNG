@@ -59,6 +59,29 @@ MCP provides character/byte budgets and up to three query-matched passages from 
 Linux ARM64 (`aarch64-unknown-linux-gnu`, glibc 2.39+) binaries are available from releases after v0.26.0, including v0.28.0.
 Linux ARMv7 and Linux ARM64 musl are separate, unsupported binary targets. Check the current [release assets](https://github.com/sahenjp/RustXNG/releases) and checksum for your platform; macOS ARM64 binaries do not run on Linux.
 
+## The MCP client hangs on `tools/list` over stdio on Windows. What should I check?
+
+The stdio transport speaks one JSON-RPC message per line (newline-delimited, no `Content-Length` header).
+If `initialize` answers but `tools/list` never does, work through this list before reporting:
+
+1. **Check the binary you actually ran.** The `initialize` response contains `serverInfo.version`. Agent frameworks
+   (including DSH) can manage their own RustXNG copy and an older one can shadow `rustxng` on `PATH`. Compare that
+   version with `rustxng --version` and the release you expect.
+2. **Run with server logs visible**: `RUST_LOG=info rustxng mcp`. The `serve_inner` trace shows initialize,
+   the initialized notification, and EOF (`input stream terminated`) as they happen.
+3. **Console, not pipe**: writing to a console window that is in selection mode (QuickEdit) blocks output until the
+   selection is cleared. Redirect stdout to a file or clear the selection and retry.
+4. **Send the exact three lines and keep stdin open** until you have the `tools/list` response:
+   `printf '%s\n' '<initialize>' '<notifications/initialized>' '<tools/list>' | rustxng mcp`.
+5. **Retry from a different client** (Node MCP SDK, a pipe from a plain file) and a clean shell. Antivirus or
+   console-host software can inject delays on some machines.
+
+Automated verification: the CI matrix runs this exact reproduction on `windows-latest` (Git Bash pipe, PowerShell
+pipe, Node SDK, console stdout, with and without EOF, official release binary and a source build, 10 repeats each).
+All variants answer `tools/list` there, so a hang that only appears on one machine points at that machine's
+environment rather than the wire protocol. When reporting, include the `initialize` response's version field and
+the `RUST_LOG=info` trace.
+
 ## How can I help or become a maintainer?
 
 You can submit a report, fixture, benchmark reproduction, documentation change or PR without an invitation.
