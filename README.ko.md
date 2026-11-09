@@ -49,13 +49,17 @@ rustxng mcp
 MCP는 읽기 전용 도구 두 개를 제공합니다.
 
 - `search`: 정렬된 검색 결과를 반환합니다. 기본 5개, 최대 10개이며 발췌문은 결과당 500자로 제한됩니다.
-- `read_page`: 같은 세션에서 `search`가 반환한 URL의 본문을 읽습니다. `query`를 지정하면 추출된 페이지 전체에서 관련 문장 최대 3개를 선택합니다.
+- `read_page`: 같은 세션에서 `search`가 반환한 URL의 본문을 읽습니다. `query`를 지정하면 추출된 페이지 전체에서 관련 구절 최대 3개를 선택합니다.
 
 `read_page`는 기본 4,000자를 반환하고 `max_chars`로 최대 20,000자를 지정할 수 있습니다. `offset`과 `next_offset`으로 이어서 읽을 수 있으며, `truncated`와 `source_truncated`로 생략 여부를 확인할 수 있습니다. 문자 및 바이트 제한 외에 `tokenizer`(`cl100k_base` 또는 `o200k_base`)와 `max_payload_tokens`를 함께 지정하면 직렬화된 MCP `structuredContent`에 토큰 제한을 적용할 수 있습니다. JSON-RPC 외피와 클라이언트 또는 모델의 프롬프트 구성은 계산에 포함되지 않습니다. [출력 계약](docs/AGENT-OUTPUT.md)을 참조하세요.
 
 페이지를 읽을 때 대상 주소와 리디렉션을 검사해 비공개 IP 연결을 차단하고 robots.txt(RFC 9309)를 준수합니다. MCP에서는 임의의 URL을 바로 읽을 수 없습니다. 검색 결과와 본문은 지시문이 아닌 신뢰할 수 없는 외부 데이터로 취급해야 합니다.
 
+MCP `read_page` 또는 HTTP `include_raw_content`에서 `accept_language`를 지정하면 가져올 페이지의 언어 우선순위를 요청할 수 있습니다. 예를 들어 `ko-KR,ko;q=0.9,en;q=0.8`을 지정하면 한국어를 우선 요청합니다. 생략하면 언어 헤더를 보내지 않으며, 본문 캐시는 언어 설정별로 구분됩니다. [검증, 제공자 및 이어서 읽기](docs/COMPATIBILITY.md#ページ本文の言語)를 참고하세요.
+
 HTTP API는 `include_raw_content=1`로 본문을 가져올 수 있습니다. PDF 텍스트 추출에는 Poppler(`pdftotext`)가 필요하며 스캔 PDF에는 별도 OCR이 필요합니다. JavaScript로 생성되는 본문을 읽으려면 선택 사항인 [Firefox 렌더러](tools/page-renderer/README.md)를 설정하세요.
+
+`include_raw_content=1`을 사용하면 각 결과의 `raw_content_status`로 본문 조회 상태를 확인할 수 있습니다. 오류에 관한 짧은 설명이 제공되는 경우 `raw_content_error`도 포함됩니다.
 
 ## 검색 프로필
 
