@@ -23,7 +23,7 @@ flowchart LR
 ## CIで確認すること
 
 - Linux・macOS・WindowsのRustテスト、fmt、Clippy、導入のオフラインスモークテスト。
-- Rust 1.88の最低対応版、既定・slimビルド、ネイティブLinux ARM64。
+- Rust 1.89の最低対応版、既定・slimビルド、ネイティブLinux ARM64。
 - amd64・arm64のコンテナ起動、バージョン、ヘルス確認。
 - 使い捨てMariaDBでのMySQL・MariaDBエンジンの実接続、パラメーターの束縛、ページング。
 - Pythonの評価器・リリース・監査ポリシーの回帰テスト、プロバイダー台帳、Markdown、actionlint。

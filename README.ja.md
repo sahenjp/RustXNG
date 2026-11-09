@@ -16,7 +16,7 @@ cargo install --git https://github.com/sahenjp/RustXNG.git --tag v0.31.0 --locke
 ```
 <!-- x-release-please-end -->
 
-ソースから導入するにはRust 1.88以降とCのビルド環境が必要です。詳しくは[エージェント向け導入ガイド](docs/AGENT-SETUP.md)を見てください。
+ソースから導入するにはRust 1.89以降とCのビルド環境が必要です。詳しくは[エージェント向け導入ガイド](docs/AGENT-SETUP.md)を見てください。
 
 サーバーを起動します。
 

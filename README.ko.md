@@ -18,7 +18,7 @@ cargo install --git https://github.com/sahenjp/RustXNG.git --tag v0.31.0 --locke
 ```
 <!-- x-release-please-end -->
 
-소스 설치에는 Rust 1.88 이상과 C 빌드 도구가 필요합니다. 배포 바이너리 선택 및 검증 방법은 [에이전트 설치 안내](docs/AGENT-SETUP.md)를 참고하세요.
+소스 설치에는 Rust 1.89 이상과 C 빌드 도구가 필요합니다. 배포 바이너리 선택 및 검증 방법은 [에이전트 설치 안내](docs/AGENT-SETUP.md)를 참고하세요.
 
 로컬 서버를 시작합니다.
 

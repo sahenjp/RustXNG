@@ -17,7 +17,7 @@ Small documentation fixes can go straight to a PR. Follow [CODE_OF_CONDUCT.md](C
 
 ## Development setup
 
-Use stable Rust (minimum 1.88 for the current lockfile) and a C build toolchain.
+Use stable Rust (minimum 1.89 for the current lockfile) and a C build toolchain.
 PDF tests also require Poppler (`pdftotext`) and Japanese CMap data; see [page extraction requirements](README.md#use-from-an-ai-agent).
 
 ```bash
@@ -50,7 +50,7 @@ python3 tools/smoke_agent_setup.py --binary target/debug/rustxng
 
 Build the server with `cargo build --locked --bin rustxng` before running the setup smoke tool.
 It uses local fake responses, not live upstream search. CI additionally checks Linux/macOS/Windows,
-`--no-default-features`, Rust 1.88, and the container.
+`--no-default-features`, Rust 1.89, and the container.
 Do not claim a check passed if it was not run. State the command, toolchain and limitation clearly.
 An empty GitHub check list is not a green CI result; first-time fork workflows may need owner approval.
 

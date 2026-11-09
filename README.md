@@ -16,7 +16,7 @@ cargo install --git https://github.com/sahenjp/RustXNG.git --tag v0.31.0 --locke
 ```
 <!-- x-release-please-end -->
 
-Rust 1.88 or newer and a C build toolchain are required for source installation. The [agent setup guide](docs/AGENT-SETUP.md) covers release binaries, verification, platform requirements and service reuse.
+Rust 1.89 or newer and a C build toolchain are required for source installation. The [agent setup guide](docs/AGENT-SETUP.md) covers release binaries, verification, platform requirements and service reuse.
 
 Start a local server:
 
