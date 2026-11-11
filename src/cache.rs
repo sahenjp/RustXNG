@@ -309,6 +309,11 @@ impl Cache {
     }
 }
 
+/// Namespace for every key this cache stores in Valkey / Redis, so `clear()`
+/// removes exactly what `set()` wrote and nothing owned by other applications
+/// (such as an upstream SearXNG) sharing the same database.
+const VALKEY_KEY_PREFIX: &str = "rustxng:cache:";
+
 /// A cache stored in Valkey / Redis, like the upstream valkey cache backend.
 pub struct ValkeyCache {
     url: String,
@@ -333,22 +338,30 @@ impl ValkeyCache {
         }
     }
 
-    async fn command(&self, args: &[&str]) -> Result<Option<String>, String> {
+    async fn request(&self, args: &[&str]) -> Result<ValkeyReply, String> {
         let mut pooled = self.connection.lock().await;
         // Cancellation must discard the connection.
         let mut connection = match pooled.take() {
             Some(connection) => connection,
             None => ValkeyConnection::connect(&self.url).await?,
         };
-        let response = connection.command(args).await;
+        let response = connection.request(args).await;
         if response.is_ok() {
             *pooled = Some(connection);
         }
         response
     }
 
+    async fn command(&self, args: &[&str]) -> Result<Option<String>, String> {
+        self.request(args).await.map(ValkeyReply::flatten)
+    }
+
+    fn namespaced(key: &str) -> String {
+        format!("{VALKEY_KEY_PREFIX}{key}")
+    }
+
     pub async fn get(&self, key: &str) -> Option<CachedResponse> {
-        match self.command(&["GET", key]).await {
+        match self.command(&["GET", &Self::namespaced(key)]).await {
             Ok(Some(payload)) => match decode_response(&payload) {
                 Some(response) => {
                     self.hit.fetch_add(1, Ordering::Relaxed);
@@ -378,7 +391,8 @@ impl ValkeyCache {
             return;
         };
         let ttl = self.ttl.as_secs().max(1).to_string();
-        match self.command(&["SET", key, &payload, "EX", &ttl]).await {
+        let key = Self::namespaced(key);
+        match self.command(&["SET", &key, &payload, "EX", &ttl]).await {
             Ok(_) => {
                 self.entries.fetch_add(1, Ordering::Relaxed);
             }
@@ -388,13 +402,44 @@ impl ValkeyCache {
         }
     }
 
+    /// Delete this cache's entries, walking the keyspace with SCAN so a large
+    /// database is not blocked the way a single KEYS call would block it.
     pub async fn clear(&self) {
-        if let Ok(Some(keys)) = self.command(&["KEYS", "searxng:*"]).await {
-            for key in keys.split('\n') {
-                if !key.is_empty() {
-                    let _ = self.command(&["DEL", key]).await;
+        let pattern = format!("{VALKEY_KEY_PREFIX}*");
+        let mut cursor = "0".to_string();
+        loop {
+            let scan: [&str; 6] = ["SCAN", &cursor, "MATCH", &pattern, "COUNT", "100"];
+            let page = match self.request(&scan).await {
+                Ok(ValkeyReply::Array(page)) => <[ValkeyReply; 2]>::try_from(page),
+                _ => {
+                    self.error.fetch_add(1, Ordering::Relaxed);
+                    return;
+                }
+            };
+            // A SCAN reply is [next cursor, [keys...]].
+            let Ok([ValkeyReply::Bulk(Some(next)), ValkeyReply::Array(keys)]) = page else {
+                self.error.fetch_add(1, Ordering::Relaxed);
+                return;
+            };
+            let keys: Vec<String> = keys
+                .into_iter()
+                .filter_map(|key| match key {
+                    ValkeyReply::Bulk(Some(key)) => Some(key),
+                    _ => None,
+                })
+                .collect();
+            if !keys.is_empty() {
+                let mut args = vec!["DEL"];
+                args.extend(keys.iter().map(String::as_str));
+                if self.command(&args).await.is_err() {
+                    self.error.fetch_add(1, Ordering::Relaxed);
+                    return;
                 }
             }
+            if next == "0" {
+                return;
+            }
+            cursor = next;
         }
     }
 
@@ -490,6 +535,11 @@ impl ValkeyConnection {
 
     /// Run one command; bulk replies come back as Some(String), nil as None.
     async fn command(&mut self, args: &[&str]) -> Result<Option<String>, String> {
+        self.request(args).await.map(ValkeyReply::flatten)
+    }
+
+    /// Run one command and return the reply with its structure intact.
+    async fn request(&mut self, args: &[&str]) -> Result<ValkeyReply, String> {
         use tokio::io::AsyncWriteExt as _;
         let mut request = format!("*{}\r\n", args.len());
         for argument in args {
@@ -503,22 +553,7 @@ impl ValkeyConnection {
             .flush()
             .await
             .map_err(|error| error.to_string())?;
-        match self.read_reply().await? {
-            ValkeyReply::Bulk(value) => Ok(value),
-            ValkeyReply::Simple(value) => Ok(Some(value)),
-            ValkeyReply::Integer(value) => Ok(Some(value.to_string())),
-            ValkeyReply::Nil => Ok(None),
-            ValkeyReply::Array(items) => Ok(Some(
-                items
-                    .into_iter()
-                    .filter_map(|item| match item {
-                        ValkeyReply::Bulk(Some(value)) | ValkeyReply::Simple(value) => Some(value),
-                        _ => None,
-                    })
-                    .collect::<Vec<_>>()
-                    .join("\n"),
-            )),
-        }
+        self.read_reply().await
     }
 
     fn read_reply(
@@ -579,6 +614,28 @@ enum ValkeyReply {
     Nil,
 }
 
+impl ValkeyReply {
+    /// Flatten a reply to a string; array items are joined with newlines.
+    fn flatten(self) -> Option<String> {
+        match self {
+            ValkeyReply::Bulk(value) => value,
+            ValkeyReply::Simple(value) => Some(value),
+            ValkeyReply::Integer(value) => Some(value.to_string()),
+            ValkeyReply::Nil => None,
+            ValkeyReply::Array(items) => Some(
+                items
+                    .into_iter()
+                    .filter_map(|item| match item {
+                        ValkeyReply::Bulk(Some(value)) | ValkeyReply::Simple(value) => Some(value),
+                        _ => None,
+                    })
+                    .collect::<Vec<_>>()
+                    .join("\n"),
+            ),
+        }
+    }
+}
+
 #[cfg(test)]
 mod valkey_tests {
     use super::*;
@@ -610,7 +667,10 @@ mod valkey_tests {
         let server = tokio::spawn(async move {
             let (stream, _) = listener.accept().await.unwrap();
             let mut first = tokio::io::BufReader::new(stream);
-            assert_eq!(read_command(&mut first).await, ["GET", "first"]);
+            assert_eq!(
+                read_command(&mut first).await,
+                ["GET", "rustxng:cache:first"]
+            );
             requested.send(()).unwrap();
             cancelled.await.unwrap();
             let payload =
@@ -622,7 +682,10 @@ mod valkey_tests {
 
             let (stream, _) = listener.accept().await.unwrap();
             let mut second = tokio::io::BufReader::new(stream);
-            assert_eq!(read_command(&mut second).await, ["GET", "second"]);
+            assert_eq!(
+                read_command(&mut second).await,
+                ["GET", "rustxng:cache:second"]
+            );
             let payload =
                 r#"{"status":200,"final_url":"https://second.invalid/","body":"c2Vjb25k"}"#;
             second
@@ -705,6 +768,134 @@ mod valkey_tests {
             } else {
                 assert!(matches!(response.unwrap(), Err(NetworkError::Timeout)));
             }
+        }
+    }
+
+    fn bulk(value: &str) -> String {
+        format!("${}\r\n{value}\r\n", value.len())
+    }
+
+    fn glob_matches(pattern: &str, key: &str) -> bool {
+        match pattern.strip_suffix('*') {
+            Some(prefix) => key.starts_with(prefix),
+            None => key == pattern,
+        }
+    }
+
+    type Keyspace = std::collections::BTreeMap<String, String>;
+
+    /// Answer one command against a fake keyspace. SCAN visits one key per
+    /// page, and its cursor names the last visited key so deleting keys
+    /// between pages skips nothing (as with a real server).
+    fn reply_to(store: &mut Keyspace, command: &[String]) -> String {
+        match command[0].as_str() {
+            "GET" => match store.get(&command[1]) {
+                Some(value) => bulk(value),
+                None => "$-1\r\n".to_string(),
+            },
+            "SET" => {
+                store.insert(command[1].clone(), command[2].clone());
+                "+OK\r\n".to_string()
+            }
+            "DEL" => {
+                let removed = command[1..]
+                    .iter()
+                    .filter(|key| store.remove(*key).is_some())
+                    .count();
+                format!(":{removed}\r\n")
+            }
+            "KEYS" => {
+                let keys: Vec<_> = store
+                    .keys()
+                    .filter(|key| glob_matches(&command[1], key))
+                    .map(|key| bulk(key))
+                    .collect();
+                format!("*{}\r\n{}", keys.len(), keys.concat())
+            }
+            "SCAN" => {
+                let after = command[1].strip_prefix("after:");
+                let pattern = match command.iter().position(|argument| argument == "MATCH") {
+                    Some(index) => command[index + 1].as_str(),
+                    None => "*",
+                };
+                let mut candidates = store
+                    .keys()
+                    .filter(|key| after.is_none_or(|after| key.as_str() > after));
+                let current = candidates.next();
+                let next = match (current, candidates.next()) {
+                    (Some(key), Some(_)) => format!("after:{key}"),
+                    _ => "0".to_string(),
+                };
+                let page: Vec<_> = current
+                    .filter(|key| glob_matches(pattern, key))
+                    .map(|key| bulk(key))
+                    .into_iter()
+                    .collect();
+                let cursor = bulk(&next);
+                format!("*2\r\n{cursor}*{}\r\n{}", page.len(), page.concat())
+            }
+            other => format!("-ERR unknown command {other}\r\n"),
+        }
+    }
+
+    /// Serve a fake Valkey keyspace on every accepted connection.
+    async fn serve_keyspace(
+        listener: tokio::net::TcpListener,
+        store: std::sync::Arc<Mutex<Keyspace>>,
+    ) {
+        loop {
+            let (stream, _) = listener.accept().await.unwrap();
+            let store = std::sync::Arc::clone(&store);
+            tokio::spawn(async move {
+                let mut stream = tokio::io::BufReader::new(stream);
+                loop {
+                    match stream.fill_buf().await {
+                        Ok(buffer) if !buffer.is_empty() => {}
+                        _ => return,
+                    }
+                    let command = read_command(&mut stream).await;
+                    let reply = reply_to(&mut store.lock().unwrap(), &command);
+                    stream.get_mut().write_all(reply.as_bytes()).await.unwrap();
+                }
+            });
+        }
+    }
+
+    #[tokio::test]
+    async fn clear_removes_own_entries_and_leaves_other_namespaces() {
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let url = format!("redis://{}", listener.local_addr().unwrap());
+        // Keys owned by another application sharing the same database,
+        // e.g. an upstream SearXNG instance.
+        let foreign = ["searxng:limiter", "searxng:cache", "other"]
+            .map(|key| (key.to_string(), "foreign".to_string()));
+        let store = std::sync::Arc::new(Mutex::new(Keyspace::from(foreign)));
+        let server = tokio::spawn(serve_keyspace(listener, std::sync::Arc::clone(&store)));
+
+        let cache = Cache::valkey(&url, Duration::from_secs(60));
+        let first = Cache::key("GET", "https://example.test/a", "");
+        let second = Cache::key("POST", "https://example.test/b", "q=1");
+        cache.set(&first, response_with_body("first")).await;
+        cache.set(&second, response_with_body("second")).await;
+        assert!(cache.get(&first).await.is_some());
+
+        cache.clear().await;
+
+        // Both of this cache's entries are gone ...
+        assert!(cache.get(&first).await.is_none());
+        assert!(cache.get(&second).await.is_none());
+        // ... and every key outside its namespace is untouched.
+        let remaining: Vec<_> = store.lock().unwrap().keys().cloned().collect();
+        assert_eq!(remaining, ["other", "searxng:cache", "searxng:limiter"]);
+        server.abort();
+    }
+
+    fn response_with_body(body: &str) -> CachedResponse {
+        CachedResponse {
+            status: 200,
+            final_url: "https://example.test/".into(),
+            headers: Default::default(),
+            body: std::sync::Arc::new(body.as_bytes().to_vec()),
         }
     }
 
