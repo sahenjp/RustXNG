@@ -12,7 +12,7 @@ Install from the [releases page](https://github.com/sahenjp/RustXNG/releases) or
 
 <!-- x-release-please-start-version -->
 ```bash
-cargo install --git https://github.com/sahenjp/RustXNG.git --tag v0.31.1 --locked
+cargo install --git https://github.com/sahenjp/RustXNG.git --tag v0.31.2 --locked
 ```
 <!-- x-release-please-end -->
 

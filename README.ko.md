@@ -14,7 +14,7 @@ Cargo로 설치하려면 다음 명령을 실행합니다.
 
 <!-- x-release-please-start-version -->
 ```bash
-cargo install --git https://github.com/sahenjp/RustXNG.git --tag v0.31.1 --locked
+cargo install --git https://github.com/sahenjp/RustXNG.git --tag v0.31.2 --locked
 ```
 <!-- x-release-please-end -->
 
