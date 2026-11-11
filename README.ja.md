@@ -12,7 +12,7 @@ Web全体を独自に索引化する検索エンジンではありません。�
 
 <!-- x-release-please-start-version -->
 ```bash
-cargo install --git https://github.com/sahenjp/RustXNG.git --tag v0.31.1 --locked
+cargo install --git https://github.com/sahenjp/RustXNG.git --tag v0.31.2 --locked
 ```
 <!-- x-release-please-end -->
 

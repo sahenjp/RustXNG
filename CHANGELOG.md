@@ -3,6 +3,15 @@
 
 このファイルの形式は [Keep a Changelog](https://keepachangelog.com/ja/1.1.0/) に従います。バージョニング方針は本文末尾の「セマンティックバージョニング」を参照してください。
 
+## [0.31.2](https://github.com/sahenjp/RustXNG/compare/v0.31.1...v0.31.2) (2026-11-11)
+
+
+### Bug Fixes
+
+* parse the LLM query array as JSON instead of splitting on commas ([#134](https://github.com/sahenjp/RustXNG/issues/134)) ([fee1a93](https://github.com/sahenjp/RustXNG/commit/fee1a93d2facf1b68153761ef7386fb0c85a47cd))
+* update rustix to 1.1.6 for RUSTSEC-2026-0486 ([c07945e](https://github.com/sahenjp/RustXNG/commit/c07945e6c9f426f0507d9eb710b42cf6bf4d76f4))
+* validate timeout_limit at the HTTP entry point instead of panicking on inf ([#135](https://github.com/sahenjp/RustXNG/issues/135)) ([f318d72](https://github.com/sahenjp/RustXNG/commit/f318d725df6991d75f238fae8c478aa74fe074dd))
+
 ## [0.31.1](https://github.com/sahenjp/RustXNG/compare/v0.31.0...v0.31.1) (2026-11-09)
 
 
