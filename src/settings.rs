@@ -1048,6 +1048,14 @@ impl Settings {
                 "fetch.timeout must be a finite positive duration".into(),
             ));
         }
+        if !self.search.timeout_limit.is_finite()
+            || self.search.timeout_limit <= 0.0
+            || std::time::Duration::try_from_secs_f64(self.search.timeout_limit).is_err()
+        {
+            return Err(SettingsError::Validation(
+                "search.timeout_limit must be a finite positive duration".into(),
+            ));
+        }
         if self.outgoing.request_timeout <= 0.0 || self.outgoing.max_request_timeout <= 0.0 {
             return Err(SettingsError::Validation(
                 "outgoing timeouts must be positive".into(),
@@ -1959,6 +1967,24 @@ engines:
             assert!(
                 settings.validate().is_err(),
                 "fetch.timeout = {value} ({name}) must be rejected"
+            );
+        }
+    }
+
+    #[test]
+    fn search_timeout_limit_must_be_finite_and_representable() {
+        for (name, value) in [
+            ("zero", "0.0"),
+            ("negative", "-1.0"),
+            ("infinity", "inf"),
+            ("negative infinity", "-inf"),
+            ("not a number", "nan"),
+            ("out of range", "1e300"),
+        ] {
+            let settings = merged_toml(&format!("[search]\ntimeout_limit = {value}\n"));
+            assert!(
+                settings.validate().is_err(),
+                "search.timeout_limit = {value} ({name}) must be rejected"
             );
         }
     }

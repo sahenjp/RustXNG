@@ -18,6 +18,28 @@ use crate::query::{Query, TimeRange};
 use crate::results::{Infobox, ResultContainer, SearchResult, Timing, UnresponsiveEngine};
 use crate::settings::Settings;
 
+/// Largest per-request `timeout_limit`, in seconds, that the HTTP layer
+/// accepts. The default search deadline is 3.0 seconds; 60 seconds matches
+/// the largest timeout already present in the settings (the research and
+/// LLM timeouts) and leaves ample headroom without letting one request
+/// hold a search open indefinitely.
+pub(crate) const MAX_TIMEOUT_LIMIT: f64 = 60.0;
+
+/// Whether a caller-supplied `timeout_limit` (in seconds) may be honoured:
+/// finite, positive and within the server cap.
+pub(crate) fn is_valid_timeout_limit(value: f64) -> bool {
+    value.is_finite() && value > 0.0 && value <= MAX_TIMEOUT_LIMIT
+}
+
+/// Resolve the effective search timeout in seconds. A non-finite or
+/// non-positive override — reachable through the library API, which
+/// bypasses the HTTP validation — falls back to the configured limit.
+fn resolve_timeout_limit(requested: Option<f64>, configured: f64) -> f64 {
+    requested
+        .filter(|value| value.is_finite() && *value > 0.0)
+        .unwrap_or(configured)
+}
+
 /// Everything the searcher needs to know about one search request.
 #[derive(Debug, Clone)]
 pub struct SearchRequest {
@@ -610,13 +632,14 @@ impl Searcher {
         engines.retain(|engine| engine.is_applicable(&request.query));
 
         // All providers share one deadline; completed results are retained.
+        // `try_from_secs_f64` keeps an unrepresentable configured value
+        // (settings validation normally rejects those) from panicking here.
         let deadline = Instant::now()
-            + Duration::from_secs_f64(
-                request
-                    .timeout_limit
-                    .unwrap_or(self.settings.search.timeout_limit)
+            + Duration::try_from_secs_f64(
+                resolve_timeout_limit(request.timeout_limit, self.settings.search.timeout_limit)
                     .max(0.1),
-            );
+            )
+            .unwrap_or(Duration::from_millis(100));
         // A general search that names a specialised source ("... arxiv",
         // "... github") also asks that source, without the site's name.
         let routed = self.site_routes(&request, &engines);
@@ -2372,6 +2395,39 @@ mod tests {
     }
 
     use super::*;
+
+    #[test]
+    fn timeout_limit_validation_rejects_non_finite_and_out_of_range_values() {
+        assert!(is_valid_timeout_limit(3.0));
+        assert!(is_valid_timeout_limit(MAX_TIMEOUT_LIMIT));
+        for value in [
+            f64::INFINITY,
+            f64::NEG_INFINITY,
+            f64::NAN,
+            0.0,
+            -1.0,
+            MAX_TIMEOUT_LIMIT + 0.1,
+            1e300,
+        ] {
+            assert!(
+                !is_valid_timeout_limit(value),
+                "timeout_limit {value} must be rejected"
+            );
+        }
+    }
+
+    #[test]
+    fn invalid_timeout_limit_overrides_fall_back_to_the_configured_value() {
+        assert_eq!(resolve_timeout_limit(Some(2.5), 3.0), 2.5);
+        assert_eq!(resolve_timeout_limit(None, 3.0), 3.0);
+        for value in [f64::INFINITY, f64::NEG_INFINITY, f64::NAN, 0.0, -1.0] {
+            assert_eq!(
+                resolve_timeout_limit(Some(value), 3.0),
+                3.0,
+                "timeout_limit {value} must fall back"
+            );
+        }
+    }
 
     #[test]
     fn cosine_similarity_behaves_as_expected() {
