@@ -866,6 +866,26 @@ async fn research_and_search_share_limits_before_outbound_requests() {
     server.abort();
 }
 
+#[tokio::test]
+async fn autocompleter_is_rate_limited() {
+    let base_url = start_fake_engine().await;
+    let mut settings = settings_for(&base_url);
+    settings.server.limiter = LimiterSettings::Enabled(true);
+    settings.server.limiter_max = 1;
+    settings.server.limiter_window = 60;
+    let app = app(settings);
+
+    // `backend=none` keeps the allowed request from reaching any backend.
+    let uri = "/autocompleter?q=rust&backend=none";
+    let (status, body, _) = get_uri(&app, uri).await;
+    assert_eq!(status, StatusCode::OK);
+    assert_eq!(body, "[]");
+
+    let (status, _, headers) = get_uri(&app, uri).await;
+    assert_eq!(status, StatusCode::TOO_MANY_REQUESTS);
+    assert!(headers.contains_key(header::RETRY_AFTER));
+}
+
 /// The JSON payload the fake YaCy engine answers with.
 const YACY_RESPONSE: &str = r#"{
   "channels": [{
