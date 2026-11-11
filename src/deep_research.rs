@@ -156,16 +156,20 @@ fn parse_string_array(text: &str, max: usize) -> Vec<String> {
     let Some(end) = end.filter(|end| *end > start) else {
         return fallback_queries(text, max);
     };
-    let inner = &text[start + 1..end];
-    let items: Vec<String> = inner
-        .split(',')
-        .map(|item| item.trim().trim_matches('"').trim().to_string())
+    // The reply may wrap the array in prose or a markdown fence; the slice
+    // between the outermost brackets is the array itself. Parse it as JSON
+    // instead of splitting on commas, which corrupts entries that contain
+    // commas or escaped quotes.
+    let items: Vec<String> = serde_json::from_str::<Vec<String>>(&text[start..=end])
+        .unwrap_or_default()
+        .into_iter()
         .filter(|item| !item.is_empty())
+        .take(max)
         .collect();
     if items.is_empty() {
         fallback_queries(text, max)
     } else {
-        items.into_iter().take(max).collect()
+        items
     }
 }
 
@@ -275,6 +279,37 @@ mod tests {
         let text = "Here you go:\n```json\n[\"a\", \"b\"]\n```";
         let items = parse_string_array(text, 5);
         assert_eq!(items, vec!["a".to_string(), "b".to_string()]);
+    }
+
+    #[test]
+    fn parses_entries_containing_commas() {
+        let items = parse_string_array(
+            "[\"Paris, Texas population\", \"Austin, Texas weather\"]",
+            5,
+        );
+        assert_eq!(
+            items,
+            vec![
+                "Paris, Texas population".to_string(),
+                "Austin, Texas weather".to_string()
+            ]
+        );
+    }
+
+    #[test]
+    fn parses_escaped_quotes_in_entries() {
+        let items = parse_string_array("[\"Paris, Texas population\", \"a\\\"b\"]", 5);
+        assert_eq!(
+            items,
+            vec!["Paris, Texas population".to_string(), "a\"b".to_string()]
+        );
+    }
+
+    #[test]
+    fn falls_back_when_array_is_not_valid_json() {
+        let items = parse_string_array("[rust async, tokio runtime]", 3);
+        assert!(!items.is_empty());
+        assert!(items[0].contains("[rust async, tokio runtime]"));
     }
 
     #[test]
