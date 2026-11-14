@@ -46,6 +46,14 @@ curl --fail --get 'http://127.0.0.1:29483/search' \
 rustxng mcp
 ```
 
+stdio の代わりに Streamable HTTP で提供する場合:
+
+```bash
+rustxng mcp --http --bind 127.0.0.1 --port 29483
+```
+
+エンドポイントは `http://127.0.0.1:29483/mcp` です。`Mcp-Session-Id` ごとに `read_page` のURL許可リストとページキャッシュを分けます。ワイルドカードにバインドするときは、DNSリバインディング対策のため `RUSTXNG_MCP_ALLOWED_HOSTS` に公開ホスト名を指定します。ループバック以外ではTLSと認証を前段に置いてください。
+
 MCPには、読み取り専用のツールが2つあります。
 
 - `search`：検索結果を順位順に返します。デフォルトは5件、最大10件で、抜粋は1件500文字までです。

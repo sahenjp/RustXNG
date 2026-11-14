@@ -46,6 +46,14 @@ Start the built-in MCP server:
 rustxng mcp
 ```
 
+To serve MCP over Streamable HTTP instead of stdio:
+
+```bash
+rustxng mcp --http --bind 127.0.0.1 --port 29483
+```
+
+The endpoint is `http://127.0.0.1:29483/mcp`. Each `Mcp-Session-Id` has its own `read_page` URL allowlist and page cache. A wildcard bind requires `RUSTXNG_MCP_ALLOWED_HOSTS` to list the public host names for DNS-rebinding protection. Put TLS and authentication in front of any non-loopback deployment.
+
 MCP exposes two read-only tools:
 
 - `search` returns up to 10 ranked results. The default is 5, with snippets limited to 500 characters.

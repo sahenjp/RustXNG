@@ -14,8 +14,10 @@ const HELP: &str = "rustxng - a Rust rewrite of the SearXNG metasearch engine
 
 USAGE:
     rustxng [OPTIONS]
-    rustxng mcp [--profile NAME] [--config FILE]
-                                   Serve MCP tools on stdin/stdout
+    rustxng mcp [--profile NAME] [--config FILE] [--http]
+                [--bind ADDRESS] [--port PORT]
+                                   Serve MCP tools on stdin/stdout,
+                                   or at /mcp over Streamable HTTP
 
 OPTIONS:
     --profile <NAME>       Built-in provider set (default: standard)
@@ -28,6 +30,9 @@ OPTIONS:
                            (default: $SEARXNG_SETTINGS_PATH)
     -b, --bind <ADDRESS>   Address to listen on (default: server.bind_address)
     -p, --port <PORT>      Port to listen on (default: server.port)
+    --http                 Serve MCP over Streamable HTTP at /mcp
+                           (mcp mode only; needs RUSTXNG_MCP_ALLOWED_HOSTS
+                           for a wildcard bind)
     --check-update        Check the latest official release
     --update              Download, verify and install the latest release
     -v, --version          Print the version
@@ -35,11 +40,12 @@ OPTIONS:
 
 ENVIRONMENT:
     RUSTXNG_PROFILE, SEARXNG_SETTINGS_PATH, SEARXNG_BIND_ADDRESS, SEARXNG_PORT, SEARXNG_SECRET,
-    SEARXNG_BASE_URL, SEARXNG_DEBUG, SEARXNG_ENABLE_METRICS, RUST_LOG
+    SEARXNG_BASE_URL, SEARXNG_DEBUG, SEARXNG_ENABLE_METRICS, RUSTXNG_MCP_ALLOWED_HOSTS, RUST_LOG
 ";
 
 struct Args {
     mcp: bool,
+    http: bool,
     config: Option<PathBuf>,
     profile: Option<Profile>,
     bind: Option<String>,
@@ -50,6 +56,7 @@ struct Args {
 fn parse_args() -> Result<Option<Args>, String> {
     let mut args = Args {
         mcp: false,
+        http: false,
         config: None,
         profile: None,
         bind: None,
@@ -77,6 +84,7 @@ fn parse_args() -> Result<Option<Args>, String> {
                 }
                 args.update = Some(argument == "--update");
             }
+            "--http" => args.http = true,
             "-c" | "--config" => {
                 args.config = Some(PathBuf::from(
                     argv.next().ok_or("--config needs a file path")?,
@@ -122,8 +130,16 @@ async fn main() -> ExitCode {
         }
     };
 
-    if args.mcp && (args.update.is_some() || args.bind.is_some() || args.port.is_some()) {
-        eprintln!("error: mcp only accepts --profile and --config");
+    if args.http && !args.mcp {
+        eprintln!("error: --http requires mcp");
+        return ExitCode::from(2);
+    }
+    if args.mcp && args.update.is_some() {
+        eprintln!("error: mcp does not accept --update or --check-update");
+        return ExitCode::from(2);
+    }
+    if args.mcp && !args.http && (args.bind.is_some() || args.port.is_some()) {
+        eprintln!("error: mcp only accepts --bind and --port with --http");
         return ExitCode::from(2);
     }
     tracing_subscriber::fmt()
@@ -185,7 +201,12 @@ async fn main() -> ExitCode {
     };
     print_profile_notice(profile);
     if args.mcp {
-        return match rustxng::mcp::serve_stdio(searcher).await {
+        let result = if args.http {
+            rustxng::mcp::http::serve(searcher, address).await
+        } else {
+            rustxng::mcp::serve_stdio(searcher).await
+        };
+        return match result {
             Ok(()) => ExitCode::SUCCESS,
             Err(error) => {
                 eprintln!("error: {error}");
