@@ -1,6 +1,6 @@
 //! Search suggestions, ported from `searx/autocomplete.py`.
 
-use std::collections::BTreeSet;
+use std::collections::HashSet;
 
 use crate::engine::util::{json_str, locale_language};
 use crate::engine::{EngineRequest, EngineResponse};
@@ -62,18 +62,26 @@ pub async fn suggest(
     }
 }
 
-/// Extract the suggestions from a backend response.
+/// Extract the suggestions from a backend response, keeping the backend's own
+/// relevance order: the ranking is the entire point of an autocomplete
+/// suggestion list, so results are only de-duplicated, never re-sorted.
 pub fn parse_suggestions(backend: &str, response: &EngineResponse) -> Vec<String> {
     let Ok(json) = response.json() else {
         return Vec::new();
     };
-    let mut suggestions = BTreeSet::new();
+    let mut seen = HashSet::new();
+    let mut suggestions = Vec::new();
+    let mut push = |text: String| {
+        if seen.insert(text.clone()) {
+            suggestions.push(text);
+        }
+    };
     match backend {
         "wikipedia" => {
             if let Some(items) = json_path_array(&json, 1) {
                 for item in items {
                     if let Some(text) = item.as_str() {
-                        suggestions.insert(text.to_string());
+                        push(text.to_string());
                     }
                 }
             }
@@ -83,7 +91,7 @@ pub fn parse_suggestions(backend: &str, response: &EngineResponse) -> Vec<String
                 for item in items.iter().take(10) {
                     let title = json_str(item, "title.0.value");
                     if !title.is_empty() {
-                        suggestions.insert(title);
+                        push(title);
                     }
                 }
             }
@@ -93,11 +101,11 @@ pub fn parse_suggestions(backend: &str, response: &EngineResponse) -> Vec<String
             if let Some(items) = json.as_array() {
                 for item in items {
                     if let Some(text) = item.as_str() {
-                        suggestions.insert(text.to_string());
+                        push(text.to_string());
                     } else {
                         let phrase = json_str(item, "phrase");
                         if !phrase.is_empty() {
-                            suggestions.insert(phrase);
+                            push(phrase);
                         }
                     }
                 }
@@ -105,13 +113,15 @@ pub fn parse_suggestions(backend: &str, response: &EngineResponse) -> Vec<String
             if let Some(items) = json_path_array(&json, 1) {
                 for item in items {
                     if let Some(text) = item.as_str() {
-                        suggestions.insert(text.to_string());
+                        push(text.to_string());
                     }
                 }
             }
         }
     }
-    suggestions.into_iter().take(10).collect()
+    drop(push);
+    suggestions.truncate(10);
+    suggestions
 }
 
 fn json_path_array(value: &serde_json::Value, index: usize) -> Option<&[serde_json::Value]> {
@@ -151,5 +161,25 @@ mod tests {
     #[test]
     fn broken_json_yields_no_suggestions() {
         assert!(parse_suggestions("duckduckgo", &response("<html>")).is_empty());
+    }
+
+    #[test]
+    fn suggestion_order_follows_backend_ranking_not_alphabetical_order() {
+        // The backend ranks "zebra" above "apple"; a `BTreeSet` would have
+        // alphabetized the pair and silently thrown that ranking away.
+        let body = r#"[{"phrase":"zebra"},{"phrase":"apple"}]"#;
+        assert_eq!(
+            parse_suggestions("duckduckgo", &response(body)),
+            vec!["zebra".to_string(), "apple".to_string()]
+        );
+    }
+
+    #[test]
+    fn duplicate_suggestions_are_removed_without_reordering() {
+        let body = r#"[{"phrase":"rust"},{"phrase":"ruby"},{"phrase":"rust"}]"#;
+        assert_eq!(
+            parse_suggestions("duckduckgo", &response(body)),
+            vec!["rust".to_string(), "ruby".to_string()]
+        );
     }
 }
