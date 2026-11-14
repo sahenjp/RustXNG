@@ -13,6 +13,8 @@ use axum::response::Redirect;
 use axum::routing::get;
 use rmcp::model::{CallToolRequestParams, CallToolResult};
 use rmcp::service::RunningService;
+use rmcp::transport::StreamableHttpClientTransport;
+use rmcp::transport::streamable_http_server::StreamableHttpServerConfig;
 use rmcp::{RoleClient, ServiceExt};
 use serde_json::{Value, json};
 
@@ -43,6 +45,55 @@ async fn connect() -> Fixture {
 }
 
 async fn connect_with_page(page: String) -> Fixture {
+    let (searcher, origin, port, page_fetches) = search_fixture(page).await;
+
+    let (server_transport, client_transport) = tokio::io::duplex(64 * 1024);
+    let overrides = [(
+        "example.com".to_string(),
+        std::net::SocketAddr::from(([127, 0, 0, 1], port)),
+    )];
+    let server = McpServer::with_page_overrides(Arc::new(searcher), &overrides).unwrap();
+    tokio::spawn(async move {
+        let running = server.serve(server_transport).await.expect("server");
+        let _ = running.waiting().await;
+    });
+    let client = ().serve(client_transport).await.expect("client");
+    Fixture {
+        client,
+        origin,
+        port,
+        page_fetches,
+    }
+}
+
+/// The same server over Streamable HTTP, with one McpServer per MCP session.
+async fn connect_http() -> Fixture {
+    let (searcher, origin, port, page_fetches) = search_fixture(PAGE.to_string()).await;
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let address = listener.local_addr().unwrap();
+    let overrides = vec![(
+        "example.com".to_string(),
+        std::net::SocketAddr::from(([127, 0, 0, 1], port)),
+    )];
+    let app = rustxng::mcp::http::router(
+        Arc::new(searcher),
+        overrides,
+        StreamableHttpServerConfig::default(),
+    );
+    tokio::spawn(async move { axum::serve(listener, app).await.unwrap() });
+    let transport = StreamableHttpClientTransport::from_uri(format!("http://{address}/mcp"));
+    let client = ().serve(transport).await.expect("client");
+    Fixture {
+        client,
+        origin,
+        port,
+        page_fetches,
+    }
+}
+
+/// A loopback server plays the engine and the result pages, with settings
+/// that keep the fixture off the network.
+async fn search_fixture(page: String) -> (Searcher, String, u16, Arc<AtomicUsize>) {
     let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
     let port = listener.local_addr().unwrap().port();
     let origin = format!("http://example.com:{port}");
@@ -143,24 +194,7 @@ async fn connect_with_page(page: String) -> Fixture {
     settings.search.embedding_url.clear();
     settings.search.local_index_path.clear();
     let searcher = Searcher::new(settings).expect("searcher");
-
-    let (server_transport, client_transport) = tokio::io::duplex(64 * 1024);
-    let overrides = [(
-        "example.com".to_string(),
-        std::net::SocketAddr::from(([127, 0, 0, 1], port)),
-    )];
-    let server = McpServer::with_page_overrides(Arc::new(searcher), &overrides).unwrap();
-    tokio::spawn(async move {
-        let running = server.serve(server_transport).await.expect("server");
-        let _ = running.waiting().await;
-    });
-    let client = ().serve(client_transport).await.expect("client");
-    Fixture {
-        client,
-        origin,
-        port,
-        page_fetches,
-    }
+    (searcher, origin, port, page_fetches)
 }
 
 async fn call(client: &RunningService<RoleClient, ()>, tool: &str, args: Value) -> CallToolResult {
@@ -211,6 +245,30 @@ async fn tools_are_listed_read_only_with_schemas() {
             tool.name
         );
     }
+    client.cancel().await.unwrap();
+}
+
+#[tokio::test]
+async fn the_http_transport_keeps_search_and_read_page_in_one_session() {
+    let Fixture {
+        client,
+        origin,
+        page_fetches,
+        ..
+    } = connect_http().await;
+    let tools = client.list_all_tools().await.unwrap();
+    assert_eq!(tools.len(), 2);
+
+    let search = call(&client, "search", json!({"query": "rust", "limit": 1})).await;
+    let url = structured(&search)["results"][0]["url"]
+        .as_str()
+        .unwrap()
+        .to_owned();
+    assert_eq!(url, format!("{origin}/rust"));
+
+    let page = call(&client, "read_page", json!({"url": url})).await;
+    assert_eq!(structured(&page)["text"], PAGE_TEXT);
+    assert_eq!(page_fetches.load(Ordering::SeqCst), 1);
     client.cancel().await.unwrap();
 }
 

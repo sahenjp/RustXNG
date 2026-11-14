@@ -28,6 +28,7 @@ use crate::version::VERSION;
 #[cfg(test)]
 mod benchmark;
 mod budget;
+pub mod http;
 use budget::TokenBudget;
 pub use budget::{PayloadTokenizer, TokenBudgetInfo};
 
