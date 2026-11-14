@@ -491,8 +491,15 @@ pub fn format_number(value: f64, locale: &str) -> String {
     }
     let magnitude = value.abs();
     if magnitude != 0.0 && !(1e-6..1e12).contains(&magnitude) {
-        // Scientific notation, like upstream's format_scientific.
-        return format!("{value:e}");
+        // Scientific notation, like upstream's format_scientific. Still
+        // needs the same locale decimal separator as the branch below, or a
+        // "de"/"fr" result mixes a comma-free mantissa into an otherwise
+        // comma-formatted answer.
+        let mut text = format!("{value:e}");
+        if uses_decimal_comma(locale) {
+            text = text.replace('.', ",");
+        }
+        return text;
     }
     let mut text = format!("{value:.10}");
     if text.contains('.') {
@@ -702,6 +709,21 @@ mod tests {
         assert_eq!(format_number(1.5, "de"), "1,5");
         assert_eq!(format_number(1.5, "en"), "1.5");
         assert_eq!(format_number(1000.0, "en"), "1000");
+    }
+
+    #[test]
+    fn scientific_notation_still_uses_the_locale_decimal_separator() {
+        // Outside the plain-decimal range (below 1e-6 or at/above 1e12),
+        // `format_number` switches to scientific notation; that branch must
+        // localize its own decimal point exactly like the plain branch does.
+        let large = format_number(1.5e13, "de");
+        assert!(large.contains(','), "{large}");
+        assert!(!large.contains('.'), "{large}");
+        assert_eq!(format_number(1.5e13, "en"), "1.5e13");
+
+        let small = format_number(2.5e-7, "fr");
+        assert!(small.contains(','), "{small}");
+        assert!(!small.contains('.'), "{small}");
     }
 
     #[test]
