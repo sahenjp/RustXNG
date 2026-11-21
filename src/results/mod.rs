@@ -799,6 +799,7 @@ fn title_numbers(title: &str) -> Vec<String> {
 }
 
 /// 語の Dice 係数（正規化済みタイトルの類似度）。
+#[allow(dead_code)]
 fn title_dice(a: &str, b: &str) -> f64 {
     let words_a: std::collections::BTreeSet<&str> = a.split_whitespace().collect();
     let words_b: std::collections::BTreeSet<&str> = b.split_whitespace().collect();
@@ -812,15 +813,20 @@ fn title_dice(a: &str, b: &str) -> f64 {
 /// 転載の統合（distillation）。
 ///
 /// 統合条件はすべてを満たす場合のみ（誤統合は根拠を失わせるので最悪）:
-///  1. 正規化タイトルの完全一致
+///  1. 正規化タイトルの完全一致（正規化後は空白を含まないため語集合 Dice は
+///     常に 1.0 になり、別途の類似度検査は意味を持たない）
 ///  2. 数字列の完全一致（版番号・CVE 番号の違いは別の記事）
-///  3. Dice >= 0.95（語集合の類似）
+///  3. 異なるホスト間（同一ホストの別ページは転載ではない）
 ///
 /// 統合時はスコアの高い方を代表とし、engines / positions / merged_sources を寄せる。
 fn distill_transfers(results: &mut Vec<SearchResult>, _query_terms: &[String]) {
     if results.len() < 2 {
         return;
     }
+    // 正規化タイトル → keep 内の位置。同じタイトルを持つ結果だけが転載候補
+    // なので、ペア比較をバケツ内に限定して入力サイズに対してほぼ線形にする。
+    // （バケツをまたぐ全ペア比較は、エンジンが返す件数の2乗に比例する。）
+    let mut buckets: HashMap<String, Vec<usize>> = HashMap::new();
     let mut keep: Vec<SearchResult> = Vec::with_capacity(results.len());
     'outer: for mut candidate in results.drain(..) {
         let cand_norm = normalize_title_for_dedup(&candidate.title);
@@ -831,45 +837,47 @@ fn distill_transfers(results: &mut Vec<SearchResult>, _query_terms: &[String]) {
             continue 'outer;
         }
         let cand_nums = title_numbers(&candidate.title);
-        for existing in keep.iter_mut() {
-            // 転載は「別ドメインでの再掲」。同じホストの別ページ（例: サイト内の一覧と詳細）は
-            // タイトルが似ていても別のページなので統合しない。
-            if url_host(&existing.url) == url_host(&candidate.url) {
-                continue;
-            }
-            let ex_norm = normalize_title_for_dedup(&existing.title);
-            if ex_norm != cand_norm {
-                continue;
-            }
-            if title_numbers(&existing.title) != cand_nums {
-                continue; // 数字が違う = 別の記事（版番号・CVE 番号が違う）
-            }
-            if title_dice(&ex_norm, &cand_norm) < 0.95 {
-                continue;
-            }
-            // 転載として統合する。代表（existing）に寄せる。
-            let merged_label = format!("{} | {}", candidate.title, candidate.url);
-            existing.merged_sources.push(merged_label);
-            for engine in candidate.engines.drain(..) {
-                if !existing.engines.contains(&engine) {
-                    existing.engines.push(engine);
+        if let Some(indices) = buckets.get(&cand_norm) {
+            for &index in indices {
+                let existing = &mut keep[index];
+                // 転載は「別ドメインでの再掲」。同じホストの別ページ（例: サイト内の一覧と詳細）は
+                // タイトルが似ていても別のページなので統合しない。
+                if url_host(&existing.url) == url_host(&candidate.url) {
+                    continue;
                 }
+                if title_numbers(&existing.title) != cand_nums {
+                    continue; // 数字が違う = 別の記事（版番号・CVE 番号が違う）
+                }
+                // title_dice の検査は不要: ここに来る時点で正規化タイトルは
+                // 文字列として一致しており、空白を含まない正規化済み文字列の
+                // 語集合 Dice は常に 1.0 になる。
+                // 転載として統合する。代表（existing）に寄せる。
+                let merged_label = format!("{} | {}", candidate.title, candidate.url);
+                existing.merged_sources.push(merged_label);
+                for engine in candidate.engines.drain(..) {
+                    if !existing.engines.contains(&engine) {
+                        existing.engines.push(engine);
+                    }
+                }
+                existing.positions.append(&mut candidate.positions);
+                if existing.score < candidate.score {
+                    // より強い結果を代表にする。タイトルの正規化形は統合条件で
+                    // 一致済みなので、入れ替えてもバケツの所属は変わらない。
+                    std::mem::swap(&mut existing.url, &mut candidate.url);
+                    std::mem::swap(&mut existing.title, &mut candidate.title);
+                    std::mem::swap(&mut existing.content, &mut candidate.content);
+                    std::mem::swap(&mut existing.score, &mut candidate.score);
+                    std::mem::swap(
+                        &mut existing.relevance_score,
+                        &mut candidate.relevance_score,
+                    );
+                }
+                continue 'outer;
             }
-            existing.positions.append(&mut candidate.positions);
-            if existing.score < candidate.score {
-                // より強い結果を代表にする
-                std::mem::swap(&mut existing.url, &mut candidate.url);
-                std::mem::swap(&mut existing.title, &mut candidate.title);
-                std::mem::swap(&mut existing.content, &mut candidate.content);
-                std::mem::swap(&mut existing.score, &mut candidate.score);
-                std::mem::swap(
-                    &mut existing.relevance_score,
-                    &mut candidate.relevance_score,
-                );
-            }
-            continue 'outer;
         }
+        let index = keep.len();
         keep.push(candidate);
+        buckets.entry(cand_norm).or_default().push(index);
     }
     *results = keep;
 }
@@ -887,57 +895,74 @@ fn merge_near_duplicates(results: &mut Vec<SearchResult>) {
     if results.len() < 2 {
         return;
     }
+    // (host, 正規化タイトル) → keep 内の位置。統合候補は同じバケツの中に
+    // しかいないので、全ペア比較ではなくバケツ内比較に留める。本文の
+    // 4-gram 集合は組み立てが重いため、同じバケツで初めて必要になった
+    // 結果に対してだけ遅延構築する。
+    let mut buckets: HashMap<(String, String), Vec<usize>> = HashMap::new();
+    let mut grams: Vec<Option<BTreeSet<String>>> = Vec::new();
     let mut keep: Vec<SearchResult> = Vec::with_capacity(results.len());
     'outer: for mut candidate in results.drain(..) {
         let candidate_host = content_host(&candidate.url);
         let candidate_title = normalize_title_for_dedup(&candidate.title);
         if candidate_host.is_empty() || candidate_title.is_empty() {
             keep.push(candidate);
+            grams.push(None);
             continue 'outer;
         }
         let Some(candidate_grams) = body_grams(&candidate.content) else {
             keep.push(candidate);
+            grams.push(None);
             continue 'outer;
         };
-        for existing in keep.iter_mut() {
-            if content_host(&existing.url) != candidate_host {
-                continue;
-            }
-            if normalize_title_for_dedup(&existing.title) != candidate_title {
-                continue;
-            }
-            let Some(existing_grams) = body_grams(&existing.content) else {
-                continue;
-            };
-            let overlap = existing_grams.intersection(&candidate_grams).count();
-            let dice = 2.0 * overlap as f64 / (existing_grams.len() + candidate_grams.len()) as f64;
-            if dice < 0.9 {
-                continue;
-            }
-            // Keep the stronger result as the representative and record where
-            // the other address came from, the same way distillation does.
-            existing
-                .merged_sources
-                .push(format!("{} | {}", candidate.title, candidate.url));
-            for engine in candidate.engines.drain(..) {
-                if !existing.engines.contains(&engine) {
-                    existing.engines.push(engine);
+        let key = (candidate_host, candidate_title);
+        if let Some(indices) = buckets.get(&key) {
+            for &index in indices {
+                let existing = &mut keep[index];
+                if grams[index].is_none() {
+                    grams[index] = body_grams(&existing.content);
                 }
+                let Some(existing_grams) = &grams[index] else {
+                    continue;
+                };
+                let overlap = existing_grams.intersection(&candidate_grams).count();
+                let dice =
+                    2.0 * overlap as f64 / (existing_grams.len() + candidate_grams.len()) as f64;
+                if dice < 0.9 {
+                    continue;
+                }
+                // Keep the stronger result as the representative and record where
+                // the other address came from, the same way distillation does.
+                existing
+                    .merged_sources
+                    .push(format!("{} | {}", candidate.title, candidate.url));
+                for engine in candidate.engines.drain(..) {
+                    if !existing.engines.contains(&engine) {
+                        existing.engines.push(engine);
+                    }
+                }
+                existing.positions.append(&mut candidate.positions);
+                if candidate.score > existing.score {
+                    std::mem::swap(&mut existing.url, &mut candidate.url);
+                    std::mem::swap(&mut existing.title, &mut candidate.title);
+                    std::mem::swap(&mut existing.content, &mut candidate.content);
+                    std::mem::swap(&mut existing.score, &mut candidate.score);
+                    std::mem::swap(
+                        &mut existing.relevance_score,
+                        &mut candidate.relevance_score,
+                    );
+                    // 代表が candidate の本文を引き継いだので、4-gram も
+                    // そちらに合わせる（統合条件上 host と正規化タイトルは
+                    // 一致済みで、バケツの所属は変わらない）。
+                    grams[index] = Some(candidate_grams.clone());
+                }
+                continue 'outer;
             }
-            existing.positions.append(&mut candidate.positions);
-            if candidate.score > existing.score {
-                std::mem::swap(&mut existing.url, &mut candidate.url);
-                std::mem::swap(&mut existing.title, &mut candidate.title);
-                std::mem::swap(&mut existing.content, &mut candidate.content);
-                std::mem::swap(&mut existing.score, &mut candidate.score);
-                std::mem::swap(
-                    &mut existing.relevance_score,
-                    &mut candidate.relevance_score,
-                );
-            }
-            continue 'outer;
         }
+        let index = keep.len();
         keep.push(candidate);
+        grams.push(Some(candidate_grams));
+        buckets.entry(key).or_default().push(index);
     }
     *results = keep;
 }

@@ -5,9 +5,10 @@
 //! indexes, and falls back to the links on the seed page.
 //!
 //! `/extract` turns one page into records. The schema is resolved from the
-//! page itself (JSON-LD, microdata, definition lists, tables) so the caller
-//! gets structure instead of prose. Nothing is invented: every field carries
-//! the selector or JSON-LD path it came from.
+//! page itself (JSON-LD, definition lists, tables) so the caller gets
+//! structure instead of prose; a page without any of those yields one record
+//! of reduced page text. Nothing is invented: every field carries the
+//! selector or JSON-LD path it came from.
 
 use std::collections::BTreeSet;
 
@@ -21,8 +22,6 @@ use crate::robots::Robots;
 pub const MAX_MAP_URLS: usize = 5_000;
 /// Most sitemaps followed from one seed (index files expand to more).
 pub const MAX_SITEMAPS: usize = 32;
-/// Largest sitemap body accepted, in bytes.
-const MAX_SITEMAP_BYTES: usize = 8 * 1024 * 1024;
 /// Most links read from the seed page when no sitemap exists.
 const MAX_SEED_LINKS: usize = 2_000;
 /// Most records one `/extract` call returns.
@@ -68,12 +67,25 @@ pub struct MapReport {
     pub errors: Vec<String>,
 }
 
-/// Read one body with the shared page reader, bounded.
+/// Read one body with the shared page reader.
+///
+/// The raw markup is required, not the extracted text: `robots.txt` and
+/// sitemap declarations are line- and tag-sensitive, seed links live in
+/// `<a href>` attributes, and `/extract` parses `<script>` and `<table>`
+/// elements — all of which text extraction discards.
 async fn body(reader: &PageReader, url: &str) -> Result<String, String> {
-    reader
-        .text(url, MAX_SITEMAP_BYTES)
-        .await
-        .map(|text| text.to_string())
+    reader.raw(url).await
+}
+
+/// Whether `candidate` belongs to `seed`'s origin (scheme, host and port).
+///
+/// A shared string prefix is not enough: `https://example.com` is a prefix of
+/// `https://example.com.evil.example`, `https://example.computer` and
+/// `https://example.com:8443`, none of which is the same origin.
+fn same_origin(seed: &reqwest::Url, candidate: &str) -> bool {
+    reqwest::Url::parse(candidate)
+        .map(|url| url.origin() == seed.origin())
+        .unwrap_or(false)
 }
 
 /// Collect the URLs of a site.
@@ -133,7 +145,7 @@ pub async fn map_site(reader: &PageReader, seed: &str, limit: usize) -> Result<M
                     if urls.len() >= limit {
                         break;
                     }
-                    if !location.starts_with(&origin) {
+                    if !same_origin(&seed_url, &location) {
                         continue;
                     }
                     if seen.insert(location.clone()) {
@@ -149,10 +161,21 @@ pub async fn map_site(reader: &PageReader, seed: &str, limit: usize) -> Result<M
         }
     }
 
-    // No sitemap produced anything: read the links the seed page offers.
-    if urls.is_empty()
-        && let Ok(text) = body(reader, seed).await
-    {
+    // No sitemap produced anything: read the links the seed page offers. A
+    // failure here used to vanish, so a caller saw an empty map with no
+    // reason; the reason now lands in the same list as the sitemap errors.
+    let seed_body = if urls.is_empty() {
+        match body(reader, seed).await {
+            Ok(text) => Some(text),
+            Err(error) => {
+                errors.push(format!("{seed}: {error}"));
+                None
+            }
+        }
+    } else {
+        None
+    };
+    if let Some(text) = seed_body {
         let document = Html::parse_document(&text);
         if let Ok(selector) = Selector::parse("a[href]") {
             for element in document.select(&selector).take(MAX_SEED_LINKS) {
@@ -168,7 +191,7 @@ pub async fn map_site(reader: &PageReader, seed: &str, limit: usize) -> Result<M
                 let Some(normalised) = normalize_url(resolved.as_str()) else {
                     continue;
                 };
-                if !normalised.starts_with(&origin) {
+                if !same_origin(&seed_url, &normalised) {
                     continue;
                 }
                 if seen.insert(normalised.clone()) {
@@ -200,10 +223,52 @@ pub struct Record {
     pub id: Option<String>,
     /// Field name to value.
     pub fields: std::collections::BTreeMap<String, String>,
-    /// Where the record was found: `jsonld`, `microdata`, `definition-list`, `table`.
+    /// Where the record was found: `jsonld`, `definition-list`, `table`,
+    /// or `document` for the reduced page text used as the last resort.
     pub source: &'static str,
     /// Path inside the source (JSON-LD key path, table row number, ...).
     pub path: String,
+}
+
+/// One record for a page that carries no structured data.
+///
+/// The text is the same main-content reduction the fetch path uses: the
+/// largest article-like container when the page has one, the whole body text
+/// otherwise — a prose page without semantic containers may still carry site
+/// chrome in its text. A page with neither a title nor readable text yields
+/// no record at all: an empty record would look like a match.
+fn document_record(url: &str, document: &Html) -> Vec<Record> {
+    let mut fields = std::collections::BTreeMap::new();
+    if let Some(title) = document
+        .select(&Selector::parse("title").expect("static selector"))
+        .next()
+    {
+        let title: String = title.text().collect::<String>().trim().to_string();
+        if !title.is_empty() {
+            fields.insert(
+                "title".to_string(),
+                title.chars().take(MAX_FIELD_CHARS).collect(),
+            );
+        }
+    }
+    let text = crate::content::main_text(document);
+    let text = text.trim();
+    if text.is_empty() && fields.is_empty() {
+        return Vec::new();
+    }
+    fields.insert("url".to_string(), url.to_string());
+    if !text.is_empty() {
+        fields.insert(
+            "text".to_string(),
+            text.chars().take(MAX_FIELD_CHARS).collect(),
+        );
+    }
+    vec![Record {
+        id: None,
+        fields,
+        source: "document",
+        path: "body".to_string(),
+    }]
 }
 
 /// The result of an `/extract` call.
@@ -424,6 +489,13 @@ pub async fn extract(
     if records.is_empty() {
         records = table_records(&document);
     }
+    // Prose pages carry no schema, and most pages an agent asks about are
+    // prose. Returning nothing made the endpoint useless for the common case,
+    // so the page's own text is the last resort — clearly labelled as such
+    // rather than dressed up as extracted structure.
+    if records.is_empty() {
+        records = document_record(url, &document);
+    }
     let truncated = records.len() > limit;
     records.truncate(limit);
     Ok(ExtractReport {
@@ -436,6 +508,169 @@ pub async fn extract(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn a_prose_page_yields_the_document_text() {
+        // The measured case: docs pages carry no schema, so /extract answered
+        // with zero records and the endpoint was useless for the common page.
+        let html = Html::parse_document(
+            "<html><head><title>Pathlib</title></head><body>\
+             <nav>Home | Docs</nav><main><p>Pathlib offers classes representing \
+             filesystem paths with semantics appropriate for different operating \
+             systems.</p></main></body></html>",
+        );
+        let records = document_record("https://example.test/", &html);
+        assert_eq!(records.len(), 1);
+        assert_eq!(records[0].source, "document");
+        assert_eq!(
+            records[0].fields.get("title").map(String::as_str),
+            Some("Pathlib")
+        );
+        assert_eq!(
+            records[0].fields.get("url").map(String::as_str),
+            Some("https://example.test/")
+        );
+        let text = records[0].fields.get("text").expect("text");
+        assert!(text.contains("filesystem paths"), "{text}");
+        assert!(!text.contains("Home | Docs"), "navigation must be dropped");
+    }
+
+    #[test]
+    fn a_page_without_text_or_title_yields_no_record() {
+        let html = Html::parse_document("<html><body><nav></nav></body></html>");
+        assert!(document_record("https://example.test/", &html).is_empty());
+    }
+
+    #[test]
+    fn same_origin_is_an_origin_comparison_not_a_prefix_match() {
+        let seed = reqwest::Url::parse("https://example.com/").unwrap();
+        assert!(same_origin(&seed, "https://example.com/a/b?c=d"));
+        assert!(same_origin(&seed, "https://example.com:443/x"));
+        for candidate in [
+            // A lookalike host whose name merely begins with the seed's host.
+            "https://example.com.evil.example/x",
+            "https://example.computer/x",
+            "https://sub.example.com/x",
+            // Same name, different port or scheme: still another origin.
+            "https://example.com:8443/x",
+            "http://example.com/x",
+            // A trailing dot is a different hostname even though it resolves
+            // to the same entity.
+            "https://example.com./x",
+            "not a url",
+        ] {
+            assert!(!same_origin(&seed, candidate), "{candidate}");
+        }
+    }
+
+    #[tokio::test]
+    async fn map_keeps_only_urls_on_the_seed_origin() {
+        use axum::{Router, routing::get};
+        let app = Router::new()
+            .route(
+                "/robots.txt",
+                get(|| async {
+                    "User-agent: *\nAllow: /\nSitemap: http://example.test/sitemap.xml\n"
+                }),
+            )
+            .route(
+                "/sitemap.xml",
+                get(|| async {
+                    (
+                        [(axum::http::header::CONTENT_TYPE, "application/xml")],
+                        concat!(
+                            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+                            "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">",
+                            "<url><loc>http://example.test/kept</loc></url>",
+                            "<url><loc>http://example.test.evil.example/x</loc></url>",
+                            "<url><loc>http://example.testify/x</loc></url>",
+                            "<url><loc>http://example.test:9/other-port</loc></url>",
+                            "</urlset>"
+                        ),
+                    )
+                }),
+            );
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let address = listener.local_addr().unwrap();
+        let server = tokio::spawn(async move { axum::serve(listener, app).await.unwrap() });
+        let (client, _) = crate::fetch::public_client(
+            &crate::settings::Outgoing::default(),
+            &[("example.test".into(), address)],
+        )
+        .unwrap();
+        let reader = crate::fetch::PageReader::new(&crate::settings::Outgoing::default(), &[])
+            .unwrap()
+            .with_test_client(client);
+        let report = map_site(&reader, "http://example.test/", 100)
+            .await
+            .unwrap();
+        server.abort();
+        assert!(
+            report.errors.is_empty() && report.used_sitemap,
+            "errors: {:?}, urls: {:?}",
+            report.errors,
+            report.urls
+        );
+        assert_eq!(
+            report
+                .urls
+                .iter()
+                .map(|u| u.url.as_str())
+                .collect::<Vec<_>>(),
+            ["http://example.test/kept"]
+        );
+    }
+
+    #[tokio::test]
+    async fn extract_reads_the_markup_not_the_flattened_text() {
+        // Regression: /extract used to parse the reader's extracted prose, so
+        // <script type="ld+json"> never survived to the record builders and
+        // every page fell through to the document record.
+        use axum::{Router, routing::get};
+        let app = Router::new()
+            .route(
+                "/robots.txt",
+                get(|| async { "User-agent: *\nAllow: /\n" }),
+            )
+            .route(
+                "/page",
+                get(|| async {
+                    concat!(
+                        "<html><head><title>Spec</title>",
+                        r#"<script type="application/ld+json">{"@type":"TechArticle","name":"RustXNG","author":{"name":"Sahen"}}</script>"#,
+                        "</head><body><main><p>Body text.</p></main></body></html>"
+                    )
+                }),
+            );
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let address = listener.local_addr().unwrap();
+        let server = tokio::spawn(async move { axum::serve(listener, app).await.unwrap() });
+        let (client, _) = crate::fetch::public_client(
+            &crate::settings::Outgoing::default(),
+            &[("example.test".into(), address)],
+        )
+        .unwrap();
+        let reader = crate::fetch::PageReader::new(&crate::settings::Outgoing::default(), &[])
+            .unwrap()
+            .with_test_client(client);
+        let report = extract(&reader, "http://example.test/page", 10)
+            .await
+            .unwrap();
+        server.abort();
+        assert_eq!(report.records.len(), 1, "{:?}", report.records);
+        assert_eq!(report.records[0].source, "jsonld");
+        assert_eq!(
+            report.records[0].fields.get("name").map(String::as_str),
+            Some("RustXNG")
+        );
+        assert_eq!(
+            report.records[0]
+                .fields
+                .get("author.name")
+                .map(String::as_str),
+            Some("Sahen")
+        );
+    }
 
     #[test]
     fn jsonld_graph_yields_one_record_per_node() {

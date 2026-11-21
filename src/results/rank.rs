@@ -9,6 +9,7 @@
 use std::collections::HashMap;
 
 use super::{SearchResult, domain_matches, host_of};
+use crate::query::query_language;
 
 /// Lowercase query terms (latin words of 3+, plus CJK bigrams) used by
 /// [`relevance`].
@@ -353,17 +354,11 @@ const MIRRORS: &[&str] = &[
     "manpages.ubuntu.com",
 ];
 
-/// Does the query look Japanese (any CJK / kana)?
-fn query_is_japanese(query: &str) -> bool {
-    query.chars().any(|c| {
-        matches!(c as u32, 0x3040..=0x30ff | 0x3400..=0x4dbf | 0x4e00..=0x9fff | 0xf900..=0xfaff)
-    })
-}
-
 /// Penalty for a Wikipedia edition that does not match the query language.
 ///
-/// A Czech or Gan Wikipedia article is almost never the answer to an English
-/// or Japanese query; those editions only add noise to the merged results.
+/// A Czech or Gan Wikipedia article is almost never the answer to an English,
+/// Japanese or Korean query; those editions only add noise to the merged
+/// results.
 pub(crate) fn wikipedia_language_penalty(query: &str, url: &str) -> f64 {
     let Some(host) = host_of(url) else { return 0.0 };
     let Some(subdomain) = host.strip_suffix(".wikipedia.org") else {
@@ -372,11 +367,10 @@ pub(crate) fn wikipedia_language_penalty(query: &str, url: &str) -> f64 {
     if subdomain.contains('.') {
         return 0.0; // e.g. zh-min-nan.wikipedia.org counts as its own lang
     }
-    let japanese = query_is_japanese(query);
-    let matches = if japanese {
-        matches!(subdomain, "ja")
-    } else {
-        matches!(subdomain, "en" | "simple")
+    let matches = match query_language(query) {
+        "ja" => matches!(subdomain, "ja"),
+        "ko" => matches!(subdomain, "ko"),
+        _ => matches!(subdomain, "en" | "simple"),
     };
     if matches { 0.0 } else { -0.45 }
 }
@@ -443,7 +437,7 @@ pub(crate) fn page_language_adjustment(query: &str, url: &str) -> f64 {
     let Some(language) = page_language(url) else {
         return 0.0;
     };
-    let wanted = if query_is_japanese(query) { "ja" } else { "en" };
+    let wanted = query_language(query);
     if language == wanted {
         if wanted == "en" { 0.0 } else { 0.3 }
     } else if language == "en" {
@@ -596,10 +590,14 @@ pub(crate) fn order_results(results: &[SearchResult]) -> Vec<SearchResult> {
     const MAX_COUNT: i32 = 8;
     const MAX_DISTANCE: usize = 20;
 
-    let mut grouped: Vec<SearchResult> = Vec::with_capacity(sorted.len());
+    // 並べ替えはまず添字だけで行う。同一カテゴリの挿入は `Vec::insert` の
+    // memmove を伴い、SearchResult を直接動かすとエンジンが返す件数の2乗に
+    // 比例するメモリ帯域を使う。usize の並べ替えなら同じ回数でも定数分の
+    // 1/30 ほどで済み、最後に一度だけ実体を並べ替えられる。
+    let mut grouped: Vec<usize> = Vec::with_capacity(sorted.len());
     let mut positions: HashMap<String, GroupState> = HashMap::new();
 
-    for result in sorted {
+    for (sequence, result) in sorted.iter().enumerate() {
         let category = format!(
             "{}:{}:{}",
             result.category,
@@ -616,7 +614,7 @@ pub(crate) fn order_results(results: &[SearchResult]) -> Vec<SearchResult> {
                 if state.count > 0 && grouped.len().saturating_sub(state.index) < MAX_DISTANCE =>
             {
                 let index = state.index;
-                grouped.insert(index, result);
+                grouped.insert(index, sequence);
                 for state in positions.values_mut() {
                     if state.index >= index {
                         state.index += 1;
@@ -627,7 +625,7 @@ pub(crate) fn order_results(results: &[SearchResult]) -> Vec<SearchResult> {
                 }
             }
             _ => {
-                grouped.push(result);
+                grouped.push(sequence);
                 positions.insert(
                     category,
                     GroupState {
@@ -638,7 +636,13 @@ pub(crate) fn order_results(results: &[SearchResult]) -> Vec<SearchResult> {
             }
         }
     }
+
+    // `grouped` は 0..sorted.len() の順列なので、各実体は一度だけ取り出せる。
+    let mut slots: Vec<Option<SearchResult>> = sorted.into_iter().map(Some).collect();
     grouped
+        .into_iter()
+        .map(|index| slots[index].take().expect("each result is placed once"))
+        .collect()
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -725,6 +729,11 @@ mod tests {
         assert!(page_language_adjustment("mdn javascript intro", ja) < 0.0);
         assert!(page_language_adjustment("mdn javascript intro", fr) < 0.0);
         assert_eq!(page_language_adjustment("mdn javascript intro", en), 0.0);
+        // Korean query: /ko/ pages lift, English stays neutral, others sink
+        let ko = "https://developer.mozilla.org/ko/docs/Web/JavaScript";
+        assert!(page_language_adjustment("mdn javascript 입문", ko) > 0.0);
+        assert_eq!(page_language_adjustment("mdn javascript 입문", en), 0.0);
+        assert!(page_language_adjustment("mdn javascript 입문", ja) < 0.0);
     }
 
     #[test]
@@ -771,6 +780,19 @@ mod tests {
                 "富士山 wikipedia",
                 "https://en.wikipedia.org/wiki/Mount_Fuji"
             ) < 0.0
+        );
+        // Korean query: ko fine, en and ja are noise
+        assert_eq!(
+            wikipedia_language_penalty("서울 wikipedia", "https://ko.wikipedia.org/wiki/서울"),
+            0.0
+        );
+        assert!(
+            wikipedia_language_penalty("서울 wikipedia", "https://en.wikipedia.org/wiki/Seoul")
+                < 0.0
+        );
+        assert!(
+            wikipedia_language_penalty("서울 wikipedia", "https://ja.wikipedia.org/wiki/ソウル")
+                < 0.0
         );
         // non-wikipedia hosts are untouched
         assert_eq!(

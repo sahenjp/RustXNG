@@ -326,7 +326,12 @@ async fn run_search(
         return format_error(&state, &format, StatusCode::BAD_REQUEST, error);
     }
     if let Some(url) = response.redirect_url.clone() {
-        return Redirect::to(&url).into_response();
+        // `redirect_url` is engine-controlled: `Redirect::to` panics on a
+        // value that is not a valid header, so check first and fall back to
+        // the results page when the engine sent something unusable.
+        if let Ok(location) = axum::http::HeaderValue::from_str(&url) {
+            return (StatusCode::FOUND, [(header::LOCATION, location)]).into_response();
+        }
     }
 
     match format.as_str() {
@@ -507,6 +512,10 @@ fn results_page(
 /// bound that does not grow with the number of names in `backend=`.
 const AUTOCOMPLETE_DEADLINE: std::time::Duration = std::time::Duration::from_secs(5);
 
+/// `q` length cap for `/autocompleter`: suggestions are short prefixes, and
+/// the value is interpolated into upstream request URLs.
+const MAX_AUTOCOMPLETE_QUERY_CHARS: usize = 256;
+
 /// `GET /autocompleter`.
 pub async fn autocompleter(
     State(state): State<AppState>,
@@ -521,7 +530,13 @@ pub async fn autocompleter(
     ) {
         return response;
     }
-    let query = params.q.clone().unwrap_or_default();
+    let query: String = params
+        .q
+        .clone()
+        .unwrap_or_default()
+        .chars()
+        .take(MAX_AUTOCOMPLETE_QUERY_CHARS)
+        .collect();
     if query.trim().is_empty() {
         return axum::Json(Vec::<String>::new()).into_response();
     }

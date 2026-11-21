@@ -16,7 +16,7 @@ pub use direct::{
     MAX_BODY_BYTES, PageContent, PageReader, classify_fetch_error, is_fetchable, is_global,
     public_blocking_client,
 };
-pub(crate) use direct::{public_client, validated_resolver};
+pub(crate) use direct::{public_client, public_resolver, validated_resolver};
 pub use language::AcceptLanguage;
 
 use std::sync::Arc;

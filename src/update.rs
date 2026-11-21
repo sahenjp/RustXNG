@@ -96,8 +96,9 @@ const MAX_REDIRECTS: usize = 10;
 /// The destinations are fixed constants and every asset must also carry the
 /// expected prefix, but reqwest follows redirects on its own. A redirect is a
 /// destination this process did not choose, so each hop gets the same literal
-/// check the fetch paths apply, and the client keeps its own resolver, which
-/// drops non-global addresses after the lookup.
+/// check the fetch paths apply. The client keeps the validating resolver,
+/// which drops non-global DNS answers on direct connections; a proxy from
+/// the environment resolves names itself and does not get this check.
 fn redirect_policy() -> reqwest::redirect::Policy {
     reqwest::redirect::Policy::custom(|attempt| {
         if attempt.previous().len() >= MAX_REDIRECTS {
@@ -115,6 +116,7 @@ pub async fn run(install: bool) -> Result<(), String> {
     let client = reqwest::Client::builder()
         .https_only(true)
         .redirect(redirect_policy())
+        .dns_resolver(std::sync::Arc::new(crate::fetch::public_resolver()))
         .user_agent(concat!("rustxng/", env!("CARGO_PKG_VERSION")))
         .connect_timeout(Duration::from_secs(15))
         .timeout(Duration::from_secs(180))
