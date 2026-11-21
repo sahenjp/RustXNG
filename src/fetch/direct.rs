@@ -170,6 +170,12 @@ impl Resolve for SystemResolver {
 /// address at all is refused.
 struct PublicResolver(Arc<dyn Resolve>);
 
+/// A fresh validating resolver for standalone clients (the self-updater):
+/// sized so `ClientBuilder::dns_resolver` accepts it without a newtype.
+pub(crate) fn public_resolver() -> impl Resolve {
+    PublicResolver(Arc::new(SystemResolver))
+}
+
 impl Resolve for PublicResolver {
     fn resolve(&self, name: Name) -> Resolving {
         let host = name.as_str().to_string();
@@ -504,7 +510,7 @@ impl PageReader {
         if !self.robots_allow(&parsed).await {
             return Err("the site's robots.txt asks automated tools not to read this page".into());
         }
-        let body = tokio::time::timeout(FETCH_TIMEOUT, self.fetch(parsed, language))
+        let body = tokio::time::timeout(FETCH_TIMEOUT, self.fetch(parsed, language, false))
             .await
             .map_err(|_| "the page took too long to load".to_string())??;
         let mut degraded: Option<(Option<String>, Option<String>)> = None;
@@ -567,6 +573,47 @@ impl PageReader {
         Ok(content)
     }
 
+    /// The served body of a page, before text extraction — markup source for
+    /// callers that parse it themselves (`/extract`, `/map`).
+    ///
+    /// The same reachability checks as [`Self::read`] apply: public URL,
+    /// robots.txt and the configured body cap. Unlike `read` there is no
+    /// session cache (the markup is bulky and callers want the page as
+    /// served, not a rendered variant), no Accept-Language negotiation, and
+    /// non-text markup such as `application/xml` sitemaps is accepted. PDF
+    /// bodies and external page providers are refused: neither carries the
+    /// markup these callers parse.
+    pub async fn raw(&self, url: &str) -> Result<String, String> {
+        if self.source.is_some() {
+            return Err("raw reads require the direct page fetch provider".into());
+        }
+        if self.proxy_blocked {
+            return Err("page reads are unavailable with configured proxies: destination validation requires direct connections".into());
+        }
+        let parsed = reqwest::Url::parse(url).map_err(|_| "not a valid URL".to_string())?;
+        if !is_fetchable(&parsed) {
+            return Err("only public http(s) pages can be read".into());
+        }
+        let _permit = self
+            .permits
+            .acquire()
+            .await
+            .map_err(|error| error.to_string())?;
+        if !self.robots_allow(&parsed).await {
+            return Err("the site's robots.txt asks automated tools not to read this page".into());
+        }
+        match tokio::time::timeout(
+            FETCH_TIMEOUT,
+            self.fetch(parsed, &AcceptLanguage::default(), true),
+        )
+        .await
+        .map_err(|_| "the page took too long to load".to_string())??
+        {
+            PageBody::Text { content, .. } => Ok(content),
+            PageBody::Pdf(_) => Err("the page is a PDF, not markup".into()),
+        }
+    }
+
     /// Whether the site's robots.txt lets us read this page.
     ///
     /// The same RFC 9309 rules as the crawler, with one difference: a robots.txt
@@ -624,10 +671,14 @@ impl PageReader {
         crate::robots::Robots::from_response(status, &String::from_utf8_lossy(&body), "rustxng")
     }
 
+    /// `markup` widens the accepted media types for [`Self::raw`]: XML
+    /// documents (sitemaps) and untyped `octet-stream` bodies, which are
+    /// sniffed for the PDF magic below like any other response.
     async fn fetch(
         &self,
         url: reqwest::Url,
         language: &AcceptLanguage,
+        markup: bool,
     ) -> Result<PageBody, String> {
         let request = self.client.get(url).header(
             "Accept",
@@ -649,8 +700,12 @@ impl PageReader {
             .to_ascii_lowercase();
         let media_type = content_type.split(';').next().unwrap_or_default().trim();
         let is_text = media_type.starts_with("text/") || media_type.contains("xhtml");
+        let is_markup = markup
+            && (media_type == "application/xml"
+                || media_type.ends_with("+xml")
+                || media_type == "application/octet-stream");
         let is_pdf = media_type == "application/pdf";
-        if !(is_text || is_pdf || media_type == "application/octet-stream") {
+        if !(is_text || is_markup || is_pdf || media_type == "application/octet-stream") {
             return Err(format!("not a text page ({content_type})"));
         }
         let html_media_type = match media_type {
@@ -679,7 +734,7 @@ impl PageReader {
             Ok(PageBody::Pdf(body))
         } else if is_pdf {
             Err("the response is not a PDF document".into())
-        } else if is_text {
+        } else if is_text || is_markup {
             Ok(PageBody::Text {
                 url: response.url().clone(),
                 content: String::from_utf8_lossy(&body).into_owned(),

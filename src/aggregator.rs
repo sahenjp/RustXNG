@@ -752,7 +752,7 @@ impl Searcher {
                 }
                 crate::settings::SearchStrategy::Parallel => {
                     futures::future::join_all(engines.iter().map(|engine| async {
-                        let outcome = self.run_engine(engine, &request, deadline).await;
+                        let outcome = self.run_engine_catching(engine, &request, deadline).await;
                         start_official(&outcome);
                         outcome
                     }))
@@ -763,19 +763,18 @@ impl Searcher {
                 }
             }
         };
-        let extra = async {
-            match &routed {
-                Some((routed_engines, routed_request)) => {
-                    futures::future::join_all(
-                        routed_engines
-                            .iter()
-                            .map(|engine| self.run_engine(engine, routed_request, deadline)),
-                    )
-                    .await
+        let extra =
+            async {
+                match &routed {
+                    Some((routed_engines, routed_request)) => {
+                        futures::future::join_all(routed_engines.iter().map(|engine| {
+                            self.run_engine_catching(engine, routed_request, deadline)
+                        }))
+                        .await
+                    }
+                    None => Vec::new(),
                 }
-                None => Vec::new(),
-            }
-        };
+            };
         let (mut outcomes, extra_outcomes) = futures::join!(main, extra);
         // The query named these sources: their own results are what was asked for.
         outcomes.extend(extra_outcomes.into_iter().map(|mut outcome| {
@@ -838,7 +837,7 @@ impl Searcher {
                 let page_outcomes = futures::future::join_all(
                     paging
                         .iter()
-                        .map(|engine| self.run_engine(engine, &deeper, deadline)),
+                        .map(|engine| self.run_engine_catching(engine, &deeper, deadline)),
                 )
                 .await;
                 for outcome in page_outcomes {
@@ -1093,6 +1092,45 @@ impl Searcher {
         });
     }
 
+    /// Run one engine, turning a panic into a recorded failure instead of
+    /// losing the whole search. Engine futures run inside `join_all` /
+    /// `FuturesUnordered`, so a panic in `build_request`, `parse` or
+    /// `check_quality` would otherwise unwind through the search task,
+    /// discard every sibling engine's results and — because `record_failure`
+    /// never ran — leave the breaker blind to a provider that now panics on
+    /// every query. Offline engines already get this isolation for free from
+    /// `spawn_blocking`'s `JoinError`; network engines get it here.
+    async fn run_engine_catching(
+        &self,
+        engine: &EngineHandle,
+        request: &SearchRequest,
+        deadline: Instant,
+    ) -> EngineOutcome {
+        use futures::FutureExt;
+        let outcome = std::panic::AssertUnwindSafe(self.run_engine(engine, request, deadline))
+            .catch_unwind()
+            .await;
+        match outcome {
+            Ok(outcome) => outcome,
+            Err(_) => {
+                tracing::warn!(engine = %engine.name(), "engine run panicked");
+                self.states.record_failure(
+                    engine.name(),
+                    FailureKind::Other,
+                    &self.settings.search,
+                );
+                EngineOutcome {
+                    engine: engine.name().to_string(),
+                    weight: engine.weight(),
+                    items: Err(FailureKind::Other),
+                    elapsed: Duration::ZERO,
+                    suspended: false,
+                    reason: Some("engine panicked"),
+                }
+            }
+        }
+    }
+
     async fn run_engine(
         &self,
         engine: &EngineHandle,
@@ -1221,6 +1259,7 @@ impl Searcher {
             tracing::debug!(engine = %engine.name(), %error, "engine response rejected");
             FailureKind::from(&error)
         })?;
+        tracing::info!(engine = %engine.name(), status = response.status, bytes = response.body.len(), items = items.len(), "TEMP engine outcome");
         check_quality(engine.name(), &request.query, items)
     }
 
@@ -1249,7 +1288,7 @@ impl Searcher {
         let mut futures = futures::stream::FuturesUnordered::new();
         for (index, engine) in engines.iter().enumerate() {
             futures.push(async move {
-                let outcome = self.run_engine(engine, request, deadline).await;
+                let outcome = self.run_engine_catching(engine, request, deadline).await;
                 (index, outcome)
             });
         }
@@ -1329,7 +1368,7 @@ impl Searcher {
             let tier_outcomes = futures::future::join_all(
                 chunk
                     .iter()
-                    .map(|engine| self.run_engine(engine, request, deadline)),
+                    .map(|engine| self.run_engine_catching(engine, request, deadline)),
             )
             .await;
             for outcome in &tier_outcomes {
@@ -1674,7 +1713,8 @@ impl Searcher {
 
     /// Engine statistics for `/stats`.
     pub fn engine_snapshots(&self) -> Vec<EngineSnapshot> {
-        self.states.snapshot()
+        self.states
+            .snapshot_configured(&self.registry.names(), self.registry.failed())
     }
 }
 
@@ -1821,6 +1861,12 @@ mod orchestration_tests {
         meta: EngineMeta,
         results: usize,
         build_error: bool,
+        /// Panic inside `build_request`, to exercise the isolation an engine
+        /// on the inline path gets from `run_engine_catching`.
+        panic_on_build: bool,
+        /// `false` puts the engine on the network path, which is the path
+        /// that runs without `spawn_blocking`'s JoinError isolation.
+        offline: bool,
         queries: std::sync::Mutex<Vec<Query>>,
         applicable: Option<ApplicabilityPredicate>,
         /// How long the fake engine takes, to exercise the bounded wait.
@@ -1853,10 +1899,23 @@ mod orchestration_tests {
                 meta,
                 results,
                 build_error,
+                panic_on_build: false,
+                offline: true,
                 queries: std::sync::Mutex::new(Vec::new()),
                 applicable,
                 delay: None,
             })
+        }
+
+        /// An engine on the network path whose `build_request` panics.
+        fn panicking(name: &str, categories: &[&str]) -> Arc<Self> {
+            let mut engine = Self::build(name, categories, 0, false);
+            {
+                let inner = std::sync::Arc::get_mut(&mut engine).unwrap();
+                inner.panic_on_build = true;
+                inner.offline = false;
+            }
+            engine
         }
     }
 
@@ -1871,7 +1930,7 @@ mod orchestration_tests {
                 .unwrap_or(true)
         }
         fn is_offline(&self) -> bool {
-            true
+            self.offline
         }
         fn search_offline(
             &self,
@@ -1889,6 +1948,9 @@ mod orchestration_tests {
         }
         fn build_request(&self, query: &Query, _pageno: u32) -> Result<EngineRequest, EngineError> {
             self.queries.lock().unwrap().push(query.clone());
+            if self.panic_on_build {
+                panic!("{} exploded while building a request", self.meta.name);
+            }
             if self.build_error {
                 return Err(EngineError::Message("boom".into()));
             }
@@ -2866,6 +2928,40 @@ mod orchestration_tests {
         request.strict_engines = true;
         let response = searcher.search(request).await;
         assert_eq!(response.error.as_deref(), Some("unknown engines: nope"),);
+    }
+
+    #[tokio::test]
+    async fn a_panicking_engine_is_a_recorded_failure_not_a_dead_search() {
+        let panic = FakeEngine::panicking("kaput", &["general"]);
+        let good = FakeEngine::build("good", &["general"], 2, false);
+        let searcher = searcher(vec![panic, good]);
+        for round in 1..=2 {
+            let response = searcher
+                .search(SearchRequest::new(query("needle", &searcher.registry)))
+                .await;
+            assert!(response.error.is_none(), "round {round}: search answers");
+            assert_eq!(
+                response.results.len(),
+                2,
+                "round {round}: the healthy engine's results survive"
+            );
+            let dead = response
+                .unresponsive_engines
+                .iter()
+                .find(|entry| entry.engine == "kaput")
+                .expect("the panicking engine is listed as unresponsive");
+            assert_eq!(dead.error_type, "engine panicked");
+        }
+        // The failure was recorded twice, so the breaker can see the engine:
+        // without the isolation the panic unwound past `record_failure`.
+        let snapshot = searcher
+            .states
+            .snapshot()
+            .into_iter()
+            .find(|s| s.engine == "kaput")
+            .expect("the panicking engine has state");
+        assert_eq!(snapshot.stats.errors, 2);
+        assert_eq!(snapshot.consecutive_failures, 2);
     }
 
     #[tokio::test]

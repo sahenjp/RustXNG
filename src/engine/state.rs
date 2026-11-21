@@ -297,6 +297,41 @@ pub struct EngineSnapshot {
 }
 
 impl EngineSnapshot {
+    /// The state of a configured engine that has not run yet.
+    ///
+    /// `EngineStates::snapshot` only lists engines that already have state, so
+    /// a process that has just started reported nothing at all — which is when
+    /// an operator is most likely to look.
+    pub fn idle(engine: &str) -> Self {
+        Self {
+            engine: engine.to_string(),
+            stats: EngineStats::default(),
+            consecutive_failures: 0,
+            suspended: false,
+            suspended_for: 0.0,
+            suspension_reason: None,
+            resting: false,
+            resting_for: 0.0,
+            circuit: CircuitState::Closed,
+            circuit_open_for: 0.0,
+            circuit_failure_ratio: 0.0,
+            circuit_samples: 0,
+        }
+    }
+
+    /// The state of a configured engine that could not be initialised.
+    ///
+    /// The engine cannot run at all, so it reports as suspended with the
+    /// build failure as its reason; `suspended_for` stays 0 because the
+    /// suspension is not time-bound.
+    pub fn unavailable(engine: &str, reason: &str) -> Self {
+        Self {
+            suspended: true,
+            suspension_reason: Some(format!("could not be initialised: {reason}")),
+            ..Self::idle(engine)
+        }
+    }
+
     /// Circuit phase as a human-readable label (see [`CircuitState::as_str`]).
     pub fn circuit_label(&self) -> &'static str {
         self.circuit.as_str()
@@ -466,6 +501,33 @@ impl EngineStates {
             .lock()
             .unwrap_or_else(|poisoned| poisoned.into_inner())
             .clear();
+    }
+
+    /// Snapshot every configured engine, including the ones that never ran.
+    ///
+    /// Operators read `/stats` and `/metrics` right after a restart, when
+    /// nothing has been used yet; reporting an empty table there hides the
+    /// engines the process is about to try. Engines that failed to
+    /// initialise are listed as suspended with their build failure, so a
+    /// broken configuration is visible in the same place.
+    pub fn snapshot_configured(
+        &self,
+        configured: &[String],
+        failed: &[(String, String)],
+    ) -> Vec<EngineSnapshot> {
+        let mut snapshots = self.snapshot();
+        for name in configured {
+            if !snapshots.iter().any(|snapshot| &snapshot.engine == name) {
+                snapshots.push(EngineSnapshot::idle(name));
+            }
+        }
+        for (name, reason) in failed {
+            if !snapshots.iter().any(|snapshot| &snapshot.engine == name) {
+                snapshots.push(EngineSnapshot::unavailable(name, reason));
+            }
+        }
+        snapshots.sort_by(|a, b| a.engine.cmp(&b.engine));
+        snapshots
     }
 
     /// Snapshot of every engine that has been used.
@@ -1047,6 +1109,39 @@ mod tests {
             "hard blocks are the suspension ladder's business"
         );
         assert_eq!(circuit_of(&states, "eng").circuit, CircuitState::Closed);
+    }
+
+    #[test]
+    fn configured_engines_are_reported_before_their_first_request() {
+        let states = EngineStates::new();
+        let names = vec!["zeta".to_string(), "alpha".to_string()];
+        let failed = vec![("kaput".to_string(), "missing api key".to_string())];
+        let idle = states.snapshot_configured(&names, &failed);
+        assert_eq!(
+            idle.iter().map(|s| s.engine.as_str()).collect::<Vec<_>>(),
+            ["alpha", "kaput", "zeta"]
+        );
+        assert!(idle.iter().all(|s| s.circuit == CircuitState::Closed));
+        assert!(
+            idle.iter()
+                .all(|s| s.stats.requests == 0 && s.circuit_samples == 0)
+        );
+        // An engine that failed to initialise shows as suspended with its
+        // reason instead of vanishing from the report entirely.
+        assert!(idle[1].suspended);
+        assert_eq!(
+            idle[1].suspension_reason.as_deref(),
+            Some("could not be initialised: missing api key")
+        );
+
+        // An engine that has run keeps its real counters, and the list stays
+        // sorted and free of duplicates.
+        let settings = crate::settings::Search::default();
+        states.record_success("zeta", 3, Duration::from_millis(10), &settings);
+        let mixed = states.snapshot_configured(&names, &failed);
+        assert_eq!(mixed.len(), 3);
+        assert_eq!(mixed[2].engine, "zeta");
+        assert_eq!(mixed[2].stats.requests, 1);
     }
 
     #[test]

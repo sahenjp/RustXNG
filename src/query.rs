@@ -411,16 +411,9 @@ impl Query {
             return self.locale.clone();
         }
         // Neither the UI nor the request chose a language: follow the query.
-        // Japanese engines answer Japanese queries far better than "all" does.
-        if self
-            .query_text()
-            .chars()
-            .any(|c| matches!(c as u32, 0x3040..=0x30ff | 0x3400..=0x4dbf | 0x4e00..=0x9fff))
-        {
-            "ja".to_string()
-        } else {
-            "en".to_string()
-        }
+        // Japanese and Korean engines answer queries in their own language
+        // far better than "all" does.
+        query_language(&self.query_text()).to_string()
     }
 
     /// With no language chosen ("auto"), a Japanese query searches in
@@ -433,7 +426,7 @@ impl Query {
         }
         let ui_locale = std::mem::take(&mut self.locale);
         let detected = self.engine_language();
-        self.locale = if detected == "ja" {
+        self.locale = if matches!(detected.as_str(), "ja" | "ko") {
             detected
         } else {
             ui_locale
@@ -488,6 +481,26 @@ impl Query {
             return bang_categories.into_iter().collect();
         }
         vec![categories::GENERAL.to_string()]
+    }
+}
+
+/// The language a query's script implies: Japanese kana/CJK, Korean hangul,
+/// or English for everything else. Used when neither the request nor the UI
+/// chose a language.
+pub(crate) fn query_language(query: &str) -> &'static str {
+    if query.chars().any(|c| {
+        matches!(c as u32, 0x3040..=0x30ff | 0x3400..=0x4dbf | 0x4e00..=0x9fff | 0xf900..=0xfaff)
+    }) {
+        "ja"
+    } else if query.chars().any(|c| {
+        matches!(
+            c as u32,
+            0x1100..=0x11ff | 0x3130..=0x318f | 0xa960..=0xa97f | 0xac00..=0xd7af | 0xd7b0..=0xd7ff
+        )
+    }) {
+        "ko"
+    } else {
+        "en"
     }
 }
 
@@ -566,6 +579,21 @@ mod tests {
         query.locale = "en-US".into();
         query.follow_query_script(true);
         assert_eq!(query.locale, "en-US");
+    }
+
+    #[test]
+    fn a_korean_query_searches_in_korean() {
+        let mut query = Query::parse("서울 날씨 예보", &registry(), &[]);
+        query.locale = "en".into();
+        query.follow_query_script(false);
+        assert_eq!(query.locale, "ko");
+        assert_eq!(query.engine_language(), "ko");
+
+        // Hangul jamo and compatibility jamo count too, not only syllables.
+        assert_eq!(query_language("한글"), "ko");
+        assert_eq!(query_language("한국어"), "ko");
+        assert_eq!(query_language("rust async"), "en");
+        assert_eq!(query_language("気象庁"), "ja");
     }
 
     use super::*;

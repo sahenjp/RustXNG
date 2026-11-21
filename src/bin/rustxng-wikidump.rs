@@ -126,6 +126,11 @@ struct Article {
     snippet: String,
 }
 
+/// Largest single line accepted from the dump, in bytes. Legitimate article
+/// text sits on one line; this only stops a malformed stream from growing
+/// the read buffer without bound.
+const MAX_LINE_BYTES: usize = 64 * 1024 * 1024;
+
 /// Reads the dump XML line by line. MediaWiki exports are line-structured,
 /// which makes a small scanner enough.
 struct Scanner {
@@ -148,8 +153,20 @@ impl Scanner {
         let mut text = String::new();
         loop {
             buffer.clear();
-            if reader.read_until(b'\n', &mut buffer)? == 0 {
+            // `read_until` alone would let a line without a newline grow the
+            // buffer with the whole remaining stream. Article text arrives on
+            // a single line, so the cap clears the largest legitimate article
+            // several times over while still bounding a corrupt stream.
+            let mut limited = std::io::Read::take(&mut reader, MAX_LINE_BYTES as u64 + 1);
+            let read = limited.read_until(b'\n', &mut buffer)?;
+            if read == 0 {
                 return Ok(());
+            }
+            if buffer.len() > MAX_LINE_BYTES && buffer.last() != Some(&b'\n') {
+                return Err(std::io::Error::new(
+                    std::io::ErrorKind::InvalidData,
+                    format!("dump line exceeds {MAX_LINE_BYTES} bytes"),
+                ));
             }
             let line = String::from_utf8_lossy(&buffer);
             let trimmed = line.trim_start();
