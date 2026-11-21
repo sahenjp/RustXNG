@@ -3,6 +3,23 @@
 
 このファイルの形式は [Keep a Changelog](https://keepachangelog.com/ja/1.1.0/) に従います。バージョニング方針は本文末尾の「セマンティックバージョニング」を参照してください。
 
+## [0.33.0](https://github.com/RustXNG/RustXNG/compare/v0.32.0...v0.33.0) (2026-11-21)
+
+
+### Features
+
+* deliver the area 0-5 roadmap ([#159](https://github.com/RustXNG/RustXNG/issues/159)) ([620a845](https://github.com/RustXNG/RustXNG/commit/620a84546b3cae818b67ead9d96188b25df02adf))
+* **index:** schedule site crawls and carry the semantic score into the merged number ([#161](https://github.com/RustXNG/RustXNG/issues/161)) ([0612b39](https://github.com/RustXNG/RustXNG/commit/0612b39b4321c7564391058bdef837dd68b76ee0))
+* **observability:** make engine health visible in stats, config check and metrics ([#160](https://github.com/RustXNG/RustXNG/issues/160)) ([be8579f](https://github.com/RustXNG/RustXNG/commit/be8579f58ee7d4c33df782c89a60e82f12576101))
+* **results:** rank by agreement and text overlap, and merge near-duplicates ([#162](https://github.com/RustXNG/RustXNG/issues/162)) ([c4a7607](https://github.com/RustXNG/RustXNG/commit/c4a760721a6c5f937f5e0dd71b3e2db9c14319c5))
+
+
+### Bug Fixes
+
+* **deps:** drop the libz-sys vulnerability and track the chrono exception ([#158](https://github.com/RustXNG/RustXNG/issues/158)) ([ec94a38](https://github.com/RustXNG/RustXNG/commit/ec94a3894cd80c5ca582823dac7d32c615c89eb3))
+* restore search, explain suspensions, and split API rate limits ([#155](https://github.com/RustXNG/RustXNG/issues/155)) ([627c4dc](https://github.com/RustXNG/RustXNG/commit/627c4dc1a22cfed50b129fb7d2c5feb0fd62d7b1))
+* **search:** stop waiting for a straggler past the grace window ([#157](https://github.com/RustXNG/RustXNG/issues/157)) ([c873c36](https://github.com/RustXNG/RustXNG/commit/c873c36ebd8c18d500dd4e07c7fe74cfad9ba61f))
+
 ## [0.32.0](https://github.com/RustXNG/RustXNG/compare/v0.31.2...v0.32.0) (2026-11-16)
 
 

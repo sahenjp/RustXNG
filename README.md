@@ -19,7 +19,7 @@ Install from the [releases page](https://github.com/RustXNG/RustXNG/releases) or
 
 <!-- x-release-please-start-version -->
 ```bash
-cargo install --git https://github.com/RustXNG/RustXNG.git --tag v0.32.0 --locked
+cargo install --git https://github.com/RustXNG/RustXNG.git --tag v0.33.0 --locked
 ```
 <!-- x-release-please-end -->
 
